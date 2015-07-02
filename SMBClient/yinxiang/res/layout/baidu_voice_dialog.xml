@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:background="@android:color/black"
+              android:layout_width="match_parent"
+              android:layout_height="200dp"
+              android:orientation="horizontal"
+              android:layout_gravity="bottom">
+
+    <LinearLayout
+            android:layout_width="300dp"
+            android:layout_height="200dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_weight="8"
+            android:orientation="vertical">
+
+        <TextView
+                android:id="@+id/baidu_notification"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:textSize="20sp"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:text="按下开始语音识别，送开完成"
+                />
+        <Button
+                android:id="@+id/baidu_pressbutton"
+                android:layout_gravity="center"
+                android:background="@drawable/remote_yuyin"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                />
+    </LinearLayout>
+
+    <LinearLayout
+            android:layout_width="80dp"
+            android:layout_height="200dp"
+            android:layout_gravity="left"
+            android:layout_weight="8"
+            android:orientation="vertical">
+
+        <Button
+                android:id="@+id/baidu_closebutton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="关闭"/>
+    </LinearLayout>
+</LinearLayout>
+

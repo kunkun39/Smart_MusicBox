@@ -1,0 +1,110 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/main_bk"
+    tools:context="com.changhong.baidu.MainActivity" >
+
+    <!--IP选择-->
+
+    <LinearLayout
+            android:background="@drawable/title_banner"
+            android:layout_height="67.6dip"
+            android:layout_width="fill_parent"
+            android:focusable="false"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+        <TextView
+                android:id="@+id/title"
+                android:layout_width="80dip"
+                android:layout_height="64.3dip"
+                android:ellipsize="marquee"
+                android:gravity="center_vertical"
+                android:singleLine="true"
+                android:text="未连接"
+                android:textSize="20sp" />
+
+        <ImageView
+                android:layout_width="16.7dip"
+                android:layout_height="10.7dip"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/title_ip_select" />
+    </LinearLayout>
+
+    <Button
+            android:id="@+id/btn_back"
+            android:background="@drawable/title_btn_back_selector"
+            android:layout_width="80.5dip"
+            android:layout_height="77.3dip"
+            android:layout_marginLeft="0dip"/>
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="100dip"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/acoustics_search"
+                android:scaleType="fitCenter" />
+
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/result"
+            android:layout_width="fill_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="40dp"
+            android:background="@drawable/music_search_result"
+            android:textColor="@color/white" />
+        
+        <ImageView 
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="@color/white"
+            />
+
+        <Button
+            android:id="@+id/confirm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/musicsearch"/>
+
+        <ImageView
+            android:id="@+id/voice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:background="@drawable/acoustics_voice"
+            android:text="@string/hello_world" />
+    </LinearLayout>
+<!-- IP选择 -->
+
+    <ListView
+            android:id="@+id/clients"
+            android:layout_width="match_parent"
+            android:layout_height="558dip"
+            android:layout_marginTop="67.6dip"
+            android:background="@drawable/title_ip_list_bg"
+            android:listSelector="@drawable/title_ip_list"
+            android:visibility="gone" />
+
+    <Button
+            android:id="@+id/btn_list"
+            android:layout_width="204dip"
+            android:layout_height="49.8dip"
+            android:layout_marginLeft="70dip"
+            android:layout_marginTop="10dip"
+            android:background="@drawable/title_btn_list_selector" />
+</RelativeLayout>

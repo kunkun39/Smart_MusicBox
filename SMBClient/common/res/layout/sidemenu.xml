@@ -1,0 +1,131 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/common_sidemenu"
+    android:visibility="gone"
+    android:background="#000000">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:id="@+id/menu_controller"
+            android:tag="1"
+            style="@style/menu_child_layout" >
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/menu_controller" />
+
+            <TextView
+                style="@style/menu_text"
+                android:text="遥控器" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/menu_tv"
+            android:tag="2"
+            style="@style/menu_child_layout" >
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/menu_tv" />
+
+            <TextView
+                style="@style/menu_text"
+                android:text="数字电视" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/menu_touying"
+            android:tag="3"
+            style="@style/menu_child_layout" >
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/menu_touying" />
+
+            <TextView
+                style="@style/menu_text"
+                android:text="投影" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/menu_search"
+            android:tag="4"
+            style="@style/menu_child_layout" >
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/menu_search" />
+
+            <TextView
+                style="@style/menu_text"
+                android:text="搜索" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/menu_shoucang"
+            android:tag="5"
+            style="@style/menu_child_layout" >
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/menu_shoucang" />
+
+            <TextView
+                style="@style/menu_text"
+                android:text="收藏" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/menu_faq"
+            android:tag="6"
+            style="@style/menu_child_layout" >
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/menu_faq" />
+
+            <TextView
+                style="@style/menu_text"
+                android:text="用户反馈" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/menu_setting"
+            android:tag="7"
+            style="@style/menu_child_layout" >
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/menu_setting" />
+
+            <TextView
+                style="@style/menu_text"
+                android:text="设置" />
+        </LinearLayout>
+
+        <Button
+            android:layout_width="80dp"
+            android:layout_height="40dp"
+            android:id="@+id/menu_exit"
+            android:tag="8"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="15dp"
+            android:background="#990000"
+            android:text="退出"
+            android:textColor="#fff" />
+    </LinearLayout>
+
+</ScrollView>
