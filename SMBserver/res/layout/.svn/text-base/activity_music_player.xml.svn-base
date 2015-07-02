@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/root"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="horizontal" >
+
+    <RelativeLayout
+            android:id="@+id/music_view_holder"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@drawable/activity_music_bg" >
+        <TextView
+                android:id="@+id/singer_and_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dip"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                android:textSize="40sp"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:singleLine="true"
+                android:ellipsize="marquee"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:textColor="@color/white"/>
+
+        <ImageView
+                android:id="@+id/title_pic"
+                android:layout_width="300dip"
+                android:layout_height="300dip"
+                android:layout_marginTop="180dip"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/activity_music_icon" />
+
+        <FrameLayout
+                android:id="@+id/player_frame_content"
+                android:layout_width="match_parent"
+                android:layout_height="500dip"
+                android:layout_marginTop="90dip"
+                android:layout_centerHorizontal="true">
+
+            <com.changhong.tvserver.touying.music.lyc.LycView
+                    android:id="@+id/lrc_show"
+                    android:layout_width="wrap_content"
+                    android:layout_height="500dip"
+                    android:layout_marginBottom="10dip"/>
+        </FrameLayout>
+
+    </RelativeLayout>
+
+    <LinearLayout
+            android:id="@+id/music_controller_holder"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical" >
+    </LinearLayout>
+
+</RelativeLayout>

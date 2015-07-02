@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/kunkun39/CH_BOX.git/!svn/ver/5/trunk/tv_assistant/TVserver/src/com/changhong/tvserver
+END
+MainActivity.java
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/kunkun39/CH_BOX.git/!svn/ver/5/trunk/tv_assistant/TVserver/src/com/changhong/tvserver/MainActivity.java
+END
+PackageUpdateReceiver.java
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/kunkun39/CH_BOX.git/!svn/ver/5/trunk/tv_assistant/TVserver/src/com/changhong/tvserver/PackageUpdateReceiver.java
+END
+TVSocketControllerService.java
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/kunkun39/CH_BOX.git/!svn/ver/5/trunk/tv_assistant/TVserver/src/com/changhong/tvserver/TVSocketControllerService.java
+END
+MyApplication.java
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/kunkun39/CH_BOX.git/!svn/ver/5/trunk/tv_assistant/TVserver/src/com/changhong/tvserver/MyApplication.java
+END
+BootBroadcastReceiver.java
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/kunkun39/CH_BOX.git/!svn/ver/5/trunk/tv_assistant/TVserver/src/com/changhong/tvserver/BootBroadcastReceiver.java
+END

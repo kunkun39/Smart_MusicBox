@@ -1,0 +1,96 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="com.changhong.tvserver"
+          android:versionCode="1"
+          android:versionName="1.0">
+
+    <uses-sdk
+            android:minSdkVersion="14"
+            android:targetSdkVersion="15"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.GET_TASKS"/>
+    <!--<uses-permission android:name="android.permission.FORCE_STOP_PACKAGES"/>-->
+
+    <application
+            android:allowBackup="true"
+            android:name=".MyApplication"
+            android:icon="@drawable/tv_server_applogo"
+            android:label="@string/app_name"
+            android:sharedUserId="android.uid.system"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+
+        <!--activity part-->
+        <activity android:name=".MainActivity" android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
+        <activity android:label="VideoViewPlayingActivity"
+                  android:name=".touying.video.VideoViewPlayingActivity"
+                  android:configChanges="keyboardHidden|orientation"
+                  android:screenOrientation="landscape"
+                  android:exported="true"
+                  android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+            </intent-filter>
+        </activity>
+
+        <activity android:label="MusicViewPlayingActivity"
+                  android:name=".touying.music.MusicViewPlayingActivity"
+                  android:configChanges="keyboardHidden|orientation"
+                  android:screenOrientation="landscape"
+                  android:exported="true"
+                  android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".touying.image.ImageShowPlayingActivity"
+                  android:theme="@android:style/Theme.NoTitleBar"/>
+
+        <!--service part-->
+        <service android:name=".TVSocketControllerService"
+                 android:enabled="true" android:exported="true" android:priority="1000">
+        </service>
+
+        <!--receiver part-->
+        <receiver android:name="com.changhong.tvserver.BootBroadcastReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="com.action.private_BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name=".PackageUpdateReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_ADDED"/>
+                <action android:name="android.intent.action.PACKAGE_REMOVED"/>
+                <data android:scheme="package"/>
+            </intent-filter>
+        </receiver>
+        
+        <activity
+            android:name=".TCMediaPlayer"
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
+        </activity>
+        
+        <service android:name="com.changhong.nanohttpd.NanoHTTPDService" />
+        
+    </application>
+</manifest>
