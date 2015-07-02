@@ -1,0 +1,28 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical"
+    android:gravity="center"
+    tools:context=".MainActivity" >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="40px"
+        android:textColor="@android:color/black"
+        android:text="扫描以下二维码，下载手机助手客户端" />
+    <ImageView 
+        android:src="@drawable/tv_server_code"
+        android:layout_width="250dip"
+        android:layout_height="250dip"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="36px"
+        android:textColor="@android:color/black"
+        android:text="友情提示：由于微信限制第三方二维码，请用微信外的其他工具扫描二维码" />
+
+</LinearLayout>

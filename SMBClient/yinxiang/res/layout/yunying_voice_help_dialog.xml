@@ -1,0 +1,60 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="fill_parent"
+             android:orientation="vertical"
+             android:background="@drawable/main_bk" >
+
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="40dip"
+            android:orientation="horizontal"
+            android:gravity="right|center_vertical"
+            >
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="40dip"
+                android:text="语音使用帮助"
+                android:textSize="20sp"
+                android:gravity="center"
+                />
+    </LinearLayout>
+
+    <LinearLayout
+            android:layout_marginTop="40dip"
+            android:layout_height="1dip"
+            android:layout_width="fill_parent"
+            android:background="@android:color/white"
+            android:orientation="horizontal"
+            />
+
+    <LinearLayout
+            android:layout_marginTop="40dip"
+            android:layout_width="fill_parent"
+            android:layout_height="600dip"
+            android:orientation="vertical"
+            >
+        <TextView
+                android:id="@+id/dialog_notification"
+                android:layout_height="fill_parent"
+                android:layout_width="fill_parent"
+                android:text="@string/dialog_baidu_voice_help"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:singleLine="false"
+                android:gravity="left"
+                android:layout_weight="1"
+                />
+        <Button
+                android:id="@+id/dialog_iknow"
+                android:layout_height="110dp"
+                android:layout_width="fill_parent"
+                android:text="我知道了"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:singleLine="false"
+                android:gravity="bottom|center"
+                android:layout_weight="1"
+                />
+    </LinearLayout>
+</FrameLayout>

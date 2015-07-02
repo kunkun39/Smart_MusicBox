@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/kunkun39/CH_BOX.git/!svn/ver/5/trunk/tv_assistant/TVserver/src/com/nostra13/universalimageloader/core/assist
+END
+FailReason.java
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/kunkun39/CH_BOX.git/!svn/ver/5/trunk/tv_assistant/TVserver/src/com/nostra13/universalimageloader/core/assist/FailReason.java
+END
+QueueProcessingType.java
+K 25
+svn:wc:ra_dav:version-url
+V 134
+/kunkun39/CH_BOX.git/!svn/ver/5/trunk/tv_assistant/TVserver/src/com/nostra13/universalimageloader/core/assist/QueueProcessingType.java
+END
+ViewScaleType.java
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/kunkun39/CH_BOX.git/!svn/ver/5/trunk/tv_assistant/TVserver/src/com/nostra13/universalimageloader/core/assist/ViewScaleType.java
+END
+FlushedInputStream.java
+K 25
+svn:wc:ra_dav:version-url
+V 133
+/kunkun39/CH_BOX.git/!svn/ver/5/trunk/tv_assistant/TVserver/src/com/nostra13/universalimageloader/core/assist/FlushedInputStream.java
+END
+ContentLengthInputStream.java
+K 25
+svn:wc:ra_dav:version-url
+V 139
+/kunkun39/CH_BOX.git/!svn/ver/5/trunk/tv_assistant/TVserver/src/com/nostra13/universalimageloader/core/assist/ContentLengthInputStream.java
+END
+ImageScaleType.java
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/kunkun39/CH_BOX.git/!svn/ver/5/trunk/tv_assistant/TVserver/src/com/nostra13/universalimageloader/core/assist/ImageScaleType.java
+END
+LoadedFrom.java
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/kunkun39/CH_BOX.git/!svn/ver/5/trunk/tv_assistant/TVserver/src/com/nostra13/universalimageloader/core/assist/LoadedFrom.java
+END
+ImageSize.java
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/kunkun39/CH_BOX.git/!svn/ver/5/trunk/tv_assistant/TVserver/src/com/nostra13/universalimageloader/core/assist/ImageSize.java
+END

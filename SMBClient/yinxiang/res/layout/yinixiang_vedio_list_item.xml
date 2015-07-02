@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="horizontal"
+              android:layout_width="match_parent"
+              android:layout_height="70dp"
+              android:paddingLeft="2dp"
+              android:paddingBottom="2dp"
+              android:background="@android:color/transparent"
+        >
+
+    <ImageView
+            android:id="@+id/yinxiang_vedio_item_image"
+            android:layout_height="70dp"
+            android:layout_width="90dp">
+    </ImageView>
+
+    <TextView
+            android:id="@+id/yinxiang_vedio_item_name"
+            android:layout_width="220dp"
+            android:layout_height="80dp"
+            android:paddingLeft="5dp"
+            android:textSize="11sp"
+            android:textColor="@color/white">
+    </TextView>
+
+    <CheckBox
+            android:id="@+id/yinxiang_vedio_item_checked"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:paddingRight="2dp"/>
+
+    <TextView
+            android:id="@+id/yinxiang_vedio_item_path"
+            android:layout_width="1dp"
+            android:layout_height="1dp"
+            android:visibility="invisible">
+    </TextView>
+
+</LinearLayout>

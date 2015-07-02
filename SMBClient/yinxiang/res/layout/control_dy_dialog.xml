@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="360dip"
+    android:layout_height="147dip"
+    android:background="@drawable/audioback"
+    tools:context=".view.DYControlDialog" >
+
+    <ImageView
+        android:id="@+id/showdy"
+        android:layout_width="360dip"
+    	android:layout_height="147dip"
+        android:background="@drawable/dy" />
+
+    <Button
+        android:id="@+id/dydown"
+        android:layout_width="65dip"
+        android:layout_height="65dip"
+        android:layout_marginLeft="74dip"
+        android:layout_marginTop="36dip"
+        android:background="@android:color/transparent" />
+
+    <Button
+        android:id="@+id/dyup"
+        android:layout_width="65dip"
+        android:layout_height="65dip"
+        android:layout_marginLeft="216dip"
+        android:layout_marginTop="36dip"
+        android:background="@android:color/transparent" />
+
+</FrameLayout>

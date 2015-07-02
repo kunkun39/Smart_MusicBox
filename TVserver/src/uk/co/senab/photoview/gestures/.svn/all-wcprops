@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/kunkun39/CH_BOX.git/!svn/ver/5/trunk/tv_assistant/TVserver/src/uk/co/senab/photoview/gestures
+END
+OnGestureListener.java
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/kunkun39/CH_BOX.git/!svn/ver/5/trunk/tv_assistant/TVserver/src/uk/co/senab/photoview/gestures/OnGestureListener.java
+END
+CupcakeGestureDetector.java
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/kunkun39/CH_BOX.git/!svn/ver/5/trunk/tv_assistant/TVserver/src/uk/co/senab/photoview/gestures/CupcakeGestureDetector.java
+END
+FroyoGestureDetector.java
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/kunkun39/CH_BOX.git/!svn/ver/5/trunk/tv_assistant/TVserver/src/uk/co/senab/photoview/gestures/FroyoGestureDetector.java
+END
+VersionedGestureDetector.java
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/kunkun39/CH_BOX.git/!svn/ver/5/trunk/tv_assistant/TVserver/src/uk/co/senab/photoview/gestures/VersionedGestureDetector.java
+END
+EclairGestureDetector.java
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/kunkun39/CH_BOX.git/!svn/ver/5/trunk/tv_assistant/TVserver/src/uk/co/senab/photoview/gestures/EclairGestureDetector.java
+END
+GestureDetector.java
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/kunkun39/CH_BOX.git/!svn/ver/5/trunk/tv_assistant/TVserver/src/uk/co/senab/photoview/gestures/GestureDetector.java
+END

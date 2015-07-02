@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/kunkun39/CH_BOX.git/!svn/ver/9/trunk/tv_assistant/TVhelper/common/src/com/nostra13/universalimageloader/core/assist/deque
+END
+Deque.java
+K 25
+svn:wc:ra_dav:version-url
+V 133
+/kunkun39/CH_BOX.git/!svn/ver/9/trunk/tv_assistant/TVhelper/common/src/com/nostra13/universalimageloader/core/assist/deque/Deque.java
+END
+LinkedBlockingDeque.java
+K 25
+svn:wc:ra_dav:version-url
+V 147
+/kunkun39/CH_BOX.git/!svn/ver/9/trunk/tv_assistant/TVhelper/common/src/com/nostra13/universalimageloader/core/assist/deque/LinkedBlockingDeque.java
+END
+BlockingDeque.java
+K 25
+svn:wc:ra_dav:version-url
+V 141
+/kunkun39/CH_BOX.git/!svn/ver/9/trunk/tv_assistant/TVhelper/common/src/com/nostra13/universalimageloader/core/assist/deque/BlockingDeque.java
+END
+LIFOLinkedBlockingDeque.java
+K 25
+svn:wc:ra_dav:version-url
+V 151
+/kunkun39/CH_BOX.git/!svn/ver/9/trunk/tv_assistant/TVhelper/common/src/com/nostra13/universalimageloader/core/assist/deque/LIFOLinkedBlockingDeque.java
+END
