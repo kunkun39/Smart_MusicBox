@@ -19,12 +19,13 @@
                     android:focusable="false"
                     android:gravity="left|center_vertical"
                 />
-            <Button 
+            <ImageView 
                 android:id="@+id/btn_fm"
                 android:layout_width="21dip"
                 android:layout_height="21dip"
                 android:background="@drawable/fmplay"
                 android:layout_marginLeft="10dip"
+                android:layout_gravity="center_vertical"
                 />
     </LinearLayout>
 </RelativeLayout>

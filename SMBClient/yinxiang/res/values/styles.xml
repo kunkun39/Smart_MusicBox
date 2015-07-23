@@ -183,4 +183,19 @@
         <item name="android:windowEnterAnimation">@anim/num_dialog_enter_anim</item>
         <item name="android:windowExitAnimation">@anim/num_dialog_exit_anim</item>
     </style>
+    
+    
+    <!-- 音响底部菜单风格 -->
+    <style name="yx_tab">  
+    <item name="android:layout_height">wrap_content</item>  
+    <item name="android:layout_width">match_parent</item>  
+    <item name="android:layout_weight">1</item>  
+    <item name="android:gravity">center</item>  
+    <item name="android:textSize">14sp</item>  
+    <item name="android:paddingTop">8dip</item>  
+    <item name="android:paddingBottom">4dip</item>  
+    <item name="android:background">@drawable/yx_bottombar_itembg_selector</item>  
+    <item name="android:button">@null</item>  
+   </style>  
+
 </resources>

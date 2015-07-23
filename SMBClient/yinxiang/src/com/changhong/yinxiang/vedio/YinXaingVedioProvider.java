@@ -27,8 +27,8 @@ public class YinXaingVedioProvider implements AbstructProvider {
         List<YinXiangVedio> list = null;
         if (context != null) {
             StringBuffer select = new StringBuffer(" 1=1 ");
-            // 查询语句：检索出.mp3为后缀名，时长大于1分钟，文件大小大于1MB的媒体文件
-            select.append(" and " + MediaStore.Audio.Media.DURATION + " > 0");
+            // 查询语句：检索出.mp3为后缀名，时长大于1分钟，文件大小大�?MB的媒体文�?
+            select.append(" and " + MediaStore.Video.Media.DURATION + " > 0");
             Cursor cursor = context.getContentResolver().query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, null, select.toString(), null, null);
             if (cursor != null) {
                 list = new ArrayList<YinXiangVedio>();
