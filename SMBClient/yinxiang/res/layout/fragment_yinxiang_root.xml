@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/main_bk"
+    android:orientation="vertical"
+    tools:context=".YinXiangRemoteControlActivity" >
+
+    <!-- IP选择 -->
+
+    <RelativeLayout
+        android:id="@+id/banner"
+        android:layout_width="fill_parent"
+        android:layout_height="67.6dip"
+        android:background="@drawable/title_banner"
+        android:focusable="false">
+        
+        <ImageView
+            android:id="@+id/btn_ip_select"            
+            android:layout_width="16.7dip"
+            android:layout_height="10.7dip"
+            android:layout_centerInParent="true"           
+            android:background="@drawable/title_ip_select" />
+        
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="80dip"
+            android:layout_height="64.3dip"
+            android:layout_toLeftOf="@id/btn_ip_select"          
+            android:ellipsize="marquee"
+            android:gravity="center_vertical"
+            android:singleLine="true"
+            android:text="未连接"
+            android:textSize="20sp" />
+        
+        <Button
+            android:id="@+id/power"
+            android:layout_width="80.5dip"
+            android:layout_height="77.3dip"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="5dip"
+            android:layout_centerVertical="true"           
+            android:background="@drawable/btn_power_selector" />
+    </RelativeLayout>
+
+    <!-- 内容 -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <FrameLayout
+            android:id="@+id/yx_tabcontent"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <RadioGroup
+            android:id="@+id/yx_rgtab"
+            android:layout_width="match_parent"
+            android:layout_height="50dip"
+            android:background="#66000000"
+            android:orientation="horizontal" >
+
+            <RadioButton
+                style="@style/yx_tab"
+                android:layout_height="match_parent"
+                android:drawableTop="@drawable/tab_controller"
+                android:text="遥控器" />
+
+            <RadioButton
+                style="@style/yx_tab"
+                android:layout_height="match_parent"
+                android:drawableTop="@drawable/tab_music"
+                android:text="网络电台" />
+
+            <RadioButton
+                style="@style/yx_tab"
+                android:layout_height="match_parent"
+                android:drawableTop="@drawable/tab_touying"
+                android:text="一键推送" />
+
+            <RadioButton
+                style="@style/yx_tab"
+                android:layout_height="match_parent"
+                android:drawableTop="@drawable/tab_setting"
+                android:text="设置" />
+        </RadioGroup>
+    </LinearLayout>
+
+    <!-- IP选择 -->
+
+    <ListView
+        android:id="@+id/clients"
+        android:layout_width="match_parent"
+        android:layout_height="558dip"
+        android:layout_marginTop="67.6dip"
+        android:background="@drawable/title_ip_list_bg"
+        android:listSelector="@drawable/title_ip_list"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/btn_list"
+        android:layout_width="204dip"
+        android:layout_height="49.8dip"
+        android:layout_marginLeft="70dip"
+        android:layout_marginTop="10dip"
+        android:background="@drawable/title_btn_list_selector" />
+
+</RelativeLayout>

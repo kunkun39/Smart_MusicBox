@@ -3,8 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/bidir_sliding_layout"
-    android:orientation="vertical"
-    tools:context=".YinXiangRemoteControlActivity" >
+    android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/right_menu"
@@ -19,9 +18,11 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/background"
+        android:background="@drawable/background"     
+        android:layout_marginTop="67.6dip"     
         android:orientation="vertical" >
-
+        
+        <!--屏蔽ip设置，统一由主界面控制 
         <ImageView
             android:id="@+id/ball"
             android:layout_width="71dip"
@@ -29,6 +30,7 @@
             android:background="@drawable/smoothball"
             android:visibility="invisible" />
 
+        
         <LinearLayout
             android:id="@+id/banner"
             android:layout_width="fill_parent"
@@ -69,11 +71,12 @@
             android:layout_alignParentRight="true"
             android:layout_marginRight="5dip"
             android:background="@drawable/btn_power_selector" />
+            
+            -->
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/banner"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="30dip"
             android:orientation="vertical" >
@@ -277,6 +280,7 @@
             </LinearLayout>
         </LinearLayout>
 
+      <!--  屏蔽Ip设置
         <ListView
             android:id="@+id/clients"
             android:layout_width="match_parent"
@@ -287,7 +291,6 @@
             android:visibility="gone" >
         </ListView>
 
-        
         <Button
             android:id="@+id/btn_list"
             android:layout_width="204dip"
@@ -295,8 +298,10 @@
             android:layout_marginLeft="70dip"
             android:layout_marginTop="10dip"
             android:background="@drawable/title_btn_list_selector" />
-             
-        
+            
+             -->  
+            
+            
     </RelativeLayout>
 
 </com.changhong.common.widgets.BidirSlidingLayout>
