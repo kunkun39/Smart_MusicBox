@@ -322,6 +322,7 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment impleme
                     MyApplication.vibrator.vibrate(100);
                     if (numInputDialog != null && numInputDialog.isShowing()) {
                         numInputDialog.dismiss();
+
                     }
                 }
             });

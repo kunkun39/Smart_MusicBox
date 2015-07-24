@@ -26,11 +26,11 @@ public class YinXiangCategoryFragment extends Fragment {
 
 	/************************************************** IP连接部分 *******************************************************/
 
-    public static TextView title = null;
-    private Button listClients;
-    private Button back;
-    private ListView clients = null;
-    private BoxSelectAdapter IpAdapter;
+//    public static TextView title = null;
+//    private Button listClients;
+//    private Button back;
+//    private ListView clients = null;
+//    private BoxSelectAdapter IpAdapter;
 
 	/************************************************** 菜单部分 *******************************************************/
 	private ImageView imageTouYing;
@@ -41,16 +41,6 @@ public class YinXiangCategoryFragment extends Fragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-	}
-	
-	
-	@Override
-   	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-   			Bundle savedInstanceState) {
-       	View view= inflater.inflate(R.layout.activity_yinxiang_category, container,	false);
-       	
-
 		/**
 		 * 启动Http服务
          */
@@ -58,6 +48,16 @@ public class YinXiangCategoryFragment extends Fragment {
         getActivity().startService(http);
 
         initMedia();
+	}
+	
+	
+	@Override
+   	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+   			Bundle savedInstanceState) {
+       	View view= inflater.inflate(R.layout.fragment_yinxiang_category, container,	false);
+       	
+
+	
        	initView(view);
 		initEvent();
    		return  view;
@@ -79,10 +79,10 @@ public class YinXiangCategoryFragment extends Fragment {
         /**
          * IP连接部分
          */
-        title = (TextView) v.findViewById(R.id.title);
-        back = (Button) v.findViewById(R.id.btn_back);
-        clients = (ListView) v.findViewById(R.id.clients);
-        listClients = (Button) v.findViewById(R.id.btn_list);
+//        title = (TextView) v.findViewById(R.id.title);
+//        back = (Button) v.findViewById(R.id.btn_back);
+//        clients = (ListView) v.findViewById(R.id.clients);
+//        listClients = (Button) v.findViewById(R.id.btn_list);
 
 		/**
 		 * 菜单部分
@@ -98,48 +98,48 @@ public class YinXiangCategoryFragment extends Fragment {
         /**
          * IP连接部分
          */
-        IpAdapter = new BoxSelectAdapter(getActivity(),
-                ClientSendCommandService.serverIpList);
-        clients.setAdapter(IpAdapter);
-        clients.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                clients.setVisibility(View.GONE);
-                return false;
-            }
-        });
-        clients.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-                ClientSendCommandService.serverIP = ClientSendCommandService.serverIpList.get(arg2);
-                ClientSendCommandService.titletxt=ClientSendCommandService.getCurrentConnectBoxName();
-                title.setText(ClientSendCommandService.getCurrentConnectBoxName());
-                ClientSendCommandService.handler.sendEmptyMessage(2);
-                clients.setVisibility(View.GONE);
-            }
-        });
-        listClients.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    MyApplication.vibrator.vibrate(100);
-                    if (ClientSendCommandService.serverIpList.isEmpty()) {
-                        Toast.makeText(getActivity(), "未获取到服务器IP", Toast.LENGTH_LONG).show();
-                    } else {
-                        clients.setVisibility(View.VISIBLE);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MyApplication.vibrator.vibrate(100);
-                getActivity().onBackPressed();
-            }
-        });
+//        IpAdapter = new BoxSelectAdapter(getActivity(),
+//                ClientSendCommandService.serverIpList);
+//        clients.setAdapter(IpAdapter);
+//        clients.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                clients.setVisibility(View.GONE);
+//                return false;
+//            }
+//        });
+//        clients.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+//                ClientSendCommandService.serverIP = ClientSendCommandService.serverIpList.get(arg2);
+//                ClientSendCommandService.titletxt=ClientSendCommandService.getCurrentConnectBoxName();
+//                title.setText(ClientSendCommandService.getCurrentConnectBoxName());
+//                ClientSendCommandService.handler.sendEmptyMessage(2);
+//                clients.setVisibility(View.GONE);
+//            }
+//        });
+//        listClients.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                try {
+//                    MyApplication.vibrator.vibrate(100);
+//                    if (ClientSendCommandService.serverIpList.isEmpty()) {
+//                        Toast.makeText(getActivity(), "未获取到服务器IP", Toast.LENGTH_LONG).show();
+//                    } else {
+//                        clients.setVisibility(View.VISIBLE);
+//                    }
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        });
+//        back.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                MyApplication.vibrator.vibrate(100);
+//                getActivity().onBackPressed();
+//            }
+//        });
 
 		/**
 		 * 菜单部分
@@ -183,9 +183,9 @@ public class YinXiangCategoryFragment extends Fragment {
 	@Override
 	public void onResume() {
 		super.onResume();
-        if (ClientSendCommandService.titletxt != null) {
-            title.setText(ClientSendCommandService.titletxt);
-        }
+//        if (ClientSendCommandService.titletxt != null) {
+//            title.setText(ClientSendCommandService.titletxt);
+//        }
 	}
 
 //	@Override

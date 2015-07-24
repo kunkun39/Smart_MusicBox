@@ -21,8 +21,7 @@
         android:background="@drawable/background"     
         android:layout_marginTop="67.6dip"     
         android:orientation="vertical" >
-        
-        <!--屏蔽ip设置，统一由主界面控制 
+                
         <ImageView
             android:id="@+id/ball"
             android:layout_width="71dip"
@@ -30,6 +29,7 @@
             android:background="@drawable/smoothball"
             android:visibility="invisible" />
 
+     <!--屏蔽ip设置，统一由主界面控制 
         
         <LinearLayout
             android:id="@+id/banner"

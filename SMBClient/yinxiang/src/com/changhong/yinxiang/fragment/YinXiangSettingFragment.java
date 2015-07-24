@@ -1,6 +1,7 @@
 package com.changhong.yinxiang.fragment;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.IntentFilter;
 import android.os.Bundle;
@@ -23,14 +24,14 @@ import com.changhong.yinxiang.setting.AppHelpDialog;
 /**
  * Created by Jack Wang
  */
-public class YinXiangSettingFragment extends BaseFragment {
+public class YinXiangSettingFragment extends Fragment {
 
 	private static final String LOG_TAG = "SettingActivity";
 
 	/**
 	 * 返回到主菜单按钮
 	 */
-	private Button settingReturn;
+//	private Button settingReturn;
 	/**
 	 * 升级按钮, 下载的进度条, 系统升级的服务
 	 */
@@ -58,9 +59,8 @@ public class YinXiangSettingFragment extends BaseFragment {
 	@Override
    	public View onCreateView(LayoutInflater inflater, ViewGroup container,
    			Bundle savedInstanceState) {
-       	View view= inflater.inflate(R.layout.activity_yinxiang_setting, container,	false);
+       	View view= inflater.inflate(R.layout.fragment_yinxiang_setting, container,	false);
        	initialViews(view);
-
 		initialEvents();
 		initData();
 		
@@ -75,7 +75,7 @@ public class YinXiangSettingFragment extends BaseFragment {
 //		requestWindowFeature(Window.FEATURE_NO_TITLE);
 //		setContentView(R.layout.activity_yinxiang_setting);
 		// 初始化按钮和事件
-		settingReturn = (Button) v.findViewById(R.id.btn_back);
+//		settingReturn = (Button) v.findViewById(R.id.btn_back);
 		updateInfo = (TextView) v.findViewById(R.id.update_info);
 		updateBtn = (LinearLayout) v.findViewById(R.id.update_info_btn);
 
@@ -98,11 +98,11 @@ public class YinXiangSettingFragment extends BaseFragment {
 				int what = msg.arg1;
 				switch (what) {
 				case 100:
-					Toast.makeText(getApplicationContext(), "恭喜您，已经是最新版本了",
+					Toast.makeText(getActivity(), "恭喜您，已经是最新版本了",
 							Toast.LENGTH_SHORT).show();
 					break;
 				case 200:
-					Toast.makeText(getApplicationContext(), "你没连接网络，请查看设置",
+					Toast.makeText(getActivity(), "你没连接网络，请查看设置",
 							Toast.LENGTH_SHORT).show();
 					break;
 				case 300:
@@ -117,11 +117,11 @@ public class YinXiangSettingFragment extends BaseFragment {
 					if (m_pDialog != null && m_pDialog.isShowing()) {
 						m_pDialog.dismiss();
 					}
-					Toast.makeText(getApplicationContext(), "网络连接异常，请稍后重试",
+					Toast.makeText(getActivity(), "网络连接异常，请稍后重试",
 							Toast.LENGTH_SHORT).show();
 					break;
 				case 600:
-					Toast.makeText(getApplicationContext(), "网络连接异常，请稍后重试",
+					Toast.makeText(getActivity(), "网络连接异常，请稍后重试",
 							Toast.LENGTH_SHORT).show();
 					break;
 				default:
@@ -132,13 +132,13 @@ public class YinXiangSettingFragment extends BaseFragment {
 		};
 
 
-		settingReturn.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				MyApplication.vibrator.vibrate(100);
-                getActivity().onBackPressed();
-			}
-		});
+//		settingReturn.setOnClickListener(new OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				MyApplication.vibrator.vibrate(100);
+//                getActivity().onBackPressed();
+//			}
+//		});
 
 		updateBtn.setOnClickListener(new OnClickListener() {
 			@Override
@@ -159,7 +159,7 @@ public class YinXiangSettingFragment extends BaseFragment {
 		IntentFilter homefilter = new IntentFilter();
 		homefilter.addAction("SETTING_UPDATE_DOWNLOAD");
 		homefilter.addAction("SETTING_UPDATE_INSTALL");
-		registerReceiver(updateService.updateReceiver, homefilter);
+		getActivity().registerReceiver(updateService.updateReceiver, homefilter);
 	}
 
 	private String getCurrentSystemVersion() {
@@ -206,9 +206,6 @@ public class YinXiangSettingFragment extends BaseFragment {
 //		return super.onKeyDown(keyCode, event);
 //	}
 
-	@Override
-	public String setFlag(String flag) {
-		return "设置";
-	}
+
 
 }

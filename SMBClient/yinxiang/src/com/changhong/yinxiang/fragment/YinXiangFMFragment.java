@@ -31,12 +31,12 @@ public class YinXiangFMFragment extends Fragment {
 	public static Handler mHandler = null;
 
 	/************************************************** IP连接部分 *******************************************************/
-
-	private BoxSelectAdapter ipAdapter = null;
-	public static TextView title = null;
-	private ListView clients = null;
-	private Button list = null;
-	private Button back = null;
+   
+//	private BoxSelectAdapter ipAdapter = null;
+//	public static TextView title = null;
+//	private ListView clients = null;
+//	private Button list = null;
+//	private Button back = null;
 
 	/************************************************** 频道部分 *******************************************************/
 
@@ -59,7 +59,7 @@ public class YinXiangFMFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.activity_fm_switch, container,
+		View view = inflater.inflate(R.layout.fragment_fm_switch, container,
 				false);
 		initViewAndEvent(view);
 		return view;
@@ -67,57 +67,57 @@ public class YinXiangFMFragment extends Fragment {
 
 	private void initViewAndEvent(View v) {
 		FMlist = (GridView) v.findViewById(R.id.fmlist);
-		title = (TextView) v.findViewById(R.id.title);
-		clients = (ListView) v.findViewById(R.id.clients);
-		list = (Button) v.findViewById(R.id.btn_list);
-		back = (Button) v.findViewById(R.id.btn_back);
+//		title = (TextView) v.findViewById(R.id.title);
+//		clients = (ListView) v.findViewById(R.id.clients);
+//		list = (Button) v.findViewById(R.id.btn_list);
+//		back = (Button) v.findViewById(R.id.btn_back);
 
-		/**
-		 * IP part
-		 */
-		ipAdapter = new BoxSelectAdapter(getActivity(),
-				ClientSendCommandService.serverIpList);
-		clients.setAdapter(ipAdapter);
-		clients.setOnTouchListener(new View.OnTouchListener() {
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				clients.setVisibility(View.GONE);
-				return false;
-			}
-		});
-		clients.setOnItemClickListener(new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-					long arg3) {
-				ClientSendCommandService.serverIP = ClientSendCommandService.serverIpList
-						.get(arg2);
-				String boxName = ClientSendCommandService
-						.getCurrentConnectBoxName();
-				ClientSendCommandService.titletxt = boxName;
-				title.setText(boxName);
-				ClientSendCommandService.handler.sendEmptyMessage(2);
-				clients.setVisibility(View.GONE);
-			}
-		});
-		list.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if (ClientSendCommandService.serverIpList.isEmpty()) {
-					Toast.makeText(getActivity(),
-							"没有发现长虹智能机顶盒，请确认盒子和手机连在同一个路由器?", Toast.LENGTH_LONG)
-							.show();
-				} else {
-					clients.setVisibility(View.VISIBLE);
-				}
-			}
-		});
-		back.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				MyApplication.vibrator.vibrate(100);
-                getActivity().onBackPressed();
-			}
-		});
+//		/**
+//		 * IP part
+//		 */
+//		ipAdapter = new BoxSelectAdapter(getActivity(),
+//				ClientSendCommandService.serverIpList);
+//		clients.setAdapter(ipAdapter);
+//		clients.setOnTouchListener(new View.OnTouchListener() {
+//			@Override
+//			public boolean onTouch(View v, MotionEvent event) {
+//				clients.setVisibility(View.GONE);
+//				return false;
+//			}
+//		});
+//		clients.setOnItemClickListener(new OnItemClickListener() {
+//			@Override
+//			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+//					long arg3) {
+//				ClientSendCommandService.serverIP = ClientSendCommandService.serverIpList
+//						.get(arg2);
+//				String boxName = ClientSendCommandService
+//						.getCurrentConnectBoxName();
+//				ClientSendCommandService.titletxt = boxName;
+//				title.setText(boxName);
+//				ClientSendCommandService.handler.sendEmptyMessage(2);
+//				clients.setVisibility(View.GONE);
+//			}
+//		});
+//		list.setOnClickListener(new OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				if (ClientSendCommandService.serverIpList.isEmpty()) {
+//					Toast.makeText(getActivity(),
+//							"没有发现长虹智能机顶盒，请确认盒子和手机连在同一个路由器?", Toast.LENGTH_LONG)
+//							.show();
+//				} else {
+//					clients.setVisibility(View.VISIBLE);
+//				}
+//			}
+//		});
+//		back.setOnClickListener(new OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				MyApplication.vibrator.vibrate(100);
+//                getActivity().onBackPressed();
+//			}
+//		});
 		adapter = new FMAdapter(getActivity());
 		FMlist.setAdapter(adapter);
 	}
@@ -130,9 +130,9 @@ public class YinXiangFMFragment extends Fragment {
 	@Override
 	public void onResume() {
 		super.onResume();
-		 if (ClientSendCommandService.titletxt != null) {
-		 title.setText(ClientSendCommandService.titletxt);
-		 }
+//		 if (ClientSendCommandService.titletxt != null) {
+//		 title.setText(ClientSendCommandService.titletxt);
+//		 }
 	}
 
 	// @Override
@@ -178,8 +178,7 @@ public class YinXiangFMFragment extends Fragment {
 			final ViewHolder vh;
 			if (convertView == null) {
 				vh = new ViewHolder();
-				convertView = minflater
-						.inflate(R.layout.activity_fm_item, null);
+				convertView = minflater.inflate(R.layout.activity_fm_item, null);
 				vh.FMname = (TextView) convertView.findViewById(R.id.fmtxt);
 				vh.FMplay = (ImageView) convertView.findViewById(R.id.btn_fm);
 				convertView.setTag(vh);
@@ -190,7 +189,7 @@ public class YinXiangFMFragment extends Fragment {
 
 				vh.FMname.setText(ClientSendCommandService.serverFMInfo
 						.get(position));
-				vh.FMplay.setOnClickListener(new OnClickListener() {
+				convertView.setOnClickListener(new OnClickListener() {
 
 					@Override
 					public void onClick(View arg0) {
@@ -210,7 +209,7 @@ public class YinXiangFMFragment extends Fragment {
 							mPlayingBtn
 									.setBackgroundResource(R.drawable.fmplay);
 						}
-						mPlayingBtn = (ImageView) arg0;
+						mPlayingBtn =( (ViewHolder)arg0.getTag()).FMplay;
 						mPlayingBtn.setBackgroundResource(R.anim.playing_anim);
 						mAnimation = (AnimationDrawable) mPlayingBtn
 								.getBackground();

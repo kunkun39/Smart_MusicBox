@@ -24,7 +24,7 @@ public class TVNumInputDialog extends Dialog {
         wlp.width = WindowManager.LayoutParams.MATCH_PARENT;
         window.setAttributes(wlp);
         window.setGravity(Gravity.BOTTOM);
-        window.setWindowAnimations(R.style.dialogWindowAnim);
+//        window.setWindowAnimations(R.style.dialogWindowAnim);
         setContentView(R.layout.control_num_dialog);
 
         btn0 = (Button) findViewById(R.id.num0);

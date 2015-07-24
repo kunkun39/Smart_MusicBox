@@ -85,6 +85,7 @@ public class YinXiangMainFragmentActivity extends FragmentActivity {
 	 */
 	private Handler mhandler = null;
 
+	/******************************定义fragment***************************************/
 	private FragmentManager fragmentManager;
 	private RadioGroup radioGroup;
 
@@ -119,8 +120,7 @@ public class YinXiangMainFragmentActivity extends FragmentActivity {
 		/**
 		 * 启动手机端本地线程
 		 */
-		Intent service3 = new Intent(YinXiangMainFragmentActivity.this,
-				ClientLocalThreadRunningService.class);
+		Intent service3 = new Intent(YinXiangMainFragmentActivity.this,ClientLocalThreadRunningService.class);
 		startService(service3);
 	}
 
@@ -133,6 +133,8 @@ public class YinXiangMainFragmentActivity extends FragmentActivity {
 		list = (Button) findViewById(R.id.btn_list);
         Button power = (Button) findViewById(R.id.power);
 
+        
+        /*****************************初始化fragment****************************************/
 		fragmentManager = getFragmentManager();
 
 		radioGroup = (RadioGroup) findViewById(R.id.yx_rgtab);
@@ -167,7 +169,7 @@ public class YinXiangMainFragmentActivity extends FragmentActivity {
 		clients.setOnTouchListener(new View.OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				clients.setVisibility(View.GONE);
+//				clients.setVisibility(View.GONE);
 				return false;
 			}
 		});
