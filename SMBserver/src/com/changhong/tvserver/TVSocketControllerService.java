@@ -20,6 +20,7 @@ import java.util.Map;
 import android.content.*;
 import android.database.Cursor;
 import android.net.Uri;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -37,6 +38,7 @@ import com.chome.virtualkey.virtualkey;
 import com.changhong.tvserver.touying.image.ImageShowPlayingActivity;
 import com.changhong.tvserver.touying.music.MusicViewPlayingActivity;
 import com.changhong.tvserver.touying.video.VideoViewPlayingActivity;
+
 import android.app.Service;
 import android.util.JsonReader;
 import android.util.Log;
@@ -143,7 +145,7 @@ public class TVSocketControllerService extends Service {
                                 Log.e(TAG, "key:0");
                                 t.vkey_input(11, 1);
                             } else if (msg1.equals("key:1")) {
-                                Log.e(TAG, "key:");
+                                Log.e(TAG, "key:1");
                                 t.vkey_input(2, 1);
                             } else if (msg1.equals("key:2")) {
                                 Log.e(TAG, "key:2");
@@ -788,5 +790,19 @@ public class TVSocketControllerService extends Service {
             e.printStackTrace();
         }
     }
+
+	@Override
+	public int onStartCommand(Intent intent, int flags, int startId) {
+		// TODO Auto-generated method stub
+		
+		int i=intent.getIntExtra("message", 0);
+		if(1==i){
+			initFM();
+		}
+		return super.onStartCommand(intent, flags, startId);
+	}
+    
+    //---------系统方法
+    
 
 }

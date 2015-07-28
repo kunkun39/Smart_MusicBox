@@ -17,6 +17,7 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.GET_TASKS"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <!--<uses-permission android:name="android.permission.FORCE_STOP_PACKAGES"/>-->
 
     <application
@@ -64,6 +65,8 @@
         <activity android:name=".touying.image.ImageShowPlayingActivity"
                   android:theme="@android:style/Theme.NoTitleBar"/>
 
+        <activity android:name="com.changhong.tvserver.search.SearchActivity"
+            android:theme="@android:style/Theme.NoTitleBar"></activity>
         <!--service part-->
         <service android:name=".TVSocketControllerService"
                  android:enabled="true" android:exported="true" android:priority="1000">
@@ -74,6 +77,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
                 <action android:name="com.action.private_BOOT_COMPLETED"/>
+                <action android:name="com.changhong.action.fmaction"/>
             </intent-filter>
         </receiver>
 
