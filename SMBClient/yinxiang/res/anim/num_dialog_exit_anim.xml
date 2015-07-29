@@ -1,26 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<animation-list xmlns:android="http://schemas.android.com/apk/res/android" >
+<set xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <item
-        android:drawable="@drawable/playing_1"
-        android:duration="200"/>
-    <item
-        android:drawable="@drawable/playing_2"
-        android:duration="200"/>
-    <item
-        android:drawable="@drawable/playing_3"
-        android:duration="200"/>
-    <item
-        android:drawable="@drawable/playing_4"
-        android:duration="200"/>
-    <item
-        android:drawable="@drawable/playing_5"
-        android:duration="200"/>
-    <item
-        android:drawable="@drawable/playing_6"
-        android:duration="200"/>
-    <item
-        android:drawable="@drawable/playing_7"
-        android:duration="200"/>
+    <translate
+        android:duration="300"
+        android:fromYDelta="10"
+        android:toYDelta="640" />
+	<!-- <alpha
+        android:duration="100"
+        android:fromAlpha="1"
+        android:toAlpha="0" /> -->
 
-</animation-list>
+</set>

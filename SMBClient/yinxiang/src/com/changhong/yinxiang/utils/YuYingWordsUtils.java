@@ -30,11 +30,11 @@ public class YuYingWordsUtils {
         TV_CONTROL_KEYWORDS.put("key:ok", ok);
 
         List<String> volumnUp = new ArrayList<String>();
-        volumnUp.add("声音大点");volumnUp.add("大点声");volumnUp.add("大声点");volumnUp.add("加声音");volumnUp.add("开点声音");
+        volumnUp.add("声音大点");volumnUp.add("大点声");volumnUp.add("大声点");volumnUp.add("加声音");volumnUp.add("开点声音");volumnUp.add("音量加");volumnUp.add("音量+");
         TV_CONTROL_KEYWORDS.put("key:volumeup|key:volumeup", volumnUp);
 
         List<String> volumnDown = new ArrayList<String>();
-        volumnDown.add("声音小点");volumnDown.add("小点声");volumnDown.add("小声点");volumnDown.add("减声音");volumnDown.add("关点声音");volumnDown.add("观点声音");
+        volumnDown.add("声音小点");volumnDown.add("小点声");volumnDown.add("小声点");volumnDown.add("减声音");volumnDown.add("关点声音");volumnDown.add("观点声音");volumnUp.add("音量减");volumnUp.add("音量-");
         TV_CONTROL_KEYWORDS.put("key:volumedown|key:volumedown", volumnDown);
 
         List<String> tv = new ArrayList<String>();
@@ -138,8 +138,8 @@ public class YuYingWordsUtils {
             List<String> keywords = TV_CONTROL_KEYWORDS.get(key);
 
             for (String keyword : keywords) {
-                if(keyword.equals("key:volumeup|key:volumeup") || keyword.equals("key:volumedown|key:volumedown")) {
-                    if (searchWords.startsWith(keyword)) {
+                if(key.equals("key:volumeup|key:volumeup") || key.equals("key:volumedown|key:volumedown")) {
+                    if (searchWords.contains(keyword)) {
                         return key;
                     }
                 } else {
