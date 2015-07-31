@@ -21,9 +21,7 @@ import com.changhong.yinxiang.R;
 import com.changhong.yinxiang.service.UserUpdateService;
 import com.changhong.yinxiang.setting.AppHelpDialog;
 
-/**
- * Created by Jack Wang
- */
+
 public class YinXiangSettingFragment extends Fragment {
 
 	private static final String LOG_TAG = "SettingActivity";

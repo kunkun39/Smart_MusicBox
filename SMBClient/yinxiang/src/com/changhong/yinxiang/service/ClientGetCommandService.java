@@ -3,10 +3,12 @@ package com.changhong.yinxiang.service;
 import java.io.*;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.util.*;
 
 import android.app.ActivityManager;
 import android.content.Context;
+
 import com.changhong.common.domain.NetworkStatus;
 import com.changhong.common.service.ClientSendCommandService;
 import com.changhong.common.service.ClientSocketInterface;
@@ -17,6 +19,8 @@ import com.changhong.yinxiang.setting.NetEstimateUtils;
 
 import android.app.Service;
 import android.content.Intent;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -43,6 +47,7 @@ public class ClientGetCommandService extends Service implements ClientSocketInte
      */
     private long time = 0l;
 
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -53,8 +58,8 @@ public class ClientGetCommandService extends Service implements ClientSocketInte
     }
 
     private void initView() {
-        manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-
+    	
+        manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);        
         mHandler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
@@ -91,10 +96,10 @@ public class ClientGetCommandService extends Service implements ClientSocketInte
         public void run() {
             ClientSendCommandService.serverIpList.clear();
             DatagramSocket dgSocket = null;
-
             try {
                 dgSocket = new DatagramSocket(SERVER_IP_POST_PORT);
                 DatagramPacket dgPacket = null;
+                DatagramPacket outPacket = null;
 
                 while (true) {
                     try {
@@ -222,10 +227,21 @@ public class ClientGetCommandService extends Service implements ClientSocketInte
                         if (exit) {
                             break;
                         }
+                        
+                        /***************************************************20150726  YD add for autoCtrl Audio********************************************************/
+                  	  //将服务器的ip地址作为发送内容发给服务器
+                        byte[] send=(time+"").getBytes();
+                        outPacket=new DatagramPacket(send,send.length,dgPacket.getAddress(), SERVER_IP_POST_PORT);
+                        dgSocket.send(outPacket);
+
+                        /***************************************************20150726  YD add end********************************************************/
+
+                        
                     } catch (IOException e) {
                         e.printStackTrace();
                     } finally {
                         dgPacket = null;
+                        outPacket=null;
                     }
                 }
             } catch (Exception e) {
@@ -265,6 +281,9 @@ public class ClientGetCommandService extends Service implements ClientSocketInte
         mHandler.sendEmptyMessage(0);
         time = 0l;
     }
+    
+    
+ 
 
     /**
      * *****************************************************系统重载部分*******************************************
