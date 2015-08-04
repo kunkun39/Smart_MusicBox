@@ -22,9 +22,10 @@ public class SearchActivity extends Activity {
 	/**
 	 * 搜索类型定义
 	 */
-	private static final String music = "音乐";
-	private static final String movie = "电影";
+	private static final String music = "music";
+	private static final String movie = "movie";
 	private static final String[] type_str = { music, movie };
+	private static final String[] type_rcn_str = { "音乐", "电影" };
 	private String locType = music;
 	/**
 	 * 控件
@@ -53,7 +54,7 @@ public class SearchActivity extends Activity {
 
 	private void initData() {
 		adapter = new ArrayAdapter<String>(this,
-				android.R.layout.simple_spinner_item, type_str);
+				android.R.layout.simple_spinner_item, type_rcn_str);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		search_type.setAdapter(adapter);
 		search_type.setOnItemSelectedListener(new SpinnerSelectedListener());
