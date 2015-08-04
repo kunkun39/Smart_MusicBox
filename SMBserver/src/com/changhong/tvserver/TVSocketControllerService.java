@@ -36,6 +36,7 @@ import com.changhong.tvserver.utils.NetworkUtils;
 import com.changhong.tvserver.utils.StringUtils;
 import com.chome.virtualkey.virtualkey;
 import com.changhong.tvserver.search.SearchActivity;
+import com.changhong.tvserver.smartctrl.ClientOnLineMonitorService;
 import com.changhong.tvserver.touying.image.ImageShowPlayingActivity;
 import com.changhong.tvserver.touying.music.MusicViewPlayingActivity;
 import com.changhong.tvserver.touying.video.VideoViewPlayingActivity;
@@ -88,6 +89,9 @@ public class TVSocketControllerService extends Service {
     LcdManager mLcdManager=null;
     
     public static String CH_BOX_NAME = "音    箱";
+    
+    //YD add 20150726 接收ClientOnLineMonitorService发送过来的自动控制命令广播。
+    private AutoCtrlCommandReceiver autoCtrlReceiver=null;
     
     @Override
     public IBinder onBind(Intent intent) {
@@ -215,7 +219,7 @@ public class TVSocketControllerService extends Service {
                             	Log.e(TAG, "key:music");
                             	t.vkey_input(0x190, 1);
                             }
-                            //选择输入源部分
+                            //选择输入源部�?
                     		else if(msg1.equals("source:av1")){
                             	mLcdManager.lcdDsaCmdSend((byte) 0x60);
 								Intent intent = new Intent();
@@ -417,6 +421,13 @@ public class TVSocketControllerService extends Service {
 
         new send_heart_thread().start();
         new get_command().start();
+        
+        //YD add 20150726 注册自动控制监控发送的广播
+        autoCtrlReceiver=new AutoCtrlCommandReceiver();
+        IntentFilter  filter =new IntentFilter();
+        filter.addAction(ClientOnLineMonitorService.ACTION_AUTOCTRL_COMMAND);
+        registerReceiver(autoCtrlReceiver, filter);
+        
     }
 
     /*************************************************send heart part **************************************************/
@@ -424,8 +435,8 @@ public class TVSocketControllerService extends Service {
     /**
      * 服务端发送客户端心跳
      * <p>
-     * DatagramSocket:一开始就创建好
-     * DatagramPacket:接收一个创建一个, 这样免得发生阻塞
+     * DatagramSocket:一开始就创建�?
+     * DatagramPacket:接收一个创建一�? 这样免得发生阻塞
      */
     private class send_heart_thread extends Thread {
         public void run() {
@@ -488,7 +499,7 @@ public class TVSocketControllerService extends Service {
                             }
 
                             /**
-                             * 发送心跳
+                             * 发送心�?
                              */
                             Log.i(TAG, ">>>" + serverInfo);
                             byte[] b = serverInfo.getBytes();
@@ -527,8 +538,8 @@ public class TVSocketControllerService extends Service {
     /**
      * 服务端接收客户端发来的socket
      * <p>
-     * DatagramSocket:一开始就创建好
-     * DatagramPacket:接收一个创建一个, 这样免得发生阻塞
+     * DatagramSocket:一开始就创建�?
+     * DatagramPacket:接收一个创建一�? 这样免得发生阻塞
      */
     private class get_command extends Thread {
         public void run() {
@@ -644,7 +655,7 @@ public class TVSocketControllerService extends Service {
     }
 
     /**
-     * 记录上次打开的应用
+     * 记录上次打开的应�?
      */
     private String lastLunchApp = "";
 
@@ -798,7 +809,7 @@ public class TVSocketControllerService extends Service {
             if(cursor!=null)cursor.close();
 
             /**
-             * 输入FM列表到文件
+             * 输入FM列表到文�?
              */
             File FMIndexJson = new File(MyApplication.appInfoPath, "OttFMInfoJson.json");
             if (FMIndexJson.exists()) {
@@ -826,5 +837,31 @@ public class TVSocketControllerService extends Service {
     
     //---------系统方法
     
+	
+    /*****************************************************YD add 20150726  broadcast 接收clientmonitor 发送过来自动控制命令********************************************************/
+	   
+    private class   AutoCtrlCommandReceiver extends BroadcastReceiver{
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+                  String action=intent.getAction();
+                  if(action.equals(ClientOnLineMonitorService.ACTION_AUTOCTRL_COMMAND)){
+                	  msg1 = intent.getStringExtra("cmd");
+                	  Log.i(TAG,"autoCtrlCommand is "+msg1);
+                      handler.sendEmptyMessage(1);
+                  }		
+		}
+	   
+   }
+    /*****************************************************YD add 20150726  end********************************************************/
+
+	@Override
+	public void onDestroy() {
+		
+		//取消自动控制广播
+		unregisterReceiver(autoCtrlReceiver);
+		super.onDestroy();
+		
+	}
 
 }

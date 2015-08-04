@@ -37,6 +37,11 @@ public class MainActivity extends Activity {
 		
         Intent intent = new Intent(MainActivity.this, TVSocketControllerService.class);
         startService(intent);
+        
+        
+      //YD add 20150726 client状态监控服务
+        Intent  mIntent = new Intent(MainActivity.this, com.changhong.tvserver.smartctrl.ClientOnLineMonitorService.class);
+        startService(mIntent);
 		
 		chboxSave.setOnClickListener(new View.OnClickListener() {
             @Override
