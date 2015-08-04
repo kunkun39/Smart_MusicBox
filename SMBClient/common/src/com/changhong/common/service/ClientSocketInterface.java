@@ -43,7 +43,7 @@ public interface ClientSocketInterface {
 
 	// others
 	public static final int SERVER_IP_GET_PORT = 9000;
-	public static final int SERVER_IP_POST_PORT = 9001;
+	public static final int SERVER_IP_POST_PORT = 9004;
 	public static final int KEY_PORT = 9002;
     public static final int SWITCH_KEY_PORT = 9005;
 	public static final String STR_HEATBEAT = "BONG!";
