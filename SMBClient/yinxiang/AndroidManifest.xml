@@ -89,6 +89,7 @@
                 android:name="com.changhong.yinxiang.activity.YinXiangFMActivity"
                 android:screenOrientation="portrait" />
 
+        <activity android:name="com.changhong.yinxiang.activity.SearchActivity"/>
         <service android:name="com.changhong.yinxiang.nanohttpd.HTTPDService" />
 
         <service android:name=".service.ClientGetCommandService" android:enabled="true" android:exported="true" android:priority="1000"/>

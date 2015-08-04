@@ -16,6 +16,7 @@ import com.changhong.common.service.ClientSendCommandService;
 import com.changhong.common.system.MyApplication;
 import com.changhong.common.widgets.BoxSelectAdapter;
 import com.changhong.yinxiang.R;
+import com.changhong.yinxiang.activity.SearchActivity;
 import com.changhong.yinxiang.activity.YinXiangMusicViewActivity;
 import com.changhong.yinxiang.activity.YinXiangPictureCategoryActivity;
 import com.changhong.yinxiang.activity.YinXiangVedioViewActivity;
@@ -172,7 +173,9 @@ public class YinXiangCategoryFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 MyApplication.vibrator.vibrate(100);
-                Toast.makeText(getActivity(), "暂不支持，敬请期待...", 3000).show();
+                Intent intent = new Intent(getActivity(), SearchActivity.class);
+                startActivity(intent);
+//                Toast.makeText(getActivity(), "暂不支持，敬请期待...", 3000).show();
             }
         });
 
