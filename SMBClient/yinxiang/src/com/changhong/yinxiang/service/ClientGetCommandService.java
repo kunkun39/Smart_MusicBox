@@ -27,283 +27,317 @@ import android.os.Message;
 import android.os.SystemClock;
 import android.util.Log;
 
-public class ClientGetCommandService extends Service implements ClientSocketInterface {
+public class ClientGetCommandService extends Service implements
+		ClientSocketInterface {
 
-    protected static final String TAG = "CHTVhelper";
+	protected static final String TAG = "CHTVhelper";
 
-    private ActivityManager manager;
-    /**
-     * message handler
-     */
-    public static Handler mHandler = null;
+	private ActivityManager manager;
+	/**
+	 * message handler
+	 */
+	public static Handler mHandler = null;
 
-    /**
-     * the parameter which used for check the application will exist or not
-     */
-    private boolean exit = false;
+	/**
+	 * the parameter which used for check the application will exist or not
+	 */
+	private boolean exit = false;
 
-    /**
-     * client and heart time internal check
-     */
-    private long time = 0l;
+	/**
+	 * client and heart time internal check
+	 */
+	private long time = 0l;
 
+	// YD add for client heartBeat
+	public static String CH_CLIENT_HEARTBEAT = "client | heartBeat";
+	private long delaySend = 0;
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
+	@Override
+	public void onCreate() {
+		super.onCreate();
 
-        initView();
+		initView();
 
-        initThreads();
-    }
+		initThreads();
 
-    private void initView() {
-    	
-        manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);        
-        mHandler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                switch (msg.what) {
-                    case 0:
-                        //set every activity title when client connect to server
-                        ClientTitleSettingService.setClientActivityTitle();
-                        break;
-                    case 1:
-                        //use change server refresh the all channel, please also check ClientSendCommandService
-                        break;
-                    case 3:
-                        break;
-                    default:
-                        break;
-                }
-                super.handleMessage(msg);
-            }
-        };
-    }
+	}
 
-    private void initThreads() {
+	private void initView() {
 
-        new GetServerIP().start();
+		manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+		mHandler = new Handler() {
+			@Override
+			public void handleMessage(Message msg) {
+				switch (msg.what) {
+				case 0:
+					// set every activity title when client connect to server
+					ClientTitleSettingService.setClientActivityTitle();
+					break;
+				case 1:
+					// use change server refresh the all channel, please also
+					// check ClientSendCommandService
+					break;
+				case 3:
+					break;
+				default:
+					break;
+				}
+				super.handleMessage(msg);
+			}
+		};
+	}
 
-        new BoxMinitorThread().start();
+	private void initThreads() {
 
-    }
+		new GetServerIP().start();
 
-    /*************************************************手机端不停的获得盒子广播线程*****************************************/
+		new BoxMinitorThread().start();
 
-    private class GetServerIP extends Thread {
+	}
 
-        public void run() {
-            ClientSendCommandService.serverIpList.clear();
-            DatagramSocket dgSocket = null;
-            try {
-                dgSocket = new DatagramSocket(SERVER_IP_POST_PORT);
-                DatagramPacket dgPacket = null;
-                DatagramPacket outPacket = null;
+	/************************************************* 手机端不停的获得盒子广播线程 *****************************************/
 
-                while (true) {
-                    try {
-                        /**
-                         * 接收Socket
-                         */
-                        byte[] by = new byte[512];
-                        dgPacket = new DatagramPacket(by, by.length);
-                        dgSocket.receive(dgPacket);
+	private class GetServerIP extends Thread {
 
-                        /**
-                         * 处理Socket
-                         */
-                        String serverAddress = dgPacket.getAddress().getHostAddress();
+		public void run() {
+			ClientSendCommandService.serverIpList.clear();
+			DatagramSocket dgSocket = null;
+			try {
+				dgSocket = new DatagramSocket(SERVER_IP_POST_PORT);
+				DatagramPacket dgPacket = null;
+				DatagramPacket outPacket = null;
+
+				while (true) {
+					try {
+						/**
+						 * 接收Socket
+						 */
+						byte[] by = new byte[512];
+						dgPacket = new DatagramPacket(by, by.length);
+						dgSocket.receive(dgPacket);
+
+						/**
+						 * 处理Socket
+						 */
+						String serverAddress = dgPacket.getAddress()
+								.getHostAddress();
 						String content = new String(by, 0, dgPacket.getLength());
-                        String[] tokens = StringUtils.delimitedListToStringArray(content, "|");
-                        String boxName = NetworkUtils.convertCHBoxName(tokens[0]);
-                        if (StringUtils.hasLength(serverAddress)) {
-                            Log.w(TAG, serverAddress);
+						String[] tokens = StringUtils
+								.delimitedListToStringArray(content, "|");
+						String boxName = NetworkUtils
+								.convertCHBoxName(tokens[0]);
+						if (StringUtils.hasLength(serverAddress)) {
+							Log.w(TAG, serverAddress);
 
-                            if (!ClientSendCommandService.serverIpList.contains(serverAddress)) {
-                                ClientSendCommandService.serverIpList.add(serverAddress);
-								ClientSendCommandService.serverIpListMap.put(serverAddress, boxName);
-                                /**
-                                 * 如果用户已经选择了IP，就不用选择了，如果为空，就按照系统自动分配
-                                 */
-                                if (!StringUtils.hasLength(ClientSendCommandService.serverIP)) {
-                                    ClientSendCommandService.serverIP = ClientSendCommandService.serverIpList.get(0);
+							if (!ClientSendCommandService.serverIpList
+									.contains(serverAddress)) {
+								ClientSendCommandService.serverIpList
+										.add(serverAddress);
+								ClientSendCommandService.serverIpListMap.put(
+										serverAddress, boxName);
+								/**
+								 * 如果用户已经选择了IP，就不用选择了，如果为空，就按照系统自动分配
+								 */
+								if (!StringUtils
+										.hasLength(ClientSendCommandService.serverIP)) {
+									ClientSendCommandService.serverIP = ClientSendCommandService.serverIpList
+											.get(0);
 
-                                }
-                                ClientSendCommandService.titletxt = boxName;
-                                time = System.currentTimeMillis();
-                                /**
-                                 * 更细所有的频道TITLE
-                                 */
-                                mHandler.sendEmptyMessage(0);
-                                Log.e("COMMAND_CLEAN_1", serverAddress + "-" + ClientSendCommandService.serverIP);
+								}
+								ClientSendCommandService.titletxt = boxName;
+								time = System.currentTimeMillis();
+								/**
+								 * 更细所有的频道TITLE
+								 */
+								mHandler.sendEmptyMessage(0);
+								Log.e("COMMAND_CLEAN_1", serverAddress + "-"
+										+ ClientSendCommandService.serverIP);
 
-                            } else if (ClientSendCommandService.serverIP != null && serverAddress.equals(ClientSendCommandService.serverIP)) {
-                                Log.e("COMMAND_CLEAN_2", serverAddress + "-" + ClientSendCommandService.serverIP);
-                                /**
-                                 * 更新当前server的活动时间
-                                 */
-                                time = System.currentTimeMillis();
+							} else if (ClientSendCommandService.serverIP != null
+									&& serverAddress
+											.equals(ClientSendCommandService.serverIP)) {
+								Log.e("COMMAND_CLEAN_2", serverAddress + "-"
+										+ ClientSendCommandService.serverIP);
+								/**
+								 * 更新当前server的活动时间
+								 */
+								time = System.currentTimeMillis();
 
-                                /**
-                                 * 设置服务端网络状态
-                                 */
-                                try {
-                                    NetEstimateUtils.serverNetworkStatus = NetworkStatus.valueOf(tokens[1]);
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
+								/**
+								 * 设置服务端网络状态
+								 */
+								try {
+									NetEstimateUtils.serverNetworkStatus = NetworkStatus
+											.valueOf(tokens[1]);
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
 
-                                /**
-                                 * 音乐和视频播放
-                                 */
-                                if (tokens.length == 6) {
-                                    ActivityManager.RunningTaskInfo info = manager.getRunningTasks(1).get(0);
-                                    String shortClassName = info.topActivity.getClassName();
+								/**
+								 * 音乐和视频播放
+								 */
+								if (tokens.length == 6) {
+									ActivityManager.RunningTaskInfo info = manager
+											.getRunningTasks(1).get(0);
+									String shortClassName = info.topActivity
+											.getClassName();
 
-                                    //视频播放
-                                    if (tokens[2].equals("vedio_play")) {
-//                                        if ("com.changhong.touying.activity.VedioDetailsActivity".equals(shortClassName)) {
-//                                            try {
-//                                                if (VedioDetailsActivity.handler != null) {
-//                                                    Message message = new Message();
-//                                                    message.what = 0;
-//                                                    message.obj = tokens[3] + "|" + tokens[4] + "|" + tokens[5];
-//                                                    VedioDetailsActivity.handler.sendMessage(message);
-//                                                }
-//                                            } catch (Exception e) {
-//                                                e.printStackTrace();
-//                                            }
-//                                        }
-                                    }
+									// 视频播放
+									if (tokens[2].equals("vedio_play")) {
+										// if
+										// ("com.changhong.touying.activity.VedioDetailsActivity".equals(shortClassName))
+										// {
+										// try {
+										// if (VedioDetailsActivity.handler !=
+										// null) {
+										// Message message = new Message();
+										// message.what = 0;
+										// message.obj = tokens[3] + "|" +
+										// tokens[4] + "|" + tokens[5];
+										// VedioDetailsActivity.handler.sendMessage(message);
+										// }
+										// } catch (Exception e) {
+										// e.printStackTrace();
+										// }
+										// }
+									}
 
-                                    //音乐播放
-                                    if (tokens[2].equals("music_play")) {
-//                                        if ("com.changhong.touying.activity.MusicDetailsActivity".equals(shortClassName)) {
-//                                            try {
-//                                                if (MusicDetailsActivity.handler != null) {
-//                                                    Message message = new Message();
-//                                                    message.what = 0;
-//                                                    message.obj = tokens[3] + "|" + tokens[4] + "|" + tokens[5];
-//                                                    MusicDetailsActivity.handler.sendMessage(message);
-//                                                }
-//                                            } catch (Exception e) {
-//                                                e.printStackTrace();
-//                                            }
-//                                        }
+									// 音乐播放
+									if (tokens[2].equals("music_play")) {
+										// if
+										// ("com.changhong.touying.activity.MusicDetailsActivity".equals(shortClassName))
+										// {
+										// try {
+										// if (MusicDetailsActivity.handler !=
+										// null) {
+										// Message message = new Message();
+										// message.what = 0;
+										// message.obj = tokens[3] + "|" +
+										// tokens[4] + "|" + tokens[5];
+										// MusicDetailsActivity.handler.sendMessage(message);
+										// }
+										// } catch (Exception e) {
+										// e.printStackTrace();
+										// }
+										// }
 
-                                    }
-                                }
+									}
+								}
 
-                                /**
-                                 * 音乐和是视频播放结束
-                                 */
-                                if (tokens.length == 4 && tokens[2].equals("play_stop")) {
-                                    //视频和音乐播放停止, 视频的停止信号为1，因为的停止信号为2
-//                                    int stopTag = Integer.valueOf(tokens[3]);
-//
-//                                    if (stopTag == 1) {
-//                                        if (VedioDetailsActivity.handler != null) {
-//                                            VedioDetailsActivity.handler.sendEmptyMessage(1);
-//                                        }
-//                                    } else if (stopTag == 2) {
-//                                        if (MusicDetailsActivity.handler != null) {
-//                                            MusicDetailsActivity.handler.sendEmptyMessage(1);
-//                                        }
-//                                    }
-                                }
+								/**
+								 * 音乐和是视频播放结束
+								 */
+								if (tokens.length == 4
+										&& tokens[2].equals("play_stop")) {
+									// 视频和音乐播放停止, 视频的停止信号为1，因为的停止信号为2
+									// int stopTag = Integer.valueOf(tokens[3]);
+									//
+									// if (stopTag == 1) {
+									// if (VedioDetailsActivity.handler != null)
+									// {
+									// VedioDetailsActivity.handler.sendEmptyMessage(1);
+									// }
+									// } else if (stopTag == 2) {
+									// if (MusicDetailsActivity.handler != null)
+									// {
+									// MusicDetailsActivity.handler.sendEmptyMessage(1);
+									// }
+									// }
+								}
 
-                                /**
-                                 * 没有播放音频和视频的情况, 关闭httpserver
-                                 */
-                                if(tokens.length == 2) {
-                                    //HTTPD的使用状态
-                                    MobilePerformanceUtils.httpServerUsing = false;
-                                }
-                            } else {
-                                Log.e("COMMAND_CLEAN_3", serverAddress + "-" + ClientSendCommandService.serverIP);
-                            }
-                        }
-                        if (exit) {
-                            break;
-                        }
-                        
-                        /***************************************************20150726  YD add for autoCtrl Audio********************************************************/
-                  	  //将服务器的ip地址作为发送内容发给服务器
-                        byte[] send=(time+"").getBytes();
-                        outPacket=new DatagramPacket(send,send.length,dgPacket.getAddress(), SERVER_IP_POST_PORT);
-                        dgSocket.send(outPacket);
+								/**
+								 * 没有播放音频和视频的情况, 关闭httpserver
+								 */
+								if (tokens.length == 2) {
+									// HTTPD的使用状态
+									MobilePerformanceUtils.httpServerUsing = false;
+								}
+							} else {
+								Log.e("COMMAND_CLEAN_3", serverAddress + "-"
+										+ ClientSendCommandService.serverIP);
+							}
+						}
+						if (exit) {
+							break;
+						}
 
-                        /***************************************************20150726  YD add end********************************************************/
+						/*************************************************** 20150726 YD add for autoCtrl Audio ********************************************************/
+						// 将服务器的ip地址作为发送内容发给服务器.没30秒发送一次
+						long curTime = System.currentTimeMillis();
+						if ((curTime - delaySend) > 30000) {
+							
+							byte[] send = CH_CLIENT_HEARTBEAT.getBytes();
+							outPacket = new DatagramPacket(send, send.length,dgPacket.getAddress(), CLIENT_IP_POST_PORT);
+							dgSocket.send(outPacket);
+							delaySend = curTime;
+						}
 
-                        
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } finally {
-                        dgPacket = null;
-                        outPacket=null;
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                try {
-                    if (dgSocket != null) {
-                        dgSocket.close();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
+						/*************************************************** 20150726 YD add end ********************************************************/
 
-    /***********************************************手机端不停的监控盒子是否有广播发出**************************************/
+					} catch (IOException e) {
+						e.printStackTrace();
+					} finally {
+						dgPacket = null;
+						outPacket = null;
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					if (dgSocket != null) {
+						dgSocket.close();
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
 
-    private class BoxMinitorThread extends Thread {
+	/*********************************************** 手机端不停的监控盒子是否有广播发出 **************************************/
 
-        public void run() {
-            while (true) {
-                long during = System.currentTimeMillis() - time;
-                if (during > 4000 && time != 0l) {
-                    Log.e("COMMAND_CLEAN", String.valueOf(during));
-                    clearIpList();
-                }
-                SystemClock.sleep(1000);
-            }
-        }
-    }
+	private class BoxMinitorThread extends Thread {
 
-    private void clearIpList() {
-        ClientSendCommandService.serverIpList.clear();
-        ClientSendCommandService.serverIP = null;
-        ClientSendCommandService.titletxt = "未连接";
-        mHandler.sendEmptyMessage(0);
-        time = 0l;
-    }
-    
-    
- 
+		public void run() {
+			while (true) {
+				long during = System.currentTimeMillis() - time;
+				if (during > 4000 && time != 0l) {
+					Log.e("COMMAND_CLEAN", String.valueOf(during));
+					clearIpList();
+				}
+				SystemClock.sleep(1000);
+			}
+		}
+	}
 
-    /**
-     * *****************************************************系统重载部分*******************************************
-     */
+	private void clearIpList() {
+		ClientSendCommandService.serverIpList.clear();
+		ClientSendCommandService.serverIP = null;
+		ClientSendCommandService.titletxt = "未连接";
+		mHandler.sendEmptyMessage(0);
+		time = 0l;
+	}
 
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
+	/**
+	 * *****************************************************系统重载部分**************
+	 * *****************************
+	 */
 
-    @Override
-    public boolean onUnbind(Intent intent) {
-        return super.onUnbind(intent);
-    }
+	@Override
+	public IBinder onBind(Intent intent) {
+		return null;
+	}
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        exit = true;
-    }
+	@Override
+	public boolean onUnbind(Intent intent) {
+		return super.onUnbind(intent);
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		exit = true;
+	}
 
 }
-
