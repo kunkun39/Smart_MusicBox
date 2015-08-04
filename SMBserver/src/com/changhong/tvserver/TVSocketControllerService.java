@@ -35,6 +35,7 @@ import android.os.SystemClock;
 import com.changhong.tvserver.utils.NetworkUtils;
 import com.changhong.tvserver.utils.StringUtils;
 import com.chome.virtualkey.virtualkey;
+import com.changhong.tvserver.search.SearchActivity;
 import com.changhong.tvserver.touying.image.ImageShowPlayingActivity;
 import com.changhong.tvserver.touying.music.MusicViewPlayingActivity;
 import com.changhong.tvserver.touying.video.VideoViewPlayingActivity;
@@ -397,6 +398,12 @@ public class TVSocketControllerService extends Service {
                             	intent.putExtra("fmname", msg1.substring(3));
                             	sendBroadcast(intent);
                             }
+                            
+                            //搜索音乐部分
+                            else if(msg1.startsWith("search:")){
+                            	handleSearchMsg(msg1);
+                            	Log.i("mmmm", "search:misic-"+msg1);
+                            }
                             break;
                         default:
                             break;
@@ -751,6 +758,21 @@ public class TVSocketControllerService extends Service {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra("musicpath", msg);
         startActivity(intent);
+    }
+    
+    private void handleSearchMsg(String str){
+    	String[] keys=StringUtils.delimitedListToStringArray(str, "|");
+    	if(keys.length!=3){
+    		return;
+    	}
+    	if(keys[1].equals("music")){
+    		Intent intent=new Intent();
+    		intent.putExtra(SearchActivity.keyWordsName, keys[2]);
+    		intent.setClass(TVSocketControllerService.this, SearchActivity.class);
+    		startActivity(intent);
+    	}else if(keys[1].equals("movie")){
+    		
+    	}
     }
     /*
     *init FM 列表
