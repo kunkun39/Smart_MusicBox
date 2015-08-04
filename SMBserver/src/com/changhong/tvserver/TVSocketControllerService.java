@@ -13,37 +13,39 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import android.content.*;
-import android.database.Cursor;
-import android.net.Uri;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.app.ActivityManager;
+import android.app.Service;
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
+import android.content.ContentResolver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.LcdManager;
 import android.os.Message;
 import android.os.SystemClock;
+import android.util.JsonReader;
+import android.util.Log;
 
-import com.changhong.tvserver.utils.NetworkUtils;
-import com.changhong.tvserver.utils.StringUtils;
-import com.chome.virtualkey.virtualkey;
 import com.changhong.tvserver.search.SearchActivity;
 import com.changhong.tvserver.smartctrl.ClientOnLineMonitorService;
 import com.changhong.tvserver.touying.image.ImageShowPlayingActivity;
 import com.changhong.tvserver.touying.music.MusicViewPlayingActivity;
 import com.changhong.tvserver.touying.video.VideoViewPlayingActivity;
-
-import android.app.Service;
-import android.util.JsonReader;
-import android.util.Log;
+import com.changhong.tvserver.utils.NetworkUtils;
+import com.changhong.tvserver.utils.StringUtils;
+import com.chome.virtualkey.virtualkey;
 
 
 public class TVSocketControllerService extends Service {
@@ -61,6 +63,10 @@ public class TVSocketControllerService extends Service {
      */
     private String ip = null;
 
+    /**
+     * heart
+     */
+    private static final int heartPort =9004;
     /**
      * handle for this service
      */
@@ -503,7 +509,7 @@ public class TVSocketControllerService extends Service {
                              */
                             Log.i(TAG, ">>>" + serverInfo);
                             byte[] b = serverInfo.getBytes();
-                            dgPacket = new DatagramPacket(b, b.length, InetAddress.getByName("255.255.255.255"), 9001);
+                            dgPacket = new DatagramPacket(b, b.length, InetAddress.getByName("255.255.255.255"), heartPort);
                             dgSocket.send(dgPacket);
                         } else {
                             Log.e(TAG, "ip>>>not get the ip");
@@ -779,7 +785,8 @@ public class TVSocketControllerService extends Service {
     	if(keys[1].equals("music")){
     		Intent intent=new Intent();
     		intent.putExtra(SearchActivity.keyWordsName, keys[2]);
-    		intent.setClass(TVSocketControllerService.this, SearchActivity.class);
+    		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    		intent.setClass(this, SearchActivity.class);
     		startActivity(intent);
     	}else if(keys[1].equals("movie")){
     		
