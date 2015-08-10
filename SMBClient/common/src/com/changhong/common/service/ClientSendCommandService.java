@@ -182,7 +182,6 @@ public class ClientSendCommandService extends Service implements ClientSocketInt
 
                                     DatagramPacket dgPacket = new DatagramPacket(b, b.length, InetAddress.getByName(serverIP), SWITCH_KEY_PORT);
                                     dgSocket.send(dgPacket);
-                                    Log.i("ysharp", "udp package send");
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 } finally {
@@ -292,7 +291,7 @@ public class ClientSendCommandService extends Service implements ClientSocketInt
                     stringappend.append(new String(b, 0, length));
                 }
                 sss = stringappend.toString();
-                Log.i(TAG, sss);
+//                Log.i(TAG, sss);
                 inreader.close();
                 instream.close();
             } else {
@@ -349,7 +348,7 @@ public class ClientSendCommandService extends Service implements ClientSocketInt
     				stringappend.append(new String(b, 0, length));
     			}
     			sss = stringappend.toString();
-    			Log.i(TAG, sss);
+//    			Log.i(TAG, sss);
     			inreader.close();
     			instream.close();
     		} else {
