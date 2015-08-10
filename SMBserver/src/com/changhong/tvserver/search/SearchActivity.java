@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.widget.EditText;
 import android.widget.ListView;
 
@@ -31,7 +33,7 @@ public class SearchActivity extends Activity{
 		// TODO Auto-generated method stub
 		super.onCreate(arg0);
 		initView();
-		
+		initEvent();
 		
 	}
 
@@ -53,6 +55,33 @@ public class SearchActivity extends Activity{
 			searchKeyWords.setText(s_KeyWords);
 			search(s_KeyWords);
 		}
+	}
+	
+	private void initEvent(){
+		searchKeyWords.addTextChangedListener(new TextWatcher() {
+			
+			@Override
+			public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
+					int arg3) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void afterTextChanged(Editable arg0) {
+				// TODO Auto-generated method stub
+				String text = arg0.toString();
+                if (!TextUtils.isEmpty(text)) {
+                    search(text);
+                }
+			}
+		});
 	}
 	
 	private void search(final String keyWords) {
