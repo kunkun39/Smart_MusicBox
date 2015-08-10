@@ -18,4 +18,6 @@
     <string name="vch_name">语音控制帮助</string>
     <string name="vch_content">"        "1、请按住屏幕任何地方，开始说话，松开后，助手自动为您识别指令。目前支持的语音指令，可以帮助您换台和启动盒子里的程序，更多指令敬请期待&#8230; \n"        "2、换台指令：如说出“中央一台”，盒子将会换到中央一台\n"        "3、启动程序指令：如说出“打开电视助手”，盒子将自动启动手机助手程序</string>
     <string name="system_score">系统评分</string>
+    <string name="error_response">请求失败</string>
+    <string name="error_empty_keyword">搜索内容不能为空</string>
 </resources>
