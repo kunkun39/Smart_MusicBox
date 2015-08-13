@@ -117,7 +117,9 @@ public abstract class SocketController implements ClientSocketInterface {
                                 mRemoteInfo.setIp(ip);
                             Log.d(TAG, "getIP:" + ip);
 
-                            byte[] ipBytes = mRemoteInfo.getIp().getBytes("ISO-8859-1");//ip.getBytes();
+//                            byte[] ipBytes = mRemoteInfo.getIp().getBytes("ISO-8859-1");//ip.getBytes();
+                            byte[] ipBytes ="192.168.0.200".getBytes("ISO-8859-1");//ip.getBytes();
+
                             try {
                                 clientSocket.send(new DatagramPacket(ipBytes, ipBytes.length, receivePacket.getAddress(), INPUT_IP_GET_PORT));
                             } catch (NumberFormatException e) {

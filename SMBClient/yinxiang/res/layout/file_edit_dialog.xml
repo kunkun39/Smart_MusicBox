@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="100dip"
+	android:orientation="horizontal"
+	android:background="@drawable/yinxiaoback">
+	
+    <ImageView 
+        android:id="@+id/fileedit_cancle"
+        android:background="@drawable/file_edit_btn_bg"
+        android:src="@drawable/edit_remove"
+        android:adjustViewBounds="true"        
+        android:layout_width="0dip"
+		android:layout_height="match_parent"
+	    android:layout_weight="1"
+	    android:layout_margin="20dip"
+	    
+	     />
+    <ImageView 
+        android:id="@+id/fileedit_clock"
+        android:background="@drawable/file_edit_btn_bg"
+        android:src="@drawable/edit_clock"
+        android:adjustViewBounds="true" 
+        android:layout_width="0dip"
+		android:layout_height="match_parent"
+	    android:layout_weight="1"
+	    android:layout_margin="20dip"
+	    
+        />
+    <ImageView
+        android:id="@+id/fileedit_copy"
+       android:background="@drawable/file_edit_btn_bg"
+        android:src="@drawable/edit_copy"
+        android:adjustViewBounds="true"       
+        android:layout_width="0dip"
+		android:layout_height="match_parent"
+	    android:layout_weight="1"
+	    android:layout_margin="20dip"
+        />
+    
+</LinearLayout>

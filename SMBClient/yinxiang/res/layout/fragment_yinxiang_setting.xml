@@ -9,7 +9,6 @@
         android:layout_width="150dip"
         android:layout_height="fill_parent"
         android:layout_alignParentRight="true"
-        android:background="#00ffcc"
         android:visibility="gone" >
 
         <include layout="@layout/sidemenu" />

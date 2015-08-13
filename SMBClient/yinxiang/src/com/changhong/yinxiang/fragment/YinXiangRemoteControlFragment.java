@@ -140,7 +140,7 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 		Button btn_v1 = (Button) v.findViewById(R.id.volume1);
 		Button btn_vtv = (Button) v.findViewById(R.id.tv);
 		Button btn_vchannel = (Button) v.findViewById(R.id.channel);
-		Button btn_vnum = (Button) v.findViewById(R.id.num);
+//		Button btn_vnum = (Button) v.findViewById(R.id.num);
 		// Button back = (Button) v.findViewById(R.id.btn_back);
 		// Button power = (Button) v.findViewById(R.id.power);
 		Button home = (Button) v.findViewById(R.id.btn_home);
@@ -206,16 +206,16 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 			}
 		});
 
-		btn_vnum.setOnTouchListener(this);
-		btn_vnum.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				MyApplication.vibrator.vibrate(100);
-				if (numInputDialog != null && !numInputDialog.isShowing()) {
-					numInputDialog.show();
-				}
-			}
-		});
+//		btn_vnum.setOnTouchListener(this);
+//		btn_vnum.setOnClickListener(new OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				MyApplication.vibrator.vibrate(100);
+//				if (numInputDialog != null && !numInputDialog.isShowing()) {
+//					numInputDialog.show();
+//				}
+//			}
+//		});
 
 		// back.setOnTouchListener(this);
 		home.setOnClickListener(this);
@@ -715,16 +715,24 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 				img_v.setBackgroundResource(R.drawable.tv_control_menu);
 			}
 			break;
-		case R.id.num:
+//		case R.id.num:
+//			if (event.getAction() == MotionEvent.ACTION_DOWN) {
+//				LongKeyValue = "";
+//				img_v.setBackgroundResource(R.drawable.tv_control_menu_num);
+//			} else if (event.getAction() == MotionEvent.ACTION_UP) {
+//				img_v.setBackgroundResource(R.drawable.tv_control_menu);
+//			}
+//			break;
+			
+			case R.id.btn_menu:
 			if (event.getAction() == MotionEvent.ACTION_DOWN) {
 				LongKeyValue = "";
-				img_v.setBackgroundResource(R.drawable.tv_control_menu_num);
+				img_v.setBackgroundResource(R.drawable.tv_control_menu_menu);
 			} else if (event.getAction() == MotionEvent.ACTION_UP) {
 				img_v.setBackgroundResource(R.drawable.tv_control_menu);
 			}
 			break;
 		case R.id.btn_home:
-		case R.id.btn_menu:
 		case R.id.btn_b:
 			LongKeyValue = "";
 			break;

@@ -684,7 +684,8 @@ public class YinXiangPictureDetailsActivity extends Activity implements GestureD
                 array.put(1, tmpSmallImagePath);
             } else {
                 array.put(1, "");
-            }
+            }       
+            
             o.put("urls", array);
 
             //client ip

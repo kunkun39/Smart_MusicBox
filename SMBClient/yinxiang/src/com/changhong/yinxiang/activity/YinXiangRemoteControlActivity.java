@@ -670,14 +670,14 @@ public class YinXiangRemoteControlActivity extends TVInputDialogActivity impleme
                     img_v.setBackgroundResource(R.drawable.tv_control_menu);
                 }
                 break;
-            case R.id.num:
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    LongKeyValue = "";
-                    img_v.setBackgroundResource(R.drawable.tv_control_menu_num);
-                } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                    img_v.setBackgroundResource(R.drawable.tv_control_menu);
-                }
-                break;
+//            case R.id.num:
+//                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+//                    LongKeyValue = "";
+//                    img_v.setBackgroundResource(R.drawable.tv_control_menu_num);
+//                } else if (event.getAction() == MotionEvent.ACTION_UP) {
+//                    img_v.setBackgroundResource(R.drawable.tv_control_menu);
+//                }
+//                break;
             case R.id.btn_home:
             case R.id.btn_menu:
             case R.id.btn_b:

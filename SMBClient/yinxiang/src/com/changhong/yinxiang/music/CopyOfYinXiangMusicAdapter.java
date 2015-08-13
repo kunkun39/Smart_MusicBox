@@ -15,8 +15,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Handler;
-import android.os.Message;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -51,7 +49,7 @@ import com.nostra13.universalimageloader.cache.disc.utils.DiskCacheFileManager;
 /**
  * Created by Administrator on 15-5-11.
  */
-public class YinXiangMusicAdapter extends BaseAdapter {
+public class CopyOfYinXiangMusicAdapter extends BaseAdapter {
 
 	private LayoutInflater inflater;
 
@@ -64,20 +62,16 @@ public class YinXiangMusicAdapter extends BaseAdapter {
 	private String keyStr;
 	private String displayName, musicPath;
 	private boolean checkSetFlag = false;
-	
-	public static final int  SHOW_FILEEDIT_DIALOG=1;
-	
-	
 
 	/**
-	 * YD add 20150806 for fileEdit 音频文件编辑功能
+	 * YD add 20150806 for fileEdit 音频文件编辑
 	 */
-       Handler mHandler=null;
+	// 文件编辑对话框
+	FileEditDialog fileEditDialog = null;
 
-	public YinXiangMusicAdapter(Context context, Handler handler,String keyWords) {
+	public CopyOfYinXiangMusicAdapter(Context context, String keyWords) {
 		this.context = context;
 		this.keyStr = keyWords;
-		this.mHandler=handler;
 		this.inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -86,6 +80,7 @@ public class YinXiangMusicAdapter extends BaseAdapter {
 		checkStateMap = new TreeMap<String, String>();
 		musicFilter();
 		selectMusics.clear();
+
 	}
 
 	public int getCount() {
@@ -173,12 +168,9 @@ public class YinXiangMusicAdapter extends BaseAdapter {
 			@Override
 			public void onClick(View v) {
 				MyApplication.vibrator.vibrate(100);
-				
-				//发送消息给绑定的activity。
-				Message msg=new Message();
-				msg.what=SHOW_FILEEDIT_DIALOG;
-				msg.obj=yinXiangMusic;
-				mHandler.sendMessage(msg);
+				if (fileEditDialog != null && !fileEditDialog.isShowing()) {
+					fileEditDialog.show();
+				}
 			}
 		});
 
@@ -219,9 +211,136 @@ public class YinXiangMusicAdapter extends BaseAdapter {
 		}
 	}
 
-	
-	
+	private void createFileEditDialog() {
+		if (fileEditDialog == null) {
+			fileEditDialog = new FileEditDialog(context);
+			fileEditDialog.setCanceledOnTouchOutside(true);
+		
+			// 设置盒子端闹铃铃声
+			fileEditDialog.edit_clock
+					.setOnClickListener(new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							Toast.makeText(context, "闹铃设置成功", Toast.LENGTH_SHORT).show();
+						}
+					});
 
+			fileEditDialog.edit_cancle
+					.setOnClickListener(new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
+
+						}
+					});
+
+			fileEditDialog.edit_copy
+					.setOnClickListener(new View.OnClickListener() {
+
+						@Override
+						public void onClick(View v) {
+
+						}
+					});
+		}
+	}
+	
+	
+	/**************************************************************YD add  20150806 发送文件编辑信息到音响端*******************************************************************************/
+	
+	private void sendFileMSG2Audio(String musicPath){
+      
+        if (!NetworkUtils.isWifiConnected(context)) {
+            Toast.makeText(context, "请链接无线网络", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        
+        if (!StringUtils.hasLength(ClientSendCommandService.serverIP)) {
+            Toast.makeText(context, "手机未连接机顶盒，请检查网络", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        /**
+         * 封装发送信息。
+         */
+        try {
+            MyApplication.vibrator.vibrate(100);
+
+            //获取IP和外部存储路径
+            String  ipAddress = NetworkUtils.getLocalHostIp();
+            String httpAddress = "http://" + ipAddress + ":" + HTTPDService.HTTP_PORT;
+            
+            
+            String newMusicPath = null;
+            if (musicPath.startsWith(HTTPDService.defaultHttpServerPath)) {
+            	newMusicPath = musicPath.replace(HTTPDService.defaultHttpServerPath, "").replace(" ", "%20");
+            } else {
+                for (String otherHttpServerPath : HTTPDService.otherHttpServerPaths) {
+                    if (musicPath.startsWith(otherHttpServerPath)) {
+                    	newMusicPath = musicPath.replace(otherHttpServerPath, "").replace(" ", "%20");
+                    }
+                }
+            }
+
+            String tmpHttpAddress = httpAddress + newMusicPath;
+
+            
+            //判断URL是否符合规范，如果不符合规范，就1重命名文件
+            try {
+                URI.create(tmpHttpAddress);
+            } catch (Exception e) {
+                try {
+                    /**
+                     * 创建信的文件
+                     */
+                    File illegeFile = new File(musicPath);
+                    String fullpath = illegeFile.getAbsolutePath();
+                    String filename = illegeFile.getName();
+                    String filepath = fullpath.replace(File.separator + filename, "");
+                    String[] tokens = StringUtils.delimitedListToStringArray(filename, ".");
+                    String filenameSuffix = tokens[tokens.length - 1];
+
+                    String newFile = filepath + File.separator + StringUtils.getRandomString(15) + "." + filenameSuffix;
+                    Runtime.getRuntime().exec("mv " + fullpath + " " + newFile);
+
+
+                  
+
+                    /**
+                     * 更改Content Provider的文件
+                     */
+                    ContentResolver mContentResolver = context.getContentResolver();
+                    Uri mAudioUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+                    ContentValues values = new ContentValues();
+                    values.put(MediaStore.Audio.Media.DATA, newFile);
+                    mContentResolver.update(mAudioUri, values, MediaStore.Images.Media.DATA + " = '" + fullpath + "'", null);
+                    
+                } catch (Exception e1) {
+                    e.printStackTrace();
+                    Toast.makeText(context, "对不起，音乐文件获取有误，不能正常操作！", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            }
+
+            //封装文件为json格式
+            JSONObject o = new JSONObject();
+            JSONArray array = new JSONArray();
+            //music urls
+            array.put(0, tmpHttpAddress);
+            File musicFile = new File(musicPath);
+            array.put(1, tmpHttpAddress);
+            o.put("urls", array);
+            //client ip
+            o.put("client_ip", ipAddress);
+
+            //发送播放地址
+            ClientSendCommandService.msg = o.toString();
+            ClientSendCommandService.handler.sendEmptyMessage(4);
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(context, "音乐文件获取失败", Toast.LENGTH_SHORT).show();
+        }
+    }
 	
 	
 	

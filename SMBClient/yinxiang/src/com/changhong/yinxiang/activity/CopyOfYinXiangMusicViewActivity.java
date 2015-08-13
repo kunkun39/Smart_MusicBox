@@ -2,20 +2,15 @@ package com.changhong.yinxiang.activity;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
 import org.json.JSONArray;
-import org.json.JSONObject;
+
 import android.app.Activity;
-import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -27,6 +22,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSONObject;
 import com.changhong.common.service.ClientSendCommandService;
 import com.changhong.common.system.MyApplication;
 import com.changhong.common.utils.NetworkUtils;
@@ -36,10 +32,8 @@ import com.changhong.yinxiang.R;
 import com.changhong.yinxiang.music.YinXiangMusic;
 import com.changhong.yinxiang.music.YinXiangMusicAdapter;
 import com.changhong.yinxiang.nanohttpd.HTTPDService;
-import com.changhong.yinxiang.view.FileEditDialog;
-import com.changhong.yinxiang.view.YinXiaoControlDialog;
 
-public class YinXiangMusicViewActivity extends Activity{
+public class CopyOfYinXiangMusicViewActivity extends Activity{
 
 	/**************************************************IP连接部分*******************************************************/
 
@@ -82,14 +76,6 @@ public class YinXiangMusicViewActivity extends Activity{
      * 音频已经选择INFO
      */
     public static TextView musicSelectedInfo;
-    
-    /**
-	 * YD add 20150806 for fileEdit 音频文件编辑功能
-	 */
-	// 文件编辑对话框
-	FileEditDialog fileEditDialog = null;
-	YinXiangMusic mEditMusic = null ;
-  
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,12 +103,14 @@ public class YinXiangMusicViewActivity extends Activity{
         musicListView = (ListView) findViewById(R.id.yinxiang_vedio_list_view);
         Intent intent =getIntent();
         String keyStr=intent.getStringExtra("KeyWords");
-        
-        musicAdapter = new YinXiangMusicAdapter(this,mHandle,keyStr);
+
+        //YD modify  20150810
+        musicAdapter = new YinXiangMusicAdapter(this,null,keyStr);
         musicListView.setAdapter(musicAdapter);
 
         musicSend = (Button)findViewById(R.id.yinxing_vedio_tuisong);
         musicSelectedInfo = (TextView)findViewById(R.id.yinxing_vedio_tuisong_info);
+        
     }
 
     private void initEvent() {
@@ -130,7 +118,7 @@ public class YinXiangMusicViewActivity extends Activity{
         /**
          * IP连接部分
          */
-        IpAdapter = new BoxSelectAdapter(YinXiangMusicViewActivity.this,
+        IpAdapter = new BoxSelectAdapter(CopyOfYinXiangMusicViewActivity.this,
                 ClientSendCommandService.serverIpList);
         clients.setAdapter(IpAdapter);
         clients.setOnTouchListener(new View.OnTouchListener() {
@@ -156,7 +144,7 @@ public class YinXiangMusicViewActivity extends Activity{
                 try {
                     MyApplication.vibrator.vibrate(100);
                     if (ClientSendCommandService.serverIpList.isEmpty()) {
-                        Toast.makeText(YinXiangMusicViewActivity.this, "未获取到服务器IP", Toast.LENGTH_LONG).show();
+                        Toast.makeText(CopyOfYinXiangMusicViewActivity.this, "未获取到服务器IP", Toast.LENGTH_LONG).show();
                     } else {
                         clients.setVisibility(View.VISIBLE);
                     }
@@ -180,9 +168,9 @@ public class YinXiangMusicViewActivity extends Activity{
             @Override
             public void onClick(View v) {
                 try {
-                    if (NetworkUtils.isWifiConnected(YinXiangMusicViewActivity.this)) {
+                    if (NetworkUtils.isWifiConnected(CopyOfYinXiangMusicViewActivity.this)) {
                         if (!StringUtils.hasLength(ClientSendCommandService.serverIP)) {
-                            Toast.makeText(YinXiangMusicViewActivity.this, "手机未连接音箱，请确认后再推送", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(CopyOfYinXiangMusicViewActivity.this, "手机未连接音箱，请确认后再推送", Toast.LENGTH_SHORT).show();
                             return;
                         }
                         MyApplication.vibrator.vibrate(100);
@@ -192,7 +180,7 @@ public class YinXiangMusicViewActivity extends Activity{
                          */
                         
                         if(YinXiangMusicAdapter.selectMusics.isEmpty()){
-                        	Toast.makeText(YinXiangMusicViewActivity.this, "请选择推送的歌曲", Toast.LENGTH_LONG).show();
+                        	Toast.makeText(CopyOfYinXiangMusicViewActivity.this, "请选择推送的歌曲", Toast.LENGTH_LONG).show();
                         }else{
 //                        	if(YinXiangMusicAdapter.selectMusics.size()>=4){
 //                        		Toast.makeText(YinXiangMusicViewActivity.this, "暂时最多支持推送4首歌曲", Toast.LENGTH_LONG).show();
@@ -244,173 +232,16 @@ public class YinXiangMusicViewActivity extends Activity{
 //                        	}
                         }
                     } else {
-                        Toast.makeText(YinXiangMusicViewActivity.this, "请链接无线网络", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(CopyOfYinXiangMusicViewActivity.this, "请链接无线网络", Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(YinXiangMusicViewActivity.this, "音频获取失败", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CopyOfYinXiangMusicViewActivity.this, "音频获取失败", Toast.LENGTH_SHORT).show();
                 }
             }
         });
-        
-        //YD add 20150810 for fileEdit
-        createFileEditDialog();
-        
     }
 
-    
-    
-    
-    private void createFileEditDialog() {
-		if (fileEditDialog == null) {
-			fileEditDialog = new FileEditDialog(this);
-			fileEditDialog.setCanceledOnTouchOutside(true);
-		
-			// 设置盒子端闹铃铃声
-			fileEditDialog.edit_clock
-					.setOnClickListener(new View.OnClickListener() {
-						@Override
-						public void onClick(View v) {
-							String musicPath=mEditMusic.getPath();
-							sendFileEditMsg2Audio(musicPath,"clock");
-						}
-					});
-
-			fileEditDialog.edit_cancle
-					.setOnClickListener(new View.OnClickListener() {
-						@Override
-						public void onClick(View v) {
-
-						}
-					});
-
-			fileEditDialog.edit_copy
-					.setOnClickListener(new View.OnClickListener() {
-
-						@Override
-						public void onClick(View v) {
-
-						}
-					});
-		}
-	}
-	
-    
-	/**************************************************************YD add  20150806 发送文件编辑信息到音响端*******************************************************************************/
-	
-	private void sendFileEditMsg2Audio(String musicPath,String editType){
-      
-        if (!NetworkUtils.isWifiConnected(this)) {
-            Toast.makeText(this, "请链接无线网络", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        
-        if (!StringUtils.hasLength(ClientSendCommandService.serverIP)) {
-            Toast.makeText(this, "手机未连接机顶盒，请检查网络", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        /**
-         * 封装发送信息。
-         */
-        try {
-            MyApplication.vibrator.vibrate(100);
-
-            //获取IP和外部存储路径
-            String  ipAddress = NetworkUtils.getLocalHostIp();
-            String httpAddress = "http://" + ipAddress + ":" + HTTPDService.HTTP_PORT;
-            
-            
-            String newMusicPath = null;
-            if (musicPath.startsWith(HTTPDService.defaultHttpServerPath)) {
-            	newMusicPath = musicPath.replace(HTTPDService.defaultHttpServerPath, "").replace(" ", "%20");
-            } else {
-                for (String otherHttpServerPath : HTTPDService.otherHttpServerPaths) {
-                    if (musicPath.startsWith(otherHttpServerPath)) {
-                    	newMusicPath = musicPath.replace(otherHttpServerPath, "").replace(" ", "%20");
-                    }
-                }
-            }
-
-            String tmpHttpAddress = httpAddress + newMusicPath;
-
-            
-            //判断URL是否符合规范，如果不符合规范，就1重命名文件
-            try {
-                URI.create(tmpHttpAddress);
-            } catch (Exception e) {
-                try {
-                   
-                	/**
-                     * 创建新的文件
-                     */
-                    File illegalFile = new File(musicPath);
-                    String fullpath =  illegalFile.getAbsolutePath();
-                    String filename = illegalFile.getName();
-                    String filepath = fullpath.replace(File.separator + filename, "");
-                    String[] tokens = StringUtils.delimitedListToStringArray(filename, ".");
-                    String filenameSuffix = tokens[tokens.length - 1];
-                    String newFile = filepath + File.separator + StringUtils.getRandomString(15) + "." + filenameSuffix;
-                    Runtime.getRuntime().exec("mv " + fullpath + " " + newFile);
-
-                    tmpHttpAddress = httpAddress + newFile;
-                    /**
-                     * 更改Content Provider的文件
-                     */
-                    ContentResolver mContentResolver =getContentResolver();
-                    Uri mAudioUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-                    ContentValues values = new ContentValues();
-                    values.put(MediaStore.Audio.Media.DATA, newFile);
-                    mContentResolver.update(mAudioUri, values, MediaStore.Audio.Media.DATA + " = '" + fullpath + "'", null);
-                    
-                } catch (Exception e1) {
-                    e.printStackTrace();
-                    Toast.makeText(this, "对不起，音乐文件获取有误，不能正常操作！", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-            }
-
-            //封装文件为json格式
-            JSONObject sendObj = new JSONObject();
-            JSONArray array = new JSONArray();
-            //music urls                   
-            //文件编辑类型： copy、clock
-            array.put(0, editType);
-            //发送文件路径
-            array.put(1, tmpHttpAddress);
-
-            sendObj.put("fileEdit", array);           
-            //client ip
-            sendObj.put("client_ip", ipAddress);
-
-            //发送播放地址
-            ClientSendCommandService.msg = sendObj.toString();
-            ClientSendCommandService.handler.sendEmptyMessage(4);
-            
-        } catch (Exception e) {
-            e.printStackTrace();
-            Toast.makeText(this, "音乐文件获取失败", Toast.LENGTH_SHORT).show();
-        }
-    }
-    
-    
-    private Handler mHandle = new Handler() {
-    	@Override
-    	public void handleMessage(Message msg) {
-    		
-    		//显示文件编辑对话框
-    		if(msg.what ==YinXiangMusicAdapter.SHOW_FILEEDIT_DIALOG ){
-    		     
-    			//1、获取当前焦点音乐文件信息
-    			mEditMusic=(YinXiangMusic) msg.obj;
-    			//2、显示文件编辑对话框
-    			 if (fileEditDialog != null && !fileEditDialog.isShowing()) {
-    					fileEditDialog.show();
-    			}
-    		}
-    	}
-    	
-    };
     
     /**********************************************系统发发重载*********************************************************/
 

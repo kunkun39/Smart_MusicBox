@@ -16,13 +16,23 @@
 
     <TextView
             android:id="@+id/yinxiang_vedio_item_name"
-            android:layout_width="220dp"
+            android:layout_width="170dp"
             android:layout_height="80dp"
             android:paddingLeft="5dp"
             android:textSize="11sp"
             android:textColor="@color/white">
     </TextView>
 
+    <ImageView
+            android:id="@+id/yinxiang_vedio_item_edit"
+            android:layout_width="50dip"
+            android:layout_height="50dip"
+            android:paddingRight="15dip"
+            android:src="@drawable/file_edit"
+            android:adjustViewBounds="true" 
+            
+            android:background="@drawable/file_edit_btn_bg"/>
+    
     <CheckBox
             android:id="@+id/yinxiang_vedio_item_checked"
             android:layout_width="35dp"
