@@ -1,6 +1,6 @@
 package com.changhong.search;
 
-import java.util.List;
+import java.util.List; 
 
 import android.content.Context;
 import android.os.Handler;

@@ -5,8 +5,10 @@ import java.io.FileWriter;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
+
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -323,11 +325,12 @@ public class YinXiangMusicViewActivity extends Activity{
             
             String newMusicPath = null;
             if (musicPath.startsWith(HTTPDService.defaultHttpServerPath)) {
-            	newMusicPath = musicPath.replace(HTTPDService.defaultHttpServerPath, "").replace(" ", "%20");
+            	newMusicPath = convertFileUrlToHttpURL (musicPath.replace(HTTPDService.defaultHttpServerPath, ""));
+
             } else {
                 for (String otherHttpServerPath : HTTPDService.otherHttpServerPaths) {
                     if (musicPath.startsWith(otherHttpServerPath)) {
-                    	newMusicPath = musicPath.replace(otherHttpServerPath, "").replace(" ", "%20");
+                    	newMusicPath = convertFileUrlToHttpURL (musicPath.replace(otherHttpServerPath, ""));
                     }
                 }
             }
@@ -411,6 +414,20 @@ public class YinXiangMusicViewActivity extends Activity{
     	}
     	
     };
+    
+    
+    
+    /**
+	 * 特殊字符转换
+	 * @param url  url字符串
+	 * @return
+	 */
+	public  String convertFileUrlToHttpURL(String url) {
+        if (null !=url && url.length()>0) {
+            return url.replace("%", "%25").replace(" ", "%20").replace("+", "%2B").replace("#", "%23").replace("&", "%26").replace("=", "%3D").replace("?", "%3F").replace("^", "%5E");
+        }
+        return url;
+    }
     
     /**********************************************系统发发重载*********************************************************/
 

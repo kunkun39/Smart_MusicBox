@@ -145,8 +145,7 @@ public class YinXiangMainFragmentActivity extends FragmentActivity {
 
 						FragmentTransaction transaction = fragmentManager
 								.beginTransaction();
-						Fragment mFragment = FragmentFactory
-								.getInstanceByIndex(checkedId);
+						Fragment mFragment = getInstanceByIndex(checkedId);
 
 						// 增加fragment到backstack。
 						transaction.replace(R.id.yx_tabcontent, mFragment);
@@ -735,6 +734,27 @@ public class YinXiangMainFragmentActivity extends FragmentActivity {
 			AppHelpDialog dialog = new AppHelpDialog(this);
 			dialog.show();
 		}
+	}
+	
+	
+	
+	public  Fragment getInstanceByIndex(int index) {  
+        Fragment fragment = null;  
+        switch (index) {  
+            case 1:  //遥控器
+                fragment = new YinXiangRemoteControlFragment();  
+                break;  
+            case 2:  //网络电台
+                fragment = new YinXiangFMFragment();  
+                break;  
+            case 3:   //一键推送
+                fragment = new YinXiangCategoryFragment();  
+                break;  
+            case 4:  //设置Fragment
+                fragment = new YinXiangSettingFragment();  
+                break;  
+        } 
+        return  fragment;
 	}
 
 }
