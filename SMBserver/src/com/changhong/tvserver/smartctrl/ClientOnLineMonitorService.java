@@ -218,8 +218,9 @@ public class ClientOnLineMonitorService extends Service {
 			if (!DateFormat.is24HourFormat(this) && 0 != c.get(Calendar.AM_PM)) {
 				hour += 12;
 			}
-
-			if (hour >= 9 && hour < 22) {
+            
+			//预设自动关机时间早上7:00~9:00;
+			if (hour >= 7 && hour < 9) {
 				rValue = true;
 			}
 			mTime=20;

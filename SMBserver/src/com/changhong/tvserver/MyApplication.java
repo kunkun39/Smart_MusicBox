@@ -51,6 +51,13 @@ public class MyApplication extends Application {
      * Image download save path
      */
     public static File imageDownloadRootPath;
+    
+    /**
+     * music download save Path
+     */
+    public static File musicDownloadRootPath;
+
+    
 
     /**
      * all status about network
@@ -107,6 +114,24 @@ public class MyApplication extends Application {
         } else {
             lrcFile.mkdirs();
         }
+        
+        /**
+         * YD add 20150806 for 创建音乐文件保存路径和删除原来的同名音乐文件
+         */
+        String musicPath = ROOT + "/music";
+        musicDownloadRootPath = new File(musicPath);
+        if(musicDownloadRootPath.exists()) {
+            File[] files = musicDownloadRootPath.listFiles();
+            if (files != null) {
+                for (File file : files) {
+                    file.delete();
+                }
+            }
+        } else {
+        	musicDownloadRootPath.mkdirs();
+        }
+        
+        
 
         /**
         * 设置图片下载的路径

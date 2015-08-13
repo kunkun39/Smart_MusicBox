@@ -1,5 +1,8 @@
 <resources>
 
     <string name="app_name">音箱助手</string>
-
+    <string name="file_download_title">音乐文件下载</string>
+     <string name="file_download_result">音乐文件下载成功</string>
+     <string name="clock_setting">闹铃铃声设置</string>
+     
 </resources>
