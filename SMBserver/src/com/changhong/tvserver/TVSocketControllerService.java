@@ -848,6 +848,11 @@ public class TVSocketControllerService extends Service {
 		}
 		if (keys[1].equals("music")) {
 			if (Commonmethod.isActivityForeground(this, "SearchActivity")) {
+				//处理当搜索界面已经启动的时候。
+				
+				
+				
+			}else{
 				Intent intent = new Intent();
 				intent.putExtra(SearchActivity.keyWordsName, keys[2]);
 				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

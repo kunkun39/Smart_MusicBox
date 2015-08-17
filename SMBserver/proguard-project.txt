@@ -23,6 +23,9 @@
 #jar package
 -libraryjars libs/android-support-v4.jar
 -libraryjars libs/cyberplayer-sdk.jar
+-libraryjars libs/boas-sdk-v0.1.0.jar
 #projecet package
 -keep class android.os.** {*;}
 -dontwarn android.os.**
+-keep class com.alibaba.fastjson.** {*;}
+-dontwarn com.alibaba.fastjson.**
