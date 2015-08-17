@@ -1,5 +1,11 @@
 package com.changhong.yinxiang.activity;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
@@ -15,19 +21,21 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import com.changhong.common.service.ClientSendCommandService;
 import com.changhong.common.system.AppConfig;
 import com.changhong.common.system.MyApplication;
 import com.changhong.common.utils.StringUtils;
 import com.changhong.common.widgets.BoxSelectAdapter;
 import com.changhong.yinxiang.R;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Jack Wang
@@ -293,23 +301,23 @@ public class YinXiangPictureCategoryActivity extends Activity {
                 try {
                     if (images.size() == 1) {
                         displayImage(holder.imageView1, images.get(0));
-                        holder.imageView2.setBackground(getResources().getDrawable(R.drawable.ic_stub));
-                        holder.imageView3.setBackground(getResources().getDrawable(R.drawable.ic_stub));
-                        holder.imageView4.setBackground(getResources().getDrawable(R.drawable.ic_stub));
+                        holder.imageView2.setBackgroundResource(R.drawable.ic_stub); 
+                        holder.imageView3.setBackgroundResource(R.drawable.ic_stub); 
+                        holder.imageView4.setBackgroundResource(R.drawable.ic_stub); 
                     }
 
                     if (images.size() == 2) {
                         displayImage(holder.imageView1, images.get(0));
                         displayImage(holder.imageView2, images.get(1));
-                        holder.imageView3.setBackground(getResources().getDrawable(R.drawable.ic_stub));
-                        holder.imageView4.setBackground(getResources().getDrawable(R.drawable.ic_stub));
+                        holder.imageView3.setBackgroundResource(R.drawable.ic_stub); 
+                        holder.imageView4.setBackgroundResource(R.drawable.ic_stub); 
                     }
 
                     if (images.size() == 3) {
                         displayImage(holder.imageView1, images.get(0));
                         displayImage(holder.imageView2, images.get(1));
                         displayImage(holder.imageView3, images.get(2));
-                        holder.imageView4.setBackground(getResources().getDrawable(R.drawable.ic_stub));
+                        holder.imageView4.setBackgroundResource(R.drawable.ic_stub); 
 
                     }
 

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- 默认效果 -->
+    <item android:state_enabled="true" 
+    	      android:state_focused="false" android:state_pressed="false"><shape android:shape="rectangle">
+            <gradient android:angle="270" 
+            android:centerColor="#00454545" android:endColor="#00313131" android:startColor="#00575757" />
+
+            <corners android:radius="10dip" />
+            <!-- 渐变角度 只能被45整除 -->
+        </shape></item>
+
+    <!-- 按下时效果 -->
+    <item android:state_pressed="true">
+    	      <shape android:shape="rectangle">
+            <gradient android:angle="270"            	
+            android:centerColor="#AAFFC400" android:endColor="#AAFFC400" android:startColor="#AAFFC400" />
+
+            <corners android:radius="10dip" />
+            <!-- 渐变角度 只能被45整除 -->
+        </shape></item>
+    <!-- 焦点效果 -->
+    <item android:state_focused="true"><shape android:shape="rectangle">"
+            <gradient android:angle="270" android:centerColor="#FFF07305" android:endColor="#FFF07305" android:startColor="#FFF07305" />
+
+            <padding android:bottom="2dp" android:left="2dp" android:right="2dp" android:top="2dp" />
+
+            <corners android:radius="10dp" />
+            <!-- 渐变角度 只能被45整除 -->
+        </shape></item>
+
+</selector>

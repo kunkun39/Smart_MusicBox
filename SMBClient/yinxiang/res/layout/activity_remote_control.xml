@@ -1,8 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/bidir_sliding_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/bidir_sliding_layout"
     android:orientation="vertical"
     tools:context=".YinXiangRemoteControlActivity" >
 
@@ -13,6 +13,7 @@
         android:layout_alignParentRight="true"
         android:background="#00ffcc"
         android:visibility="gone" >
+
         <include layout="@layout/sidemenu" />
     </RelativeLayout>
 
@@ -85,25 +86,26 @@
                 android:layout_weight="2"
                 android:orientation="horizontal" >
 
-	        <View 
-		        android:layout_width="0dip"
-		        android:layout_height="0dp"
-		        android:layout_weight="1"
-		        />
-		    <LinearLayout 	
-		        android:id="@+id/img_volume"        
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:orientation="horizontal"
-		        android:background="@drawable/tv_control_menu"
-					>
-			    <!-- ImageView 
+                <View
+                    android:layout_width="0dip"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <LinearLayout
+                    android:id="@+id/img_volume"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/tv_control_menu"
+                    android:orientation="horizontal" >
+
+                    <!--
+                     ImageView 
 			        android:id="@+id/img_volume"	        	        
 			        
 			        android:layout_width="match_parent"	
 			        android:layout_height="match_parent"  
 			        android:layout_gravity="center"
-			        /
+
                     -->
 
                     <Button
@@ -142,70 +144,73 @@
                         android:background="@android:color/transparent" />
                 </LinearLayout>
 
-		    <View 
-		        android:layout_width="0dip"
-		        android:layout_height="0dp"
-		        android:layout_weight="1"
-		        />
+                <View
+                    android:layout_width="0dip"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
             </LinearLayout>
 
             <RelativeLayout
-	        android:layout_width="match_parent"
-		    android:layout_height="0dp"
-	        android:layout_weight="7"
-			android:layout_marginLeft="30dp" android:layout_marginRight="30dp" android:layout_marginTop="35dp"
-			android:layout_marginBottom="35dp">
-		    
-	        <ImageView
-		        android:id="@+id/img_d"
-		        android:layout_width="match_parent"
-		        android:layout_height="match_parent"
-		        android:scaleType="fitCenter"
-		        android:background="@drawable/tv_control_direction" 
-	        />
-	        <LinearLayout 	        
-		        android:layout_width="match_parent"
-			    android:layout_height="match_parent"
-				android:orientation="horizontal"
-				android:layout_alignParentTop="true" android:layout_alignParentRight="true"
-				android:layout_alignParentEnd="true" android:layout_alignParentBottom="true">
-			    <LinearLayout
-			        android:orientation="vertical"
-			        android:layout_width="0dp"
-			        android:layout_height="match_parent"
-			        android:layout_weight="1"
-						>
-			        <View
-			            android:layout_width="match_parent"
-			        	android:layout_height="0dp" 
-			        	android:layout_weight="1"
-			            />
-			        <Button 
-			            android:id="@+id/left"
-			            android:background="@drawable/left_back"
-			            android:layout_width="match_parent"
-			        	android:layout_height="0dp"
-						android:layout_weight="1"
-			            />
-			        <View
-			            android:layout_width="match_parent"
-			        	android:layout_height="0dp" 
-			        	android:layout_weight="1"
-			            />
-			    </LinearLayout>
-			    <LinearLayout
-			        android:orientation="vertical"
-			        android:layout_width="0dp"
-			        android:layout_height="match_parent"
-			        android:layout_weight="1"
-			        >
-			        <Button 
-			            android:id="@+id/up"
-			            android:background="@drawable/up_back"
-			            android:layout_width="match_parent"
-			        	android:layout_height="0dp"
-						android:layout_weight="1"
-			            />
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginBottom="35dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginTop="35dp"
+                android:layout_weight="7" >
+
+                <ImageView
+                    android:id="@+id/img_d"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/tv_control_direction"
+                    android:scaleType="fitCenter" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:orientation="horizontal" >
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical" >
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1" />
+
+                        <Button
+                            android:id="@+id/left"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/left_back" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical" >
+
+                        <Button
+                            android:id="@+id/up"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/up_back" />
+
                         <Button
                             android:id="@+id/center"
                             android:layout_width="match_parent"
@@ -228,32 +233,31 @@
                         android:orientation="vertical" >
 
                         <View
-			            android:layout_width="match_parent"
-			        	android:layout_height="0dp" 
-			        	android:layout_weight="1"
-			            />
-			        <Button 
-			            android:id="@+id/right"
-			            android:background="@drawable/left_back"
-			            android:layout_width="101dp"
-			        	android:layout_height="0dp"
-						android:layout_weight="0.97"
-			            />
-			        <View
-			            android:layout_width="match_parent"
-			        	android:layout_height="0dp" 
-			        	android:layout_weight="1"
-			            />
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1" />
+
+                        <Button
+                            android:id="@+id/right"
+                            android:layout_width="101dp"
+                            android:layout_height="0dp"
+                            android:layout_weight="0.97"
+                            android:background="@drawable/left_back" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1" />
                     </LinearLayout>
                 </LinearLayout>
             </RelativeLayout>
 
-	    <LinearLayout 
-	        android:layout_height="0dip"
-	        android:layout_width="match_parent"
-	        android:orientation="horizontal"	        
-	        android:layout_weight="2"
-	        >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dip"
+                android:layout_weight="2"
+                android:orientation="horizontal" >
+
                 <Button
                     android:id="@+id/btn_home"
                     android:layout_width="0dp"
@@ -287,7 +291,6 @@
             android:visibility="gone" >
         </ListView>
 
-        
         <Button
             android:id="@+id/btn_list"
             android:layout_width="204dip"
@@ -295,8 +298,6 @@
             android:layout_marginLeft="70dip"
             android:layout_marginTop="10dip"
             android:background="@drawable/title_btn_list_selector" />
-             
-        
     </RelativeLayout>
 
 </RelativeLayout>

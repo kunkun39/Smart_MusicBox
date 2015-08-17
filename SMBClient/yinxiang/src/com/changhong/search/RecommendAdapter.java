@@ -1,19 +1,14 @@
 package com.changhong.search;
 
-import com.baidu.android.common.logging.Log;
-import com.changhong.yinxiang.R;
-import com.changhong.yinxiang.activity.SearchActivity;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView.FindListener;
 import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.baidu.android.common.logging.Log;
+import com.changhong.yinxiang.R;
 
 public class RecommendAdapter extends BaseAdapter {
 

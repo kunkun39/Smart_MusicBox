@@ -1,0 +1,37 @@
+# To enable ProGuard in your project, edit project.properties
+# to define the proguard.config property as described in that file.
+#
+# Add project specific ProGuard rules here.
+# By default, the flags in this file are appended to flags specified
+# in ${sdk.dir}/tools/proguard/proguard-android.txt
+# You can edit the include path and order by changing the ProGuard
+# include property in project.properties.
+#
+# For more details, see
+#   http://developer.android.com/guide/developing/tools/proguard.html
+
+# Add any project specific keep options here:
+
+# If your project uses WebView with JS, uncomment the following
+# and specify the fully qualified class name to the JavaScript interface
+# class:
+#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
+#   public *;
+#}
+
+#jar package
+-libraryjars libs/VoiceRecognition-1.6.0.jar
+-libraryjars libs/boas-sdk-v0.1.0.jar
+-libraryjars libs/Baidu-SpeechRecognitionUI-SDK-Android-1.6.0.jar
+-libraryjars libs/galaxy.jar
+
+
+#projecet package
+-keep class android.os.** {*;}
+-dontwarn android.os.**
+-keep class com.alibaba.fastjson.** {*;}
+-dontwarn com.alibaba.fastjson.**
+-keep class com.baidu.voicerecognition.**{*;}
+-dontwarn com.baidu.voicerecognition.**
+-keep class org.apache.commons.httpclient.**{*;}
+-dontwarn org.apache.commons.httpclient.**

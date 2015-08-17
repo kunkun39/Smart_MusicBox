@@ -2,8 +2,13 @@ package com.changhong.baidu;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.view.*;
-import android.widget.*;
+import android.view.Gravity;
+import android.view.KeyEvent;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.TextView;
+
 import com.changhong.common.system.MyApplication;
 import com.changhong.yinxiang.R;
 
