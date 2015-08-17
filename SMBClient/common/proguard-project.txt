@@ -18,3 +18,9 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+
+
+#jar package
+-libraryjars libs/android-support-v4.jar
+-libraryjars libs/commons-httpclient-3.1.jar
+-libraryjars libs/commons-io-2.4.jar
