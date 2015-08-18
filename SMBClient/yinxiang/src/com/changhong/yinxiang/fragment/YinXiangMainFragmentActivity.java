@@ -85,7 +85,7 @@ public class YinXiangMainFragmentActivity extends FragmentActivity {
 	 */
 	private Handler mhandler = null;
 
-	/******************************定义fragment***************************************/
+	/****************************** 定义fragment ***************************************/
 	private FragmentManager fragmentManager;
 	private RadioGroup radioGroup;
 
@@ -120,7 +120,8 @@ public class YinXiangMainFragmentActivity extends FragmentActivity {
 		/**
 		 * 启动手机端本地线程
 		 */
-		Intent service3 = new Intent(YinXiangMainFragmentActivity.this,ClientLocalThreadRunningService.class);
+		Intent service3 = new Intent(YinXiangMainFragmentActivity.this,
+				ClientLocalThreadRunningService.class);
 		startService(service3);
 	}
 
@@ -131,10 +132,9 @@ public class YinXiangMainFragmentActivity extends FragmentActivity {
 		title = (TextView) findViewById(R.id.title);
 		clients = (ListView) findViewById(R.id.clients);
 		list = (Button) findViewById(R.id.btn_list);
-        Button power = (Button) findViewById(R.id.power);
+		Button power = (Button) findViewById(R.id.power);
 
-        
-        /*****************************初始化fragment****************************************/
+		/***************************** 初始化fragment ****************************************/
 		fragmentManager = getFragmentManager();
 
 		radioGroup = (RadioGroup) findViewById(R.id.yx_rgtab);
@@ -168,7 +168,7 @@ public class YinXiangMainFragmentActivity extends FragmentActivity {
 		clients.setOnTouchListener(new View.OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-//				clients.setVisibility(View.GONE);
+				// clients.setVisibility(View.GONE);
 				return false;
 			}
 		});
@@ -201,33 +201,37 @@ public class YinXiangMainFragmentActivity extends FragmentActivity {
 				}
 			}
 		});
-		
-		   power.setOnClickListener(new OnClickListener() {
 
-	            @Override
-	            public void onClick(View v) {
-	                MyApplication.vibrator.vibrate(100);
-	                Dialog dialog = new AlertDialog.Builder(YinXiangMainFragmentActivity.this)
-	                        .setTitle("是否确定关机？")
-	                        .setPositiveButton("是", new DialogInterface.OnClickListener() {
+		power.setOnClickListener(new OnClickListener() {
 
-	                            @Override
-	                            public void onClick(DialogInterface dialog, int which) {
-	                                ClientSendCommandService.msg = "key:power";
-	                                ClientSendCommandService.handler.sendEmptyMessage(1);
-	                            }
-	                        })
-	                        .setNegativeButton("否", new DialogInterface.OnClickListener() {
-	                            @Override
-	                            public void onClick(DialogInterface dialog, int which) {
-	                                dialog.cancel();
-	                            }
-	                        })
-	                        .create();
-	                dialog.show();
-	            }
-	        });
-		
+			@Override
+			public void onClick(View v) {
+				MyApplication.vibrator.vibrate(100);
+				Dialog dialog = new AlertDialog.Builder(
+						YinXiangMainFragmentActivity.this)
+						.setTitle("是否确定关机？")
+						.setPositiveButton("是",
+								new DialogInterface.OnClickListener() {
+
+									@Override
+									public void onClick(DialogInterface dialog,
+											int which) {
+										ClientSendCommandService.msg = "key:power";
+										ClientSendCommandService.handler
+												.sendEmptyMessage(1);
+									}
+								})
+						.setNegativeButton("否",
+								new DialogInterface.OnClickListener() {
+									@Override
+									public void onClick(DialogInterface dialog,
+											int which) {
+										dialog.cancel();
+									}
+								}).create();
+				dialog.show();
+			}
+		});
 
 		mhandler = new Handler() {
 
@@ -253,7 +257,7 @@ public class YinXiangMainFragmentActivity extends FragmentActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if (ClientSendCommandService.titletxt != null) {			
+		if (ClientSendCommandService.titletxt != null) {
 			title.setText(ClientSendCommandService.titletxt);
 			// 增加获取FM频道列表
 			ClientSendCommandService.handler.sendEmptyMessage(2);
@@ -735,26 +739,41 @@ public class YinXiangMainFragmentActivity extends FragmentActivity {
 			dialog.show();
 		}
 	}
-	
-	
-	
-	public  Fragment getInstanceByIndex(int index) {  
-        Fragment fragment = null;  
-        switch (index) {  
-            case 1:  //遥控器
-                fragment = new YinXiangRemoteControlFragment();  
-                break;  
-            case 2:  //网络电台
-                fragment = new YinXiangFMFragment();  
-                break;  
-            case 3:   //一键推送
-                fragment = new YinXiangCategoryFragment();  
-                break;  
-            case 4:  //设置Fragment
-                fragment = new YinXiangSettingFragment();  
-                break;  
-        } 
-        return  fragment;
+
+	public Fragment getInstanceByIndex(int index) {
+		Fragment fragment = null;
+		int fragmentIndex = matchFragmentIndex(index);
+		switch (fragmentIndex) {
+		case 1: // 遥控器
+			fragment = new YinXiangRemoteControlFragment();
+			break;
+		case 2: // 网络电台
+			fragment = new YinXiangFMFragment();
+			break;
+		case 3: // 一键推送
+			fragment = new YinXiangCategoryFragment();
+			break;
+		case 4: // 设置Fragment
+			fragment = new YinXiangSettingFragment();
+			break;
+		default:
+			fragment = new YinXiangRemoteControlFragment();
+			break;
+		}
+		return fragment;
+	}
+
+	private int matchFragmentIndex(int index) {
+		int reValue = 1;
+		int childCount = radioGroup.getChildCount();
+		for (int i = 0; i < childCount; i++) {
+			RadioButton child = (RadioButton) radioGroup.getChildAt(i);
+			if (null != child && index == child.getId()){
+				reValue=i+1;
+				break;
+			}
+		}
+		return reValue;
 	}
 
 }
