@@ -3,55 +3,100 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
-    android:orientation="vertical"
     android:gravity="center"
+    android:orientation="vertical"
     tools:context=".MainActivity" >
-	
-	<LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center" >
+
         <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="40px"
-                android:textColor="@android:color/black"
-                android:text="音箱标识:" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="音箱标识:"
+            android:textColor="@android:color/black"
+            android:textSize="40px" />
+
         <EditText
-                android:id="@+id/ch_box_name"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"
-                android:textSize="40px"
-                android:gravity="center"
-                android:textColor="@android:color/black"
-                android:singleLine="true"
-                android:text="客厅" />
+            android:id="@+id/ch_box_name"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text="客厅"
+            android:textColor="@android:color/black"
+            android:textSize="40px" />
+
         <Button
-                android:id="@+id/ch_box_save"
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
-                android:textSize="40px"
-                android:gravity="center"
-                android:textColor="@android:color/black"
-                android:text="保存" />
+            android:id="@+id/ch_box_save"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="保存"
+            android:textColor="@android:color/black"
+            android:textSize="40px" />
     </LinearLayout>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="40px"
+        android:text="扫描以下二维码，下载音箱助手客户端"
         android:textColor="@android:color/black"
-        android:text="扫描以下二维码，下载音箱助手客户端" />
-    <ImageView 
-        android:src="@drawable/tv_server_code"
-        android:layout_width="250dip"
-        android:layout_height="250dip"
-        />
+        android:textSize="40px" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:layout_width="250dip"
+                android:layout_height="250dip"
+                android:background="@drawable/tv_server_code" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="ANDROID"
+                android:textColor="@color/black"
+                android:textSize="36px" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginLeft="150dp" >
+
+            <ImageView
+                android:layout_width="250dip"
+                android:layout_height="250dip"
+                android:background="@drawable/tv_server_code_ios" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="IOS"
+                android:textColor="@color/black"
+                android:textSize="36px" />
+        </LinearLayout>
+    </LinearLayout>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="36px"
+        android:text="友情提示：由于微信限制第三方二维码，请用微信外的其他工具扫描二维码"
         android:textColor="@android:color/black"
-        android:text="友情提示：由于微信限制第三方二维码，请用微信外的其他工具扫描二维码" />
+        android:textSize="36px" />
 
 </LinearLayout>

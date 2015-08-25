@@ -1,7 +1,5 @@
 package com.changhong.tvserver.search;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,13 +9,13 @@ import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Pair;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
@@ -77,7 +75,7 @@ public class SearchActivity extends Activity {
 
 		sdk = new XiamiSDK(this, SDKUtil.KEY, SDKUtil.SECRET);
 		handler = new Handler(getMainLooper());
-		adapter = new SearchSummaryAdapter(getLayoutInflater());
+		adapter = new SearchSummaryAdapter(SearchActivity.this);
 		searchResultList.setAdapter(adapter);
 	}
 
@@ -86,7 +84,7 @@ public class SearchActivity extends Activity {
 		s_KeyWords = intent.getStringExtra(keyWordsName);
 		if (!TextUtils.isEmpty(s_KeyWords)) {
 			searchKeyWords.setText(s_KeyWords);
-			search(s_KeyWords);
+//			search(s_KeyWords);
 		}
 
 		searchResultList.setOnItemClickListener(new OnItemClickListener() {
@@ -96,50 +94,53 @@ public class SearchActivity extends Activity {
 					long arg3) {
 				// TODO Auto-generated method stub
 				// 获取网络音乐路径，并发送给播放器
-				packageData(songsfull.get(arg2));
+				packageData(arg2);
 
 			}
 		});
+		searchResultList.setItemsCanFocus(true);
 	}
 
-	private void packageData(OnlineSong song) {
+	private void packageData(int arg) {
 		JSONObject o = new JSONObject();
 		JSONArray array = new JSONArray();
+		for (int i = arg; i < songsfull.size(); i++) {
+			
 
-		String path = song.getListenFile();
-		String title = song.getSongName();
-		String artist = song.getArtistName();
-		int duration = song.getLength();
+			String path = songsfull.get(i).getListenFile();
+			String title = songsfull.get(i).getSongName();
+			String artist = songsfull.get(i).getArtistName();
+			int duration = songsfull.get(i).getLength();
 
-		JSONObject music = new JSONObject();
-		music.put("tempPath", path);
-		music.put("title", title);
-		music.put("artist", artist);
-		music.put("duration", duration);
-		array.put(music);
-
-		o.put("musicss", array.toString());
-
-		String listFileAddress = Environment.getExternalStorageDirectory()
-				.getAbsolutePath() + "/MusicList.json";
-
-		File jsonFile = new File(listFileAddress);
-		if (jsonFile.exists()) {
-			jsonFile.delete();
+			JSONObject music = new JSONObject();
+			music.put("tempPath", path);
+			music.put("title", title);
+			music.put("artist", artist);
+			music.put("duration", duration);
+			array.put(music);
 		}
-		try {
-			jsonFile.createNewFile();
+			o.put("musicss", array.toString());
+		
+		// String listFileAddress =
+		// Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+"MusicList.json";
+		// File jsonFile = new File(listFileAddress);
+		// if (jsonFile.exists()) {
+		// jsonFile.delete();
+		// }
+		// try {
+		// jsonFile.createNewFile();
+		// FileWriter fw = new FileWriter(jsonFile);
+		// fw.write(o.toString(), 0, o.toString().length());
+		// fw.flush();
+		// fw.close();
+		// } catch (IOException e) {
+		// Toast.makeText(SearchActivity.this, "音频列表保存失败", Toast.LENGTH_SHORT)
+		// .show();
+		// e.printStackTrace();
+		//
+		// }
 
-			FileWriter fw = new FileWriter(jsonFile);
-			fw.write(o.toString(), 0, o.toString().length());
-			fw.flush();
-			fw.close();
-		} catch (Exception e) {
-			Toast.makeText(SearchActivity.this, "音频获取失败", Toast.LENGTH_SHORT)
-					.show();
-		}
-
-		String listPath="GetMusicList:"+listFileAddress;
+		String listPath = "GetMusicList:" + o.toString();
 		handleMusicMsgs(listPath);
 	}
 
@@ -189,6 +190,8 @@ public class SearchActivity extends Activity {
 				songs = results.second;
 				if (null == songsfull) {
 					songsfull = new ArrayList<OnlineSong>();
+				}else{
+					songsfull.clear();
 				}
 				for (int i = 0; i < songs.size(); i++) {
 					songsfull.add(sdk.findSongByIdSync(
@@ -199,7 +202,7 @@ public class SearchActivity extends Activity {
 					public void run() {
 						if (results != null) {
 							// 设置歌曲列表
-							adapter.changeSongs(songs);
+							adapter.changeSongs(songsfull);
 						} else if (results.second.size() == 0) {
 							Toast.makeText(SearchActivity.this,
 									R.string.no_search_result,
