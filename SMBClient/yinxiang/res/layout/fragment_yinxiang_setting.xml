@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical" >
 
     <RelativeLayout
         android:id="@+id/right_menu"
@@ -19,15 +19,14 @@
         android:layout_height="match_parent"
         android:orientation="vertical" >
 
-       
         <ImageButton
             android:id="@+id/setting_sidemunubutton"
             android:layout_width="40dip"
             android:layout_height="50dip"
-            android:layout_marginTop="8dp"
             android:layout_marginLeft="310dip"
-            android:visibility="gone"
-            android:background="@drawable/sidemenubutton" />
+            android:layout_marginTop="8dp"
+            android:background="@drawable/sidemenubutton"
+            android:visibility="gone" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -37,6 +36,10 @@
             android:orientation="vertical" >
 
             <!-- 全圆角 -->
+
+            <TextView
+                style="@style/titletext"
+                android:text="系统设置" />
 
             <LinearLayout style="@style/wrap_layout" >
 
@@ -66,6 +69,24 @@
                     <TextView
                         style="@style/usertext"
                         android:text="检查更新" />
+
+                    <ImageView style="@style/img_arrow" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                style="@style/titletext"
+                android:text="其他" />
+
+            <LinearLayout style="@style/wrap_layout" >
+
+                <LinearLayout
+                    android:id="@+id/alarm_setting"
+                    style="@style/mid_layout" >
+
+                    <TextView
+                        style="@style/usertext"
+                        android:text="音乐闹铃" />
 
                     <ImageView style="@style/img_arrow" />
                 </LinearLayout>

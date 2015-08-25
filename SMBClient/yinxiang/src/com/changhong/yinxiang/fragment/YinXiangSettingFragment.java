@@ -1,23 +1,24 @@
 package com.changhong.yinxiang.fragment;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
-import android.view.Window;
-import android.widget.*;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.changhong.common.system.MyApplication;
 import com.changhong.yinxiang.R;
+import com.changhong.yinxiang.activity.AlarmSetting;
 import com.changhong.yinxiang.service.UserUpdateService;
 import com.changhong.yinxiang.setting.AppHelpDialog;
 
@@ -35,6 +36,7 @@ public class YinXiangSettingFragment extends Fragment {
 	 */
 	private TextView updateInfo;
 	private LinearLayout updateBtn;
+	private LinearLayout alarmBtn;
 	private ProgressDialog m_pDialog;
 	private UserUpdateService updateService;
 
@@ -76,7 +78,7 @@ public class YinXiangSettingFragment extends Fragment {
 //		settingReturn = (Button) v.findViewById(R.id.btn_back);
 		updateInfo = (TextView) v.findViewById(R.id.update_info);
 		updateBtn = (LinearLayout) v.findViewById(R.id.update_info_btn);
-
+		alarmBtn= (LinearLayout) v.findViewById(R.id.alarm_setting);
 
 
 		/**
@@ -145,6 +147,16 @@ public class YinXiangSettingFragment extends Fragment {
 				startUpdate();
 			}
 		});
+		
+		alarmBtn.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				MyApplication.vibrator.vibrate(100);
+				startSetAlarm();
+			}
+		});
 	}
 
 	private void initData() {
@@ -167,6 +179,12 @@ public class YinXiangSettingFragment extends Fragment {
 			Log.e(LOG_TAG, e.getMessage());
 			return "1.0";
 		}
+	}
+	
+	
+	private void startSetAlarm(){
+		Intent intent =new Intent(getActivity(), AlarmSetting.class);
+		startActivity(intent);
 	}
 
 	/**

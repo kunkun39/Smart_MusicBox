@@ -87,7 +87,9 @@
         <activity
                 android:name="com.changhong.yinxiang.activity.YinXiangFMActivity"
                 android:screenOrientation="portrait" />
-
+		<activity
+                android:name="com.changhong.yinxiang.activity.AlarmSetting"
+                android:screenOrientation="portrait" />
         <activity android:name="com.changhong.yinxiang.activity.SearchActivity"/>
         <service android:name="com.changhong.yinxiang.nanohttpd.HTTPDService" />
 
