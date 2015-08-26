@@ -105,7 +105,7 @@ public class CopyOfYinXiangMusicViewActivity extends Activity{
         String keyStr=intent.getStringExtra("KeyWords");
 
         //YD modify  20150810
-        musicAdapter = new YinXiangMusicAdapter(this,null,keyStr);
+        musicAdapter = new YinXiangMusicAdapter(this,null,keyStr,null);
         musicListView.setAdapter(musicAdapter);
 
         musicSend = (Button)findViewById(R.id.yinxing_vedio_tuisong);

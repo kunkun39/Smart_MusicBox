@@ -1,23 +1,17 @@
 package com.changhong.yinxiang.music;
 
-import java.io.File;
-import java.net.URI;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
-
-import android.content.ContentResolver;
-import android.content.ContentValues;
+import org.json.JSONTokener;
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,27 +19,10 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.alibaba.fastjson.serializer.MapSerializer;
-import com.baidu.android.common.logging.Log;
-import com.changhong.common.service.ClientSendCommandService;
-import com.changhong.common.system.AppConfig;
 import com.changhong.common.system.MyApplication;
-import com.changhong.common.utils.NetworkUtils;
-import com.changhong.common.utils.StringUtils;
 import com.changhong.yinxiang.R;
-import com.changhong.yinxiang.activity.YinXiangMusicViewActivity;
-import com.changhong.yinxiang.activity.YinXiangPictureCategoryActivity;
-import com.changhong.yinxiang.activity.YinXiangPictureDetailsActivity;
-import com.changhong.yinxiang.activity.YinXiangRemoteControlActivity;
-import com.changhong.yinxiang.nanohttpd.HTTPDService;
-import com.changhong.yinxiang.view.FileEditDialog;
 import com.nostra13.universalimageloader.cache.disc.utils.DiskCacheFileManager;
 
 /**
@@ -64,29 +41,64 @@ public class YinXiangMusicAdapter extends BaseAdapter {
 	private String keyStr;
 	private String displayName, musicPath;
 	private boolean checkSetFlag = false;
-	
-	public static final int  SHOW_FILEEDIT_DIALOG=1;
-	
-	
+
+
 
 	/**
 	 * YD add 20150806 for fileEdit 音频文件编辑功能
 	 */
        Handler mHandler=null;
 
-	public YinXiangMusicAdapter(Context context, Handler handler,String keyWords) {
+	public YinXiangMusicAdapter(Context context, Handler handler,String keyWords, String jsonStr) {
 		this.context = context;
 		this.keyStr = keyWords;
 		this.mHandler=handler;
-		this.inflater = (LayoutInflater) context
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-		YinXiangMusicProvider provider = new YinXiangMusicProvider(context);
-		musicsAll = provider.getList();
+		if(null != jsonStr){
+			musicsAll = pareJsonToMusicList(jsonStr);
+		}else {
+			YinXiangMusicProvider provider = new YinXiangMusicProvider(context);
+			musicsAll = provider.getList();
+		}
 		checkStateMap = new TreeMap<String, String>();
 		musicFilter();
 		selectMusics.clear();
 	}
+	
+	
+	private List<YinXiangMusic>  pareJsonToMusicList(String jsonStr) {
+        List<YinXiangMusic> list = new ArrayList<YinXiangMusic>();
+		if (null  != jsonStr) {		
+			try {
+
+				JSONTokener jsonParser = new JSONTokener(jsonStr);
+				// 此时还未读取任何json文本，直接读取就是一个JSONObject对象。
+				// 如果此时的读取位置在"name" : 了，那么nextValue就是"返回对象了"（String）
+
+				JSONArray msgObject = (JSONArray) jsonParser.nextValue();
+
+				// 获取消息类型
+//				JSONArray jsonObjs = msgObject.getJSONArray("musicList");
+				for (int i = 0; i < msgObject.length(); i++) {
+					JSONObject musicObj = ((JSONObject) msgObject.opt(i));
+					int id =musicObj.getInt("id");
+                    String title = musicObj.getString("title");
+                    String path = musicObj.getString("path");
+                    String artist = musicObj.getString("artist");;
+                    YinXiangMusic music = new YinXiangMusic(id, title, path, i, artist,i, 0, 4);
+                    list.add(music);
+				}	
+            }catch (JSONException ex) {
+    			// 异常处理代码
+    			ex.printStackTrace();
+    		}
+		
+        }
+		return list;
+  }
+	
+	
 
 	public int getCount() {
 		return musicsAct.size();
@@ -107,21 +119,21 @@ public class YinXiangMusicAdapter extends BaseAdapter {
 			wapper = new DataWapper();
 
 			// 获得view
-			convertView = inflater.inflate(R.layout.yinixiang_vedio_list_item,
+			convertView = inflater.inflate(R.layout.yinixiang_music_list_item,
 					null);
-			wapper.musicImage = (ImageView) convertView
-					.findViewById(R.id.yinxiang_vedio_item_image);
+			wapper.musicIndex = (TextView) convertView
+					.findViewById(R.id.yinxiang_music_item_index);
 			wapper.musicName = (TextView) convertView
-					.findViewById(R.id.yinxiang_vedio_item_name);
+					.findViewById(R.id.yinxiang_music_item_name);
 			wapper.fullPath = (TextView) convertView
-					.findViewById(R.id.yinxiang_vedio_item_path);
+					.findViewById(R.id.yinxiang_music_item_path);
 			wapper.musicChecked = (CheckBox) convertView
-					.findViewById(R.id.yinxiang_vedio_item_checked);
+					.findViewById(R.id.yinxiang_music_item_checked);
 
 			wapper.editBtn = (ImageView) convertView
-					.findViewById(R.id.yinxiang_vedio_item_edit);
+					.findViewById(R.id.yinxiang_music_item_edit);
 
-			wapper.musicImage.setTag(position);
+//			wapper.musicImage.setTag(position);
 			// 组装view
 			convertView.setTag(wapper);
 		} else {
@@ -134,19 +146,19 @@ public class YinXiangMusicAdapter extends BaseAdapter {
 		displayName = yinXiangMusic.getTitle();
 		musicPath = yinXiangMusic.getPath();
 
+		wapper.musicIndex.setText(Integer.toString(position+1));
 		wapper.musicName.setText(displayName);
 		wapper.fullPath.setText(musicPath);
-		String musicImagePath = DiskCacheFileManager
-				.isSmallImageExist(musicPath);
-		if (!musicImagePath.equals("")) {
-			MyApplication.imageLoader.displayImage("file://" + musicImagePath,
-					wapper.musicImage, MyApplication.viewOptions);
-			wapper.musicImage.setScaleType(ImageView.ScaleType.FIT_XY);
-		} else {
-			YinXiangSetImageView.getInstance().setContext(context);
-			YinXiangSetImageView.getInstance().startExecutor(wapper.musicImage,
-					yinXiangMusic);
-		}
+		String musicImagePath = DiskCacheFileManager	.isSmallImageExist(musicPath);
+//		if (!musicImagePath.equals("")) {
+//			MyApplication.imageLoader.displayImage("file://" + musicImagePath,
+//					wapper.musicImage, MyApplication.viewOptions);
+//			wapper.musicImage.setScaleType(ImageView.ScaleType.FIT_XY);
+//		} else {
+//			YinXiangSetImageView.getInstance().setContext(context);
+//			YinXiangSetImageView.getInstance().startExecutor(wapper.musicImage,
+//					yinXiangMusic);
+//		}
 
 		final boolean isChecked = selectMusics.contains(yinXiangMusic);
 		wapper.musicChecked.setChecked(isChecked);
@@ -163,8 +175,8 @@ public class YinXiangMusicAdapter extends BaseAdapter {
 				} else {
 					selectMusics.remove(yinXiangMusic);
 				}
-				YinXiangMusicViewActivity.musicSelectedInfo.setText("你共选择了"
-						+ selectMusics.size() + "首歌曲");
+//				YinXiangMusicViewActivity.musicSelectedInfo.setText("你共选择了"
+//						+ selectMusics.size() + "首歌曲");
 			}
 		});
 
@@ -176,7 +188,7 @@ public class YinXiangMusicAdapter extends BaseAdapter {
 				
 				//发送消息给绑定的activity。
 				Message msg=new Message();
-				msg.what=SHOW_FILEEDIT_DIALOG;
+				msg.what=1;
 				msg.obj=yinXiangMusic;
 				mHandler.sendMessage(msg);
 			}
@@ -230,8 +242,8 @@ public class YinXiangMusicAdapter extends BaseAdapter {
 
 	private final class DataWapper {
 
-		// 音频的图标
-		public ImageView musicImage;
+		// 列表序号
+		public TextView musicIndex;
 
 		// 音频的名字
 		public TextView musicName;

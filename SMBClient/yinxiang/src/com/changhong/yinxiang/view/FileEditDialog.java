@@ -18,7 +18,7 @@ public class FileEditDialog extends Dialog {
     /**
      * 
      */
-    public ImageView edit_copy, edit_cancle, edit_clock;
+    public ImageView edit_copy1, edit_copy2,edit_cancle, edit_clock,edit_rename;
     public ImageView imgback;
    private  Context mContext;
 	public static String ACTION_FILE_EDIT = "com.changhong.fileEdit";
@@ -30,18 +30,18 @@ public class FileEditDialog extends Dialog {
         this.mContext=context;
         Window window = this.getWindow();
         WindowManager.LayoutParams wlp = window.getAttributes();
-        wlp.alpha = 0.75f;
         wlp.width = WindowManager.LayoutParams.MATCH_PARENT;
         window.setAttributes(wlp);
-        window.setGravity(Gravity.CENTER);
+        window.setGravity(Gravity.BOTTOM);
 //        window.setWindowAnimations(R.style.dialogWindowAnim);
         setContentView(R.layout.file_edit_dialog);
 
         //功能按钮定义
-        edit_copy = (ImageView) findViewById(R.id.fileedit_copy);
+        edit_copy1 = (ImageView) findViewById(R.id.fileedit_copy1);
+        edit_copy2 = (ImageView) findViewById(R.id.fileedit_copy2);
         edit_cancle = (ImageView) findViewById(R.id.fileedit_cancle);
         edit_clock = (ImageView) findViewById(R.id.fileedit_clock);
-//        imgback=(ImageView)findViewById(R.id.showyinxiao);
+        edit_rename=(ImageView)findViewById(R.id.fileedit_rename);
          
     }
     

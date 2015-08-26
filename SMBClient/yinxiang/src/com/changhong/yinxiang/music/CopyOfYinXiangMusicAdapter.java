@@ -41,7 +41,6 @@ import com.changhong.yinxiang.R;
 import com.changhong.yinxiang.activity.YinXiangMusicViewActivity;
 import com.changhong.yinxiang.activity.YinXiangPictureCategoryActivity;
 import com.changhong.yinxiang.activity.YinXiangPictureDetailsActivity;
-import com.changhong.yinxiang.activity.YinXiangRemoteControlActivity;
 import com.changhong.yinxiang.nanohttpd.HTTPDService;
 import com.changhong.yinxiang.view.FileEditDialog;
 import com.nostra13.universalimageloader.cache.disc.utils.DiskCacheFileManager;
@@ -158,8 +157,8 @@ public class CopyOfYinXiangMusicAdapter extends BaseAdapter {
 				} else {
 					selectMusics.remove(yinXiangMusic);
 				}
-				YinXiangMusicViewActivity.musicSelectedInfo.setText("你共选择了"
-						+ selectMusics.size() + "首歌曲");
+//				YinXiangMusicViewActivity.musicSelectedInfo.setText("你共选择了"
+//						+ selectMusics.size() + "首歌曲");
 			}
 		});
 
@@ -217,8 +216,7 @@ public class CopyOfYinXiangMusicAdapter extends BaseAdapter {
 			fileEditDialog.setCanceledOnTouchOutside(true);
 		
 			// 设置盒子端闹铃铃声
-			fileEditDialog.edit_clock
-					.setOnClickListener(new View.OnClickListener() {
+			fileEditDialog.edit_clock	.setOnClickListener(new View.OnClickListener() {
 						@Override
 						public void onClick(View v) {
 							Toast.makeText(context, "闹铃设置成功", Toast.LENGTH_SHORT).show();
@@ -233,7 +231,7 @@ public class CopyOfYinXiangMusicAdapter extends BaseAdapter {
 						}
 					});
 
-			fileEditDialog.edit_copy
+			fileEditDialog.edit_copy1
 					.setOnClickListener(new View.OnClickListener() {
 
 						@Override

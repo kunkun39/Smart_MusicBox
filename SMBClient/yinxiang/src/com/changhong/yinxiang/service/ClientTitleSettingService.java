@@ -12,15 +12,15 @@ public class ClientTitleSettingService {
      * every activity which contains list of box should set title here
      */
     public static void setClientActivityTitle() {
-        if (YinXiangRemoteControlActivity.title != null) {
-            YinXiangRemoteControlActivity.title.setText(ClientSendCommandService.titletxt);
-        }
+//        if (YinXiangRemoteControlActivity.title != null) {
+//            YinXiangRemoteControlActivity.title.setText(ClientSendCommandService.titletxt);
+//        }
         if (YinXiangMainActivity.title != null) {
             YinXiangMainActivity.title.setText(ClientSendCommandService.titletxt);
         }
-        if (YinXiangCategoryActivity.title != null) {
-        	YinXiangCategoryActivity.title.setText(ClientSendCommandService.titletxt);
-        }
+//        if (YinXiangCategoryActivity.title != null) {
+//        	YinXiangCategoryActivity.title.setText(ClientSendCommandService.titletxt);
+//        }
         if (YinXiangPictureCategoryActivity.title != null) {
         	YinXiangPictureCategoryActivity.title.setText(ClientSendCommandService.titletxt);
         }

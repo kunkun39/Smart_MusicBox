@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!--
         Base application theme, dependent on API level. This theme is replaced
@@ -192,9 +192,17 @@
     <item name="android:layout_weight">1</item>  
     <item name="android:gravity">center</item>  
     <item name="android:textSize">14sp</item>  
-    <item name="android:paddingTop">8dip</item>  
+    <item name="android:paddingTop">5dip</item>  
     <item name="android:paddingBottom">4dip</item>       
     <item name="android:button">@null</item>  
    </style>  
+   
+    <!-- 推送个选中框风格 -->
+   <style name="MyCheckBox" parent="@android:style/Widget.CompoundButton.CheckBox">
+   <item name="android:background">@drawable/send_checkbox</item>
+   <item name="android:padding">2.0dip</item>
+   <item name="android:maxHeight">30.0dip</item>
+    <item name="android:button">@null</item>     
+   </style>
 
 </resources>
