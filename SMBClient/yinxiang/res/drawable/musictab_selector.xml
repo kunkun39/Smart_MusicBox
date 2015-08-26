@@ -3,5 +3,7 @@
     <item android:state_pressed="true" android:drawable="@drawable/tab_divider" /> <!--按下时效果-->  
     <item android:state_focused="true" android:drawable="@drawable/tab_divider" /> <!--按下时效果--> 
     <item android:state_selected="true"   android:drawable="@drawable/tab_divider" /> 
-    <item android:state_checked="true"   android:drawable="@drawable/tab_divider" /> 
+    <item android:state_checked="true"   android:drawable="@drawable/tab_divider" />    
+    <item android:drawable="@drawable/tab_divider_default" /> 
+    
 </selector> 
