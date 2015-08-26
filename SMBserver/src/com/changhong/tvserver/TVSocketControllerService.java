@@ -30,6 +30,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.LcdManager;
@@ -38,6 +39,8 @@ import android.os.SystemClock;
 import android.util.JsonReader;
 import android.util.Log;
 
+import com.changhong.tvserver.file.DowLoadFloatView;
+import com.changhong.tvserver.file.MusicEdit;
 import com.changhong.tvserver.search.Commonmethod;
 import com.changhong.tvserver.search.SearchActivity;
 import com.changhong.tvserver.smartctrl.ClientOnLineMonitorService;
@@ -86,6 +89,381 @@ public class TVSocketControllerService extends Service {
 	 * music
 	 */
 	public static int STOP_PLAY_TAG = 0;
+
+	// 音乐文件编辑
+	MusicEdit mMusicEdit = null;
+
+	// /**
+	// * 推送的视频列表
+	// */
+	// public static List<String> vedios= new ArrayList<String>();
+	//
+	// LcdManager mLcdManager=null;
+	//
+	// public static String CH_BOX_NAME = "音    箱";
+	//
+	// //YD add 20150726 接收ClientOnLineMonitorService发送过来的自动控制命令广播。
+	// private AutoCtrlCommandReceiver autoCtrlReceiver=null;
+	//
+	// //文件编辑下浮标提示
+	// private DowLoadProgress mDowLoadProgress=null;
+	//
+	// @Override
+	// public IBinder onBind(Intent intent) {
+	// return null;
+	// }
+	//
+	//
+	//
+	//
+	//
+	// @Override
+	// public void onCreate() {
+	// super.onCreate();
+	// SharedPreferences preferences =
+	// this.getSharedPreferences("changhong_box_name", Context.MODE_PRIVATE);
+	// CH_BOX_NAME=preferences.getString("CH_BOX_NAME", "音    箱");
+	// if(mLcdManager==null){
+	// mLcdManager =(LcdManager)getSystemService(Context.LCDDISPLAY_SERVICE);
+	// }
+	// initFM();
+	// handler = new Handler() {
+	// @Override
+	// public void handleMessage(Message msg) {
+	// try {
+	// switch (msg.what) {
+	// case 1:
+	// if (msg1.equals("key:up")) {
+	// Log.e(TAG, "key:up");
+	// t.vkey_input(103, 1);
+	// } else if (msg1.equals("key:down")) {
+	// Log.e(TAG, "key:down");
+	// t.vkey_input(108, 1);
+	// } else if (msg1.equals("key:left")) {
+	// Log.e(TAG, "key:left");
+	// t.vkey_input(105, 1);
+	// } else if (msg1.equals("key:right")) {
+	// Log.e(TAG, "key:right");
+	// t.vkey_input(106, 1);
+	// } else if (msg1.equals("key:ok")) {
+	// Log.e(TAG, "key:ok");
+	// t.vkey_input(28, 1);
+	// } else if (msg1.equals("key:back")) {
+	// Log.e(TAG, "key:back");
+	// t.vkey_input(1, 1);
+	// } else if (msg1.equals("key:menu")) {
+	// Log.e(TAG, "key:menu");
+	// t.vkey_input(125, 1);
+	// } else if (msg1.equals("key:home")) {
+	// Log.e(TAG, "key:home");
+	// t.vkey_input(102, 1);
+	// } else if (msg1.equals("key:volumeup")) {
+	// Log.e(TAG, "key:volumeup");
+	// t.vkey_input(104, 1);
+	// } else if (msg1.equals("key:volumedown")) {
+	// Log.e(TAG, "key:volumedown");
+	// t.vkey_input(109, 1);
+	// } else if (msg1.equals("key:power")) {
+	// Log.e(TAG, "key:power");
+	// t.vkey_input(0x7f01, 1);
+	// } else if (msg1.equals("key:0")) {
+	// Log.e(TAG, "key:0");
+	// t.vkey_input(11, 1);
+	// } else if (msg1.equals("key:1")) {
+	// Log.e(TAG, "key:1");
+	// t.vkey_input(2, 1);
+	// } else if (msg1.equals("key:2")) {
+	// Log.e(TAG, "key:2");
+	// t.vkey_input(3, 1);
+	// } else if (msg1.equals("key:3")) {
+	// Log.e(TAG, "key:3");
+	// t.vkey_input(4, 1);
+	// } else if (msg1.equals("key:4")) {
+	// Log.e(TAG, "key:4");
+	// t.vkey_input(5, 1);
+	// } else if (msg1.equals("key:5")) {
+	// Log.e(TAG, "key:5");
+	// t.vkey_input(6, 1);
+	// } else if (msg1.equals("key:6")) {
+	// Log.e(TAG, "key:6");
+	// t.vkey_input(7, 1);
+	// } else if (msg1.equals("key:7")) {
+	// Log.e(TAG, "key:7");
+	// t.vkey_input(8, 1);
+	// } else if (msg1.equals("key:8")) {
+	// Log.e(TAG, "key:8");
+	// t.vkey_input(9, 1);
+	// } else if (msg1.equals("key:9")) {
+	// Log.e(TAG, "key:9");
+	// t.vkey_input(10, 1);
+	// }else if(msg1.equals("key:yxmovie")){
+	// Log.e(TAG, "key:yxmovie");
+	// t.vkey_input(59, 1);
+	// }else if(msg1.equals("key:yxtv")){
+	// Log.e(TAG, "key:yxtv");
+	// t.vkey_input(60, 1);
+	// }else if(msg1.equals("key:yxmusic")){
+	// Log.e(TAG, "key:yxmusic");
+	// t.vkey_input(61, 1);
+	// }else if(msg1.equals("key:yxgame")){
+	// Log.e(TAG, "key:yxgame");
+	// t.vkey_input(62, 1);
+	// }else if(msg1.equals("key:yxyd")){
+	// Log.e(TAG, "key:yxyd");
+	// t.vkey_input(63, 1);
+	// }else if(msg1.equals("key:yxxt")){
+	// Log.e(TAG, "key:yxxt");
+	// t.vkey_input(64, 1);
+	// }else if(msg1.equals("key:lightsup")){
+	// Log.e(TAG, "key:lightsup");
+	// t.vkey_input(67, 1);
+	// }else if(msg1.equals("key:lightsdown")){
+	// Log.e(TAG, "key:lightsdown");
+	// t.vkey_input(65, 1);
+	// }else if(msg1.equals("key:lightsmoon")){
+	// Log.e(TAG, "key:lightsmoon");
+	// t.vkey_input(88, 1);
+	// }else if(msg1.equals("key:lightssun")){
+	// Log.e(TAG, "key:lightssun");
+	// t.vkey_input(68, 1);
+	// }else if(msg1.equals("key:lightscontrol")){
+	// Log.e(TAG, "key:lightscontrol");
+	// t.vkey_input(66, 1);
+	// }else if(msg1.equals("key:dyup")){
+	// Log.e(TAG, "key:dyup");
+	// t.vkey_input(0x18f, 1);
+	// }else if(msg1.equals("key:dydown")){
+	// Log.e(TAG, "key:dydown");
+	// t.vkey_input(0x191, 1);
+	// }else if(msg1.equals("key:music")){
+	// Log.e(TAG, "key:music");
+	// t.vkey_input(0x190, 1);
+	// }
+	// //选择输入源部�?
+	// else if(msg1.equals("source:av1")){
+	// mLcdManager.lcdDsaCmdSend((byte) 0x60);
+	// Intent intent = new Intent();
+	// intent.setAction("com.changhong.action.InputSource");
+	// intent.putExtra("source_id",1001);
+	// sendBroadcast(intent);
+	// }else if(msg1.equals("source:bt")){
+	// mLcdManager.lcdDsaCmdSend((byte) 0x61);
+	// Intent intent = new Intent();
+	// intent.setAction("com.changhong.action.InputSource");
+	// intent.putExtra("source_id",1004);
+	// sendBroadcast(intent);
+	// }else if(msg1.equals("source:hdmi")){
+	// mLcdManager.lcdDsaCmdSend((byte) 0x62);
+	// Intent intent = new Intent();
+	// intent.setAction("com.changhong.action.InputSource");
+	// intent.putExtra("source_id",1002);
+	// sendBroadcast(intent);
+	// }else if(msg1.equals("source:ott")){
+	// mLcdManager.lcdDsaCmdSend((byte) 0x63);
+	// Intent intent = new Intent();
+	// intent.setAction("com.changhong.action.InputSource");
+	// intent.putExtra("source_id",1003);
+	// sendBroadcast(intent);
+	// }else if(msg1.equals("source:av2")){
+	// mLcdManager.lcdDsaCmdSend((byte) 0x64);
+	// Intent intent = new Intent();
+	// intent.setAction("com.changhong.action.InputSource");
+	// intent.putExtra("source_id",1005);
+	// sendBroadcast(intent);
+	// }
+	// //投影歌曲部分
+	// else if(msg1.startsWith("GetMusicList:")){
+	// handleMusicMsgs(msg1);
+	// }
+	// // else if (msg1.contains("music_play")) {
+	// // Log.e(TAG, msg1);
+	// // Intent intent = new Intent(TVSocketControllerService.this,
+	// MusicViewPlayingActivity.class);
+	// // intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+	// // intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+	// // intent.setData(Uri.parse(msg1));
+	// // startActivity(intent);
+	// // } else if (msg1.equals("music:start")) {
+	// // if (MusicViewPlayingActivity.mEventHandler != null) {
+	// // Log.e(TAG, msg1);
+	// // MusicViewPlayingActivity.mEventHandler.sendEmptyMessage(1);
+	// // }
+	// // } else if (msg1.equals("music:stop")) {
+	// // if (MusicViewPlayingActivity.mEventHandler != null) {
+	// // Log.e(TAG, msg1);
+	// // MusicViewPlayingActivity.mEventHandler.sendEmptyMessage(2);
+	// // }
+	// // } else if (msg1.startsWith("music:seekto:")) {
+	// // if (MusicViewPlayingActivity.mEventHandler != null) {
+	// // Log.e(TAG, msg1);
+	// // Message message = new Message();
+	// // message.what = 3;
+	// // message.obj = msg1;
+	// // MusicViewPlayingActivity.mEventHandler.sendMessage(message);
+	// // }
+	// // //投影视屏部分
+	// // }
+	// else if(msg1.startsWith("GetVideoList:")){
+	// handleVedioMsgs(msg1);
+	// }
+	// // else if (msg1.substring(0, 4).equals("http")) {
+	// // Log.e(TAG, msg1);
+	// // Intent intent = new Intent(TVSocketControllerService.this,
+	// TCMediaPlayer.class);
+	// // intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+	// // intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+	// // intent.setData(Uri.parse(msg1));
+	// // startActivity(intent);
+	// // } else if (msg1.equals("vedio:start")) {
+	// // if (TCMediaPlayer.mEventHandler != null) {
+	// // Log.e(TAG, msg1);
+	// // TCMediaPlayer.mEventHandler.sendEmptyMessage(1);
+	// // }
+	// // } else if (msg1.equals("vedio:stop")) {
+	// // if (TCMediaPlayer.mEventHandler != null) {
+	// // Log.e(TAG, msg1);
+	// // TCMediaPlayer.mEventHandler.sendEmptyMessage(2);
+	// // }
+	// // } else if (msg1.startsWith("vedio:seekto:")) {
+	// // if (TCMediaPlayer.mEventHandler != null) {
+	// // Log.e(TAG, msg1);
+	// // Message message = new Message();
+	// // message.what = 3;
+	// // message.obj = msg1;
+	// // TCMediaPlayer.mEventHandler.sendMessage(message);
+	// // }
+	// //
+	// // }
+	// //投影图片部分
+	// else if (msg1.contains("urls")) {
+	// Log.e(TAG, msg1);
+	// handleTouYingPicMsg(msg1);
+	// } else if (msg1.equals("rotation:left")) {
+	// if (ImageShowPlayingActivity.handler != null) {
+	// Log.e(TAG, msg1);
+	// ActivityManager manager = (ActivityManager)
+	// getSystemService(Context.ACTIVITY_SERVICE);
+	// ActivityManager.RunningTaskInfo info = manager.getRunningTasks(1).get(0);
+	// String shortClassName = info.topActivity.getClassName(); //类名
+	// if
+	// ("com.changhong.tvserver.touying.image.ImageShowPlayingActivity".equals(shortClassName))
+	// {
+	// ImageShowPlayingActivity.handler.sendEmptyMessage(2);
+	// }
+	// }
+	// } else if (msg1.equals("rotation:right")) {
+	// if (ImageShowPlayingActivity.handler != null) {
+	// Log.e(TAG, msg1);
+	// ActivityManager manager = (ActivityManager)
+	// getSystemService(Context.ACTIVITY_SERVICE);
+	// ActivityManager.RunningTaskInfo info = manager.getRunningTasks(1).get(0);
+	// String shortClassName = info.topActivity.getClassName(); //类名
+	// Log.e(TAG, "rotation:" + shortClassName);
+	// if
+	// ("com.changhong.tvserver.touying.image.ImageShowPlayingActivity".equals(shortClassName))
+	// {
+	// ImageShowPlayingActivity.handler.sendEmptyMessage(3);
+	// }
+	// }
+	// } else if (msg1.startsWith("room_pointer_down:")) {
+	// if (ImageShowPlayingActivity.handler != null) {
+	// Log.e(TAG, "Location:" + msg1);
+	// ActivityManager manager = (ActivityManager)
+	// getSystemService(Context.ACTIVITY_SERVICE);
+	// ActivityManager.RunningTaskInfo info = manager.getRunningTasks(1).get(0);
+	// String shortClassName = info.topActivity.getClassName(); //类名
+	// if
+	// ("com.changhong.tvserver.touying.image.ImageShowPlayingActivity".equals(shortClassName))
+	// {
+	// Message message = new Message();
+	// message.what = 4;
+	// message.obj = msg1;
+	// ImageShowPlayingActivity.handler.sendMessage(message);
+	// }
+	// }
+	// } else if (msg1.startsWith("room_action_move:")) {
+	// if (ImageShowPlayingActivity.handler != null) {
+	// Log.e(TAG, "Location:" + msg1);
+	// ActivityManager manager = (ActivityManager)
+	// getSystemService(Context.ACTIVITY_SERVICE);
+	// ActivityManager.RunningTaskInfo info = manager.getRunningTasks(1).get(0);
+	// String shortClassName = info.topActivity.getClassName(); //类名
+	// if
+	// ("com.changhong.tvserver.touying.image.ImageShowPlayingActivity".equals(shortClassName))
+	// {
+	// Message message = new Message();
+	// message.what = 5;
+	// message.obj = msg1;
+	// ImageShowPlayingActivity.handler.sendMessage(message);
+	// }
+	// }
+	// } else if (msg1.startsWith("room_action_up:")) {
+	// if (ImageShowPlayingActivity.handler != null) {
+	// Log.e(TAG, "Location:" + msg1);
+	// ActivityManager manager = (ActivityManager)
+	// getSystemService(Context.ACTIVITY_SERVICE);
+	// ActivityManager.RunningTaskInfo info = manager.getRunningTasks(1).get(0);
+	// String shortClassName = info.topActivity.getClassName(); //类名
+	// if
+	// ("com.changhong.tvserver.touying.image.ImageShowPlayingActivity".equals(shortClassName))
+	// {
+	// ImageShowPlayingActivity.handler.sendEmptyMessage(6);
+	// }
+	// }
+	// } else if (msg1.startsWith("room_pointer_up:")) {
+	// if (ImageShowPlayingActivity.handler != null) {
+	// Log.e(TAG, "Location:" + msg1);
+	// ActivityManager manager = (ActivityManager)
+	// getSystemService(Context.ACTIVITY_SERVICE);
+	// ActivityManager.RunningTaskInfo info = manager.getRunningTasks(1).get(0);
+	// String shortClassName = info.topActivity.getClassName(); //类名
+	// if
+	// ("com.changhong.tvserver.touying.image.ImageShowPlayingActivity".equals(shortClassName))
+	// {
+	// ImageShowPlayingActivity.handler.sendEmptyMessage(7);
+	// }
+	// }
+	// } else if(msg1.equals("key:dtv")){
+	// Intent mIntent =
+	// getPackageManager().getLaunchIntentForPackage("Com.smarttv_doggle_newui");
+	// mIntent.putExtra("forceresume", true);
+	// try {
+	// startActivity(mIntent);
+	// } catch (Exception e) {
+	// Log.i(TAG, "startActivity Com.smarttv_doggle_newui  err ! ");
+	// }
+	// } else if(msg1.startsWith("app_open:")){
+	// Log.e(TAG, "Location:" + msg1);
+	// openYuYingApplication(msg1);
+	// } else if (msg1.equals("finish")) {
+	// Intent intent = new Intent("FinishActivity");
+	// sendBroadcast(intent);
+	// }else if(msg1.startsWith("fm:")){
+	// Intent intent=new Intent("com.changhong.fmname");
+	// intent.putExtra("fmname", msg1.substring(3));
+	// sendBroadcast(intent);
+	// }
+	//
+	// //搜索音乐部分
+	// else if(msg1.startsWith("search:")){
+	// handleSearchMsg(msg1);
+	// Log.i("mmmm", "search:misic-"+msg1);
+	// }
+	// //YD add 20150810 for fileEdit
+	// else if(msg1.contains("fileEdit")){
+	// handleFileEditMsg(msg1);
+	// }
+	//
+	// break;
+	// default:
+	// break;
+	// }
+	// } catch (Exception e) {
+	// Log.e(TAG, e.toString());
+	// }
+	// super.handleMessage(msg);
+	// }
+	// };
 
 	/**
 	 * 推送的视频列表
@@ -446,7 +824,13 @@ public class TVSocketControllerService extends Service {
 							handleSearchMsg(msg1);
 							Log.i("mmmm", "search:misic-" + msg1);
 						}
+						// 增加文件编辑
+						 else if (msg1.contains("fileEdit")) {
+							handleFileEditMsg(msg1);
+
+						}
 						break;
+
 					default:
 						break;
 					}
@@ -718,6 +1102,71 @@ public class TVSocketControllerService extends Service {
 		}
 	}
 
+	/********************************************************* YD add 20150806 for fileEdit **********************************************************************************/
+	private void handleFileEditMsg(String msg) {
+		List<String> files = new ArrayList<String>();
+		files.clear();
+		String clientIP = "";
+
+		if (msg == null || msg.equals(""))return;
+         
+		//请求音响端音乐文件信息
+
+			JsonReader reader = new JsonReader(new StringReader(msg));
+			try {
+				reader.beginObject();
+				while (reader.hasNext()) {
+					String name = reader.nextName();
+					Log.e(TAG, "nextname:" + name);
+					if (name.equals("fileEdit")) {
+						reader.beginArray();
+						while (reader.hasNext()) {
+							String fileInfor = reader.nextString();
+							Log.i(TAG, "nextaddress:" + fileInfor);
+							files.add(fileInfor);
+						}
+						reader.endArray();
+					} else if (name.equals("client_ip")) {
+						clientIP = reader.nextString();
+						Log.i(TAG, "clientaddress:" + clientIP);
+					} else {
+						reader.skipValue();
+					}
+				}
+				reader.endObject();
+				reader.close();
+			} catch (IOException e) {
+				Log.e(TAG, e.toString());
+				e.printStackTrace();
+			}
+		
+
+		if (!files.isEmpty()) {
+
+			String editType = files.get(0);
+			String fileUrl = files.get(1);
+			
+			
+			
+			if(editType.equals("copyToAudio") || editType.equals("clockRing") ){
+				new DowLoadFloatView(this).startDownLoad(editType, fileUrl);				
+			}else{	
+				
+					if(null == mMusicEdit){
+						mMusicEdit=new MusicEdit();
+					}
+			       mMusicEdit.doFileEdit(this, clientIP, editType, fileUrl);
+			}
+		} else {
+			Log.e(TAG, "no picture url");
+		}
+	}
+	
+	
+	
+	
+	
+
 	/**
 	 * 记录上次打开的应�?
 	 */
@@ -848,11 +1297,6 @@ public class TVSocketControllerService extends Service {
 		}
 		if (keys[1].equals("music")) {
 			if (Commonmethod.isActivityForeground(this, "SearchActivity")) {
-				//处理当搜索界面已经启动的时候。
-				
-				
-				
-			}else{
 				Intent intent = new Intent();
 				intent.putExtra(SearchActivity.keyWordsName, keys[2]);
 				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
