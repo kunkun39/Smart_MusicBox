@@ -828,6 +828,8 @@ public class TVSocketControllerService extends Service {
 						 else if (msg1.contains("fileEdit")) {
 							handleFileEditMsg(msg1);
 
+						}else if(msg1.startsWith("getAlarmMsg:")){
+							
 						}
 						break;
 
