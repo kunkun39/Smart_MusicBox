@@ -827,7 +827,7 @@ public class TVSocketControllerService extends Service {
 						// 增加文件编辑
 						 else if (msg1.contains("fileEdit")) {
 							handleFileEditMsg(msg1);
-
+							//获取闹铃设置信息
 						}else if(msg1.startsWith("getAlarmMsg:")){
 							
 						}
@@ -874,7 +874,6 @@ public class TVSocketControllerService extends Service {
 
 						if (StringUtils.hasLength(ip) && !ip.equals("0.0.0.0")) {
 							serverInfo = CH_BOX_NAME;
-
 							/**
 							 * 添加服务端网络信息到心跳
 							 */
