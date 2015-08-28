@@ -11,6 +11,8 @@ import java.util.Enumeration;
 /**
  * Created by Jack Wang
  */
+
+
 public class NetworkUtils {
 
     public static String getLocalIpAddress() {

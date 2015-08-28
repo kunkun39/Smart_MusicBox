@@ -1,17 +1,23 @@
 package com.changhong.tvserver.file;
 
 import java.io.File;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+
+import com.changhong.nanohttpd.NanoHTTPDService;
 import com.changhong.tvserver.touying.music.MusicInfor;
 import com.changhong.tvserver.touying.music.MusicProvider;
+import com.changhong.tvserver.utils.NetworkUtils;
 import com.changhong.tvserver.utils.StringUtils;
 
 public class MusicEdit {
@@ -19,6 +25,8 @@ public class MusicEdit {
 	List<MusicInfor> musicList=null;
 	FileUtil mFileUtil ;
 	FileEditManager mFileEditManager;
+
+	
 	
 	public MusicEdit(){
 		   mFileUtil = new FileUtil() ;
@@ -86,12 +94,14 @@ public class MusicEdit {
 					String artist = music.getArtist();
 					int duration = music.getDuration();
 					int id = music.getId();
+					String httpurl=convertFilePathToHttpURL(tempPath);
 					JSONObject musicObj = new JSONObject();
 					musicObj.put("id", id);
 					musicObj.put("path", tempPath);
 					musicObj.put("title", title);
 					musicObj.put("artist", artist);
 					musicObj.put("duration", duration);
+					musicObj.put("httpUrl", httpurl);
 					array.put(musicObj);
 				}
 			} else {
@@ -136,6 +146,53 @@ public class MusicEdit {
 		return reValue;
 	}
 	
+	
+	
+	private  String convertFilePathToHttpURL(String filePath){
+		
+		// 获取IP和外部存储路径
+		String ipAddress = NetworkUtils.getLocalIpAddress();
+		String httpAddress = "http://" + ipAddress + ":" + NanoHTTPDService.HTTP_PORT;
+
+		String newMusicPath = null;
+		if (filePath.startsWith(NanoHTTPDService.defaultHttpServerPath)) {
+			newMusicPath = convertFileUrlToHttpURL(filePath.replace(NanoHTTPDService.defaultHttpServerPath, ""));
+
+		} else {
+			for (String otherHttpServerPath : NanoHTTPDService.otherHttpServerPaths) {
+				if (filePath.startsWith(otherHttpServerPath)) {
+					newMusicPath = convertFileUrlToHttpURL(filePath.replace(otherHttpServerPath, ""));
+				}
+			}
+		}
+
+		String tmpHttpAddress = httpAddress + newMusicPath;
+		// 判断URL是否符合规范，如果不符合规范，就1重命名文件
+		try {
+			URI.create(tmpHttpAddress);
+		} catch (Exception e) {
+			tmpHttpAddress=filePath;
+		}		
+		return tmpHttpAddress;
+	}
+	
+	
+	/**
+	 * 特殊字符转换
+	 * 
+	 * @param url
+	 *            url字符串
+	 * @return
+	 */
+	public String convertFileUrlToHttpURL(String url) {
+		if (null != url && url.length() > 0) {
+			return url.replace("%", "%25").replace(" ", "%20")
+					.replace("+", "%2B").replace("#", "%23")
+					.replace("&", "%26").replace("=", "%3D")
+					.replace("?", "%3F").replace("^", "%5E");
+		}
+		return url;
+	}
 	
 	private void upDateMediaStore(Context context,String doAction,String fileUrl, String newFile) {
 		
