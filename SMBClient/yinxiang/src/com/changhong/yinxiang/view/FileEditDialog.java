@@ -18,7 +18,7 @@ public class FileEditDialog extends Dialog {
     /**
      * 
      */
-    public ImageView edit_copy1, edit_copy2,edit_cancle, edit_clock,edit_rename;
+    public ImageView edit_copy1, edit_copy2,edit_remove, edit_clock,edit_rename;
     public ImageView imgback;
    private  Context mContext;
 	public static String ACTION_FILE_EDIT = "com.changhong.fileEdit";
@@ -39,7 +39,7 @@ public class FileEditDialog extends Dialog {
         //功能按钮定义
         edit_copy1 = (ImageView) findViewById(R.id.fileedit_copy1);
         edit_copy2 = (ImageView) findViewById(R.id.fileedit_copy2);
-        edit_cancle = (ImageView) findViewById(R.id.fileedit_cancle);
+        edit_remove = (ImageView) findViewById(R.id.fileedit_cancle);
         edit_clock = (ImageView) findViewById(R.id.fileedit_clock);
         edit_rename=(ImageView)findViewById(R.id.fileedit_rename);
          

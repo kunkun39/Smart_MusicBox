@@ -22,6 +22,8 @@ public class YinXiangMusic implements Serializable {
     private int duration;// 歌曲时长
 
     private long createTime;
+    
+
 
     public YinXiangMusic(int id, String title, String path, int albumId, String artist, int artistId, int duration, long createTime) {
         this.id = id;

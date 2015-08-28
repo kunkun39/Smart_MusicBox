@@ -13,9 +13,11 @@ import org.json.JSONTokener;
 
 import com.changhong.yinxiang.activity.YinXiangMusicViewActivity;
 
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.widget.Toast;
 
 
 public class MusicEditServer {
@@ -51,10 +53,8 @@ public class MusicEditServer {
 		mSocketCommunication = new Thread(commThread);
 		mSocketCommunication.start();
 		
-		try {
-			
-			mServerSocket = new ServerSocket(SOCKET_PORT);
-			
+		try {			
+			mServerSocket = new ServerSocket(SOCKET_PORT);			
 		} catch (IOException e) {
 			// TODO 自动生成的 catch 块
 			e.printStackTrace();
@@ -107,7 +107,7 @@ public class MusicEditServer {
 					Socket socketclient = null;
 					try {
 						// 设置接收延迟时间
-						mServerSocket.setSoTimeout(20000);
+						mServerSocket.setSoTimeout(30000);
 						// 获取音响端发送的socket的对象
 						socketclient = mServerSocket.accept();
 						in = new BufferedReader(new InputStreamReader(
@@ -123,15 +123,24 @@ public class MusicEditServer {
 						String communication=(String) msg.obj;
 						if(communication.equals("requestMusicList")){
 							 newMsg.what = YinXiangMusicViewActivity.SHOW_AUDIOEQUIPMENT_MUSICLIST;
+							 newMsg.obj = getRespondMsg(content);							 
 						}else{
 						     newMsg.what = YinXiangMusicViewActivity.SHOW_ACTION_RESULT;
+						     Bundle bundle=new Bundle();
+						     bundle.putString("action", communication);
+						     bundle.putString("result", content);
+						     newMsg.setData(bundle);
 						}
-						newMsg.obj = getRespondMsg(content);
 						mParentHandler.sendMessage(newMsg);
 
 					} catch (IOException e) {
 						// TODO 自动生成的 catch 块
+						
+						System.out.println("mServerSocket.accept（） error:::::::::::::::::::::::::::::::::::::::::");
+
 						e.printStackTrace();
+						System.out.println("mServerSocket.accept（） error  end:::::::::::::::::::::::::::::::::::::::::");
+
 					} finally {
 
 						try {
@@ -140,7 +149,8 @@ public class MusicEditServer {
 							}
 							if (null != socketclient) {
 								socketclient.close();
-							}
+								socketclient=null;
+							}						
 						} catch (IOException e) {
 							// TODO 自动生成的 catch 块
 							e.printStackTrace();
@@ -149,6 +159,15 @@ public class MusicEditServer {
 				}
 			
 			};
+			
+			
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				// TODO 自动生成的 catch 块
+				e.printStackTrace();
+			}
+
 			Looper.loop();
 	}
 		

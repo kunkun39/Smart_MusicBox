@@ -55,17 +55,51 @@ public class YinXiangMusicAdapter extends BaseAdapter {
 		this.mHandler=handler;
 		this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
+		createAdapterData(jsonStr);
+		checkStateMap = new TreeMap<String, String>();
+		musicFilter();
+		selectMusics.clear();
+	}
+	
+	
+	
+	
+	public void createAdapterData(String jsonStr){
 		if(null != jsonStr){
 			musicsAll = pareJsonToMusicList(jsonStr);
 		}else {
 			YinXiangMusicProvider provider = new YinXiangMusicProvider(context);
 			musicsAll = provider.getList();
 		}
-		checkStateMap = new TreeMap<String, String>();
-		musicFilter();
-		selectMusics.clear();
 	}
 	
+	
+	public void changeAdapterData(String type, YinXiangMusic music ){
+		
+		if(null == music)return;
+		int index=getMusicIndex(music);			
+		if(-1 != index  && type.equals(MusicUtils.EDIT_REMOVE)){
+			musicsAll.remove(index);
+		}else if(-1 != index  && type.equals(MusicUtils.EDIT_RENAME)){
+//			YinXiangMusic tempMusic=musicsAll.get(index);
+//			tempMusic.setTitle(music.getTitle());
+			musicsAll.set(index, music);
+		}
+		musicFilter();
+	}
+	
+	
+	
+	private int getMusicIndex(YinXiangMusic music){
+		int musicID=music.getId();
+		for ( int i = 0; i < musicsAll.size(); i++) {
+			YinXiangMusic tempMusic = musicsAll.get(i);
+			if (musicID == tempMusic.getId()) {
+				return i;
+			} 
+		}	
+		return -1;		
+	}
 	
 	private List<YinXiangMusic>  pareJsonToMusicList(String jsonStr) {
         List<YinXiangMusic> list = new ArrayList<YinXiangMusic>();

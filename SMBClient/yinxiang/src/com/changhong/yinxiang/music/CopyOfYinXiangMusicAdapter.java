@@ -223,7 +223,7 @@ public class CopyOfYinXiangMusicAdapter extends BaseAdapter {
 						}
 					});
 
-			fileEditDialog.edit_cancle
+			fileEditDialog.edit_remove
 					.setOnClickListener(new View.OnClickListener() {
 						@Override
 						public void onClick(View v) {
