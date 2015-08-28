@@ -192,6 +192,12 @@ public class FileUtil {
 	 */
 	public String getNewFilePath(String filePath, String newName) {
 		String newPath = "";
+		
+		//参数有效性检查
+		if(null == filePath || filePath.length() <=0 )return newPath;
+		if(null == newName || newName.length() <=0 )return newPath;
+
+		//获取文件文件名，并替换。
 		int startIndex = filePath.lastIndexOf(File.separator);
 		int endIndex = filePath.indexOf(".");
 		if (startIndex > 0 && endIndex > (startIndex + 1)) {

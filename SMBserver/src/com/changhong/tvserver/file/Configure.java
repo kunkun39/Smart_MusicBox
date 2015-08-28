@@ -28,8 +28,8 @@ public class Configure {
 	public final static String  EDIT_COPY= "copy";
 	public final static String  EDIT_CLOCK= "clockRing";
 	public final static String  EDIT_RENAME= "reName";
-	public final static String  EDIT_CANCLE= "cancle";
-	public final static String  EDIT_REQUEST_MUSICS= "musicList";
+	public final static String  EDIT_REMOVE= "remove";
+	public final static String  EDIT_REQUEST_MUSICS= "requestMusicList";
 
 
 	

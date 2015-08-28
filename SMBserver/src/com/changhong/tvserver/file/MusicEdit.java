@@ -1,6 +1,6 @@
 package com.changhong.tvserver.file;
 
-
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +8,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import com.changhong.tvserver.touying.music.MusicInfor;
 import com.changhong.tvserver.touying.music.MusicProvider;
 import com.changhong.tvserver.utils.StringUtils;
@@ -24,17 +26,16 @@ public class MusicEdit {
 	}
 	
 
-	public void doFileEdit(Context context, String clientIp, String editType,String fileUrl) {
+	public void doFileEdit(Context context, String clientIp, String editType,String fileUrl,String param) {
 		
 		String doResult = "";
-		if (!matchEditTypeAndMsg(editType,fileUrl))return;
+		if (!matchEditTypeAndMsg(editType,fileUrl,param))return;
 
-		if (editType.equals("reName")) {
-			String[] tokens=fileUrl.split(";");
-			doResult = mFileUtil.reNameFile(tokens[0], tokens[1]);
-		} else if (editType.equals("cancle")) {
+		if (editType.equals(Configure.EDIT_RENAME)) {
+			doResult = mFileUtil.reNameFile(fileUrl, param);
+		} else if (editType.equals(Configure.EDIT_REMOVE)) {
 			doResult = mFileUtil.removeFileFromSDCard(fileUrl);
-		} else if (editType.equals("requestMusicList")) {
+		} else if (editType.equals(Configure.EDIT_REQUEST_MUSICS)) {
 			// 获取媒体库文件
 			MusicProvider provider = new MusicProvider(context);
 			musicList = provider.getList();
@@ -43,11 +44,18 @@ public class MusicEdit {
 		//将信息封装成Json格式
 		String jsonStr = formateDataToJson(editType, fileUrl, doResult);
 		if (StringUtils.hasLength(jsonStr)) {
+			
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put(Configure.MSG_SEND, jsonStr);
 			params.put(Configure.IP_ADD, clientIp);
 			params.put(Configure.EDIT_TYPE, editType);
 			mFileEditManager.communicationWithClient(null,	Configure.ACTION_SOCKET_COMMUNICATION, params);
+			
+            //文件修改成功，更新媒体库文件
+			if(doResult.equals(Configure.ACTION_SUCCESS)){
+				      String newFile=mFileUtil.getNewFilePath(fileUrl, param);
+			         upDateMediaStore(context,editType,fileUrl,newFile);
+            }
 		}
 	}
 
@@ -112,21 +120,40 @@ public class MusicEdit {
 	 * @param fileUrl 文件路径
 	 * @return
 	 */
-	private boolean matchEditTypeAndMsg(String editType,String fileUrl){
+	private boolean matchEditTypeAndMsg(String editType,String fileUrl, String param){
 		
 		boolean reValue=false;		
-	    if (editType.equals("cancle") && StringUtils.hasLength(fileUrl)) {
+	    if (editType.equals(Configure.EDIT_REMOVE) && StringUtils.hasLength(fileUrl)) {
 			     reValue=true;
-		}else if (editType.equals("reName") && StringUtils.hasLength(fileUrl)) {
-			String[] tokens=fileUrl.split(";");
-			if(null != tokens  && tokens.length >1){
+		}else if (editType.equals(Configure.EDIT_RENAME) && StringUtils.hasLength(fileUrl)) {
+			if(StringUtils.hasLength(param)){
 				reValue=true;
 			}
-		} else if(editType.equals("requestMusicList")){
+		} else if(editType.equals(Configure.EDIT_REQUEST_MUSICS) ){
 			reValue=true;
 
 		}	
 		return reValue;
+	}
+	
+	
+	private void upDateMediaStore(Context context,String doAction,String fileUrl, String newFile) {
+		
+		/**
+		 * remove、rename 成功，则，更新MediaStore的文件
+		 */
+		if (!StringUtils.hasLength(fileUrl) || !doAction.equals(Configure.EDIT_REMOVE)
+				|| !doAction.equals(Configure.EDIT_RENAME))return;
+		
+		Intent scanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+		scanIntent.setData(Uri.fromFile(new File(fileUrl)));
+		context.sendBroadcast(scanIntent);
+		
+		if(doAction.equals(Configure.EDIT_RENAME) && StringUtils.hasLength(newFile)){
+		    scanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+			scanIntent.setData(Uri.fromFile(new File(newFile)));
+			context.sendBroadcast(scanIntent);
+		}		
 	}
 
 }

@@ -1145,18 +1145,17 @@ public class TVSocketControllerService extends Service {
 		if (!files.isEmpty()) {
 
 			String editType = files.get(0);
-			String fileUrl = files.get(1);
-			
-			
-			
+			String parameter1 = files.get(1);
+			String parameter2= files.get(2);
+		
 			if(editType.equals("copyToAudio") || editType.equals("clockRing") ){
-				new DowLoadFloatView(this).startDownLoad(editType, fileUrl);				
+				new DowLoadFloatView(this).startDownLoad(editType, parameter2);				
 			}else{	
 				
 					if(null == mMusicEdit){
 						mMusicEdit=new MusicEdit();
 					}
-			       mMusicEdit.doFileEdit(this, clientIP, editType, fileUrl);
+			       mMusicEdit.doFileEdit(this, clientIP, editType, parameter1,parameter2);
 			}
 		} else {
 			Log.e(TAG, "no picture url");

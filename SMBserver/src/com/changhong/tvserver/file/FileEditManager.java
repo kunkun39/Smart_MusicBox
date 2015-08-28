@@ -173,6 +173,8 @@ public class FileEditManager {
 			socketoutput = new PrintWriter(client.getOutputStream(), true);
 			socketoutput.println(sendMsg);// 发送给服务器
 			socketoutput.flush();// 清空缓存
+			
+			Thread.sleep(5000);
 
 		} catch (Exception e) {
 			result = "error";
