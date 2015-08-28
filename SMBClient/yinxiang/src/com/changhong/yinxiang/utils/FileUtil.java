@@ -8,6 +8,8 @@ import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.Comparator;
 
+import com.changhong.common.utils.StringUtils;
+
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -122,6 +124,10 @@ public class FileUtil {
 	 */
 	public File writeToSDCard(String type, String fileName, InputStream input) {
 		File file = null;
+		
+		if(!StringUtils.hasLength(fileName))return null;
+		if(null == input)return null;
+		
 		OutputStream output = null;
 		// 默认状态下，路径为音乐文件
 		String path = MUSIC_PATH;
@@ -215,6 +221,16 @@ public class FileUtil {
 	}
 	
 	
+	
+	public String getFileName(String filePath){
+		String fileName="";
+	    int startIndex=filePath.lastIndexOf(File.separator);
+	    int endIndex=filePath.indexOf(".");	
+	    if(startIndex>0  && endIndex>(startIndex+1)){
+			fileName=filePath.substring(startIndex+1, endIndex);
+		}		
+		return fileName;
+	}
 
 	
 	

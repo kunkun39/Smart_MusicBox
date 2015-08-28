@@ -5,8 +5,10 @@ import java.io.FileWriter;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
+
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -21,11 +23,13 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.changhong.common.service.ClientSendCommandService;
 import com.changhong.common.system.MyApplication;
 import com.changhong.common.utils.NetworkUtils;
@@ -79,6 +83,12 @@ public class YinXiangMusicViewActivity extends Activity {
 	 */
 	private Button musicSend;
 
+
+	/**
+	 * 全选按钮
+	 */
+	private CheckBox checkAll;
+	
 	/**
 	 * 音频已经选择INFO
 	 */
@@ -150,7 +160,7 @@ public class YinXiangMusicViewActivity extends Activity {
 		musicSend = (Button) findViewById(R.id.yinxing_music_tuisong);
 		// musicSelectedInfo =
 		// (TextView)findViewById(R.id.yinxing_music_tuisong_info);
-
+		checkAll=(CheckBox) findViewById(R.id.yinxing_music_checkall);
 		radioGroup = (RadioGroup) findViewById(R.id.music_rgtab);
 		curStorage = STORAGE_MOBILE;
 		mFileEdit = new MusicEdit(this,mHandle);
@@ -276,9 +286,7 @@ public class YinXiangMusicViewActivity extends Activity {
 							}
 							o.put("musicss", array.toString());
 
-							File jsonFile = new File(
-									HTTPDService.defaultHttpServerPath
-											+ "/MusicList.json");
+							File jsonFile = new File(HTTPDService.defaultHttpServerPath	+ "/MusicList.json");
 							if (jsonFile.exists()) {
 								jsonFile.delete();
 							}
@@ -305,6 +313,22 @@ public class YinXiangMusicViewActivity extends Activity {
 				}
 			}
 		});
+		
+		//全选/取消全选
+		checkAll.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				CheckBox check = (CheckBox) v;
+				if (check.isChecked()) {
+					musicAdapter.setMusicsCheckAll(true);
+				} else {
+					musicAdapter.setMusicsCheckAll(false);
+				}
+				musicAdapter.notifyDataSetChanged();;
+			}
+		});
+
 
 		// YD add 20150810 for fileEdit
 		radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -468,7 +492,7 @@ public class YinXiangMusicViewActivity extends Activity {
 				if(STORAGE_YINXIANG== curStorage){
 						//发送播放地址
 					    sendFileEditMsg2YinXiang("", MusicUtils.EDIT_REQUEST_MUSICS,"");
-						mMusicEditServer.accept(mHandle,MusicUtils.EDIT_REQUEST_MUSICS);
+						mMusicEditServer.communicationWithServer(mHandle,MusicUtils.ACTION_SOCKET_COMMUNICATION,MusicUtils.EDIT_REQUEST_MUSICS);
 						
 				}
 				break;		
@@ -513,8 +537,14 @@ public class YinXiangMusicViewActivity extends Activity {
 			//文件拷贝：手机----->音响
 			case FILE_EDIT_COPY:
 				if(STORAGE_MOBILE== curStorage){
-						 musicPath = mEditMusic.getPath();
+					   musicPath = mEditMusic.getPath();
 						sendFileEditMsg2YinXiang(musicPath, MusicUtils.EDIT_COPYTO_YINXIANG,"");
+				}else if(STORAGE_YINXIANG== curStorage){
+					
+					//获取远程文件访问定位符，实现音响到手机文件COPY
+					 musicPath = mEditMusic.getFileUrl();
+					mMusicEditServer.communicationWithServer(mHandle,MusicUtils.ACTION_HTTP_DOWNLOAD,musicPath);
+			
 				}
 				break;
 		    //设置音响端音乐闹铃-并同步拷贝文件到音响
@@ -534,7 +564,8 @@ public class YinXiangMusicViewActivity extends Activity {
 				if(STORAGE_YINXIANG== curStorage){
 					mEditMusic.setTitle(newName);
 					sendFileEditMsg2YinXiang(musicPath, MusicUtils.EDIT_RENAME,newName);		
-					mMusicEditServer.accept(mHandle,MusicUtils.EDIT_RENAME);
+					mMusicEditServer.communicationWithServer(mHandle,MusicUtils.ACTION_SOCKET_COMMUNICATION,MusicUtils.EDIT_RENAME);
+
 				}else if(STORAGE_MOBILE== curStorage){
 					
 					  String result="重命名失败";
@@ -557,7 +588,8 @@ public class YinXiangMusicViewActivity extends Activity {
 					
 					    musicPath = mEditMusic.getPath();
 					    sendFileEditMsg2YinXiang(musicPath, MusicUtils.EDIT_REMOVE,"");	
-						mMusicEditServer.accept(mHandle,MusicUtils.EDIT_REMOVE);
+						mMusicEditServer.communicationWithServer(mHandle,MusicUtils.ACTION_SOCKET_COMMUNICATION,MusicUtils.EDIT_REMOVE);
+
 						
 				}else if(STORAGE_MOBILE== curStorage ){
 					  String result="文件删除失败";

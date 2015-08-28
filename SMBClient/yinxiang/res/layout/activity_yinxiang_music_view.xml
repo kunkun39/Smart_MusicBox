@@ -114,24 +114,21 @@
                 android:id="@+id/yinxing_music_tuisong"
                 android:background="@drawable/btn_send_selector"
                 android:layout_width="42dip"
-                android:layout_height="match_parent"/>
-        
-        <View android:layout_width="0dip"
-                android:layout_height="match_parent"
-                android:layout_weight="1"/>
+                android:layout_height="match_parent"/>      
         
         <!-- 全选 -->
-        <Button
+        <CheckBox
                 android:id="@+id/yinxing_music_checkall"
                 android:background="@drawable/btn_checkall_selector"        
                 android:layout_width="42dip"
-                android:layout_height="match_parent"/>
-        
-        <!-- 取消全选 -->
-        <TextView
-                android:layout_width="42dip"
+                android:layout_marginLeft="15dip"
                 android:layout_height="match_parent"
-                 android:layout_marginLeft="20dip"/>
+                android:layout_centerVertical="true"
+                style="@style/MyCheckBox"   />
+        
+        <View android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="2"/>
         
         <!--  
         <TextView

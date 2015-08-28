@@ -23,6 +23,10 @@ public class YinXiangMusic implements Serializable {
 
     private long createTime;
     
+    //增加文件定位符
+    private String  fileUrl="";
+
+    
 
 
     public YinXiangMusic(int id, String title, String path, int albumId, String artist, int artistId, int duration, long createTime) {
@@ -102,4 +106,12 @@ public class YinXiangMusic implements Serializable {
     public void setCreateTime(long createTime) {
         this.createTime = createTime;
     }
+
+	public String getFileUrl() {
+		return fileUrl;
+	}
+
+	public void setFileUrl(String fileUrl) {
+		this.fileUrl = fileUrl;
+	}
 }

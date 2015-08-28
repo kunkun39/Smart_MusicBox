@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -12,11 +13,14 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import com.changhong.yinxiang.activity.YinXiangMusicViewActivity;
+import com.changhong.yinxiang.nanohttpd.HttpDownloader;
+import com.changhong.yinxiang.utils.FileUtil;
 
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
 import android.widget.Toast;
 
 
@@ -49,7 +53,7 @@ public class MusicEditServer {
 	private void initMusicEditServer() {
 		
 		//启动接收线程:
-		SocketCommunicationThread commThread = new SocketCommunicationThread();
+		clientCommunicationThread commThread = new clientCommunicationThread();
 		mSocketCommunication = new Thread(commThread);
 		mSocketCommunication.start();
 		
@@ -66,12 +70,14 @@ public class MusicEditServer {
 	 * 
 	 * @return
 	 */
-	public void accept(Handler handler, String communicationType) {
+	public void communicationWithServer(Handler handler, int communicationType,String param) {
 
 		mParentHandler = handler;
-		if (null != mMsgHandler) {// 发送消息给子线程
+		// 发送消息给子线程
+		if (null != mMsgHandler) {
 			Message sendMsg = mMsgHandler.obtainMessage();
-			sendMsg.obj=communicationType;
+			sendMsg.what=communicationType;
+			sendMsg.obj=param;
 			mMsgHandler.sendMessage(sendMsg);
 		}
 	}
@@ -88,10 +94,11 @@ public class MusicEditServer {
 	}
 	
 	
-	/********************************************************** socketSever   *******************************************************************/
+	/********************************************************** clientCommunicationThread   *******************************************************************/
 
-	private class SocketCommunicationThread implements Runnable {
+	private class clientCommunicationThread implements Runnable {
 
+		int communicationType;
 		@Override
 		public void run() {
 		
@@ -102,62 +109,39 @@ public class MusicEditServer {
 
 				public void handleMessage(Message msg) {
 
-					BufferedReader in = null;
-					String content = "";
-					Socket socketclient = null;
-					try {
-						// 设置接收延迟时间
-						mServerSocket.setSoTimeout(30000);
-						// 获取音响端发送的socket的对象
-						socketclient = mServerSocket.accept();
-						in = new BufferedReader(new InputStreamReader(
-								socketclient.getInputStream()));
-						// 接收从音响送来的数据
-						String line = "";
-						while ((line = in.readLine()) != null) {
-							content += line;
-						}
-						System.out.println("recieve Infor::" + content);
-						// 发送信息给主线程，更新YinXiangMusicViewActivityUI
-						Message newMsg = mParentHandler.obtainMessage();
-						String communication=(String) msg.obj;
-						if(communication.equals("requestMusicList")){
-							 newMsg.what = YinXiangMusicViewActivity.SHOW_AUDIOEQUIPMENT_MUSICLIST;
-							 newMsg.obj = getRespondMsg(content);							 
-						}else{
-						     newMsg.what = YinXiangMusicViewActivity.SHOW_ACTION_RESULT;
-						     Bundle bundle=new Bundle();
-						     bundle.putString("action", communication);
-						     bundle.putString("result", content);
-						     newMsg.setData(bundle);
-						}
-						mParentHandler.sendMessage(newMsg);
+					communicationType = msg.what;
 
-					} catch (IOException e) {
-						// TODO 自动生成的 catch 块
-						
-						System.out.println("mServerSocket.accept（） error:::::::::::::::::::::::::::::::::::::::::");
-
-						e.printStackTrace();
-						System.out.println("mServerSocket.accept（） error  end:::::::::::::::::::::::::::::::::::::::::");
-
-					} finally {
-
-						try {
-							if (null != in) {
-								in.close();
-							}
-							if (null != socketclient) {
-								socketclient.close();
-								socketclient=null;
-							}						
-						} catch (IOException e) {
-							// TODO 自动生成的 catch 块
-							e.printStackTrace();
-						}
-					}
+					// 接收来之通讯线程的消息
+					switch (communicationType) {
+					
+					case MusicUtils.ACTION_HTTP_DOWNLOAD:
+								String downLoadResult;
+								String fileUrl = (String) msg.obj;
+								String fileType = "music";
+								if (fileUrl.toLowerCase().startsWith("http://") || fileUrl.toLowerCase().startsWith("https://")) {
+									try {
+										downLoadResult = HttpDownloader.download(fileUrl, fileType);
+										Message respondMsg = mParentHandler.obtainMessage();
+										respondMsg.obj=fileUrl;
+										respondMsg.what = 2;
+										if (downLoadResult.equals(MusicUtils.ACTION_SUCCESS)) {
+											respondMsg.what = 3;
+										} else if (downLoadResult.equals(MusicUtils.FILE_EXIST)) {
+											respondMsg.what = 4;
+										}
+										mParentHandler.sendMessage(respondMsg);
+										Log.e(Tag, "finish download file " + fileUrl);
+									} catch (Exception e) {
+										e.printStackTrace();
+									}
+								}	
+						break;
+					case MusicUtils.ACTION_SOCKET_COMMUNICATION:
+						    String editType=(String) msg.obj;
+							socketAccept(editType);
+					break;
 				}
-			
+				}		
 			};
 			
 			
@@ -170,6 +154,67 @@ public class MusicEditServer {
 
 			Looper.loop();
 	}
+		
+		
+		
+		
+		
+		
+		
+		private  void socketAccept( String editType){
+			BufferedReader in = null;
+			String content = "";
+			Socket socketclient = null;
+			try {
+				// 设置接收延迟时间
+				mServerSocket.setSoTimeout(30000);
+				// 获取音响端发送的socket的对象
+				socketclient = mServerSocket.accept();
+				in = new BufferedReader(new InputStreamReader(socketclient.getInputStream()));
+				// 接收从音响送来的数据
+				String line = "";
+				while ((line = in.readLine()) != null) {
+					content += line;
+				}
+				System.out.println("recieve Infor::" + content);
+				// 发送信息给主线程，更新YinXiangMusicViewActivityUI
+				Message newMsg = mParentHandler.obtainMessage();
+				if(editType.equals("requestMusicList")){
+					 newMsg.what = YinXiangMusicViewActivity.SHOW_AUDIOEQUIPMENT_MUSICLIST;
+					 newMsg.obj = getRespondMsg(content);							 
+				}else{
+				     newMsg.what = YinXiangMusicViewActivity.SHOW_ACTION_RESULT;
+				     Bundle bundle=new Bundle();
+				     bundle.putString("action", editType);
+				     bundle.putString("result", content);
+				     newMsg.setData(bundle);
+				}
+				mParentHandler.sendMessage(newMsg);
+
+			} catch (IOException e) {
+				// TODO 自动生成的 catch 块
+				
+				System.out.println("mServerSocket.accept（） error:::::::::::::::::::::::::::::::::::::::::");
+
+				e.printStackTrace();
+				System.out.println("mServerSocket.accept（） error  end:::::::::::::::::::::::::::::::::::::::::");
+
+			} finally {
+
+				try {
+					if (null != in) {
+						in.close();
+					}
+					if (null != socketclient) {
+						socketclient.close();
+						socketclient=null;
+					}						
+				} catch (IOException e) {
+					// TODO 自动生成的 catch 块
+					e.printStackTrace();
+				}
+			}
+		}
 		
 		
 		/**

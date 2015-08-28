@@ -2,13 +2,16 @@ package com.changhong.yinxiang.music;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
+
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
@@ -21,6 +24,7 @@ import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.changhong.common.system.MyApplication;
 import com.changhong.yinxiang.R;
 import com.nostra13.universalimageloader.cache.disc.utils.DiskCacheFileManager;
@@ -35,14 +39,11 @@ public class YinXiangMusicAdapter extends BaseAdapter {
 	private List<YinXiangMusic> musicsAll;
 	private List<YinXiangMusic> musicsAct = new ArrayList<YinXiangMusic>();
 	private Map<String, String> checkStateMap;
-
 	public static List<YinXiangMusic> selectMusics = new ArrayList<YinXiangMusic>();
 	private Context context;
 	private String keyStr;
 	private String displayName, musicPath;
 	private boolean checkSetFlag = false;
-
-
 
 	/**
 	 * YD add 20150806 for fileEdit 音频文件编辑功能
@@ -59,6 +60,7 @@ public class YinXiangMusicAdapter extends BaseAdapter {
 		checkStateMap = new TreeMap<String, String>();
 		musicFilter();
 		selectMusics.clear();
+		
 	}
 	
 	
@@ -101,6 +103,17 @@ public class YinXiangMusicAdapter extends BaseAdapter {
 		return -1;		
 	}
 	
+	
+	public void setMusicsCheckAll(boolean checkAll){
+		  selectMusics.clear();
+		   if(checkAll){
+			   for (int i = 0; i < musicsAct.size(); i++) {
+					YinXiangMusic music = musicsAll.get(i);
+					selectMusics.add(music);
+				}
+		   }	
+	}
+	
 	private List<YinXiangMusic>  pareJsonToMusicList(String jsonStr) {
         List<YinXiangMusic> list = new ArrayList<YinXiangMusic>();
 		if (null  != jsonStr) {		
@@ -119,8 +132,13 @@ public class YinXiangMusicAdapter extends BaseAdapter {
 					int id =musicObj.getInt("id");
                     String title = musicObj.getString("title");
                     String path = musicObj.getString("path");
-                    String artist = musicObj.getString("artist");;
+                    String artist = musicObj.getString("artist");
+                    String fileUrl = musicObj.getString("httpUrl");;
+
                     YinXiangMusic music = new YinXiangMusic(id, title, path, i, artist,i, 0, 4);
+                    
+                    //增加文件远程访问定位符
+                    music.setFileUrl(fileUrl);
                     list.add(music);
 				}	
             }catch (JSONException ex) {
@@ -174,8 +192,7 @@ public class YinXiangMusicAdapter extends BaseAdapter {
 			wapper = (DataWapper) convertView.getTag();
 		}
 
-		final YinXiangMusic yinXiangMusic = (YinXiangMusic) musicsAct
-				.get(position);
+		final YinXiangMusic yinXiangMusic = (YinXiangMusic) musicsAct.get(position);
 
 		displayName = yinXiangMusic.getTitle();
 		musicPath = yinXiangMusic.getPath();
@@ -261,7 +278,7 @@ public class YinXiangMusicAdapter extends BaseAdapter {
 				break;
 			} else if (music.getTitle().contains(keyStr)) {
 				musicsAct.add(music);
-			}
+			}			
 		}
 	}
 
