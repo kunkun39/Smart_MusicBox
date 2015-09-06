@@ -39,6 +39,7 @@ import android.os.SystemClock;
 import android.util.JsonReader;
 import android.util.Log;
 
+import com.changhong.tvserver.alarm.ClockCommonData;
 import com.changhong.tvserver.file.DowLoadFloatView;
 import com.changhong.tvserver.file.MusicEdit;
 import com.changhong.tvserver.search.Commonmethod;
@@ -825,11 +826,11 @@ public class TVSocketControllerService extends Service {
 							Log.i("mmmm", "search:misic-" + msg1);
 						}
 						// 增加文件编辑
-						 else if (msg1.contains("fileEdit")) {
+						else if (msg1.contains("fileEdit")) {
 							handleFileEditMsg(msg1);
-							//获取闹铃设置信息
-						}else if(msg1.startsWith("getAlarmMsg:")){
-							
+							// 获取闹铃设置信息
+						} else if (msg1.startsWith("getAlarmMsg:")) {
+							handleAlarm(msg1);
 						}
 						break;
 
@@ -1109,38 +1110,38 @@ public class TVSocketControllerService extends Service {
 		files.clear();
 		String clientIP = "";
 
-		if (msg == null || msg.equals(""))return;
-         
-		//请求音响端音乐文件信息
+		if (msg == null || msg.equals(""))
+			return;
 
-			JsonReader reader = new JsonReader(new StringReader(msg));
-			try {
-				reader.beginObject();
-				while (reader.hasNext()) {
-					String name = reader.nextName();
-					Log.e(TAG, "nextname:" + name);
-					if (name.equals("fileEdit")) {
-						reader.beginArray();
-						while (reader.hasNext()) {
-							String fileInfor = reader.nextString();
-							Log.i(TAG, "nextaddress:" + fileInfor);
-							files.add(fileInfor);
-						}
-						reader.endArray();
-					} else if (name.equals("client_ip")) {
-						clientIP = reader.nextString();
-						Log.i(TAG, "clientaddress:" + clientIP);
-					} else {
-						reader.skipValue();
+		// 请求音响端音乐文件信息
+
+		JsonReader reader = new JsonReader(new StringReader(msg));
+		try {
+			reader.beginObject();
+			while (reader.hasNext()) {
+				String name = reader.nextName();
+				Log.e(TAG, "nextname:" + name);
+				if (name.equals("fileEdit")) {
+					reader.beginArray();
+					while (reader.hasNext()) {
+						String fileInfor = reader.nextString();
+						Log.i(TAG, "nextaddress:" + fileInfor);
+						files.add(fileInfor);
 					}
+					reader.endArray();
+				} else if (name.equals("client_ip")) {
+					clientIP = reader.nextString();
+					Log.i(TAG, "clientaddress:" + clientIP);
+				} else {
+					reader.skipValue();
 				}
-				reader.endObject();
-				reader.close();
-			} catch (IOException e) {
-				Log.e(TAG, e.toString());
-				e.printStackTrace();
 			}
-		
+			reader.endObject();
+			reader.close();
+		} catch (IOException e) {
+			Log.e(TAG, e.toString());
+			e.printStackTrace();
+		}
 
 		if (!files.isEmpty()) {
 
@@ -1163,11 +1164,16 @@ public class TVSocketControllerService extends Service {
 			Log.e(TAG, "no picture url");
 		}
 	}
-	
-	
-	
-	
-	
+
+	/**
+	 * 
+	 */
+	private void handleAlarm(String str) {
+		if (str == null || str.equals(""))
+			return;
+		String[] keys = StringUtils.delimitedListToStringArray(str, "|");
+		ClockCommonData.getInstance().dealMsg(keys);
+	}
 
 	/**
 	 * 记录上次打开的应�?
