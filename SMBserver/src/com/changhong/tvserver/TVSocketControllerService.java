@@ -1148,8 +1148,10 @@ public class TVSocketControllerService extends Service {
 			String parameter1 = files.get(1);
 			String parameter2= files.get(2);
 		
-			if(editType.equals("copyToAudio") || editType.equals("clockRing") ){
-				new DowLoadFloatView(this).startDownLoad(editType, parameter2);				
+			if(editType.equals("copyToYinXiang") || editType.equals("clockRing") ){
+				  
+				new DowLoadFloatView(this).startDownLoad(editType, parameter2);		
+				
 			}else{	
 				
 					if(null == mMusicEdit){

@@ -134,7 +134,7 @@ public class DowLoadFloatView {
 		LayoutInflater inflater=(LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		mFloatView=inflater.inflate(R.layout.download_progress, null);
 		// 初始化View
-		downLoadTitle = (TextView) mFloatView.findViewById(R.id.download_progress_title);
+		downLoadTitle = (TextView) mFloatView.findViewById(R.id.download_title);
 		downLoadProgress = (ImageView) mFloatView.findViewById(R.id.download_progress_progress);
 		downLoadResult = (TextView) mFloatView.findViewById(R.id.download_progress_result);
 
@@ -150,7 +150,7 @@ public class DowLoadFloatView {
         }
 
 		// 指定下载进程显示屏幕下方       
-        MyFloatView.show(mContext, mFloatView, 150, 80, MyFloatView.DIRECTION_RIGHTBOTTOM);
+        MyFloatView.show(mContext, mFloatView,300 , 130, MyFloatView.DIRECTION_RIGHTBOTTOM);
 	}
 
 	
@@ -166,7 +166,9 @@ public class DowLoadFloatView {
 
 		Resources res=mContext.getResources();
 		if (fileType.contains("clock")) {
+			
 			downLoadTitle.setText(res.getString(R.string.clock_setting));
+			
 		} else if (fileType.contains("music")) {
 			
 			downLoadTitle.setText(res.getString(R.string.file_download_title));

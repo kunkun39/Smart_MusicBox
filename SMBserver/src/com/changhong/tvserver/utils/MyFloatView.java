@@ -39,14 +39,19 @@ public class MyFloatView {
 		  		
 		  		lp.width = width;
 		  		lp.height = height;
-		  		
+		  	
 		  		if(DIRECTION_LEFTTOP == direction)lp.gravity = Gravity.LEFT | Gravity.TOP;
 		  		else if(DIRECTION_LEFTBOTTOM == direction)lp.gravity = Gravity.BOTTOM  | Gravity.LEFT;
 		  		else if(DIRECTION_RIGHTTOP == direction)lp.gravity = Gravity.TOP  | Gravity.RIGHT;
-		  		else if(DIRECTION_RIGHTBOTTOM == direction)lp.gravity = Gravity.BOTTOM  | Gravity.RIGHT;
+		  		else if(DIRECTION_RIGHTBOTTOM == direction){
+		  			lp.gravity = Gravity.BOTTOM  | Gravity.RIGHT;
+		  		
+		  		}
 		  		else lp.gravity = Gravity.CENTER;
 
-		  		lp.alpha=0.5f;
+		  		lp.alpha=0.4f;
+		  		lp.horizontalMargin=20;
+		  		lp.verticalMargin=20;
 		  		wm.addView(floatView, lp);	  		
 	      }
 	    
