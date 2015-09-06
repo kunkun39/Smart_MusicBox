@@ -120,7 +120,7 @@
                     android:id="@+id/img_d"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/tv_control_direction"
+                    android:src="@drawable/tv_control_direction"
                     android:scaleType="fitCenter" />
 
                 <LinearLayout

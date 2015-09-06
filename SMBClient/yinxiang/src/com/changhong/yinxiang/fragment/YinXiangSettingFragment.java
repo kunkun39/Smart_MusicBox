@@ -18,7 +18,7 @@ import android.widget.Toast;
 
 import com.changhong.common.system.MyApplication;
 import com.changhong.yinxiang.R;
-import com.changhong.yinxiang.activity.AlarmSetting;
+import com.changhong.yinxiang.activity.AlarmMainActivity;
 import com.changhong.yinxiang.service.UserUpdateService;
 import com.changhong.yinxiang.setting.AppHelpDialog;
 
@@ -183,7 +183,7 @@ public class YinXiangSettingFragment extends Fragment {
 	
 	
 	private void startSetAlarm(){
-		Intent intent =new Intent(getActivity(), AlarmSetting.class);
+		Intent intent =new Intent(getActivity(), AlarmMainActivity.class);
 		startActivity(intent);
 	}
 
