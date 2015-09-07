@@ -4,6 +4,7 @@ import java.io.File;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -12,22 +13,34 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
+import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.EditText;
+
 import com.changhong.common.system.MyApplication;
 import com.changhong.common.utils.StringUtils;
+import com.changhong.yinxiang.R;
 import com.changhong.yinxiang.activity.YinXiangMusicViewActivity;
 import com.changhong.yinxiang.utils.FileUtil;
+import com.changhong.yinxiang.view.FileDownLoadDialog;
 import com.changhong.yinxiang.view.FileEditDialog;
 
 public class MusicEdit {
 	
 	// 文件编辑对话框
-	FileEditDialog fileEditDialog = null;
+	FileEditDialog fileEditDialog = null;	
+	// 文件下载提示框
+	FileDownLoadDialog  fileDownLoadDialog=null;
 	// 文件删除提示对话框：
 	Dialog cancleDialog = null;
 	// 文件删除提示对话框：
 	Dialog reNameDialog = null;
+	
+	//远程处理进度条
+	ProgressDialog MProgressDialog =null;
+
 	EditText mEditText = null;
 	FileUtil mFileUtil = null;
 
@@ -47,7 +60,7 @@ public class MusicEdit {
 
 	public void createFileEditDialog() {
 
-		if (fileEditDialog == null) {
+		if (null ==fileEditDialog) {
 
 			fileEditDialog = new FileEditDialog(mContext);
 			fileEditDialog.setCanceledOnTouchOutside(true);
@@ -98,6 +111,19 @@ public class MusicEdit {
 						}
 					});
 		}
+		
+		if(null == fileDownLoadDialog){
+			  fileDownLoadDialog=new FileDownLoadDialog(mContext);
+		}
+		
+		if(null == MProgressDialog){
+			  MProgressDialog=new ProgressDialog(mContext,R.style.fileEditTheme);
+			    Window window =MProgressDialog.getWindow();
+		        window.setGravity(Gravity.BOTTOM);
+		        MProgressDialog.setCanceledOnTouchOutside(false);// 设置点击屏幕Dialog不消失  
+		        MProgressDialog.setCancelable(true);// 设置是否可以通过点击Back键取消  
+		}
+		
 	}
 
 	public void showEditDialog(YinXiangMusic music, int storageDev) {
@@ -107,7 +133,37 @@ public class MusicEdit {
 			fileEditDialog.show();
 		}
 	}
+	
+	
+	public void showProgressDialog(int type , String msg ) {
+		
+		if(1 == type  ||  2 == type){
+			if (fileDownLoadDialog != null && !fileDownLoadDialog.isShowing()) {
+				fileDownLoadDialog.show(type);
+			}
+		}else if(StringUtils.hasLength(msg)){
+		
+			if (MProgressDialog != null && !MProgressDialog.isShowing()) {
+				MProgressDialog.setMessage(msg);
+				MProgressDialog.show();
+			}
+		}	
+	}
+	
+   
+	public void closeProgressDialog( ) {
+		
+		if (fileDownLoadDialog != null && fileDownLoadDialog.isShowing()) {
+			fileDownLoadDialog.close();
+			fileDownLoadDialog.cancel();
+		}
+		if (MProgressDialog != null && MProgressDialog.isShowing()) {
+			MProgressDialog.cancel();
+		}
+	}
+	
 
+   
 	/**
 	 * 删除指定文件对话框
 	 * 
@@ -129,7 +185,7 @@ public class MusicEdit {
 								
 								//本地文件删除，成功，则，更新媒体库文件
 								if (mFileUtil.removeFileFromSDCard(removeFilePath)) {
-									upDateMediaStore(MusicUtils.EDIT_REMOVE,removeFilePath, null);
+									upDateMediaStoreFile(removeFilePath);
 								} else {
 									removeFilePath = "";
 								}
@@ -173,7 +229,8 @@ public class MusicEdit {
 									// 本地重命名文件，成功，则，更新媒体库记录。
 									if (mFileUtil.reNameFile(	filePath, newName)) {		
 										String newFilePath=mFileUtil.getNewFilePath(filePath, newName);
-										upDateMediaStore(MusicUtils.EDIT_RENAME,filePath, newFilePath);
+										upDateMediaStoreFile(filePath);
+										upDateMediaStoreFile(newFilePath);
 									} else {									
 										newName = "";
 									}
@@ -200,27 +257,22 @@ public class MusicEdit {
 	/**
 	 * 媒体库文件更新、删除。
 	 * 
-	 * @param doAction 文件编辑类型 remove、reName
 	 * @param fileUrl  文件定位符
-	 * @param newFile 新文件定位符
 	 */
-	private void upDateMediaStore(String doAction,String fileUrl, String newFile) {
+	public void upDateMediaStoreFile(String fileUrl) {
 
 		//参数检查
-		if (!StringUtils.hasLength(fileUrl) && !doAction.equals(MusicUtils.EDIT_REMOVE)
-				&& !doAction.equals(MusicUtils.EDIT_RENAME))return;
+		if (!StringUtils.hasLength(fileUrl) )return;	
 		
+		//文件定位符转换成本地文件路径
+	   if (fileUrl.toLowerCase().startsWith("http://") || fileUrl.toLowerCase().startsWith("https://")) {
+		        fileUrl=mFileUtil.getLocalFilePathOfDownLoad(fileUrl);
+	   }
+
 		//更新mediaStorage中 指定文件信息
 		Intent scanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
 		scanIntent.setData(Uri.fromFile(new File(fileUrl)));
-		mContext.sendBroadcast(scanIntent);
-		
-		//以下操作主要针对重命名文件，根据新的文件路径，更新媒体库记录
-		if(doAction.equals(MusicUtils.EDIT_RENAME) && StringUtils.hasLength(newFile)){
-		    scanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-			scanIntent.setData(Uri.fromFile(new File(newFile)));
-			mContext.sendBroadcast(scanIntent);
-		}		
+		mContext.sendBroadcast(scanIntent);	
 	}
 
 

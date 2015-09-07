@@ -50,9 +50,8 @@ public class YinXiangFMFragment extends Fragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
 		// // 请求Fm列表信息
-		// ClientSendCommandService.handler.sendEmptyMessage(2);
+		 ClientSendCommandService.handler.sendEmptyMessage(2);
 
 	}
 
@@ -67,57 +66,6 @@ public class YinXiangFMFragment extends Fragment {
 
 	private void initViewAndEvent(View v) {
 		FMlist = (GridView) v.findViewById(R.id.fmlist);
-//		title = (TextView) v.findViewById(R.id.title);
-//		clients = (ListView) v.findViewById(R.id.clients);
-//		list = (Button) v.findViewById(R.id.btn_list);
-//		back = (Button) v.findViewById(R.id.btn_back);
-
-//		/**
-//		 * IP part
-//		 */
-//		ipAdapter = new BoxSelectAdapter(getActivity(),
-//				ClientSendCommandService.serverIpList);
-//		clients.setAdapter(ipAdapter);
-//		clients.setOnTouchListener(new View.OnTouchListener() {
-//			@Override
-//			public boolean onTouch(View v, MotionEvent event) {
-//				clients.setVisibility(View.GONE);
-//				return false;
-//			}
-//		});
-//		clients.setOnItemClickListener(new OnItemClickListener() {
-//			@Override
-//			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-//					long arg3) {
-//				ClientSendCommandService.serverIP = ClientSendCommandService.serverIpList
-//						.get(arg2);
-//				String boxName = ClientSendCommandService
-//						.getCurrentConnectBoxName();
-//				ClientSendCommandService.titletxt = boxName;
-//				title.setText(boxName);
-//				ClientSendCommandService.handler.sendEmptyMessage(2);
-//				clients.setVisibility(View.GONE);
-//			}
-//		});
-//		list.setOnClickListener(new OnClickListener() {
-//			@Override
-//			public void onClick(View v) {
-//				if (ClientSendCommandService.serverIpList.isEmpty()) {
-//					Toast.makeText(getActivity(),
-//							"没有发现长虹智能机顶盒，请确认盒子和手机连在同一个路由器?", Toast.LENGTH_LONG)
-//							.show();
-//				} else {
-//					clients.setVisibility(View.VISIBLE);
-//				}
-//			}
-//		});
-//		back.setOnClickListener(new OnClickListener() {
-//			@Override
-//			public void onClick(View v) {
-//				MyApplication.vibrator.vibrate(100);
-//                getActivity().onBackPressed();
-//			}
-//		});
 		adapter = new FMAdapter(getActivity());
 		FMlist.setAdapter(adapter);
 	}
@@ -130,22 +78,8 @@ public class YinXiangFMFragment extends Fragment {
 	@Override
 	public void onResume() {
 		super.onResume();
-//		 if (ClientSendCommandService.titletxt != null) {
-//		 title.setText(ClientSendCommandService.titletxt);
-//		 }
+	
 	}
-
-	// @Override
-	// public boolean onKeyDown(int keyCode, KeyEvent event) {
-	// switch (keyCode) {
-	// case KeyEvent.KEYCODE_BACK:
-	// finish();
-	// break;
-	// default:
-	// break;
-	// }
-	// return super.onKeyDown(keyCode, event);
-	// }
 
 	/**
 	 * FM名称

@@ -57,12 +57,7 @@ public class MusicEditServer {
 		mSocketCommunication = new Thread(commThread);
 		mSocketCommunication.start();
 		
-		try {			
-			mServerSocket = new ServerSocket(SOCKET_PORT);			
-		} catch (IOException e) {
-			// TODO 自动生成的 catch 块
-			e.printStackTrace();
-		}
+		
 	}
 
 	/**
@@ -86,7 +81,10 @@ public class MusicEditServer {
 	
 	public void close() {
 		try {		
-			mServerSocket.close();
+			if(null != mServerSocket){
+			      mServerSocket.close();
+			      mServerSocket=null;
+			}
 		} catch (IOException e) {
 			// TODO 自动生成的 catch 块
 			e.printStackTrace();
@@ -122,13 +120,18 @@ public class MusicEditServer {
 									try {
 										downLoadResult = HttpDownloader.download(fileUrl, fileType);
 										Message respondMsg = mParentHandler.obtainMessage();
-										respondMsg.obj=fileUrl;
-										respondMsg.what = 2;
+										respondMsg.what = YinXiangMusicViewActivity.SHOW_ACTION_RESULT;
+									     Bundle bundle=new Bundle();
+									     bundle.putString("action", "copy");
 										if (downLoadResult.equals(MusicUtils.ACTION_SUCCESS)) {
-											respondMsg.what = 3;
+										     bundle.putString("result", "文件拷贝成功：音响==>>手机");
 										} else if (downLoadResult.equals(MusicUtils.FILE_EXIST)) {
-											respondMsg.what = 4;
+										     bundle.putString("result", "文件已存在");
+										}else{
+											bundle.putString("result", "文件拷贝失败：音响==>>手机");
 										}
+										respondMsg.setData(bundle);
+
 										mParentHandler.sendMessage(respondMsg);
 										Log.e(Tag, "finish download file " + fileUrl);
 									} catch (Exception e) {
@@ -166,6 +169,11 @@ public class MusicEditServer {
 			String content = "";
 			Socket socketclient = null;
 			try {
+				
+				if(null == mServerSocket){
+					mServerSocket = new ServerSocket(SOCKET_PORT);			
+				}
+				
 				// 设置接收延迟时间
 				mServerSocket.setSoTimeout(30000);
 				// 获取音响端发送的socket的对象
@@ -257,9 +265,7 @@ public class MusicEditServer {
 			} 
 			return msgRespond;
 		}
-		
-		
-		
+	
 	}
 
 	

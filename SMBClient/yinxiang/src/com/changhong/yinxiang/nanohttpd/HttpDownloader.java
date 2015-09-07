@@ -6,6 +6,7 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import com.changhong.yinxiang.music.MusicUtils;
 import com.changhong.yinxiang.utils.FileUtil;
 
 
@@ -45,7 +46,7 @@ public class HttpDownloader {
     */
 	public static String download(String fileUri, String fileType) {
 
-		String result = "downLoadOK";
+		String result = MusicUtils.ACTION_SUCCESS;
 		InputStream inputStream = null;
 		HttpURLConnection conn = null;
 		try {
@@ -60,18 +61,18 @@ public class HttpDownloader {
 				String fileName=fileUtils.getFileName(fileUri);
 				// 判断文件是否存在
 				if (fileUtils.isFileExist(fileType, fileName)) {
-					result = "fileExist";
+					result = MusicUtils.FILE_EXIST;
 				} else {
 					File fileResult = fileUtils.writeToSDCard(fileType,fileName, inputStream);
 					// 如果fileResult=null,下载失败。
 					if (null == fileResult) {
-						result = "downloadError";
+						result = MusicUtils.ACTION_FAILED;
 					}					
 					fileUtils.checkMaxFileItemExceedAndProcess(fileType);
 				}
 			}
 		} catch (IOException e) {
-			result = "downloadError";
+			result = MusicUtils.ACTION_FAILED;
 			e.printStackTrace();
 		} finally {
 			try {

@@ -50,6 +50,7 @@ import com.changhong.common.widgets.BoxSelectAdapter;
 import com.changhong.yinxiang.R;
 import com.changhong.yinxiang.fragment.YinXiangCategoryFragment;
 import com.changhong.yinxiang.fragment.YinXiangFMFragment;
+import com.changhong.yinxiang.fragment.YinXiangNetMusicFragment;
 import com.changhong.yinxiang.fragment.YinXiangRemoteControlFragment;
 import com.changhong.yinxiang.fragment.YinXiangSettingFragment;
 import com.changhong.yinxiang.service.AppLogService;
@@ -180,10 +181,8 @@ public class YinXiangMainActivity extends FragmentActivity {
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
 				adapter.notifyDataSetChanged();
-				ClientSendCommandService.serverIP = ClientSendCommandService.serverIpList
-						.get(arg2);
-				ClientSendCommandService.titletxt = ClientSendCommandService
-						.getCurrentConnectBoxName();
+				ClientSendCommandService.serverIP = ClientSendCommandService.serverIpList	.get(arg2);
+				ClientSendCommandService.titletxt = ClientSendCommandService.getCurrentConnectBoxName();
 				title.setText(ClientSendCommandService.titletxt);
 				ClientSendCommandService.handler.sendEmptyMessage(2);
 				clients.setVisibility(View.GONE);
@@ -757,10 +756,14 @@ public class YinXiangMainActivity extends FragmentActivity {
 		case 2: // 网络电台
 			fragment = new YinXiangFMFragment();
 			break;
-		case 3: // 一键推送
+		case 3: // 音乐速递
+			fragment = new YinXiangNetMusicFragment();
+			
+			break;
+		case 4: // 一键推送
 			fragment = new YinXiangCategoryFragment();
 			break;
-		case 4: // 设置Fragment
+		case 5: // 设置Fragment
 			fragment = new YinXiangSettingFragment();
 			break;
 		default:

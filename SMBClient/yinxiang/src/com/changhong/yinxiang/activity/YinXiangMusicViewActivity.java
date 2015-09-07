@@ -10,6 +10,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -42,7 +43,6 @@ import com.changhong.yinxiang.music.MusicUtils;
 import com.changhong.yinxiang.music.YinXiangMusic;
 import com.changhong.yinxiang.music.YinXiangMusicAdapter;
 import com.changhong.yinxiang.nanohttpd.HTTPDService;
-
 
 public class YinXiangMusicViewActivity extends Activity {
 
@@ -83,12 +83,11 @@ public class YinXiangMusicViewActivity extends Activity {
 	 */
 	private Button musicSend;
 
-
 	/**
 	 * 全选按钮
 	 */
 	private CheckBox checkAll;
-	
+
 	/**
 	 * 音频已经选择INFO
 	 */
@@ -109,24 +108,22 @@ public class YinXiangMusicViewActivity extends Activity {
 	public final int STORAGE_YINXIANG = 2;
 	// 存储设备3——USB
 	public final int STORAGE_USB = 3;
-		
-	public static final int  FILE_EDIT_DIALOG=1;
-	public static final int  FILE_EDIT_CLOCK=2;
-	public static final int  FILE_EDIT_COPY=3;
-	public static final int  FILE_EDIT_RENAME=4;
-	public static final int  FILE_EDIT_REMOVE=5;
 
-	
-	//请求音响设备的音乐文件
-	public static final int  REQUEST_AUDIOEQUIPMENT_MUSIC=6;
-	public static final int  SHOW_AUDIOEQUIPMENT_MUSICLIST=7;
-	public static final int  SHOW_ACTION_RESULT=8;
+	public static final int FILE_EDIT_DIALOG = 1;
+	public static final int FILE_EDIT_CLOCK = 2;
+	public static final int FILE_EDIT_COPY = 3;
+	public static final int FILE_EDIT_RENAME = 4;
+	public static final int FILE_EDIT_REMOVE = 5;
 
-	
-	MusicEditServer mMusicEditServer=null;
+	// 请求音响设备的音乐文件
+	public static final int REQUEST_AUDIOEQUIPMENT_MUSIC = 6;
+	public static final int SHOW_AUDIOEQUIPMENT_MUSICLIST = 7;
+	public static final int SHOW_ACTION_RESULT = 8;
+
+	MusicEditServer mMusicEditServer = null;
 	String keyStr;
-	
-	private String  remoteMusics="";
+
+	private String remoteMusics = "";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -154,18 +151,18 @@ public class YinXiangMusicViewActivity extends Activity {
 		Intent intent = getIntent();
 		keyStr = intent.getStringExtra("KeyWords");
 
-		musicAdapter = new YinXiangMusicAdapter(this, mHandle, keyStr, null);
-		musicListView.setAdapter(musicAdapter);
+		// musicAdapter = new YinXiangMusicAdapter(this, mHandle, keyStr, null);
+		// musicListView.setAdapter(musicAdapter);
 
 		musicSend = (Button) findViewById(R.id.yinxing_music_tuisong);
 		// musicSelectedInfo =
 		// (TextView)findViewById(R.id.yinxing_music_tuisong_info);
-		checkAll=(CheckBox) findViewById(R.id.yinxing_music_checkall);
+		checkAll = (CheckBox) findViewById(R.id.yinxing_music_checkall);
 		radioGroup = (RadioGroup) findViewById(R.id.music_rgtab);
 		curStorage = STORAGE_MOBILE;
-		mFileEdit = new MusicEdit(this,mHandle);
-		mMusicEditServer= MusicEditServer.creatFileEditServer();
-		
+		mFileEdit = new MusicEdit(this, mHandle);
+		mMusicEditServer = MusicEditServer.creatFileEditServer();
+
 	}
 
 	private void initEvent() {
@@ -191,7 +188,8 @@ public class YinXiangMusicViewActivity extends Activity {
 						.get(arg2);
 				ClientSendCommandService.titletxt = ClientSendCommandService
 						.getCurrentConnectBoxName();
-				title.setText(ClientSendCommandService	.getCurrentConnectBoxName());
+				title.setText(ClientSendCommandService
+						.getCurrentConnectBoxName());
 				ClientSendCommandService.handler.sendEmptyMessage(2);
 				clients.setVisibility(View.GONE);
 			}
@@ -286,7 +284,9 @@ public class YinXiangMusicViewActivity extends Activity {
 							}
 							o.put("musicss", array.toString());
 
-							File jsonFile = new File(HTTPDService.defaultHttpServerPath	+ "/MusicList.json");
+							File jsonFile = new File(
+									HTTPDService.defaultHttpServerPath
+											+ "/MusicList.json");
 							if (jsonFile.exists()) {
 								jsonFile.delete();
 							}
@@ -298,8 +298,10 @@ public class YinXiangMusicViewActivity extends Activity {
 							fw.close();
 
 							// 发送播放地址
-							ClientSendCommandService.msg = "GetMusicList:"	+ httpAddress + "/MusicList.json";
-							ClientSendCommandService.handler	.sendEmptyMessage(4);
+							ClientSendCommandService.msg = "GetMusicList:"
+									+ httpAddress + "/MusicList.json";
+							ClientSendCommandService.handler
+									.sendEmptyMessage(4);
 							// }
 						}
 					} else {
@@ -313,8 +315,8 @@ public class YinXiangMusicViewActivity extends Activity {
 				}
 			}
 		});
-		
-		//全选/取消全选
+
+		// 全选/取消全选
 		checkAll.setOnClickListener(new View.OnClickListener() {
 
 			@Override
@@ -325,31 +327,54 @@ public class YinXiangMusicViewActivity extends Activity {
 				} else {
 					musicAdapter.setMusicsCheckAll(false);
 				}
-				musicAdapter.notifyDataSetChanged();;
+				musicAdapter.notifyDataSetChanged();
+				;
 			}
 		});
 
-
 		// YD add 20150810 for fileEdit
-		radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+		radioGroup
+				.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 					@Override
 					public void onCheckedChanged(RadioGroup group, int checkedId) {
 						// 设备变化
 						curStorage = matchFragmentIndex(checkedId);
-						//当前设备为音响，请求音响音乐文件。
-						if(STORAGE_YINXIANG  ==  curStorage && remoteMusics.length()<10){							
-							   mHandle.sendEmptyMessage(REQUEST_AUDIOEQUIPMENT_MUSIC);
-                               return;
-						}				
-					   String tempStr=(STORAGE_YINXIANG == curStorage )?remoteMusics:null;
-					   musicAdapter= new YinXiangMusicAdapter(YinXiangMusicViewActivity.this, mHandle, keyStr, tempStr);
-					   musicListView.setAdapter(musicAdapter);
-						
+						// //当前设备为音响，请求音响音乐文件。
+						// if(STORAGE_YINXIANG == curStorage &&
+						// remoteMusics.length()<10){
+						// MProgressDialog=new
+						// ProgressDialog(YinXiangMusicViewActivity.this);
+						// MProgressDialog.setMessage("正在获取音乐文件······");
+						// MProgressDialog.show();
+						// mHandle.sendEmptyMessage(REQUEST_AUDIOEQUIPMENT_MUSIC);
+						// return;
+						// }
+						// String tempStr=(STORAGE_YINXIANG == curStorage
+						// )?remoteMusics:null;
+						// musicAdapter= new
+						// YinXiangMusicAdapter(YinXiangMusicViewActivity.this,
+						// mHandle, keyStr, tempStr);
+						// musicListView.setAdapter(musicAdapter);
+						setMusicAdapter();
+
 					}
 				});
-		
+
 		((RadioButton) radioGroup.getChildAt(curStorage - 1)).setChecked(true);
 
+	}
+
+	private void setMusicAdapter() {
+
+		// 当前设备为音响，请求音响音乐文件。
+		if (STORAGE_YINXIANG == curStorage && remoteMusics.length() < 10) {
+			mHandle.sendEmptyMessage(REQUEST_AUDIOEQUIPMENT_MUSIC);
+			return;
+		}
+		String tempStr = (STORAGE_YINXIANG == curStorage) ? remoteMusics : null;
+		musicAdapter = new YinXiangMusicAdapter(YinXiangMusicViewActivity.this,
+				mHandle, keyStr, tempStr);
+		musicListView.setAdapter(musicAdapter);
 	}
 
 	/**
@@ -373,7 +398,8 @@ public class YinXiangMusicViewActivity extends Activity {
 
 	/************************************************************** YD add 20150806 发送文件编辑信息到音响端 *******************************************************************************/
 
-	private void sendFileEditMsg2YinXiang(String musicPath, String editType, String param) {
+	private void sendFileEditMsg2YinXiang(String musicPath, String editType,
+			String param) {
 
 		if (!NetworkUtils.isWifiConnected(this)) {
 			Toast.makeText(this, "请链接无线网络", Toast.LENGTH_SHORT).show();
@@ -385,84 +411,37 @@ public class YinXiangMusicViewActivity extends Activity {
 			return;
 		}
 
-		/**
-		 * 封装发送信息。
-		 */
-		try {
-			MyApplication.vibrator.vibrate(100);
+		// 显示操作等待进度提示
+		if (null != mFileEdit && !editType.equals(MusicUtils.EDIT_COPYTO_YINXIANG)) {
+			String msg = editType.equals(MusicUtils.EDIT_REQUEST_MUSICS) ? "音响文件获取中"
+					: "操作正在进行,请稍后";
+			mFileEdit.showProgressDialog(0, msg + "······");
+		}
 
+		try {
+			
+			String tmpHttpAddress = musicPath;
 			// 获取IP和外部存储路径
 			String ipAddress = NetworkUtils.getLocalHostIp();
-			String httpAddress = "http://" + ipAddress + ":" + HTTPDService.HTTP_PORT;
-
-			String newMusicPath = null;
-			if (musicPath.startsWith(HTTPDService.defaultHttpServerPath)) {
-				newMusicPath = convertFileUrlToHttpURL(musicPath.replace(HTTPDService.defaultHttpServerPath, ""));
-
-			} else {
-				for (String otherHttpServerPath : HTTPDService.otherHttpServerPaths) {
-					if (musicPath.startsWith(otherHttpServerPath)) {
-						newMusicPath = convertFileUrlToHttpURL(musicPath.replace(otherHttpServerPath, ""));
-					}
-				}
+			if (STORAGE_MOBILE == curStorage) {
+				tmpHttpAddress = getHttpAddressOfFile(ipAddress, musicPath);
 			}
-
-			String tmpHttpAddress = httpAddress + newMusicPath;
-
-			// 判断URL是否符合规范，如果不符合规范，就1重命名文件
-			try {
-				URI.create(tmpHttpAddress);
-			} catch (Exception e) {
-				try {
-
-					/**
-					 * 创建新的文件
-					 */
-					if(!musicPath.equals("")){
-							File illegalFile = new File(musicPath);
-							String fullpath = illegalFile.getAbsolutePath();
-							String filename = illegalFile.getName();
-							String filepath = fullpath.replace(File.separator+ filename, "");
-							String[] tokens = StringUtils.delimitedListToStringArray(filename, ".");
-							String filenameSuffix = tokens[tokens.length - 1];
-							String newFile = filepath + File.separator	+ StringUtils.getRandomString(15) + "."	+ filenameSuffix;
-							Runtime.getRuntime().exec("mv " + fullpath + " " + newFile);
-							tmpHttpAddress = httpAddress + newFile;
-						
-							/**
-							 * 更改Content Provider的文件
-							 */						
-							ContentResolver mContentResolver = getContentResolver();
-							Uri mAudioUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-							ContentValues values = new ContentValues();
-							values.put(MediaStore.Audio.Media.DATA, newFile);
-							mContentResolver.update(mAudioUri, values,MediaStore.Audio.Media.DATA + " = '" + fullpath
-											+ "'", null);
-					}
-
-				} catch (Exception e1) {
-					e.printStackTrace();
-					Toast.makeText(this, "对不起，音乐文件获取有误，不能正常操作！",
-							Toast.LENGTH_SHORT).show();
-					return;
-				}
-			}
-
 			// 封装文件为json格式
 			JSONObject sendObj = new JSONObject();
 			JSONArray array = new JSONArray();
-		
-			// music urls		
+
+			// music urls
 			// 文件编辑类型： copy、clock
 			array.put(0, editType);
-	     	array.put(1, musicPath);
+			array.put(1, musicPath);
 
-			//第二个参数：如reName：则发送新的文件名。否则，赋值文件httpAddress
-			if(editType.equals(MusicUtils.EDIT_RENAME)){
-		     	array.put(2, param);	
-			}else{
-		     	array.put(2, tmpHttpAddress);
+			// 第二个参数：如reName：则发送新的文件名。否则，赋值文件httpAddress
+			if (StringUtils.hasLength(param)) {
+				array.put(2, param);
+			} else {
+				array.put(2, tmpHttpAddress);
 			}
+
 			sendObj.put("fileEdit", array);
 			// client ip
 			sendObj.put("client_ip", ipAddress);
@@ -470,140 +449,237 @@ public class YinXiangMusicViewActivity extends Activity {
 			// 发送播放地址
 			ClientSendCommandService.msg = sendObj.toString();
 			ClientSendCommandService.handler.sendEmptyMessage(4);
-			
 
 		} catch (Exception e) {
 			e.printStackTrace();
 			Toast.makeText(this, "音乐文件获取失败", Toast.LENGTH_SHORT).show();
+			mFileEdit.closeProgressDialog();
 		}
 	}
 
 	
+	/**
+	 * 获取文件远程访问地址
+	 * @param ipAddress 本地ip地址
+	 * @param filePath  文件路径
+	 * @return 远程访问地址
+	 */
+	private String getHttpAddressOfFile(String ipAddress, String filePath) {
+
+		String mHttpAddress = "";
+
+		String httpAddress = "http://" + ipAddress + ":"
+				+ HTTPDService.HTTP_PORT;
+
+		String newMusicPath = null;
+		if (filePath.startsWith(HTTPDService.defaultHttpServerPath)) {
+			newMusicPath = convertFileUrlToHttpURL(filePath.replace(
+					HTTPDService.defaultHttpServerPath, ""));
+
+		} else {
+			for (String otherHttpServerPath : HTTPDService.otherHttpServerPaths) {
+				if (filePath.startsWith(otherHttpServerPath)) {
+					newMusicPath = convertFileUrlToHttpURL(filePath.replace(
+							otherHttpServerPath, ""));
+				}
+			}
+		}
+
+		mHttpAddress = httpAddress + newMusicPath;
+		// 判断URL是否符合规范，如果不符合规范，就1重命名文件
+		try {
+			URI.create(mHttpAddress);
+
+		} catch (Exception e) {
+			try {
+
+				/**
+				 * 创建新的文件
+				 */
+				if (!filePath.equals("")) {
+					File illegalFile = new File(filePath);
+					String fullpath = illegalFile.getAbsolutePath();
+					String filename = illegalFile.getName();
+					String filepath = fullpath.replace(File.separator
+							+ filename, "");
+					String[] tokens = StringUtils.delimitedListToStringArray(
+							filename, ".");
+					String filenameSuffix = tokens[tokens.length - 1];
+					String newFile = filepath + File.separator
+							+ StringUtils.getRandomString(15) + "."
+							+ filenameSuffix;
+					Runtime.getRuntime().exec("mv " + fullpath + " " + newFile);
+					mHttpAddress = httpAddress + newFile;
+
+					/**
+					 * 更改Content Provider的文件
+					 */
+					ContentResolver mContentResolver = getContentResolver();
+					Uri mAudioUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+					ContentValues values = new ContentValues();
+					values.put(MediaStore.Audio.Media.DATA, newFile);
+					mContentResolver.update(mAudioUri, values,
+							MediaStore.Audio.Media.DATA + " = '" + fullpath
+									+ "'", null);
+				}
+			} catch (Exception e1) {
+				e.printStackTrace();
+				Toast.makeText(this, "对不起，音乐文件获取有误，不能正常操作！", Toast.LENGTH_SHORT)
+						.show();
+			}
+		}
+		return mHttpAddress;
+
+	}
+
 	private Handler mHandle = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
 
 			String musicPath;
 			// 显示文件编辑对话框
-			switch(msg.what){
-			
-            case REQUEST_AUDIOEQUIPMENT_MUSIC:
-				
-				if(STORAGE_YINXIANG== curStorage){
-						//发送播放地址
-					    sendFileEditMsg2YinXiang("", MusicUtils.EDIT_REQUEST_MUSICS,"");
-						mMusicEditServer.communicationWithServer(mHandle,MusicUtils.ACTION_SOCKET_COMMUNICATION,MusicUtils.EDIT_REQUEST_MUSICS);
-						
-				}
-				break;		
-				
-            case SHOW_ACTION_RESULT:
-            	
-				if(STORAGE_YINXIANG== curStorage){
-					  //机顶盒返回信息
-				      String result=(String) msg.getData().get("result");	
-				      String action=(String) msg.getData().get("action");	
-				      
-				      if( result.contains("success")){
-				    	   musicAdapter.changeAdapterData(action,mEditMusic);
-				    	   musicAdapter.notifyDataSetChanged();		    	   
-				    	   result="远程操作成功";
-				      }else {
-				    	  result="远程操作失败";
-				      }
-			    	  Toast.makeText(YinXiangMusicViewActivity.this, result, Toast.LENGTH_SHORT).show();
+			switch (msg.what) {
+
+			case REQUEST_AUDIOEQUIPMENT_MUSIC:
+
+				if (STORAGE_YINXIANG == curStorage) {
+					// 发送播放地址
+					sendFileEditMsg2YinXiang("",
+							MusicUtils.EDIT_REQUEST_MUSICS, "");
+					mMusicEditServer.communicationWithServer(mHandle,
+							MusicUtils.ACTION_SOCKET_COMMUNICATION,
+							MusicUtils.EDIT_REQUEST_MUSICS);
 
 				}
-			     break;	
-            case SHOW_AUDIOEQUIPMENT_MUSICLIST:
-				
-				if(STORAGE_YINXIANG== curStorage){
-					    remoteMusics=(String) msg.obj;
-						musicAdapter = new YinXiangMusicAdapter(YinXiangMusicViewActivity.this, mHandle, keyStr, remoteMusics);
-						musicListView.setAdapter(musicAdapter);
-//						musicAdapter.createAdapterData(musicList);
-//						musicAdapter.notifyDataSetChanged();
-				}
-				break;	
-			//显示文件编辑对话框
-			case FILE_EDIT_DIALOG:
-					// 1、获取当前焦点音乐文件信息
-					mEditMusic = (YinXiangMusic) msg.obj;
-					// 2、显示文件编辑对话框
-					if (mFileEdit != null) {
-						mFileEdit.showEditDialog(mEditMusic,curStorage);
+				break;
+
+			case SHOW_ACTION_RESULT:
+
+				if (STORAGE_YINXIANG == curStorage) {
+					// 机顶盒返回信息
+					String result = (String) msg.getData().get("result");
+					String action = (String) msg.getData().get("action");
+
+					if (result.contains("success")) {
+						musicAdapter.changeAdapterData(action, mEditMusic);
+						musicAdapter.notifyDataSetChanged();
+						result = "远程操作成功";
+					} else if (result.contains("failed")) {
+						result = "远程操作失败";
+					} else if (result.contains("文件拷贝成功")) {
+						// 拷贝成功，更新媒体库记录
+						String fileUrl = mEditMusic.getFileUrl();
+						mFileEdit.upDateMediaStoreFile(fileUrl);
 					}
-				break;				
-			//文件拷贝：手机----->音响
+
+					Toast.makeText(YinXiangMusicViewActivity.this, result,
+							Toast.LENGTH_SHORT).show();
+
+					// 如文件下载提示框显示状态，关闭文件下载提示框
+					// 关闭进度条
+					if (null != mFileEdit) {
+						mFileEdit.closeProgressDialog();
+					}
+
+				}
+				break;
+			case SHOW_AUDIOEQUIPMENT_MUSICLIST:
+
+				if (STORAGE_YINXIANG == curStorage) {
+					remoteMusics = (String) msg.obj;
+					musicAdapter = new YinXiangMusicAdapter(
+							YinXiangMusicViewActivity.this, mHandle, keyStr,
+							remoteMusics);
+					musicListView.setAdapter(musicAdapter);
+					// musicAdapter.createAdapterData(musicList);
+					// musicAdapter.notifyDataSetChanged();
+				}
+				// 关闭进度条
+				if (null != mFileEdit) {
+					mFileEdit.closeProgressDialog();
+				}
+				break;
+			// 显示文件编辑对话框
+			case FILE_EDIT_DIALOG:
+				// 1、获取当前焦点音乐文件信息
+				mEditMusic = (YinXiangMusic) msg.obj;
+				// 2、显示文件编辑对话框
+				if (mFileEdit != null) {
+					mFileEdit.showEditDialog(mEditMusic, curStorage);
+				}
+				break;
+			// 文件拷贝：手机----->音响
 			case FILE_EDIT_COPY:
-				if(STORAGE_MOBILE== curStorage){
-					   musicPath = mEditMusic.getPath();
-						sendFileEditMsg2YinXiang(musicPath, MusicUtils.EDIT_COPYTO_YINXIANG,"");
-				}else if(STORAGE_YINXIANG== curStorage){
-					
-					//获取远程文件访问定位符，实现音响到手机文件COPY
-					 musicPath = mEditMusic.getFileUrl();
-					mMusicEditServer.communicationWithServer(mHandle,MusicUtils.ACTION_HTTP_DOWNLOAD,musicPath);
-			
+
+				if (STORAGE_MOBILE == curStorage) {
+					musicPath = mEditMusic.getPath();
+					sendFileEditMsg2YinXiang(musicPath,	MusicUtils.EDIT_COPYTO_YINXIANG, "");
+				} else if (STORAGE_YINXIANG == curStorage) {
+
+					// 获取远程文件访问定位符，实现音响到手机文件COPY
+					musicPath = mEditMusic.getFileUrl();
+					mMusicEditServer.communicationWithServer(mHandle,MusicUtils.ACTION_HTTP_DOWNLOAD, musicPath);
+					mFileEdit.showProgressDialog(curStorage, null);
 				}
+
 				break;
-		    //设置音响端音乐闹铃-并同步拷贝文件到音响
+			// 设置音响端音乐闹铃-并同步拷贝文件到音响
 			case FILE_EDIT_CLOCK:
-				
-				if(STORAGE_MOBILE== curStorage){
-					    musicPath = mEditMusic.getPath();
-						sendFileEditMsg2YinXiang(musicPath, MusicUtils.EDIT_CLOCK,"");		
-				}
-				break;
-				
-			//实现远程音响文件重命名。
-			case FILE_EDIT_RENAME:
-				
 				musicPath = mEditMusic.getPath();
-				String newName=(String) msg.obj;
-				if(STORAGE_YINXIANG== curStorage){
-					mEditMusic.setTitle(newName);
-					sendFileEditMsg2YinXiang(musicPath, MusicUtils.EDIT_RENAME,newName);		
-					mMusicEditServer.communicationWithServer(mHandle,MusicUtils.ACTION_SOCKET_COMMUNICATION,MusicUtils.EDIT_RENAME);
+				sendFileEditMsg2YinXiang(musicPath, MusicUtils.EDIT_CLOCK,"");
+				break;
 
-				}else if(STORAGE_MOBILE== curStorage){
+			// 实现远程音响文件重命名。
+			case FILE_EDIT_RENAME:
+
+				musicPath = mEditMusic.getPath();
+				String newName = (String) msg.obj;
+				if (STORAGE_YINXIANG == curStorage) {
 					
-					  String result="重命名失败";
-					  if(StringUtils.hasLength(newName)){
-							   mEditMusic.setTitle(newName);
-					    	   musicAdapter.changeAdapterData(MusicUtils.EDIT_RENAME,mEditMusic);
-					    	   musicAdapter.notifyDataSetChanged();
-					    	   result="重命名成功";
-					  }		    	   
-			    	   //提示操作结果
-				     Toast.makeText(YinXiangMusicViewActivity.this, result, Toast.LENGTH_SHORT).show();		    	   
+					mEditMusic.setTitle(newName);
+					sendFileEditMsg2YinXiang(musicPath, MusicUtils.EDIT_RENAME,newName);
+					mMusicEditServer.communicationWithServer(mHandle,
+							MusicUtils.ACTION_SOCKET_COMMUNICATION,
+							MusicUtils.EDIT_RENAME);
+
+				} else if (STORAGE_MOBILE == curStorage) {
+
+					String result = "重命名失败";
+					if (StringUtils.hasLength(newName)) {
+						mEditMusic.setTitle(newName);
+						musicAdapter.changeAdapterData(MusicUtils.EDIT_RENAME,	mEditMusic);
+						musicAdapter.notifyDataSetChanged();
+						result = "重命名成功";
+					}
+					// 提示操作结果
+					Toast.makeText(YinXiangMusicViewActivity.this, result,Toast.LENGTH_SHORT).show();
 				}
 				break;
-				
-		   //实现远程音响文件删除。
+
+			// 实现远程音响文件删除。
 			case FILE_EDIT_REMOVE:
-				String removeFile=(String) msg.obj;
+				String removeFile = (String) msg.obj;
 
-				if(STORAGE_YINXIANG== curStorage){
-					
-					    musicPath = mEditMusic.getPath();
-					    sendFileEditMsg2YinXiang(musicPath, MusicUtils.EDIT_REMOVE,"");	
-						mMusicEditServer.communicationWithServer(mHandle,MusicUtils.ACTION_SOCKET_COMMUNICATION,MusicUtils.EDIT_REMOVE);
+				if (STORAGE_YINXIANG == curStorage) {
+					musicPath = mEditMusic.getPath();
+					sendFileEditMsg2YinXiang(musicPath, MusicUtils.EDIT_REMOVE,"");
+					mMusicEditServer.communicationWithServer(mHandle,
+							MusicUtils.ACTION_SOCKET_COMMUNICATION,
+							MusicUtils.EDIT_REMOVE);
 
-						
-				}else if(STORAGE_MOBILE== curStorage ){
-					  String result="文件删除失败";
-					  if(StringUtils.hasLength(removeFile)){
-					    	   musicAdapter.changeAdapterData(MusicUtils.EDIT_REMOVE,mEditMusic);
-					    	   musicAdapter.notifyDataSetChanged();
-					    	   result="文件删除成功";
-					  }
-					  //提示操作结果
-					  Toast.makeText(YinXiangMusicViewActivity.this, result, Toast.LENGTH_SHORT).show();
+				} else if (STORAGE_MOBILE == curStorage) {
+					String result = "文件删除失败";
+					if (StringUtils.hasLength(removeFile)) {
+						musicAdapter.changeAdapterData(MusicUtils.EDIT_REMOVE,	mEditMusic);
+						musicAdapter.notifyDataSetChanged();
+						result = "文件删除成功";
+					}
+					// 提示操作结果
+					Toast.makeText(YinXiangMusicViewActivity.this, result,Toast.LENGTH_SHORT).show();
 				}
-				break;		
-				default:
-					break;
+				break;
+			default:
+				break;
 			}
 		}
 	};
@@ -633,6 +709,7 @@ public class YinXiangMusicViewActivity extends Activity {
 		if (ClientSendCommandService.titletxt != null) {
 			title.setText(ClientSendCommandService.titletxt);
 		}
+		setMusicAdapter();
 	}
 
 	@Override
@@ -648,12 +725,14 @@ public class YinXiangMusicViewActivity extends Activity {
 	}
 
 	@Override
+	protected void onPause() {
+		mMusicEditServer.close();
+		super.onPause();
+	}
+
+	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		mMusicEditServer.close();
-	}	
-	
-	
-	
-	
+	}
+
 }

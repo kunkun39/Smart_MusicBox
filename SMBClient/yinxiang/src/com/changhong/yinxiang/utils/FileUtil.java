@@ -13,6 +13,7 @@ import com.changhong.common.utils.StringUtils;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -222,12 +223,25 @@ public class FileUtil {
 	
 	
 	
+	/**
+	 * 根据httpdownLoad文件URL，获取文件本地保存路径
+	 * @param fileURL 文件远程定位符
+	 * @return 本地保存文件路径
+	 */
+	public String getLocalFilePathOfDownLoad(String fileUrl){
+		
+	    int startIndex=fileUrl.lastIndexOf(File.separator);
+		String fileName=fileUrl.substring(startIndex+1);
+		String localFilePath=SDCARDPATH+MUSIC_PATH+ File.separator + fileName;
+		return localFilePath;
+	}
+	
 	public String getFileName(String filePath){
 		String fileName="";
 	    int startIndex=filePath.lastIndexOf(File.separator);
-	    int endIndex=filePath.indexOf(".");	
+	    int endIndex=filePath.lastIndexOf(".");	
 	    if(startIndex>0  && endIndex>(startIndex+1)){
-			fileName=filePath.substring(startIndex+1, endIndex);
+			fileName=filePath.substring(startIndex+1);
 		}		
 		return fileName;
 	}
@@ -316,6 +330,23 @@ public class FileUtil {
 		}
 	}
 	
+	
+	/**
+	 * 媒体库文件更新、删除。
+	 * 
+	 * @param doAction 文件编辑类型 remove、reName
+	 * @param fileUrl  文件定位符
+	 * @param newFile 新文件定位符
+	 */
+	public void upDateMediaStoreFile(Context context,String fileUrl) {
+
+		//参数检查
+		if (!StringUtils.hasLength(fileUrl) )return;		
+		//更新mediaStorage中 指定文件信息
+		Intent scanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+		scanIntent.setData(Uri.fromFile(new File(fileUrl)));
+		context.sendBroadcast(scanIntent);	
+	}
 	
 
 	static class FileComparator implements Comparator<File> {
