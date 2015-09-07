@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="100dip"                 
+                    android:background="@drawable/edit_bg">
+
+     <TextView android:id="@+id/filecopy_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dip"
+                    android:textColor="@android:color/white"
+                    android:text="正在拷贝"
+                    android:textSize="20sp"
+                    android:focusable="false"
+                    android:layout_alignParentTop="true"
+                    android:gravity="center"/>"
+    
+    <LinearLayout
+            android:layout_below="@id/filecopy_title"
+            android:layout_width="match_parent"
+            android:layout_height="50dip" 
+             android:layout_marginLeft="20dip"
+              android:layout_marginRight="20dip"
+            android:orientation="horizontal">
+          <ImageView 
+                android:id="@+id/filecopy_from"
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="1"                
+                android:src="@drawable/mobile"
+                android:layout_gravity="center_vertical"/>
+          <ImageView 
+                android:id="@+id/filecopy_progress"
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="3" 
+                android:layout_marginLeft="20dip"
+                android:layout_marginRight="20dip"
+                android:layout_gravity="center_vertical"/>
+            <ImageView 
+                android:id="@+id/filecopy_to"
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:src="@drawable/tv"
+                android:layout_gravity="center_vertical"
+                />
+    </LinearLayout>
+</RelativeLayout>

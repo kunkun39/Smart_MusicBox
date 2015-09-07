@@ -12,8 +12,8 @@
         android:layout_alignParentRight="true"
         android:background="#00ffcc"
         android:visibility="gone" >
-
         <include layout="@layout/sidemenu" />
+        
     </RelativeLayout>
 
     <RelativeLayout

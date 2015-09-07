@@ -1,0 +1,51 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+        
+         <!-- 中间内容 -->
+       <TextView  android:id="@+id/netmusic_center"
+           android:layout_width="5dip"
+           android:layout_height="5dip"
+           android:layout_centerInParent="true"/>
+                
+        <ImageView
+            android:id="@+id/netmusic_qq"
+            android:layout_width="131dip"
+            android:layout_height="131dip"
+            android:layout_above="@id/netmusic_center"
+            android:layout_alignRight="@id/netmusic_center"
+            android:layout_marginRight="5dip"
+            android:scaleType="fitCenter"
+            android:src="@drawable/qq" />
+
+        <ImageView
+            android:id="@+id/netmusic_wy"
+           android:layout_width="131dip"
+            android:layout_height="131dip"
+            android:layout_above="@id/netmusic_center"
+            android:layout_toRightOf="@id/netmusic_qq"
+            android:scaleType="fitCenter"
+            android:src="@drawable/wangyi" />
+
+        <ImageView
+            android:id="@+id/netmusic_random"
+            android:layout_width="131dip"
+            android:layout_height="131dip"
+            android:layout_below="@id/netmusic_center"
+            android:layout_alignRight="@id/netmusic_center"
+            android:layout_marginRight="5dip"
+            android:scaleType="fitCenter"
+            android:src="@drawable/random" />
+
+        <ImageView
+            android:id="@+id/netmusic_xm"
+           android:layout_width="131dip"
+            android:layout_height="131dip"  
+            android:layout_below="@id/netmusic_center"
+            android:layout_toRightOf="@id/netmusic_random"            
+            android:scaleType="fitCenter"
+            android:src="@drawable/xiami" />
+        
+
+</RelativeLayout>

@@ -1,47 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginTop="60dip"     
-    android:orientation="vertical" >
-
-  
-        <!-- 中间内容 -->
-
+    android:layout_height="match_parent" >
+        
+         <!-- 中间内容 -->
+       <TextView  android:id="@+id/category_center"
+           android:layout_width="5dip"
+           android:layout_height="5dip"
+           android:layout_centerInParent="true"/>
+                
         <ImageView
             android:id="@+id/button_image_touying"
-            android:layout_width="130dp"
-            android:layout_height="130dp"
-            android:layout_marginLeft="55dip"
-            android:layout_marginTop="112.4dip"
-            android:scaleType="fitXY"
-            android:src="@drawable/yinxiang_picture" />
+            android:layout_width="131dip"
+            android:layout_height="131dip"
+            
+            android:layout_above="@id/category_center"
+            android:layout_alignRight="@id/category_center"
+            android:layout_marginRight="5dip"
+            android:scaleType="fitCenter"
+             android:src="@drawable/yinxiang_picture" />
 
         <ImageView
             android:id="@+id/button_vedio_touying"
-            android:layout_width="130dp"
-            android:layout_height="130dp"
-            android:layout_marginLeft="186dip"
-            android:layout_marginTop="112.4dip"
-            android:scaleType="fitXY"
+           android:layout_width="131dip"
+            android:layout_height="131dip"
+            android:layout_above="@id/category_center"
+            android:layout_toRightOf="@id/button_image_touying"
+            android:scaleType="fitCenter"
             android:src="@drawable/yinxiang_vedio" />
 
         <ImageView
             android:id="@+id/button_music_touying"
-            android:layout_width="130dp"
-            android:layout_height="130dp"
-            android:layout_marginLeft="55dip"
-            android:layout_marginTop="244.4dip"
-            android:scaleType="fitXY"
+            android:layout_width="131dip"
+            android:layout_height="131dip"
+            android:layout_below="@id/category_center"
+            android:layout_alignRight="@id/category_center"
+            android:layout_marginRight="5dip"
+            android:scaleType="fitCenter"
             android:src="@drawable/yinxiang_music" />
 
         <ImageView
-            android:id="@+id/button_other_touying"
-            android:layout_width="130dp"
-            android:layout_height="130dp"
-            android:layout_marginLeft="186dip"
-            android:layout_marginTop="244.4dip"
-            android:scaleType="fitXY"
+           android:id="@+id/button_other_touying"
+           android:layout_width="131dip"
+            android:layout_height="131dip"  
+            android:layout_below="@id/category_center"
+            android:layout_toRightOf="@id/button_music_touying"            
+            android:scaleType="fitCenter"
             android:src="@drawable/yinxiang_other" />
      
 

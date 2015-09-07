@@ -74,7 +74,8 @@
                 android:text="音响"
                 android:textSize="16sp"
                 android:textColor="@drawable/musictab_textcolor_selector"/>
-
+      
+    <!-- 功能屏蔽，后续实现
             <RadioButton
                 style="@style/yx_tab"
                 android:layout_height="match_parent"
@@ -84,7 +85,7 @@
                 android:text="外设"
                 android:textSize="16sp"
                 android:textColor="@drawable/musictab_textcolor_selector"/>
-            
+             -->
         </RadioGroup>
         
         
