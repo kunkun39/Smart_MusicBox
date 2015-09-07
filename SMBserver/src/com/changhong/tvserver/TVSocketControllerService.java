@@ -40,8 +40,8 @@ import android.util.JsonReader;
 import android.util.Log;
 
 import com.changhong.tvserver.alarm.ClockCommonData;
-import com.changhong.tvserver.fileedit.DowLoadFloatView;
-import com.changhong.tvserver.fileedit.MusicEdit;
+//import com.changhong.tvserver.fedit.DowLoadFloatView;
+//import com.changhong.tvserver.fedit.MusicEdit;
 import com.changhong.tvserver.search.Commonmethod;
 import com.changhong.tvserver.search.SearchActivity;
 import com.changhong.tvserver.smartctrl.ClientOnLineMonitorService;
@@ -92,7 +92,7 @@ public class TVSocketControllerService extends Service {
 	public static int STOP_PLAY_TAG = 0;
 
 	// 音乐文件编辑
-	MusicEdit mMusicEdit = null;
+//	MusicEdit mMusicEdit = null;
 
 	// /**
 	// * 推送的视频列表
@@ -1160,14 +1160,14 @@ public class TVSocketControllerService extends Service {
 		
 			if(editType.equals("copyToYinXiang") || editType.equals("clockRing") ){
 				  
-				new DowLoadFloatView(this).startDownLoad(editType, parameter2);		
+//				new DowLoadFloatView(this).startDownLoad(editType, parameter2);		
 				
 			}else{	
 				
-					if(null == mMusicEdit){
-						mMusicEdit=new MusicEdit();
-					}
-			       mMusicEdit.doFileEdit(this, clientIP, editType, parameter1,parameter2);
+//					if(null == mMusicEdit){
+//						mMusicEdit=new MusicEdit();
+//					}
+//			       mMusicEdit.doFileEdit(this, clientIP, editType, parameter1,parameter2);
 			}
 		} else {
 			Log.e(TAG, "no picture url");
