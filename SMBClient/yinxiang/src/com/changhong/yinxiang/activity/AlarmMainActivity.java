@@ -74,7 +74,7 @@ public class AlarmMainActivity extends BaseActivity{
 	}
 
 	private void getAlarmMsg(){
-		ClientSendCommandService.msg="getAlarmMsg:get";
+		ClientSendCommandService.msg="getAlarmMsg:|get";
 		ClientSendCommandService.handler.sendEmptyMessage(1);
 	}
 	
