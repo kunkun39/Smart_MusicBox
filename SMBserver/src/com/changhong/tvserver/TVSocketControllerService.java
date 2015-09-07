@@ -604,6 +604,10 @@ public class TVSocketControllerService extends Service {
 						} else if (msg1.equals("key:music")) {
 							Log.e(TAG, "key:music");
 							t.vkey_input(0x190, 1);
+						}else if (msg1.equals("key:xiami")) {
+							//启动虾米音乐
+							Log.e(TAG, "key:xiami");
+//							t.vkey_input(0x190, 1);
 						}
 						// 选择输入源部�?
 						else if (msg1.equals("source:av1")) {
