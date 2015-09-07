@@ -40,8 +40,8 @@ import android.util.JsonReader;
 import android.util.Log;
 
 import com.changhong.tvserver.alarm.ClockCommonData;
-import com.changhong.tvserver.file.DowLoadFloatView;
-import com.changhong.tvserver.file.MusicEdit;
+import com.changhong.tvserver.fileedit.DowLoadFloatView;
+import com.changhong.tvserver.fileedit.MusicEdit;
 import com.changhong.tvserver.search.Commonmethod;
 import com.changhong.tvserver.search.SearchActivity;
 import com.changhong.tvserver.smartctrl.ClientOnLineMonitorService;
@@ -827,7 +827,16 @@ public class TVSocketControllerService extends Service {
 						}
 						// 增加文件编辑
 						else if (msg1.contains("fileEdit")) {
-							handleFileEditMsg(msg1);
+							 
+//							handleFileEditMsg(msg1);
+							 
+							    //调用魔力影音。其中，“花千骨”为搜索关键字			
+								Intent intent = new Intent();
+								intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK); 
+								intent.setClass(getApplicationContext(),com.changhong.tvserver.search.MallListActivity.class);
+								 intent.putExtra("command", "MALL:花千骨");
+								 startActivity(intent);
+							 
 							// 获取闹铃设置信息
 						} else if (msg1.startsWith("getAlarmMsg:")) {
 							handleAlarm(msg1);

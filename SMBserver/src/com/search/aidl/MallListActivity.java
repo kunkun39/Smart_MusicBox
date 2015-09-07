@@ -1,29 +1,50 @@
-package com.changhong.tvserver.search;
+package com.search.aidl;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.zip.Inflater;
 
+import com.baidu.cyberplayer.utils.v;
 import com.changhong.tvserver.R;
 
+import android.R.integer;
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.Service;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.ServiceConnection;
+import android.net.Uri;
+import android.database.DataSetObserver;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
+import android.os.Message;
+import android.os.Messenger;
+import android.os.RemoteException;
 import android.support.v4.app.FragmentActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnFocusChangeListener;
 import android.view.View.OnKeyListener;
+import android.view.ViewParent;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
@@ -33,16 +54,13 @@ import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
-import com.search.aidl.KeyWords;
-import com.search.aidl.KeyWordsUtil;
-import com.search.aidl.VideoInfo;
-import com.search.aidl.VideoInfoDataServer;
 public class MallListActivity extends FragmentActivity{
 
 	public static final String TAG = "MALL";
@@ -115,8 +133,6 @@ public class MallListActivity extends FragmentActivity{
 		intent.putExtra("serviceaction", "com.search.aidl.VoiceSearchService");	
 		//intent.putExtra("keyWords", value)
 		this.sendBroadcast(intent);		
-		Log.e("MallListActivity", "+++++++++++++++++++++start to requiestSearch++++++++++++++++++++++++ ");
-		
 	}
 	
 	public void requiestSearch(KeyWords keyWords)
@@ -241,7 +257,8 @@ public class MallListActivity extends FragmentActivity{
 		handler = new Handler(getMainLooper());
 	}
 	
-	void initEvent()	{
+	void initEvent()
+	{
 		// search keywords
 		mNameView.setOnKeyListener(new OnKeyListener() {
 			
@@ -312,8 +329,10 @@ public class MallListActivity extends FragmentActivity{
 	void paserIntent(Intent intent)
 	{
 		if (intent != null) {
-			String command = intent.getStringExtra("command");
-			if(command != null && !command.isEmpty())	{
+			String command = intent.getDataString();
+			if(command != null
+					&& !command.isEmpty())
+			{
 				command = command.substring(TAG.length() + 1);
 				if (!command.isEmpty()) {
 					requiestSearch(command);
@@ -408,7 +427,7 @@ public class MallListActivity extends FragmentActivity{
 				imageView = pageDataHoder.imageView;
 				nameView = pageDataHoder.nameView;
 			}			
-			ImageLoader.getInstance().displayImage(videoInfo.getmImageUrl(), imageView,options);
+			ImageLoader.getInstance().displayImage(videoInfo.mImageUrl, imageView,options);
 			convertView.setOnFocusChangeListener(new OnFocusChangeListener() {
 				
 				@Override
@@ -433,8 +452,8 @@ public class MallListActivity extends FragmentActivity{
 					playVideo(videoInfo);
 				}
 			});
-			Log.d("DATALIST:", "videoType:" + videoInfo.getVideoType() + ",ACTION:" + videoInfo.getAction());
-			nameView.setText(videoInfo.getVideoName());		
+			Log.d("DATALIST:", "videoType:" + videoInfo.videoType + ",ACTION:" + videoInfo.action);
+			nameView.setText(videoInfo.videoName);		
 			return convertView;
 		}			
 	}
