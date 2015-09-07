@@ -828,14 +828,7 @@ public class TVSocketControllerService extends Service {
 						// 增加文件编辑
 						else if (msg1.contains("fileEdit")) {
 							 
-//							handleFileEditMsg(msg1);
-							 
-							    //调用魔力影音。其中，“花千骨”为搜索关键字			
-								Intent intent = new Intent();
-								intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK); 
-								intent.setClass(getApplicationContext(),com.changhong.tvserver.search.MallListActivity.class);
-								 intent.putExtra("command", "MALL:花千骨");
-								 startActivity(intent);
+							handleFileEditMsg(msg1);
 							 
 							// 获取闹铃设置信息
 						} else if (msg1.startsWith("getAlarmMsg:")) {

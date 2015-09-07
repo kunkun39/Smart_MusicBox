@@ -45,7 +45,7 @@ import com.search.aidl.VideoInfo;
 import com.search.aidl.VideoInfoDataServer;
 public class MallListActivity extends FragmentActivity{
 
-	public static final String TAG = "MALL";
+	public static final String TAG = "Video";
 	
 	/**
 	 * DataObserver of Mall's Video
