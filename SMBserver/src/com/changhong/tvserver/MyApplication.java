@@ -1,7 +1,13 @@
 package com.changhong.tvserver;
 
-import android.app.Application;
+import java.io.File;
+import java.io.FileWriter;
+import java.util.List;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -12,21 +18,16 @@ import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
+
+import com.changhong.nanohttpd.NanoHTTPDService;
+import com.changhong.tvserver.touying.image.loader.core.ImageLoadController;
+import com.changhong.tvserver.touying.image.loader.core.ImageLoaderConfigure;
+import com.changhong.tvserver.touying.image.loader.utils.RepositoryUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.utils.StorageUtils;
-import com.changhong.nanohttpd.NanoHTTPDService;
-import com.changhong.tvserver.touying.image.loader.core.ImageLoadController;
-import com.changhong.tvserver.touying.image.loader.core.ImageLoaderConfigure;
-import com.changhong.tvserver.touying.image.loader.utils.RepositoryUtils;
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.util.List;
 
 /**
  * application for tv server which used for init some configuration such as image loader or path for cache etc
@@ -68,6 +69,12 @@ public class MyApplication extends Application {
         NET_WIRELESS_24G,
         NET_WIRELESS_5G
     }
+    
+    private static MyApplication instance;  
+    
+    public static MyApplication getContext(){  
+        return instance;  
+    }  
 
     /**
      * current network status
@@ -77,6 +84,7 @@ public class MyApplication extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		instance=this;
 		options = new DisplayImageOptions
 				.Builder()
 				.showImageForEmptyUri(R.drawable.activity_empty_photo)
