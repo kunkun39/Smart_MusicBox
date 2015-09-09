@@ -30,6 +30,9 @@ import android.provider.BaseColumns;
 import com.changhong.tvserver.R;
 
 public final class Alarm implements Parcelable {
+	
+	// This string is used to indicate a silent alarm in the db.
+		public static final String ALARM_ALERT_SILENT = "silent";
 
     public static final Parcelable.Creator<Alarm> CREATOR
             = new Parcelable.Creator<Alarm>() {
@@ -158,10 +161,10 @@ public final class Alarm implements Parcelable {
     public int        hour;
     public int        minutes;
     public DaysOfWeek daysOfWeek;
-    public long       time;
+    public long       time;//设置闹钟的时候 系统的时间
     public boolean    vibrate;
-    public String     label;
-    public Uri        alert;
+    public String     label;//闹钟的名字
+    public Uri        alert;//用户设置的闹铃的地址
     public boolean    silent;
 
     public Alarm(Cursor c) {
@@ -174,7 +177,7 @@ public final class Alarm implements Parcelable {
         vibrate = c.getInt(Columns.ALARM_VIBRATE_INDEX) == 1;
         label = c.getString(Columns.ALARM_MESSAGE_INDEX);
         String alertString = c.getString(Columns.ALARM_ALERT_INDEX);
-        if (Alarms.ALARM_ALERT_SILENT.equals(alertString)) {
+        if (ALARM_ALERT_SILENT.equals(alertString)) {
             silent = true;
         } else {
             if (alertString != null && alertString.length() != 0) {

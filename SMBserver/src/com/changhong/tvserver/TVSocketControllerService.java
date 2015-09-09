@@ -1369,10 +1369,11 @@ public class TVSocketControllerService extends Service {
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		// TODO Auto-generated method stub
 
+		if(intent!=null){
 		int i = intent.getIntExtra("message", 0);
 		if (1 == i) {
 			initFM();
-		}
+		}}
 		return super.onStartCommand(intent, flags, startId);
 	}
 
