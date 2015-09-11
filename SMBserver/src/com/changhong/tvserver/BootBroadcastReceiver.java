@@ -1,6 +1,8 @@
 package com.changhong.tvserver;
 
 
+import com.changhong.tvserver.autoctrl.ClientOnLineMonitorService;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -20,9 +22,9 @@ public class BootBroadcastReceiver extends BroadcastReceiver {
         context.startService(mIntent);
         
         //YD add 20150726 client状态监控服务
-//        mIntent = new Intent(context, ClientOnLineMonitorService.class);
-//        mIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//        context.startService(mIntent);
+        mIntent = new Intent(context, ClientOnLineMonitorService.class);
+        mIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startService(mIntent);
     }
 }
 
