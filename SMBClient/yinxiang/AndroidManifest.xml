@@ -92,9 +92,8 @@
         <activity
                 android:name="com.changhong.yinxiang.activity.YinXiangFMActivity"
                 android:screenOrientation="portrait" />
-		<activity
-                android:name="com.changhong.yinxiang.activity.AlarmMainActivity"
-                android:screenOrientation="portrait" />
+		<activity android:name="com.changhong.yinxiang.activity.AlarmMainActivity"/>
+		<activity android:name="com.changhong.yinxiang.alarm.SetAlarmActvity"/>
         <activity android:name="com.changhong.yinxiang.activity.SearchActivity"/>
         <service android:name="com.changhong.yinxiang.nanohttpd.HTTPDService" />
 

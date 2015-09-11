@@ -3,6 +3,10 @@ package com.changhong.yinxiang.alarm;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.changhong.yinxiang.R;
+
+import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -13,10 +17,18 @@ import android.widget.TextView;
 
 public class AlarmAdapter extends BaseAdapter {
 
-	private List<AlarmInfor> mAlarmList = null;
-
+	private List<Alarm> mAlarmList = null;
+	private Context context;
+	private LayoutInflater inflater;
+	
+	public AlarmAdapter(Context con){
+		this.context=con;
+		this.inflater=(LayoutInflater)con.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		
+	}
+	
 	// 初始化设置数据
-	public void setData(ArrayList<AlarmInfor> list) {
+	public void setData(ArrayList<Alarm> list) {
 		mAlarmList.clear();
 		this.mAlarmList = list;
 		notifyDataSetChanged();
@@ -31,12 +43,12 @@ public class AlarmAdapter extends BaseAdapter {
 	}
 
 	// 增加闹铃
-	public void addData(AlarmInfor newAlarm) {
+	public void addData(Alarm newAlarm) {
 		if (mAlarmList != null && mAlarmList.size() > 0) {
 			mAlarmList.add(newAlarm);
 
 		} else {
-			mAlarmList = new ArrayList<AlarmInfor>();
+			mAlarmList = new ArrayList<Alarm>();
 			mAlarmList.add(newAlarm);
 		}
 		notifyDataSetChanged();
@@ -64,7 +76,7 @@ public class AlarmAdapter extends BaseAdapter {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		// TODO Auto-generated method stub
 		if (convertView == null) {
-
+			convertView=inflater.inflate(R.layout.alarm_item, null);
 		} else {
 
 		}
