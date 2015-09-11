@@ -96,6 +96,7 @@ public class ClockCommonData {
 			bean.setUrl(musicCursor.getString(musicCursor.getColumnIndex("url")));
 			musicBeans.add(bean);
 		}
+		musicCursor.close();
 		return musicBeans;
 	}
 
@@ -137,7 +138,7 @@ public class ClockCommonData {
 					member.put("enabled", alarm.enabled);
 					member.put("hour", alarm.hour);
 					member.put("minutes", alarm.minutes);
-					member.put("daysOfWeek", alarm.daysOfWeek);
+					member.put("daysOfWeek", alarm.daysOfWeek.getCoded());
 					member.put("time", alarm.time);
 					member.put("vibrate", alarm.vibrate);
 					member.put("label", alarm.label);
