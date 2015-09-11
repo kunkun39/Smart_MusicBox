@@ -369,6 +369,7 @@ public class ClientSendCommandService extends Service implements ClientSocketInt
     				
     				serverFMInfo.add(name);
     			}
+    			
     		} else {
     			Log.e(TAG, "未获取到服务器Json");
     		}
