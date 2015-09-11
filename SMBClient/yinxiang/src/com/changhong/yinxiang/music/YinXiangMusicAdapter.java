@@ -173,17 +173,12 @@ public class YinXiangMusicAdapter extends BaseAdapter {
 			// 获得view
 			convertView = inflater.inflate(R.layout.yinixiang_music_list_item,
 					null);
-			wapper.musicIndex = (TextView) convertView
-					.findViewById(R.id.yinxiang_music_item_index);
-			wapper.musicName = (TextView) convertView
-					.findViewById(R.id.yinxiang_music_item_name);
-			wapper.fullPath = (TextView) convertView
-					.findViewById(R.id.yinxiang_music_item_path);
-			wapper.musicChecked = (CheckBox) convertView
-					.findViewById(R.id.yinxiang_music_item_checked);
+			wapper.musicIndex = (TextView) convertView.findViewById(R.id.yinxiang_music_item_index);
+			wapper.musicName = (TextView) convertView.findViewById(R.id.yinxiang_music_item_name);
+			wapper.fullPath = (TextView) convertView.findViewById(R.id.yinxiang_music_item_path);
+			wapper.musicChecked = (CheckBox) convertView.findViewById(R.id.yinxiang_music_item_checked);
 
-			wapper.editBtn = (ImageView) convertView
-					.findViewById(R.id.yinxiang_music_item_edit);
+			wapper.editBtn = (ImageView) convertView.findViewById(R.id.yinxiang_music_item_edit);
 
 //			wapper.musicImage.setTag(position);
 			// 组装view

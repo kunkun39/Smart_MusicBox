@@ -26,6 +26,7 @@ import com.changhong.yinxiang.activity.YinXiangMusicViewActivity;
 import com.changhong.yinxiang.utils.FileUtil;
 import com.changhong.yinxiang.view.FileDownLoadDialog;
 import com.changhong.yinxiang.view.FileEditDialog;
+import com.changhong.yinxiang.view.MyProgressDialog;
 
 public class MusicEdit {
 	
@@ -39,7 +40,7 @@ public class MusicEdit {
 	Dialog reNameDialog = null;
 	
 	//远程处理进度条
-	ProgressDialog MProgressDialog =null;
+	MyProgressDialog MProgressDialog =null;
 
 	EditText mEditText = null;
 	FileUtil mFileUtil = null;
@@ -110,6 +111,8 @@ public class MusicEdit {
 
 						}
 					});
+			
+			//如果是音响设备，修改edit_copy1背景图
 		}
 		
 		if(null == fileDownLoadDialog){
@@ -117,11 +120,7 @@ public class MusicEdit {
 		}
 		
 		if(null == MProgressDialog){
-			  MProgressDialog=new ProgressDialog(mContext,R.style.fileEditTheme);
-			    Window window =MProgressDialog.getWindow();
-		        window.setGravity(Gravity.BOTTOM);
-		        MProgressDialog.setCanceledOnTouchOutside(false);// 设置点击屏幕Dialog不消失  
-		        MProgressDialog.setCancelable(true);// 设置是否可以通过点击Back键取消  
+			    MProgressDialog=new MyProgressDialog(mContext);
 		}
 		
 	}
@@ -130,24 +129,24 @@ public class MusicEdit {
 		this.mEditMusic = music;
 		this.curStorageDev = storageDev;
 		if (fileEditDialog != null && !fileEditDialog.isShowing()) {
-			fileEditDialog.show();
+			fileEditDialog.show(curStorageDev);
 		}
 	}
 	
 	
-	public void showProgressDialog(int type , String msg ) {
+	public void showProgressDialog(String msg ) {
 		
-		if(1 == type  ||  2 == type){
+		if(!StringUtils.hasLength(msg))return;
+		
+		if(msg.startsWith("fileEdit:")){
 			if (fileDownLoadDialog != null && !fileDownLoadDialog.isShowing()) {
-				fileDownLoadDialog.show(type);
+				fileDownLoadDialog.show(msg.substring(10));
 			}
-		}else if(StringUtils.hasLength(msg)){
-		
+		}else{
 			if (MProgressDialog != null && !MProgressDialog.isShowing()) {
-				MProgressDialog.setMessage(msg);
-				MProgressDialog.show();
+				MProgressDialog.show(msg);
 			}
-		}	
+		}
 	}
 	
    

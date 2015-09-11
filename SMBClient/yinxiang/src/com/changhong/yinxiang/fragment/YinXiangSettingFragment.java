@@ -15,7 +15,6 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.changhong.common.system.MyApplication;
 import com.changhong.yinxiang.R;
 import com.changhong.yinxiang.activity.AlarmMainActivity;

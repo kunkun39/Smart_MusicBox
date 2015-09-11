@@ -2,6 +2,7 @@ package com.changhong.yinxiang.fragment;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
@@ -68,12 +69,19 @@ public class YinXiangFMFragment extends Fragment {
 		FMlist = (GridView) v.findViewById(R.id.fmlist);
 		adapter = new FMAdapter(getActivity());
 		FMlist.setAdapter(adapter);
+		
+		mHandler=new Handler(){
+			  public void handleMessage(Message msg1) {
+				        if(ClientSendCommandService.searchFMFinished){
+				        	adapter.notifyDataSetChanged();				        	
+				        }else{
+				    		mHandler.sendMessageDelayed(new Message(), 1000);
+				        }
+			  }
+		};		
+		mHandler.sendEmptyMessage(1);
 	}
 
-	/**
-	 * ****************************************************系统方法重载部分*************
-	 * *******************************
-	 */
 
 	@Override
 	public void onResume() {
@@ -104,8 +112,7 @@ public class YinXiangFMFragment extends Fragment {
 			return position;
 		}
 
-		public View getView(final int position, View convertView,
-				ViewGroup parent) {
+		public View getView(final int position, View convertView,	ViewGroup parent) {
 			/**
 			 * VIEW HOLDER的配置
 			 */
@@ -121,38 +128,36 @@ public class YinXiangFMFragment extends Fragment {
 			}
 			if (ClientSendCommandService.serverFMInfo.size() > 0) {
 
-				vh.FMname.setText(ClientSendCommandService.serverFMInfo
-						.get(position));
-				convertView.setOnClickListener(new OnClickListener() {
-
+				vh.FMname.setText(ClientSendCommandService.serverFMInfo	.get(position));
+				vh.FMplay.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View arg0) {
 						// TODO Auto-generated method stub
 						MyApplication.vibrator.vibrate(100);
-						ClientSendCommandService.msg = "fm:"
-								+ ClientSendCommandService.serverFMInfo
-										.get(position);
+						ClientSendCommandService.msg = "fm:"	+ ClientSendCommandService.serverFMInfo	.get(position);
 						ClientSendCommandService.handler.sendEmptyMessage(1);
 
 						if (null != mPlayingBtn) {
-							mAnimation = (AnimationDrawable) mPlayingBtn
-									.getBackground();
-							if (mAnimation.isRunning()) {
-								mAnimation.stop();
-							}
-							mPlayingBtn
-									.setBackgroundResource(R.drawable.fmplay);
+							mAnimation = (AnimationDrawable) mPlayingBtn	.getBackground();
+							if (mAnimation.isRunning())mAnimation.stop();
+							mPlayingBtn.setBackgroundResource(R.drawable.fmplay);
 						}
 						mPlayingBtn =( (ViewHolder)arg0.getTag()).FMplay;
 						mPlayingBtn.setBackgroundResource(R.anim.playing_anim);
-						mAnimation = (AnimationDrawable) mPlayingBtn
-								.getBackground();
+						mAnimation = (AnimationDrawable) mPlayingBtn	.getBackground();
 						mAnimation.start();
 					}
 				});
 			}
 			return convertView;
 		}
+		
+	
+		
+		
+		
+		
+		
 
 		public final class ViewHolder {
 			public TextView FMname;

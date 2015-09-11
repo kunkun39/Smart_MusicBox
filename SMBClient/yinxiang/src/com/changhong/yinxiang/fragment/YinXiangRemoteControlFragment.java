@@ -57,7 +57,7 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 	/**
 	 * control part
 	 */
-	View img_d = null;
+	ImageView img_d = null;
 	View img_v = null;
 
 	private GestureDetector detector;
@@ -103,7 +103,6 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 	int width, height;
 
 	/************************************************** 百度语音换台部分 **************************************************/
-
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -124,7 +123,7 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 		detector = new GestureDetector(this);
 		// bidirSlidingLayout = (BidirSlidingLayout)
 		// findViewById(R.id.bidir_sliding_layout);
-		img_d = v.findViewById(R.id.img_d);
+		img_d = (ImageView) v.findViewById(R.id.img_d);
 		img_v = v.findViewById(R.id.img_volume);
 		// title = (TextView) v.findViewById(R.id.title);
 		// clients = (ListView) v.findViewById(R.id.clients);
@@ -136,16 +135,13 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 		Button btn_left = (Button) v.findViewById(R.id.left);
 		Button btn_right = (Button) v.findViewById(R.id.right);
 		Button btn_center = (Button) v.findViewById(R.id.center);
-		Button btn_v2 = (Button) v.findViewById(R.id.volume2);
-		Button btn_v1 = (Button) v.findViewById(R.id.volume1);
-		Button btn_vtv = (Button) v.findViewById(R.id.tv);
-		Button btn_vchannel = (Button) v.findViewById(R.id.channel);
-//		Button btn_vnum = (Button) v.findViewById(R.id.num);
-		// Button back = (Button) v.findViewById(R.id.btn_back);
-		// Button power = (Button) v.findViewById(R.id.power);
-		Button home = (Button) v.findViewById(R.id.btn_home);
-		Button menu = (Button) v.findViewById(R.id.btn_menu);
-		Button fanhui = (Button) v.findViewById(R.id.btn_b);
+		ImageView btn_v2 = (ImageView) v.findViewById(R.id.volume2);
+		ImageView btn_v1 = (ImageView) v.findViewById(R.id.volume1);
+		ImageView btn_v3 = (ImageView) v.findViewById(R.id.volume3);
+		ImageView btn_vlight = (ImageView) v.findViewById(R.id.vlight);
+		ImageView home = (ImageView) v.findViewById(R.id.btn_home);
+		ImageView menu = (ImageView) v.findViewById(R.id.btn_menu);
+		ImageView backBtn = (ImageView) v.findViewById(R.id.btn_b);
 		Button list = (Button) v.findViewById(R.id.btn_list);
 		btn_up.setOnTouchListener(this);
 		btn_up.setOnClickListener(this);
@@ -183,8 +179,8 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 			}
 		});
 
-		btn_vtv.setOnTouchListener(this);
-		btn_vtv.setOnClickListener(new OnClickListener() {
+		btn_v3.setOnTouchListener(this);
+		btn_v3.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				MyApplication.vibrator.vibrate(100);
@@ -194,8 +190,8 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 				}
 			}
 		});
-		btn_vchannel.setOnTouchListener(this);
-		btn_vchannel.setOnClickListener(new OnClickListener() {
+		btn_vlight.setOnTouchListener(this);
+		btn_vlight.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				MyApplication.vibrator.vibrate(100);
@@ -222,8 +218,8 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 		home.setOnTouchListener(this);
 		menu.setOnClickListener(this);
 		menu.setOnTouchListener(this);
-		fanhui.setOnClickListener(this);
-		fanhui.setOnTouchListener(this);
+		backBtn.setOnClickListener(this);
+		backBtn.setOnTouchListener(this);
 		// back.setOnClickListener(new OnClickListener() {
 		//
 		// @Override
@@ -375,8 +371,7 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 			dyControlDialog.btnDYup.setOnClickListener(this);
 			dyControlDialog.btnDYup.setOnTouchListener(this);
 		}
-		centerPoint.set((180.25f - 35.5f) * density, (343.25f - 35.5f)
-				* density);
+		centerPoint.set((180.25f - 35.5f) * density, (343.25f - 35.5f)* density);
 
 		// 长按触发语音换台功能
 		btn_center.setOnLongClickListener(new View.OnLongClickListener() {
@@ -646,75 +641,76 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 		case R.id.up:
 			if (event.getAction() == MotionEvent.ACTION_DOWN) {
 				LongKeyValue = "key:up";
-				img_d.setBackgroundResource(R.drawable.tv_control_directory_up);
+				img_d.setImageResource(R.drawable.tv_control_directory_up);
 			} else if (event.getAction() == MotionEvent.ACTION_UP) {
-				img_d.setBackgroundResource(R.drawable.tv_control_direction);
+				img_d.setImageResource(R.drawable.tv_control_direction);
 			}
 			break;
 		case R.id.down:
 			if (event.getAction() == MotionEvent.ACTION_DOWN) {
 				LongKeyValue = "key:down";
-				img_d.setBackgroundResource(R.drawable.tv_control_directory_down);
+				img_d.setImageResource(R.drawable.tv_control_directory_down);
 			} else if (event.getAction() == MotionEvent.ACTION_UP) {
-				img_d.setBackgroundResource(R.drawable.tv_control_direction);
+				img_d.setImageResource(R.drawable.tv_control_direction);
 			}
 			break;
 		case R.id.left:
 			if (event.getAction() == MotionEvent.ACTION_DOWN) {
 				LongKeyValue = "key:left";
-				img_d.setBackgroundResource(R.drawable.tv_control_directory_left);
+				img_d.setImageResource(R.drawable.tv_control_directory_left);
 			} else if (event.getAction() == MotionEvent.ACTION_UP) {
-				img_d.setBackgroundResource(R.drawable.tv_control_direction);
+				img_d.setImageResource(R.drawable.tv_control_direction);
 			}
 			break;
 		case R.id.right:
 			if (event.getAction() == MotionEvent.ACTION_DOWN) {
 				LongKeyValue = "key:right";
-				img_d.setBackgroundResource(R.drawable.tv_control_directory_right);
+				img_d.setImageResource(R.drawable.tv_control_directory_right);
 			} else if (event.getAction() == MotionEvent.ACTION_UP) {
-				img_d.setBackgroundResource(R.drawable.tv_control_direction);
+				img_d.setImageResource(R.drawable.tv_control_direction);
 			}
 			break;
 		case R.id.center:
 			if (event.getAction() == MotionEvent.ACTION_DOWN) {
 				LongKeyValue = "";
-				img_d.setBackgroundResource(R.drawable.tv_control_directory_center);
+				img_d.setImageResource(R.drawable.tv_control_directory_center);
 			} else if (event.getAction() == MotionEvent.ACTION_UP) {
-				img_d.setBackgroundResource(R.drawable.tv_control_direction);
+				img_d.setImageResource(R.drawable.tv_control_direction);
 			}
 			break;
 		case R.id.volume2:
 			if (event.getAction() == MotionEvent.ACTION_DOWN) {
 				LongKeyValue = "";
-				img_v.setBackgroundResource(R.drawable.tv_control_menu_volum2);
+//				img_v.setBackgroundResource(R.drawable.tv_control_menu_volum2);
 			} else if (event.getAction() == MotionEvent.ACTION_UP) {
-				img_v.setBackgroundResource(R.drawable.tv_control_menu);
+//				img_v.setBackgroundResource(R.drawable.tv_control_menu);
 			}
 			break;
 		case R.id.volume1:
 			if (event.getAction() == MotionEvent.ACTION_DOWN) {
 				LongKeyValue = "";
-				img_v.setBackgroundResource(R.drawable.tv_control_menu_volum1);
+//				img_v.setBackgroundResource(R.drawable.tv_control_menu_volum1);
 			} else if (event.getAction() == MotionEvent.ACTION_UP) {
-				img_v.setBackgroundResource(R.drawable.tv_control_menu);
+//				img_v.setBackgroundResource(R.drawable.tv_control_menu);
 			}
 			break;
-		case R.id.tv:
+		case R.id.volume3:
 			if (event.getAction() == MotionEvent.ACTION_DOWN) {
 				LongKeyValue = "";
-				img_v.setBackgroundResource(R.drawable.tv_control_menu_tv);
+//				img_v.setBackgroundResource(R.drawable.tv_control_menu_tv);
 			} else if (event.getAction() == MotionEvent.ACTION_UP) {
-				img_v.setBackgroundResource(R.drawable.tv_control_menu);
+//				img_v.setBackgroundResource(R.drawable.tv_control_menu);
 			}
 			break;
-		case R.id.channel:
+		case R.id.vlight:
 			if (event.getAction() == MotionEvent.ACTION_DOWN) {
 				LongKeyValue = "";
-				img_v.setBackgroundResource(R.drawable.tv_control_menu_channel);
+//				img_v.setBackgroundResource(R.drawable.tv_control_menu_channel);
 			} else if (event.getAction() == MotionEvent.ACTION_UP) {
-				img_v.setBackgroundResource(R.drawable.tv_control_menu);
+//				img_v.setBackgroundResource(R.drawable.tv_control_menu);
 			}
 			break;
+			
 //		case R.id.num:
 //			if (event.getAction() == MotionEvent.ACTION_DOWN) {
 //				LongKeyValue = "";
@@ -727,9 +723,9 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 			case R.id.btn_menu:
 			if (event.getAction() == MotionEvent.ACTION_DOWN) {
 				LongKeyValue = "";
-				img_v.setBackgroundResource(R.drawable.tv_control_menu_menu);
+//				img_v.setBackgroundResource(R.drawable.tv_control_menu_menu);
 			} else if (event.getAction() == MotionEvent.ACTION_UP) {
-				img_v.setBackgroundResource(R.drawable.tv_control_menu);
+//				img_v.setBackgroundResource(R.drawable.tv_control_menu);
 			}
 			break;
 		case R.id.btn_home:
@@ -986,10 +982,8 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 		ClientSendCommandService.handler.sendEmptyMessage(1);
 	}
 
-	private void moveBall(float fromXDelta, float toXDelta, float fromYDelta,
-			float toYDelta) {
-		TranslateAnimation animation = new TranslateAnimation(fromXDelta,
-				toXDelta, fromYDelta, toYDelta);
+	private void moveBall(float fromXDelta, float toXDelta, float fromYDelta,float toYDelta) {
+		TranslateAnimation animation = new TranslateAnimation(fromXDelta,toXDelta, fromYDelta, toYDelta);
 		animation.setDuration(500);
 		animation.setInterpolator(new AccelerateInterpolator());
 		animation.setAnimationListener(new AnimationListener() {

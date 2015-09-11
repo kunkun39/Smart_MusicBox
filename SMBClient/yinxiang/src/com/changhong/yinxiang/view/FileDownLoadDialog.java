@@ -17,8 +17,8 @@ public class FileDownLoadDialog extends Dialog {
      */
     public ImageView progress, copy_from,copy_to;
 	public static String ACTION_FILE_EDIT = "com.changhong.FileCopyingDialog";
-    final int COPY_MOBILE_TO_YINXIANG=1;
-    final int COPY_YINXIANG_TO_MOBILE=2;
+    final String COPY_MOBILE_TO_YINXIANG="yinxiang";
+    final String  COPY_YINXIANG_TO_MOBILE="mobile";
     AnimationDrawable anim=null;
 
     public FileDownLoadDialog(Context context) {
@@ -48,9 +48,9 @@ public class FileDownLoadDialog extends Dialog {
     	}
     }
     
-    public void show(int type) {
+    public void show(String type) {
     	
-    	if(COPY_YINXIANG_TO_MOBILE==type){
+    	if(type.equals(COPY_YINXIANG_TO_MOBILE)){
            	copy_from.setBackgroundResource(R.drawable.tv);
            	copy_to.setBackgroundResource(R.drawable.mobile);
            }

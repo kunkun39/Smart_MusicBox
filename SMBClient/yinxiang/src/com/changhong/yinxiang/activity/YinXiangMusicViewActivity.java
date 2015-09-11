@@ -5,12 +5,9 @@ import java.io.FileWriter;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -25,12 +22,12 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.changhong.common.service.ClientSendCommandService;
 import com.changhong.common.system.MyApplication;
 import com.changhong.common.utils.NetworkUtils;
@@ -81,7 +78,7 @@ public class YinXiangMusicViewActivity extends Activity {
 	/**
 	 * 音频推送按钮
 	 */
-	private Button musicSend;
+	private ImageView musicSend;
 
 	/**
 	 * 全选按钮
@@ -154,7 +151,7 @@ public class YinXiangMusicViewActivity extends Activity {
 		// musicAdapter = new YinXiangMusicAdapter(this, mHandle, keyStr, null);
 		// musicListView.setAdapter(musicAdapter);
 
-		musicSend = (Button) findViewById(R.id.yinxing_music_tuisong);
+		musicSend = (ImageView) findViewById(R.id.yinxing_music_tuisong);
 		// musicSelectedInfo =
 		// (TextView)findViewById(R.id.yinxing_music_tuisong_info);
 		checkAll = (CheckBox) findViewById(R.id.yinxing_music_checkall);
@@ -413,9 +410,8 @@ public class YinXiangMusicViewActivity extends Activity {
 
 		// 显示操作等待进度提示
 		if (null != mFileEdit && !editType.equals(MusicUtils.EDIT_COPYTO_YINXIANG)) {
-			String msg = editType.equals(MusicUtils.EDIT_REQUEST_MUSICS) ? "音响文件获取中"
-					: "操作正在进行,请稍后";
-			mFileEdit.showProgressDialog(0, msg + "······");
+			String msg = editType.equals(MusicUtils.EDIT_REQUEST_MUSICS) ? "音响文件获取中": "操作正在进行,请稍后";
+			mFileEdit.showProgressDialog(msg);
 		}
 
 		try {
@@ -619,7 +615,7 @@ public class YinXiangMusicViewActivity extends Activity {
 					// 获取远程文件访问定位符，实现音响到手机文件COPY
 					musicPath = mEditMusic.getFileUrl();
 					mMusicEditServer.communicationWithServer(mHandle,MusicUtils.ACTION_HTTP_DOWNLOAD, musicPath);
-					mFileEdit.showProgressDialog(curStorage, null);
+					mFileEdit.showProgressDialog("fileEdit:yinxiang");
 				}
 
 				break;

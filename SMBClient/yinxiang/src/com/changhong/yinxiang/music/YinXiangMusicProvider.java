@@ -47,9 +47,6 @@ public class YinXiangMusicProvider implements AbstructProvider {
                     int duration = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION));
                     long createTime = cursor .getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATE_ADDED));
                     YinXiangMusic music = new YinXiangMusic(id, title, path, albumId, artist,artistId, duration, createTime);
-                    if(title.contains("479582_0")){
-                    	System.out.print("copy OK");
-                    }
                     list.add(music);
                 }
                 cursor.close();
