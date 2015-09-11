@@ -15,7 +15,8 @@
             android:layout_margin="8dip"
             android:layout_weight="1"
             android:adjustViewBounds="true"
-            android:src="@drawable/edit_remove" />
+            android:src="@drawable/edit_remove"
+            android:scaleType="fitCenter"/>
   <!-- 重命名 -->
   <ImageView
             android:id="@+id/fileedit_rename"
@@ -24,7 +25,8 @@
             android:layout_margin="8dip"
             android:layout_weight="1"
             android:adjustViewBounds="true"
-            android:src="@drawable/edit_rename" />
+            android:src="@drawable/edit_rename"
+            android:scaleType="fitCenter" />
   
   <!-- 闹铃 -->
         <ImageView
@@ -34,7 +36,8 @@
             android:layout_margin="8dip"
             android:layout_weight="1"
             android:adjustViewBounds="true"
-            android:src="@drawable/edit_clock" />
+            android:src="@drawable/edit_clock"
+            android:scaleType="fitCenter" />
 
        <ImageView
             android:id="@+id/fileedit_copy1"
@@ -43,6 +46,7 @@
             android:layout_margin="8dip"
             android:layout_weight="1"
             android:adjustViewBounds="true"
-            android:src="@drawable/edit_copy1" />  
+            android:src="@drawable/edit_copy1"
+            android:scaleType="fitCenter" />  
 
 </LinearLayout>

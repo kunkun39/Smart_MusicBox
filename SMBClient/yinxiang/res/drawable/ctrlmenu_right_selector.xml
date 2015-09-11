@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<selector xmlns:android="http://schemas.android.com/apk/res/android"> 
+    <item android:state_pressed="true" android:drawable="@drawable/tv_control_focusr" /> <!--按下时效果-->  
+    <item android:state_focused="true" android:drawable="@drawable/tv_control_focusr" /> <!--按下时效果--> 
+    <item android:state_selected="true"   android:drawable="@drawable/tv_control_focusr" /> 
+    <item android:drawable="@drawable/default_null" /> 
+    
+</selector> 
