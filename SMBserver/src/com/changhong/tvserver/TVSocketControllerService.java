@@ -39,12 +39,12 @@ import android.os.SystemClock;
 import android.util.JsonReader;
 import android.util.Log;
 
-import com.changhong.tvserver.alarm.ClockCommonData;
+//import com.changhong.tvserver.alarm.ClockCommonData;
 import com.changhong.tvserver.fedit.DowLoadFloatView;
 import com.changhong.tvserver.fedit.MusicEdit;
 import com.changhong.tvserver.search.Commonmethod;
 import com.changhong.tvserver.search.SearchActivity;
-import com.changhong.tvserver.smartctrl.ClientOnLineMonitorService;
+//import com.changhong.tvserver.smartctrl.ClientOnLineMonitorService;
 import com.changhong.tvserver.touying.image.ImageShowPlayingActivity;
 import com.changhong.tvserver.touying.music.MusicViewPlayingActivity;
 import com.changhong.tvserver.touying.video.VideoViewPlayingActivity;
@@ -856,7 +856,7 @@ public class TVSocketControllerService extends Service {
 		// YD add 20150726 注册自动控制监控发送的广播
 		autoCtrlReceiver = new AutoCtrlCommandReceiver();
 		IntentFilter filter = new IntentFilter();
-		filter.addAction(ClientOnLineMonitorService.ACTION_AUTOCTRL_COMMAND);
+//		filter.addAction(ClientOnLineMonitorService.ACTION_AUTOCTRL_COMMAND);
 		registerReceiver(autoCtrlReceiver, filter);
 
 	}
@@ -1178,7 +1178,7 @@ public class TVSocketControllerService extends Service {
 		if (str == null || str.equals(""))
 			return;
 		String[] keys = StringUtils.delimitedListToStringArray(str, "|");
-		ClockCommonData.getInstance().dealMsg(keys);
+//		ClockCommonData.getInstance().dealMsg(keys);
 	}
 
 	/**
@@ -1369,11 +1369,10 @@ public class TVSocketControllerService extends Service {
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		// TODO Auto-generated method stub
 
-		if(intent!=null){
 		int i = intent.getIntExtra("message", 0);
 		if (1 == i) {
 			initFM();
-		}}
+		}
 		return super.onStartCommand(intent, flags, startId);
 	}
 
@@ -1386,12 +1385,12 @@ public class TVSocketControllerService extends Service {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			String action = intent.getAction();
-			if (action
-					.equals(ClientOnLineMonitorService.ACTION_AUTOCTRL_COMMAND)) {
-				msg1 = intent.getStringExtra("cmd");
-				Log.i(TAG, "autoCtrlCommand is " + msg1);
-				handler.sendEmptyMessage(1);
-			}
+//			if (action
+//					.equals(ClientOnLineMonitorService.ACTION_AUTOCTRL_COMMAND)) {
+//				msg1 = intent.getStringExtra("cmd");
+//				Log.i(TAG, "autoCtrlCommand is " + msg1);
+//				handler.sendEmptyMessage(1);
+//			}
 		}
 
 	}
