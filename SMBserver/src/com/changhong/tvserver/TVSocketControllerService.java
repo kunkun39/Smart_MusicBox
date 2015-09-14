@@ -452,7 +452,7 @@ public class TVSocketControllerService extends Service {
 							sendBroadcast(intent);
 						}
 
-						// 搜索音乐部分
+						// 搜索音乐视频部分
 						else if (msg1.startsWith("search:")) {
 							handleSearchMsg(msg1);
 							Log.i("mmmm", "search:misic-" + msg1);
