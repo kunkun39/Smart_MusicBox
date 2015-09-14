@@ -12,9 +12,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.changhong.common.service.ClientSendCommandService;
 import com.changhong.common.system.MyApplication;
 import com.changhong.yinxiang.R;
 import com.changhong.yinxiang.activity.AlarmMainActivity;
@@ -36,6 +39,7 @@ public class YinXiangSettingFragment extends Fragment {
 	private TextView updateInfo;
 	private LinearLayout updateBtn;
 	private LinearLayout alarmBtn;
+	private CheckBox autoCtrlBtn;
 	private ProgressDialog m_pDialog;
 	private UserUpdateService updateService;
 
@@ -78,7 +82,7 @@ public class YinXiangSettingFragment extends Fragment {
 		updateInfo = (TextView) v.findViewById(R.id.update_info);
 		updateBtn = (LinearLayout) v.findViewById(R.id.update_info_btn);
 		alarmBtn= (LinearLayout) v.findViewById(R.id.alarm_setting);
-
+		autoCtrlBtn= (CheckBox) v.findViewById(R.id.autoctrl_setting);
 
 		/**
 		 * 进度条初始化
@@ -154,6 +158,21 @@ public class YinXiangSettingFragment extends Fragment {
 				// TODO Auto-generated method stub
 				MyApplication.vibrator.vibrate(100);
 				startSetAlarm();
+			}
+		});
+		
+	//增加自动控制开关按钮
+		autoCtrlBtn.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				MyApplication.vibrator.vibrate(100);
+				CheckBox check = (CheckBox) v;
+				String autoSet=check.isChecked()?"auto_on":"auto_off";
+				//发送设置信息给TVserver
+				 ClientSendCommandService.msg = "autoctrl:"+autoSet;
+	             ClientSendCommandService.handler.sendEmptyMessage(1);
 			}
 		});
 	}

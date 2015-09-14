@@ -33,7 +33,7 @@ public class XMMusicData {
 	/**
 	 * 推荐专辑列表
 	 */
-	private List<OnlineAlbum> mAlbums;
+	private List<OnlineAlbum> mAlbums=null;
 
 	/**
 	 * 推荐专辑名列表
@@ -61,8 +61,7 @@ public class XMMusicData {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				Pair<QueryInfo, List<OnlineAlbum>> results = mXiamiSDK
-						.getWeekHotAlbumsSync(PAGE_SIZE, PAGE_INDEX);
+				Pair<QueryInfo, List<OnlineAlbum>> results = mXiamiSDK.getWeekHotAlbumsSync(PAGE_SIZE, PAGE_INDEX);
 				if (null == results) {
 					return;
 				}

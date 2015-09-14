@@ -148,8 +148,7 @@
 		<item name="android:windowBackground">@drawable/tv_background</item>
 		<item name="android:backgroundDimEnabled">false</item>
 	</style> --> 
-
-	<style  name="InputTheme"   parent="android:style/Theme.Dialog">
+	<style name="InputTheme" parent="android:style/Theme.Dialog">
 		<item name="android:windowNoTitle">true</item>
 		<item name="android:windowFullscreen">true</item> 
 		<item name="android:windowFrame">@null</item>
@@ -157,8 +156,8 @@
 		<item name="android:windowIsTranslucent">false</item> 
 		<item name="android:windowBackground">@android:color/transparent</item>
 		<item name="android:backgroundDimEnabled">false</item>
-		
-		</style>
+	</style>
+	
 	<style name="fileEditTheme" parent="android:style/Theme.Dialog">
 		<item name="android:windowNoTitle">true</item>
 		<item name="android:windowFullscreen">true</item> 
@@ -173,24 +172,22 @@
 		<item name="android:windowIsTranslucent">false</item>  
     	<item name="android:windowAnimationStyle">@android:style/Animation.Translucent</item>  
     	<item name="android:windowFullscreen">true</item>
-   </style>
-  
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowNoTitle">true</item>
+	</style>
 	<style name="Theme.spinner" parent="android:Theme.Light">
 	    <item name="android:dropDownWidth">20dp</item>
 	</style>
-	
 	<style name="grid_line">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_centerHorizontal">true</item>
     </style>
-    
     <style name="grid_item">
         <item name="android:layout_width">130dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_centerInParent">true</item>
     </style>
-    
     <style name="dialogWindowAnim" parent="android:Animation" mce_bogus="1">
         <item name="android:windowEnterAnimation">@anim/num_dialog_enter_anim</item>
         <item name="android:windowExitAnimation">@anim/num_dialog_exit_anim</item>
@@ -234,4 +231,12 @@
 　　<item name="android:minHeight">60dip</item>
 　　<item name="android:maxHeight">60dip</item>
 </style>
+   
+   <!-- 开关 -->  
+<style name="img_switch"  parent="@android:style/Widget.CompoundButton.CheckBox">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:button">@drawable/switchbtn_selector</item>
+        <item name="android:layout_margin">3dp</item>      
+  </style>
 </resources>

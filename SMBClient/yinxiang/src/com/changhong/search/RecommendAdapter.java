@@ -20,15 +20,14 @@ public class RecommendAdapter extends BaseAdapter {
 		// TODO Auto-generated method stub
 		this.str = str;
 		this.con = con;
-		this.inflater = (LayoutInflater) con
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		this.inflater = (LayoutInflater) con	.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		Log.i("mmmm", "str:" + str.length + "=0=" + str[0]);
 	}
 
 	@Override
 	public int getCount() {
 		// TODO Auto-generated method stub
-		return str.length;
+		return str.length>6?6:str.length;
 	}
 
 	@Override
@@ -50,7 +49,7 @@ public class RecommendAdapter extends BaseAdapter {
 		if (null == convertView) {
 			dh = new DataHolder();
 			convertView = inflater.inflate(R.layout.pop_recom_element, null);
-			dh.tv = (TextView) convertView.findViewById(R.id.pr_element);
+			dh.tv = (TextView) convertView;
 			convertView.setTag(dh);
 		} else {
 			dh = (DataHolder) convertView.getTag();

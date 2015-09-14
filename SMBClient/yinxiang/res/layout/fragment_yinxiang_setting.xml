@@ -82,7 +82,7 @@
 
                 <LinearLayout
                     android:id="@+id/alarm_setting"
-                    style="@style/mid_layout" >
+                    style="@style/top_layout" >
 
                     <TextView
                         style="@style/usertext"
@@ -90,7 +90,24 @@
 
                     <ImageView style="@style/img_arrow" />
                 </LinearLayout>
+                 
+                <!-- 分割线 -->
+                <View style="@style/bg_line" /> 
+                <!--增加自动控制开关 -->
+               <LinearLayout   style="@style/bottom_layout" >
+                    <TextView
+                        style="@style/usertext"
+                        android:text="自动控制" />
+                    <CheckBox android:id="@+id/autoctrl_setting"
+                        style="@style/img_switch" />
+                </LinearLayout>
+                
+                
             </LinearLayout>
+            
+            
+            
+            
         </LinearLayout>
     </RelativeLayout>
 

@@ -1,80 +1,193 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/search_bk"
-    android:orientation="vertical" >
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:background="@drawable/main_bg">
 
-    <Spinner
-        android:id="@+id/search_type"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+    <!--IP选择-->
 
     <LinearLayout
+            android:layout_height="60dip"
+            android:layout_width="fill_parent"
+            android:focusable="false"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+      <TextView
+            android:id="@+id/title"
+            android:layout_width="100dip"
+            android:layout_height="64.3dip"
+            android:layout_centerInParent="true"
+            android:ellipsize="marquee"
+            android:gravity="center_vertical"
+            android:singleLine="true"
+            android:text="未连接"
+            android:textSize="20sp" />
+
+        <ImageView
+            android:layout_width="16.7dip"
+            android:layout_height="10.7dip"
+            android:layout_centerVertical="true"
+            android:background="@drawable/title_ip_select" />
+    </LinearLayout>
+
+    <Button
+            android:id="@+id/btn_back"
+            android:background="@drawable/title_btn_back_selector"
+            android:layout_width="70.5dip"
+            android:layout_height="60dip"
+            android:layout_marginLeft="0dip"/>
+
+    <!--中间内容-->
+
+    <LinearLayout
+            android:layout_height="500dp"
+            android:layout_width="fill_parent"
+            android:layout_marginTop="60dip"
+            android:focusable="false"
+            android:orientation="vertical">"
+        
+        <!-- 搜索类型选择 -->
+         <RadioGroup android:id="@+id/search_type"
+            android:layout_width="match_parent"
+            android:layout_height="60dip"
+            android:background="@drawable/musictab_bg"
+            android:orientation="horizontal" >
+
+            <RadioButton
+                style="@style/yx_tab"
+                android:layout_height="match_parent" 
+                android:layout_marginLeft="10dip"
+                android:layout_marginRight="10dip"                
+                android:drawableBottom="@drawable/musictab_selector"
+                android:text="音乐" 
+                android:textSize="16sp"
+                android:textColor="@drawable/musictab_textcolor_selector"/>
+
+            <RadioButton
+                style="@style/yx_tab"
+                android:layout_height="match_parent"
+                 android:layout_marginLeft="10dip"
+                android:layout_marginRight="10dip"
+                android:drawableBottom="@drawable/musictab_selector"               
+                android:text="影视"
+                android:textSize="16sp"
+                android:textColor="@drawable/musictab_textcolor_selector"/>
+ 
+        </RadioGroup>
+        
+        <!-- 搜索 -->
+        <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_height="0dip"
+        android:layout_weight="1"
+        android:layout_margin="20dp"
         android:orientation="horizontal" >
 
         <EditText
             android:id="@+id/search_keywords"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="4" />
-
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center" >
-
-            <ImageView
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:layout_weight="6" />
+          <ImageView
                 android:id="@+id/search_commit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/search_button" />
-        </RelativeLayout>
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                 android:layout_weight="1"
+                 android:layout_margin="5dip"                 
+                android:src="@drawable/search_button" 
+                android:scaleType="fitCenter"/>"
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/hot_search"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <LinearLayout  android:id="@+id/hot_search"
+        
+        android:layout_width="match_parent"
+        android:layout_height="0dip"
+        android:layout_weight="4"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="20dip"
+        android:layout_marginRight="20dip"       
+        android:orientation="vertical">"
+    <TextView   android:layout_width="match_parent"
+        android:layout_height="wrap_content"    
+        android:paddingBottom="5dip"          
         android:text="热门搜索"
         android:textColor="@color/white"
         android:textSize="18sp" />
 
     <GridView
         android:id="@+id/hot_tab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" 
-        android:numColumns="auto_fit"
+         android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:numColumns="3"
         android:horizontalSpacing="10dp"
-        android:verticalSpacing="10dp"
-        >
-    </GridView>
-<!--  
+        android:verticalSpacing="10dp"/>
+    </LinearLayout>
+    
     <TextView
         android:id="@+id/history_search_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dip"
+        android:layout_weight="1"
+        android:layout_marginLeft="20dip"    
+        android:gravity="center_vertical"
+            
         android:text="历史搜索"
         android:textColor="@color/white"
         android:textSize="18sp" />
+                       
+    <View style="@style/bg_line" />
+    
     <ListView 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/history_search_infor"
-        ></ListView>
+         android:layout_width="match_parent"
+        android:layout_height="0dip"
+        android:layout_weight="3"
+        android:id="@+id/history_search_infor" 
+        android:visibility="gone"/>
+    
+    <TextView android:layout_width="match_parent"
+        android:layout_height="0dip"
+        android:layout_weight="3"
+        android:text="无历史记录"
+        android:textColor="@color/grey"
+        android:textSize="18sp" 
+        android:gravity="center"     
+        android:visibility="visible"/>
 
     <Button 
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dip"
+        android:layout_weight="1"
+        android:padding="7dip"
         android:id="@+id/clear_search_history"
-        android:background="@drawable/clear_history"
+        android:background="@drawable/btn_selector"
         android:layout_gravity="center"
-        android:text="清除历史信息"
-        
-        />
-        -->
-</LinearLayout>
+        android:textColor="@color/white"      
+        android:text="清除历史信息"  />
+    
+    </LinearLayout>
+
+    
+   
+
+    <!-- IP选择 -->
+
+    <ListView
+            android:id="@+id/clients"
+            android:layout_width="match_parent"
+            android:layout_height="558dip"
+            android:layout_marginTop="67.6dip"
+            android:background="@drawable/title_ip_list_bg"
+            android:listSelector="@drawable/title_ip_list"
+            android:visibility="gone" />
+
+    <Button
+            android:id="@+id/btn_list"
+            android:layout_width="204dip"
+            android:layout_height="49.8dip"
+            android:layout_marginLeft="70dip"
+            android:layout_marginTop="10dip"
+            android:background="@drawable/title_btn_list_selector" />
+</RelativeLayout>
