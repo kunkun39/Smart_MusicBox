@@ -934,19 +934,28 @@ public class TVSocketControllerService extends Service {
 
 	private void handleSearchMsg(String str) {
 		String[] keys = StringUtils.delimitedListToStringArray(str, "|");
-		if (keys.length != 3) {
+		if (keys.length != 2) {
 			return;
-		}
-		if (keys[1].equals("music")) {
+		}	
+		//文字搜索，去掉类型
+		String[]  tokens=StringUtils.delimitedListToStringArray(keys[1], ";");
+		String searchContent=(2==tokens.length)?tokens[1]:tokens[0];
+		
+		if (keys[1].contains("music") || keys[1].contains("音乐")|| keys[1].contains("歌曲")) {
+			
 			if (Commonmethod.isActivityForeground(this, "SearchActivity")) {
 				Intent intent = new Intent();
-				intent.putExtra(SearchActivity.keyWordsName, keys[2]);
+				intent.putExtra(SearchActivity.keyWordsName, searchContent);
 				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 				intent.setClass(this, SearchActivity.class);
 				startActivity(intent);
 			}
-		} else if (keys[1].equals("movie")) {
-
+		} else {			
+			  Intent intent = new Intent();
+			  intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK); 
+			  intent.setClass(getApplicationContext(),com.changhong.tvserver.search.MallListActivity.class);
+			  intent.putExtra("command", "movie&tv:"+searchContent);
+			 startActivity(intent);
 		}
 	}
 
