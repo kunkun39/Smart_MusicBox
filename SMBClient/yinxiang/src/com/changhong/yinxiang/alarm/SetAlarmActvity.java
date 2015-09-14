@@ -1,5 +1,6 @@
 package com.changhong.yinxiang.alarm;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TimePicker;
@@ -13,6 +14,14 @@ public class SetAlarmActvity extends BaseActivity{
 	private TimePicker timePicker;
 	private Button confirm;
 	private WeekButton weekBt1,weekBt2,weekBt3,weekBt4,weekBt5,weekBt6,weekBt7;
+
+	// 进入设置界面后，先设置状态。
+	private enum State {
+		add, delete, update, get
+	}
+	//默认状态
+	private State state=State.add;
+			
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +57,26 @@ public class SetAlarmActvity extends BaseActivity{
 	@Override
 	protected void initData() {
 		// TODO Auto-generated method stub
+		Intent intent=getIntent();
+		int position=intent.getIntExtra("select", -1);
+		if(position<0){
+			state=State.add;
+			addAlarm();
+			
+		}else{
+			state=State.update;
+			updateAlarm(position);
+		}
+			
+	}
+	
+	//进入修改流程
+	private void updateAlarm(int position){
+		
+	}
+	
+	//进入添加流程
+	private void addAlarm(){
 		
 	}
 

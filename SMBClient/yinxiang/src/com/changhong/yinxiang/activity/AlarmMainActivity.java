@@ -13,6 +13,7 @@ import android.widget.ListView;
 import com.changhong.common.service.ClientSendCommandService;
 import com.changhong.common.utils.NetworkUtils;
 import com.changhong.yinxiang.R;
+import com.changhong.yinxiang.alarm.Alarm;
 import com.changhong.yinxiang.alarm.AlarmAdapter;
 import com.changhong.yinxiang.alarm.ResolveAlarmInfor;
 import com.changhong.yinxiang.alarm.SetAlarmActvity;
@@ -67,6 +68,7 @@ public class AlarmMainActivity extends BaseActivity {
 		delete = (Button) findViewById(R.id.delete);
 		alarmInfor = (ListView) findViewById(R.id.alarm_info);
 		adapter=new AlarmAdapter(AlarmMainActivity.this);
+		alarmInfor.setAdapter(adapter);
 	}
 
 	@Override
@@ -95,7 +97,7 @@ public class AlarmMainActivity extends BaseActivity {
 	private void getAlarmMsg() {
 		// 触发音响端数据发送
 		String ipString = NetworkUtils.getLocalHostIp();
-		ClientSendCommandService.msg = "getAlarmMsg:|get|" + ipString;
+		ClientSendCommandService.msg = Alarm.get + ipString;
 		ClientSendCommandService.handler.sendEmptyMessage(1);
 
 		// 启动TCP接收线程

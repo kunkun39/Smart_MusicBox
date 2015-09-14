@@ -48,9 +48,8 @@ public class ResolveAlarmInfor {
 						musicBean.setUrl(musicsJson.getString("url"));
 						musicsList.add(musicBean);
 					}
-					
-					
 					alarm.setMusicBean(musicsList);
+					mAlarmList.add(alarm);
 				}
 			}
 
