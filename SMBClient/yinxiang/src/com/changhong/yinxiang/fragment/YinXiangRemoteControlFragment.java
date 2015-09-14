@@ -1302,8 +1302,10 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 					yuYingHelpDialog.show();
 				} else {
 					Toast.makeText(getActivity(),
-							"抱歉哟，目前还不支持该指令:" + recognitionResult,
-							Toast.LENGTH_LONG).show();
+							"语音搜索:" + recognitionResult,
+							Toast.LENGTH_SHORT).show();
+					ClientSendCommandService.msg="search:"+"|"+recognitionResult;
+					ClientSendCommandService.handler.sendEmptyMessage(1);
 				}
 			} else {
 				recognitioningFailedTimes = 0;
