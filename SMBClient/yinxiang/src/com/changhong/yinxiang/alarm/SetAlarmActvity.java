@@ -1,10 +1,19 @@
 package com.changhong.yinxiang.alarm;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -20,6 +29,8 @@ import com.changhong.common.utils.StringUtils;
 import com.changhong.common.widgets.WeekButton;
 import com.changhong.yinxiang.R;
 import com.changhong.yinxiang.activity.BaseActivity;
+import com.changhong.yinxiang.activity.YinXiangMusicViewActivity;
+import com.changhong.yinxiang.music.MusicEditServer;
 import com.changhong.yinxiang.music.MusicUtils;
 
 public class SetAlarmActvity extends BaseActivity {
@@ -35,6 +46,9 @@ public class SetAlarmActvity extends BaseActivity {
 	private Alarm alarm;
 	private WeekButton myWBList[] = null;
 
+	private List<MusicBean> musicListAll = new ArrayList<MusicBean>();
+	private List<MusicBean> musicListCur = new ArrayList<MusicBean>();
+
 	// 进入设置界面后，先设置状态。
 	private enum State {
 		add, delete, update, get
@@ -42,6 +56,23 @@ public class SetAlarmActvity extends BaseActivity {
 
 	// 默认状态
 	private State state = State.add;
+
+	private Handler handler = new Handler() {
+
+		@Override
+		public void handleMessage(Message msg) {
+			// TODO Auto-generated method stub
+			switch (msg.what) {
+			case YinXiangMusicViewActivity.SHOW_AUDIOEQUIPMENT_MUSICLIST:
+				String str = (String) msg.obj;
+				musicListAll = pareJsonToMusicList(str);
+
+				break;
+
+			}
+		}
+
+	};
 
 	private OnClickListener myClickListener = new OnClickListener() {
 
@@ -61,11 +92,11 @@ public class SetAlarmActvity extends BaseActivity {
 				}
 				break;
 			case R.id.cancel:
-
+				finish();
 				break;
 
 			case R.id.musics:
-
+				showMusics();
 				break;
 			}
 		}
@@ -110,6 +141,12 @@ public class SetAlarmActvity extends BaseActivity {
 	@Override
 	protected void initData() {
 		// TODO Auto-generated method stub
+		// 发送获取音乐列表请求，并启动接收线程
+		sendFileEditMsg2YinXiang("", MusicUtils.EDIT_REQUEST_MUSICS, "");
+		MusicEditServer.creatFileEditServer().communicationWithServer(handler,
+				MusicUtils.ACTION_SOCKET_COMMUNICATION,
+				MusicUtils.EDIT_REQUEST_MUSICS);
+
 		Intent intent = getIntent();
 		int position = intent.getIntExtra("select", -1);
 		if (position < 0) {
@@ -164,15 +201,13 @@ public class SetAlarmActvity extends BaseActivity {
 		if (null != alarm) {
 			alarm.hour = timePicker.getCurrentHour();
 			alarm.minutes = timePicker.getCurrentMinute();
-			
-			//设置星期重复
+
+			// 设置星期重复
 			for (int i = 0; i < myWBList.length; i++) {
-				boolean flag=myWBList[i].getFlag();
+				boolean flag = myWBList[i].getFlag();
 				alarm.daysOfWeek.set(i, flag);
 			}
-			
-			//设置音乐信息
-			
+
 		}
 
 	}
@@ -181,64 +216,115 @@ public class SetAlarmActvity extends BaseActivity {
 	private void addAlarm() {
 
 	}
-	
-	
-//	private void sendFileEditMsg2YinXiang(String musicPath, String editType,
-//			String param) {
-//
-//		if (!NetworkUtils.isWifiConnected(this)) {
-//			Toast.makeText(this, "请链接无线网络", Toast.LENGTH_SHORT).show();
-//			return;
-//		}
-//
-//		if (!StringUtils.hasLength(ClientSendCommandService.serverIP)) {
-//			Toast.makeText(this, "手机未连接机顶盒，请检查网络", Toast.LENGTH_SHORT).show();
-//			return;
-//		}
-//
-//		// 显示操作等待进度提示
-//		if (null != mFileEdit && !editType.equals(MusicUtils.EDIT_COPYTO_YINXIANG)) {
-//			String msg = editType.equals(MusicUtils.EDIT_REQUEST_MUSICS) ? "音响文件获取中": "操作正在进行,请稍后";
-//			mFileEdit.showProgressDialog(msg);
-//		}
-//
-//		try {
-//			
-//			String tmpHttpAddress = musicPath;
-//			// 获取IP和外部存储路径
-//			String ipAddress = NetworkUtils.getLocalHostIp();
-//			if (STORAGE_MOBILE == curStorage) {
-//				tmpHttpAddress = getHttpAddressOfFile(ipAddress, musicPath);
-//			}
-//			// 封装文件为json格式
-//			JSONObject sendObj = new JSONObject();
-//			JSONArray array = new JSONArray();
-//
-//			// music urls
-//			// 文件编辑类型： copy、clock
-//			array.put(0, editType);
-//			array.put(1, musicPath);
-//
-//			// 第二个参数：如reName：则发送新的文件名。否则，赋值文件httpAddress
-//			if (StringUtils.hasLength(param)) {
-//				array.put(2, param);
-//			} else {
-//				array.put(2, tmpHttpAddress);
-//			}
-//
-//			sendObj.put("fileEdit", array);
-//			// client ip
-//			sendObj.put("client_ip", ipAddress);
-//
-//			// 发送播放地址
-//			ClientSendCommandService.msg = sendObj.toString();
-//			ClientSendCommandService.handler.sendEmptyMessage(4);
-//
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			Toast.makeText(this, "音乐文件获取失败", Toast.LENGTH_SHORT).show();
-//			mFileEdit.closeProgressDialog();
-//		}
-//	}
 
+	private void sendFileEditMsg2YinXiang(String musicPath, String editType,
+			String param) {
+
+		if (!NetworkUtils.isWifiConnected(this)) {
+			Toast.makeText(this, "请链接无线网络", Toast.LENGTH_SHORT).show();
+			return;
+		}
+
+		if (!StringUtils.hasLength(ClientSendCommandService.serverIP)) {
+			Toast.makeText(this, "手机未连接机顶盒，请检查网络", Toast.LENGTH_SHORT).show();
+			return;
+		}
+
+		try {
+
+			String tmpHttpAddress = musicPath;
+			// 获取IP和外部存储路径
+			String ipAddress = NetworkUtils.getLocalHostIp();
+			// 封装文件为json格式
+			JSONObject sendObj = new JSONObject();
+			JSONArray array = new JSONArray();
+
+			// music urls
+			// 文件编辑类型： copy、clock
+			array.put(0, editType);
+			array.put(1, musicPath);
+
+			// 第二个参数：如reName：则发送新的文件名。否则，赋值文件httpAddress
+			if (StringUtils.hasLength(param)) {
+				array.put(2, param);
+			} else {
+				array.put(2, tmpHttpAddress);
+			}
+
+			sendObj.put("fileEdit", array);
+			// client ip
+			sendObj.put("client_ip", ipAddress);
+
+			// 发送播放地址
+			ClientSendCommandService.msg = sendObj.toString();
+			ClientSendCommandService.handler.sendEmptyMessage(4);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			Toast.makeText(this, "音乐文件获取失败", Toast.LENGTH_SHORT).show();
+		}
+	}
+
+	// 将收到的音乐信息json转换成list
+	private ArrayList<MusicBean> pareJsonToMusicList(String jsonStr) {
+		ArrayList<MusicBean> list = new ArrayList<MusicBean>();
+		if (null != jsonStr) {
+			try {
+
+				JSONTokener jsonParser = new JSONTokener(jsonStr);
+				// 此时还未读取任何json文本，直接读取就是一个JSONObject对象。
+				// 如果此时的读取位置在"name" : 了，那么nextValue就是"返回对象了"（String）
+
+				JSONArray msgObject = (JSONArray) jsonParser.nextValue();
+
+				// 获取消息类型
+				// JSONArray jsonObjs = msgObject.getJSONArray("musicList");
+				for (int i = 0; i < msgObject.length(); i++) {
+					JSONObject musicObj = ((JSONObject) msgObject.opt(i));
+					int id = musicObj.getInt("id");
+					String title = musicObj.getString("title");
+					String path = musicObj.getString("path");
+					String artist = musicObj.getString("artist");
+					String fileUrl = musicObj.getString("httpUrl");
+
+					MusicBean music = new MusicBean();
+					music.setTitle(title);
+					music.setUrl(path);
+					music.setArtist(artist);
+					// 增加文件远程访问定位符
+					list.add(music);
+				}
+			} catch (JSONException ex) {
+				// 异常处理代码
+				ex.printStackTrace();
+			}
+
+		}
+		return list;
+	}
+
+	// 显示音乐列表
+	private void showMusics() {
+		if (musicListAll.size() > 0) {
+			String names[] = new String[musicListAll.size()];
+			for (int i = 0; i < musicListAll.size(); i++) {
+				names[i] = musicListAll.get(i).getTitle();
+			}
+			musicListCur=alarm.getMusicBean();
+			//设置复选框初始选中状态
+			new AlertDialog.Builder(this)
+					.setTitle("复选框")
+					.setMultiChoiceItems(names, null, null)
+					.setPositiveButton("确定",
+							new DialogInterface.OnClickListener() {
+
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+									// TODO Auto-generated method stub
+				//					设置复选框监听器
+								}
+							}).setNegativeButton("取消", null).show();
+		}
+	}
 }

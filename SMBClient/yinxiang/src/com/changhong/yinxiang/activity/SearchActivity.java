@@ -248,7 +248,7 @@ public class SearchActivity extends Activity {
 			}
 		}
 		//增加背景广告
-		hotSearch.setBackgroundResource(bg_ResID)	;
+		hotSearch.setBackgroundResource(bg_ResID);
 		//更新历史记录:
 		
 	}
