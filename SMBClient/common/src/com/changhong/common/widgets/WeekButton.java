@@ -6,8 +6,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 
-public class WeekButton extends ImageView implements OnClickListener{
-
+public class WeekButton extends ImageView implements OnClickListener {
 
 	public WeekButton(Context context, AttributeSet attrs, int defStyleAttr) {
 		super(context, attrs, defStyleAttr);
@@ -20,10 +19,10 @@ public class WeekButton extends ImageView implements OnClickListener{
 	}
 
 	private boolean flag = false;
-	private int press_up=0;
-	private int press_down=0;
+	private int press_up = 0;
+	private int press_down = 0;
 	/**
-	 *  监听接口
+	 * 监听接口
 	 */
 	private OnChangedListener listener;
 
@@ -44,7 +43,6 @@ public class WeekButton extends ImageView implements OnClickListener{
 		setOnClickListener(this);
 	}
 
-
 	public boolean getFlag() {
 		return flag;
 	}
@@ -63,15 +61,16 @@ public class WeekButton extends ImageView implements OnClickListener{
 		// TODO Auto-generated method stub
 		if (flag) {
 			setBackgroundResource(press_up);
-			flag=false;
+			flag = false;
 		} else {
 			setBackgroundResource(press_down);
-			flag=true;
+			flag = true;
 		}
-		listener.OnChanged(WeekButton.this, flag);
+		if (listener != null) {
+			listener.OnChanged(WeekButton.this, flag);
+		}
 	}
 
-	
 	/**
 	 * 为WiperSwitch设置一个监听，供外部调用的方法
 	 * 
@@ -80,6 +79,7 @@ public class WeekButton extends ImageView implements OnClickListener{
 	public void setOnChangedListener(OnChangedListener listener) {
 		this.listener = listener;
 	}
+
 	/**
 	 * 回调接口
 	 * 
