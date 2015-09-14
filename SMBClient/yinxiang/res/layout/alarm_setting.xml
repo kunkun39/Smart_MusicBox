@@ -100,7 +100,7 @@
             android:background="@color/grey" />
 
         <LinearLayout
-            android:id="@+id/repeat"
+            android:id="@+id/musics"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical" >
@@ -110,7 +110,7 @@
                 android:text="铃声" />
 
             <TextView
-                android:id="@+id/cur_alarm"
+                android:id="@+id/cur_music"
                 style="@style/alarm_text_name"
                 android:textColor="@color/grey"
                 android:textSize="14sp" />
