@@ -932,6 +932,7 @@ public class TVSocketControllerService extends Service {
 		startActivity(intent);
 	}
 
+	//处理搜索消息
 	private void handleSearchMsg(String str) {
 		String[] keys = StringUtils.delimitedListToStringArray(str, "|");
 		if (keys.length != 2) {
@@ -942,13 +943,20 @@ public class TVSocketControllerService extends Service {
 		String searchContent=(2==tokens.length)?tokens[1]:tokens[0];
 		
 		if (keys[1].contains("music") || keys[1].contains("音乐")|| keys[1].contains("歌曲")) {
-			
-			if (Commonmethod.isActivityForeground(this, "SearchActivity")) {
+			String musickey=searchContent.replace("音乐", "");
+			musickey=musickey.replace("歌曲", "");
+			boolean flag=Commonmethod.isActivityForeground(this, "com.changhong.tvserver.search.SearchActivity");
+			if (flag) {
 				Intent intent = new Intent();
-				intent.putExtra(SearchActivity.keyWordsName, searchContent);
+				intent.putExtra(SearchActivity.keyWordsName, musickey);
 				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 				intent.setClass(this, SearchActivity.class);
 				startActivity(intent);
+			}else {
+				Message msg=new Message();
+				msg.what=1;
+				msg.obj=musickey;
+				SearchActivity.handler.sendMessage(msg);
 			}
 		} else {			
 			  Intent intent = new Intent();

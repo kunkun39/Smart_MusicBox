@@ -10,6 +10,7 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -36,7 +37,7 @@ public class SearchActivity extends Activity {
 	private EditText searchKeyWords;
 	private String s_KeyWords = null;
 	public static final String keyWordsName = "StringKeyWords";
-	private Handler handler;
+	public static Handler handler;
 
 	/**
 	 * 虾米搜索相关组件
@@ -84,7 +85,7 @@ public class SearchActivity extends Activity {
 		s_KeyWords = intent.getStringExtra(keyWordsName);
 		if (!TextUtils.isEmpty(s_KeyWords)) {
 			searchKeyWords.setText(s_KeyWords);
-//			search(s_KeyWords);
+			// search(s_KeyWords);
 		}
 
 		searchResultList.setOnItemClickListener(new OnItemClickListener() {
@@ -99,13 +100,28 @@ public class SearchActivity extends Activity {
 			}
 		});
 		searchResultList.setItemsCanFocus(true);
+
+		handler = new Handler() {
+
+			@Override
+			public void handleMessage(Message msg) {
+				// TODO Auto-generated method stub
+				switch (msg.what) {
+				case 1:
+					String keys=(String) msg.obj;
+					searchKeyWords.setText(keys);
+					break;
+
+				}
+
+			}
+		};
 	}
 
 	private void packageData(int arg) {
 		JSONObject o = new JSONObject();
 		JSONArray array = new JSONArray();
 		for (int i = arg; i < songsfull.size(); i++) {
-			
 
 			String path = songsfull.get(i).getListenFile();
 			String title = songsfull.get(i).getSongName();
@@ -119,8 +135,8 @@ public class SearchActivity extends Activity {
 			music.put("duration", duration);
 			array.put(music);
 		}
-			o.put("musicss", array.toString());
-		
+		o.put("musicss", array.toString());
+
 		// String listFileAddress =
 		// Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+"MusicList.json";
 		// File jsonFile = new File(listFileAddress);
@@ -190,7 +206,7 @@ public class SearchActivity extends Activity {
 				songs = results.second;
 				if (null == songsfull) {
 					songsfull = new ArrayList<OnlineSong>();
-				}else{
+				} else {
 					songsfull.clear();
 				}
 				for (int i = 0; i < songs.size(); i++) {

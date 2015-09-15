@@ -27,11 +27,12 @@ public class Commonmethod {
         List<RunningTaskInfo> list = am.getRunningTasks(1);
         if (list != null && list.size() > 0) {
             ComponentName cpn = list.get(0).topActivity;
-            if (className.equals(cpn.getClassName())) {
-                return true;
+            String topActivity=cpn.getClassName();
+            if (className.equals(topActivity)) {
+                return false;
             }
         }
 
-        return false;
+        return true;
     }
 }
