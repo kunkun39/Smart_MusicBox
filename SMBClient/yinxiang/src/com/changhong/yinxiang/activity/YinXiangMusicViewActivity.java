@@ -540,8 +540,7 @@ public class YinXiangMusicViewActivity extends Activity {
 
 				if (STORAGE_YINXIANG == curStorage) {
 					// 发送播放地址
-					sendFileEditMsg2YinXiang("",
-							MusicUtils.EDIT_REQUEST_MUSICS, "");
+					sendFileEditMsg2YinXiang("",MusicUtils.EDIT_REQUEST_MUSICS, "");
 					mMusicEditServer.communicationWithServer(mHandle,
 							MusicUtils.ACTION_SOCKET_COMMUNICATION,
 							MusicUtils.EDIT_REQUEST_MUSICS);

@@ -29,7 +29,11 @@ import com.changhong.common.system.MyApplication;
 import com.changhong.common.widgets.BoxSelectAdapter;
 import com.changhong.search.RecommendAdapter;
 import com.changhong.search.XMMusicData;
+import com.changhong.search.searchHistoryAdapter;
 import com.changhong.yinxiang.R;
+import com.changhong.yinxiang.music.YinXiangMusicAdapter;
+import com.changhong.yinxiang.utils.MySharePreferences;
+import com.changhong.yinxiang.utils.MySharePreferencesData;
 
 public class SearchActivity extends Activity {
 
@@ -45,20 +49,29 @@ public class SearchActivity extends Activity {
 	 * 搜索类型定义
 	 */
 	private static final String music = "music";
-	private static final String movie = "movie&tv";
-	private static final String[] type_str = { music, movie };
+	private static final String movieAndTV= "movie&tv";
+	private static final String[] type_str = { music, movieAndTV };
 	private static final String[] type_rcn_str = { "音乐", "影视" };
+	private static final String[] type_vedio_str = { "movie", "tv" };
+
 	private String locType = music;
+	private String localVedioType;
+
 	/**
 	 * 控件
 	 */
 	private EditText search_keywords;
 	private ImageView search_commit;
-	private RadioGroup search_type;
+	private RadioGroup search_type,videoType;
 	private GridView recommend;
    private LinearLayout hotSearch;
-	private ArrayAdapter<String> adapter;
-
+	private ArrayAdapter<String> adapter;	
+	private MySharePreferences mSharePreferences=null;
+	private MySharePreferencesData shareData=null;
+	private ListView myHistory;
+	private TextView  noHistoryList;
+	private  Button  clearHistory;
+	
 	/**
 	 * 推荐专辑名列表
 	 */
@@ -90,6 +103,11 @@ public class SearchActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
+		
+		//获取搜索历史记录
+		mSharePreferences=new MySharePreferences(this); 
+		shareData=mSharePreferences.InitGetMySharedPreferences();
+		
 		initView();
 		initData();
 
@@ -113,6 +131,12 @@ public class SearchActivity extends Activity {
 		search_type = (RadioGroup) findViewById(R.id.search_type);
 		recommend = (GridView) findViewById(R.id.hot_tab);
 		hotSearch=(LinearLayout) findViewById(R.id.hot_search);
+		videoType=(RadioGroup) findViewById(R.id.vedio_type);
+		myHistory=(ListView) findViewById(R.id.history_search_infor);	
+		noHistoryList=(TextView) findViewById(R.id.history_search_null);	
+		clearHistory=(Button) findViewById(R.id.clear_search_history);	
+		localVedioType=type_vedio_str[0];
+		
 	}
 
 	private void initData() {
@@ -174,11 +198,17 @@ public class SearchActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
+				MyApplication.vibrator.vibrate(100);
 				// 发送命令到机顶盒执行搜索功能
 				String key = search_keywords.getText().toString();
 				if (!TextUtils.isEmpty(key)) {
-					searchKey(key);
+					searchKey(key);			
+					if(locType.equals(music)){
+						shareData.musicHistory=key+";"+shareData.musicHistory;
+					}else{
+						shareData.vedioHistory=key+";"+shareData.vedioHistory;
+					}
+					
 				} else {
 					Toast.makeText(SearchActivity.this,R.string.error_empty_keyword,
 							Toast.LENGTH_SHORT).show();
@@ -200,7 +230,48 @@ public class SearchActivity extends Activity {
 				}
 			}
 		});
-
+		
+		videoType.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(RadioGroup group, int checkedId) {
+				MyApplication.vibrator.vibrate(100);
+				// 设备变化
+				int childCount = videoType.getChildCount();
+				for (int i = 0; i < childCount; i++) {
+					RadioButton child = (RadioButton) videoType.getChildAt(i);
+					if (null != child && checkedId == child.getId()) {
+						localVedioType = type_vedio_str[i];
+					}
+				}
+			}
+		});
+		
+		clearHistory.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				
+				if (searchHistoryAdapter.selectHistorys.isEmpty()) {
+					Toast.makeText(SearchActivity.this,"请选择删除的记录", Toast.LENGTH_LONG).show();
+				} else {
+					String  tmpStr="";
+					 for (int i = 0; i < searchHistoryAdapter.selectHistorys.size(); i++) {
+							int id=searchHistoryAdapter.selectHistorys.get(i);
+//							if(locType.equals(music)){
+//								 String[] tokens=shareData.musicHistory.split(";");								
+//								shareData.musicHistory=key+";"+shareData.musicHistory;
+//							}else{
+//								shareData.vedioHistory=key+";"+shareData.vedioHistory;
+//							}
+					}
+					
+				}
+			}
+			
+		});
+		
+		
+		setSearchHistory();
+		
        ((RadioButton) search_type.getChildAt(0)).setChecked(true);
 	   XMMusicData.getInstance(SearchActivity.this).iniData(handler);
 	}
@@ -221,13 +292,37 @@ public class SearchActivity extends Activity {
 			}
 		});
 	}
+	
+	
+	
+	private void setSearchHistory() {
+		if(null== shareData){
+			noHistoryList.setVisibility(View.VISIBLE);
+			myHistory.setVisibility(View.GONE);
+			return;	
+		}
+		noHistoryList.setVisibility(View.GONE);
+		myHistory.setVisibility(View.VISIBLE);
+		
+		String historyData=locType.equals(music)?shareData.musicHistory:shareData.vedioHistory;		
+		searchHistoryAdapter  historyAdapter=new searchHistoryAdapter(SearchActivity.this, historyData);
+		myHistory.setAdapter(historyAdapter);
+	}
+	
 
+	private void saveSearchHistory() {
+		if(null  != shareData){
+			mSharePreferences.SaveMySharePreferences(shareData);
+		}		
+	}
+	
+	
 	private void searchKey(String key) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("search:");
 		sb.append("|");
 		sb.append(locType);
-		sb.append("|");
+		sb.append(";");
 		sb.append(key);
 		
 		ClientSendCommandService.msg = sb.toString();
@@ -236,21 +331,15 @@ public class SearchActivity extends Activity {
 	
 	private void notifySearchTypeChange(){
 		
-		int childCount=hotSearch.getChildCount();
-		int  bg_ResID=0;
-		for (int i = 0; i < childCount; i++) {
-			 View child=hotSearch.getChildAt(i);
-			 if(locType.equals(music)){				
-				    child.setVisibility(View.VISIBLE);				 
-			}else {
-				  child.setVisibility(View.GONE);
-				  bg_ResID=R.drawable.music_bg2;
-			}
-		}
-		//增加背景广告
-		hotSearch.setBackgroundResource(bg_ResID);
+		 if(locType.equals(music)){				
+			      hotSearch.setVisibility(View.VISIBLE);	
+				  videoType.setVisibility(View.GONE);
+		}else {
+			  videoType.setVisibility(View.VISIBLE);
+		      hotSearch.setVisibility(View.GONE);	
+		}	
 		//更新历史记录:
-		
+		 setSearchHistory();
 	}
 
 	@Override
@@ -261,6 +350,14 @@ public class SearchActivity extends Activity {
 		}
 	}
 	
+
+	@Override
+	protected void onPause() {
+		
+		//保存历史记录
+		saveSearchHistory();
+		super.onPause();
+	}
 
 	@Override
 	protected void onDestroy() {
