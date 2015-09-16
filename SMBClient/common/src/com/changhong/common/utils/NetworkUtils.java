@@ -52,6 +52,9 @@ public class NetworkUtils {
         } catch (SocketException e) {
             Log.e("NetworkUtils", "获取本地ip地址失败");
             e.printStackTrace();
+        }catch(NullPointerException e){
+        	Log.e("NetworkUtils", "ClientSendCommandService.serverIP==null");
+        	e.printStackTrace();
         }
         Log.i("NetworkUtils", "本机IP地址为" + ipaddress);
         return ipaddress;
