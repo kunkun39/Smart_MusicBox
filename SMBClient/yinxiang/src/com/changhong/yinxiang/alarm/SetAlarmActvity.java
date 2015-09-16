@@ -55,8 +55,8 @@ public class SetAlarmActvity extends BaseActivity {
 	private List<MusicBean> musicListInit = new ArrayList<MusicBean>();
 	private boolean currentState[];
 	private int updateContent[];// 记录操作过的数据。0未操作，非0操作过。
-	
-	private int curentId;//设置该alarm的ID。
+
+	private int curentId;// 设置该alarm的ID。
 
 	// 进入设置界面后，先设置状态。
 	private enum State {
@@ -229,7 +229,7 @@ public class SetAlarmActvity extends BaseActivity {
 		if (null != alarm) {
 			alarm.hour = timePicker.getCurrentHour();
 			alarm.minutes = timePicker.getCurrentMinute();
-			curentId=alarm.getId();
+			curentId = alarm.getId();
 			// 设置星期重复
 			for (int i = 0; i < myWBList.length; i++) {
 				boolean flag = myWBList[i].getFlag();
@@ -255,10 +255,10 @@ public class SetAlarmActvity extends BaseActivity {
 			alarm.daysOfWeek.set(i, myWBList[i].getFlag());
 		}
 		alarm.setLabel(tag.getText().toString());
-		
-		ArrayList<MusicBean> musics=new ArrayList<MusicBean>();
-		
-		for(int j=0;j<currentState.length; j++) {
+
+		ArrayList<MusicBean> musics = new ArrayList<MusicBean>();
+
+		for (int j = 0; j < currentState.length; j++) {
 			if (currentState[j]) {
 				musics.add(musicListAll.get(j));
 			}
@@ -441,6 +441,17 @@ public class SetAlarmActvity extends BaseActivity {
 		String str = ResolveAlarmInfor.alarmToStr(alarm);
 		intent.putExtra("alarm", str);
 		SetAlarmActvity.this.setResult(0, intent);
+		switch (state) {
+		case update:
+			ClientSendCommandService.msg = Alarm.update + curentId + "|" + str;
+			ClientSendCommandService.handler.sendEmptyMessage(1);
+			break;
+		case add:
+
+			ClientSendCommandService.msg = Alarm.add + str;
+			ClientSendCommandService.handler.sendEmptyMessage(1);
+			break;
+		}
 	}
 
 	@Override
@@ -448,6 +459,5 @@ public class SetAlarmActvity extends BaseActivity {
 		// TODO Auto-generated method stub
 		return super.onKeyDown(keyCode, event);
 	}
-	
-	
+
 }
