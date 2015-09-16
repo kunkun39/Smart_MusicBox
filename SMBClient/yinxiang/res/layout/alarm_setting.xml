@@ -101,7 +101,7 @@
 
         <LinearLayout
             android:id="@+id/musics"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical" >
 
@@ -112,6 +112,7 @@
             <TextView
                 android:id="@+id/cur_music"
                 style="@style/alarm_text_name"
+                android:layout_marginTop="10dp"
                 android:textColor="@color/grey"
                 android:textSize="14sp" />
         </LinearLayout>

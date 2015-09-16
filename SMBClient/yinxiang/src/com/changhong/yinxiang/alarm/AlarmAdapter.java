@@ -3,6 +3,7 @@ package com.changhong.yinxiang.alarm;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -21,7 +22,7 @@ import com.changhong.yinxiang.R;
 
 public class AlarmAdapter extends BaseAdapter {
 
-	public static List<Alarm> mAlarmList = null;
+	private List<Alarm> mAlarmList = null;
 	private Context context;
 	private LayoutInflater inflater;
 
@@ -38,7 +39,7 @@ public class AlarmAdapter extends BaseAdapter {
 	// 初始化设置数据
 	public void setData(ArrayList<Alarm> list) {
 		mAlarmList.clear();
-		AlarmAdapter.mAlarmList = list;
+		this.mAlarmList = list;
 		notifyDataSetChanged();
 	}
 
@@ -60,6 +61,19 @@ public class AlarmAdapter extends BaseAdapter {
 			mAlarmList.add(newAlarm);
 		}
 		notifyDataSetChanged();
+	}
+	
+	//更改闹铃
+	
+	public void update(Alarm alarm){
+		if (mAlarmList != null && mAlarmList.size() > 0) {
+			for(int i=0;i<mAlarmList.size();i++){
+				if(mAlarmList.get(i).getId()==alarm.getId()){
+				mAlarmList.set(i, alarm);
+				notifyDataSetChanged();
+				}
+			}
+		}
 	}
 
 	@Override
@@ -147,7 +161,7 @@ public class AlarmAdapter extends BaseAdapter {
 				// TODO Auto-generated method stub
 				Intent intent=new Intent(context,SetAlarmActvity.class);
 				intent.putExtra("select", position);
-				context.startActivity(intent);
+				((Activity)context).startActivityForResult(intent, 0);
 			}
 		});
 		return convertView;

@@ -1,6 +1,8 @@
 package com.changhong.yinxiang.alarm;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -10,10 +12,12 @@ import org.json.JSONTokener;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnMultiChoiceClickListener;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -28,6 +32,7 @@ import com.changhong.common.utils.NetworkUtils;
 import com.changhong.common.utils.StringUtils;
 import com.changhong.common.widgets.WeekButton;
 import com.changhong.yinxiang.R;
+import com.changhong.yinxiang.activity.AlarmMainActivity;
 import com.changhong.yinxiang.activity.BaseActivity;
 import com.changhong.yinxiang.activity.YinXiangMusicViewActivity;
 import com.changhong.yinxiang.music.MusicEditServer;
@@ -47,7 +52,11 @@ public class SetAlarmActvity extends BaseActivity {
 	private WeekButton myWBList[] = null;
 
 	private List<MusicBean> musicListAll = new ArrayList<MusicBean>();
-	private List<MusicBean> musicListCur = new ArrayList<MusicBean>();
+	private List<MusicBean> musicListInit = new ArrayList<MusicBean>();
+	private boolean currentState[];
+	private int updateContent[];// 记录操作过的数据。0未操作，非0操作过。
+	
+	private int curentId;//设置该alarm的ID。
 
 	// 进入设置界面后，先设置状态。
 	private enum State {
@@ -88,6 +97,8 @@ public class SetAlarmActvity extends BaseActivity {
 				case update:
 					updateAlarm();
 				default:
+					dealResultData();
+					finish();
 					break;
 				}
 				break;
@@ -136,6 +147,10 @@ public class SetAlarmActvity extends BaseActivity {
 		tag = (EditText) findViewById(R.id.tag);
 		musics = (LinearLayout) findViewById(R.id.musics);
 		curMusic = (TextView) findViewById(R.id.cur_music);
+
+		confirm.setOnClickListener(myClickListener);
+		cancel.setOnClickListener(myClickListener);
+		musics.setOnClickListener(myClickListener);
 	}
 
 	@Override
@@ -151,7 +166,7 @@ public class SetAlarmActvity extends BaseActivity {
 		int position = intent.getIntExtra("select", -1);
 		if (position < 0) {
 			state = State.add;
-			addAlarm();
+			intAddAlarm();
 
 		} else {
 			state = State.update;
@@ -177,7 +192,7 @@ public class SetAlarmActvity extends BaseActivity {
 
 	// 初始化修改流程数据
 	private void initUpdateAlarm(int position) {
-		alarm = AlarmAdapter.mAlarmList.get(position);
+		alarm = AlarmMainActivity.mAlarmList.get(position);
 		timePicker.setCurrentHour(alarm.hour);
 		timePicker.setCurrentMinute(alarm.minutes);
 
@@ -196,12 +211,25 @@ public class SetAlarmActvity extends BaseActivity {
 
 	}
 
+	// 初始化进入添加流程
+	private void intAddAlarm() {
+		Calendar cal = Calendar.getInstance();
+		int hour = cal.get(Calendar.HOUR_OF_DAY);
+		int minute = cal.get(Calendar.MINUTE);
+
+		timePicker.setCurrentHour(hour);
+		timePicker.setCurrentMinute(minute);
+		for (int i = 1; i < 6; i++) {
+			myWBList[i].setFlag(true);
+		}
+	}
+
 	// 修改数据完成
 	private void updateAlarm() {
 		if (null != alarm) {
 			alarm.hour = timePicker.getCurrentHour();
 			alarm.minutes = timePicker.getCurrentMinute();
-
+			curentId=alarm.getId();
 			// 设置星期重复
 			for (int i = 0; i < myWBList.length; i++) {
 				boolean flag = myWBList[i].getFlag();
@@ -214,7 +242,28 @@ public class SetAlarmActvity extends BaseActivity {
 
 	// 进入添加流程
 	private void addAlarm() {
+		alarm = new Alarm();
+		int length = AlarmMainActivity.mAlarmList.size();
+		curentId = AlarmMainActivity.mAlarmList.get(length - 1).getId() + 1;
 
+		alarm.setId(curentId);
+		alarm.setHour(timePicker.getCurrentHour());
+		alarm.setMinutes(timePicker.getCurrentMinute());
+		alarm.setEnabled(true);
+
+		for (int i = 0; i < myWBList.length; i++) {
+			alarm.daysOfWeek.set(i, myWBList[i].getFlag());
+		}
+		alarm.setLabel(tag.getText().toString());
+		
+		ArrayList<MusicBean> musics=new ArrayList<MusicBean>();
+		
+		for(int j=0;j<currentState.length; j++) {
+			if (currentState[j]) {
+				musics.add(musicListAll.get(j));
+			}
+		}
+		alarm.setMusicBean(musics);
 	}
 
 	private void sendFileEditMsg2YinXiang(String musicPath, String editType,
@@ -291,6 +340,8 @@ public class SetAlarmActvity extends BaseActivity {
 					music.setTitle(title);
 					music.setUrl(path);
 					music.setArtist(artist);
+					music.setId(id);
+					music.setmId(curentId);
 					// 增加文件远程访问定位符
 					list.add(music);
 				}
@@ -310,11 +361,36 @@ public class SetAlarmActvity extends BaseActivity {
 			for (int i = 0; i < musicListAll.size(); i++) {
 				names[i] = musicListAll.get(i).getTitle();
 			}
-			musicListCur=alarm.getMusicBean();
-			//设置复选框初始选中状态
+			musicListInit = alarm.getMusicBean();
+			// 设置复选框初始选中状态
+			currentState = new boolean[musicListAll.size()];
+			updateContent = new int[musicListAll.size()];
+			for (int i = 0; i < currentState.length; i++) {
+				currentState[i] = false;
+				updateContent[i] = 0;
+				for (int j = 0; j < musicListInit.size(); j++) {
+					if (musicListAll.get(i).getTitle()
+							.equals(musicListInit.get(j).getTitle())) {
+						currentState[i] = true;
+						break;
+					}
+				}
+
+			}
+
 			new AlertDialog.Builder(this)
 					.setTitle("复选框")
-					.setMultiChoiceItems(names, null, null)
+					.setMultiChoiceItems(names, currentState,
+							new OnMultiChoiceClickListener() {
+
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which, boolean isChecked) {
+									// TODO Auto-generated method stub
+									currentState[which] = isChecked;
+									updateContent[which] = 1;
+								}
+							})
 					.setPositiveButton("确定",
 							new DialogInterface.OnClickListener() {
 
@@ -322,9 +398,56 @@ public class SetAlarmActvity extends BaseActivity {
 								public void onClick(DialogInterface dialog,
 										int which) {
 									// TODO Auto-generated method stub
-				//					设置复选框监听器
+									// 设置复选框监听器
+									setAlarmMusics();
 								}
 							}).setNegativeButton("取消", null).show();
 		}
 	}
+
+	private void setAlarmMusics() {
+		for (int i = 0; i < currentState.length; i++) {
+			if (updateContent[i] != 1) {
+				continue;
+			}
+			if (currentState[i]) {
+				for (int j = 0; j < musicListInit.size(); j++) {
+					if (musicListAll.get(i).getTitle()
+							.equals(musicListInit.get(j).getTitle())) {
+						break;
+					} else if (j == (musicListInit.size() - 1)) {
+						musicListInit.add(musicListAll.get(i));
+					}
+				}
+
+			} else {
+				for (int j = 0; j < musicListInit.size(); j++) {
+					if (musicListAll.get(i).getTitle()
+							.equals(musicListInit.get(j).getTitle())) {
+						musicListInit.remove(j);
+					}
+				}
+			}
+		}
+		if (alarm != null) {
+			alarm.setMusicBean(musicListInit);
+		}
+	}
+
+	// 回传数据给闹铃主界面，并且发送给音响。
+
+	private void dealResultData() {
+		Intent intent = new Intent();
+		String str = ResolveAlarmInfor.alarmToStr(alarm);
+		intent.putExtra("alarm", str);
+		SetAlarmActvity.this.setResult(0, intent);
+	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		// TODO Auto-generated method stub
+		return super.onKeyDown(keyCode, event);
+	}
+	
+	
 }

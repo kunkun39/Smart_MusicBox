@@ -1,5 +1,7 @@
 package com.changhong.yinxiang.activity;
 
+import java.util.ArrayList;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -7,6 +9,8 @@ import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ListView;
 
@@ -26,6 +30,7 @@ public class AlarmMainActivity extends BaseActivity {
 	private Button delete;
 	private ListView alarmInfor;
 	private static AlarmAdapter adapter;
+	public static ArrayList<Alarm> mAlarmList = null;
 
 	private static String action = "alarmInfor";
 	public static Handler handler = new Handler() {
@@ -41,11 +46,12 @@ public class AlarmMainActivity extends BaseActivity {
 				if (resAction.equals(action)) {
 					String result =bund.getString("result");
 					Log.i("mmmm", "AlarmMainActivity-result="+result);
-					
-					adapter.setData(ResolveAlarmInfor.strToList(result));
+					mAlarmList=ResolveAlarmInfor.strToList(result);
+					adapter.setData(mAlarmList);
 				}
 
 				break;
+				
 			}
 			super.handleMessage(msg);
 
@@ -91,6 +97,18 @@ public class AlarmMainActivity extends BaseActivity {
 
 			}
 		});
+		
+//		alarmInfor.setOnItemClickListener(new OnItemClickListener() {
+//
+//			@Override
+//			public void onItemClick(AdapterView<?> parent, View view,
+//					int position, long id) {
+//				// TODO Auto-generated method stub
+//				Intent intent=new Intent(AlarmMainActivity.this,SetAlarmActvity.class);
+//				intent.putExtra("select", position);
+//				startActivityForResult(intent, 0);
+//			}
+//		});
 		getAlarmMsg();
 	}
 
@@ -103,13 +121,35 @@ public class AlarmMainActivity extends BaseActivity {
 		// 启动TCP接收线程
 		MusicEditServer.creatFileEditServer().communicationWithServer(handler,
 				MusicUtils.ACTION_SOCKET_COMMUNICATION, action);
+		Log.i("mmmm", "getAlarmMsg:"+ipString);
 	}
 
 	private void startSetAlarm() {
 		Intent intent = new Intent(AlarmMainActivity.this,
 				SetAlarmActvity.class);
 		startActivity(intent);
+	}
+	
+	
 
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		if(data==null)
+			return;
+		switch (requestCode){
+		case 0:
+		//更改闹铃信息后的处理
+			String str=data.getExtras().getString("alarm");
+			Alarm alarm=ResolveAlarmInfor.jsonToAlarm(str);
+			adapter.update(alarm);
+			break;
+			
+		case 1:
+			
+			break;
+		}
+		
 	}
 
 	@Override
