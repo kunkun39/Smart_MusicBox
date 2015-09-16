@@ -39,11 +39,13 @@ import android.os.SystemClock;
 import android.util.JsonReader;
 import android.util.Log;
 
+
 //import com.changhong.tvserver.alarm.ClockCommonData;
 import com.changhong.tvserver.fedit.DowLoadFloatView;
 import com.changhong.tvserver.fedit.MusicEdit;
 import com.changhong.tvserver.search.Commonmethod;
 import com.changhong.tvserver.search.SearchActivity;
+import com.changhong.tvserver.alarm.ClockCommonData;
 import com.changhong.tvserver.autoctrl.ClientOnLineMonitorService;
 import com.changhong.tvserver.touying.image.ImageShowPlayingActivity;
 import com.changhong.tvserver.touying.music.MusicViewPlayingActivity;
@@ -455,7 +457,6 @@ public class TVSocketControllerService extends Service {
 						// 搜索音乐视频部分
 						else if (msg1.startsWith("search:")) {
 							handleSearchMsg(msg1);
-							Log.i("mmmm", "search:misic-" + msg1);
 						}
 						// 增加文件编辑
 						else if (msg1.contains("fileEdit")) {
@@ -464,11 +465,13 @@ public class TVSocketControllerService extends Service {
 							 
 							// 获取闹铃设置信息
 						} else if (msg1.startsWith("getAlarmMsg:")) {
+							Log.i("mmmm", TAG +":"+ msg1);
 							handleAlarm(msg1);
 						}
 						break;
 
 					default:
+						
 						break;
 					}
 				} catch (Exception e) {
@@ -806,7 +809,7 @@ public class TVSocketControllerService extends Service {
 		if (str == null || str.equals(""))
 			return;
 		String[] keys = StringUtils.delimitedListToStringArray(str, "|");
-//		ClockCommonData.getInstance().dealMsg(keys);
+		ClockCommonData.getInstance().dealMsg(keys);
 	}
 
 	/**
