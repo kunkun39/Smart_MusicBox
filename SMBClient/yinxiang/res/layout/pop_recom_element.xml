@@ -2,10 +2,9 @@
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/hot_search_frame" 
+        android:background="@drawable/hotsearch_selector" 
         android:textColor="@color/grey"
         android:singleLine="true" 
         android:maxLength="15"
         android:gravity="center">
-
 </TextView>

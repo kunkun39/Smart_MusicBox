@@ -22,7 +22,7 @@
             android:textSize="11sp"
             android:textColor="@color/white">
     </TextView>
-
+ <!-- 
     <ImageView
             android:id="@+id/yinxiang_vedio_item_edit"
             android:layout_width="50dip"
@@ -32,13 +32,13 @@
             android:adjustViewBounds="true" 
             
             android:background="@drawable/file_edit_btn_bg"/>
-    
+   -->
     <CheckBox
             android:id="@+id/yinxiang_vedio_item_checked"
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:paddingRight="2dp"/>
-
+ 
     <TextView
             android:id="@+id/yinxiang_vedio_item_path"
             android:layout_width="1dp"

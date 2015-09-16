@@ -11,5 +11,6 @@
     <color name="dim_foreground_light_inverse_disabled">#80bebebe</color>
     <color name="tab_textColor_selected">#ff1293e9</color>
     <color name="tab_textColor_default">#ff828282</color>
+    <color name="imgbg_Color_default">#00000000</color>
     
 </resources>

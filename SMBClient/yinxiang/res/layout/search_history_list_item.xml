@@ -5,9 +5,10 @@
 
   
     
-    <LinearLayout  android:layout_height="46dip"
+    <LinearLayout  android:layout_height="40dip"
             android:layout_width="match_parent"
-            android:layout_margin="10dip"
+            android:layout_marginLeft="15dip"
+            android:layout_marginRight="15dip"            
             android:orientation="horizontal">
         
     

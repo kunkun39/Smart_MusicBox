@@ -26,8 +26,7 @@ public class MySharePreferences {
 	
 	public MySharePreferencesData InitGetMySharedPreferences() {
 		MySharePreferencesData mysharepreferencesdata = new MySharePreferencesData();
-		mysharepreferencesdata.musicHistory = mSettings.getString("search_musicHistory", null);
-		mysharepreferencesdata.vedioHistory = mSettings.getString("search_vedioHistory", null);
+		mysharepreferencesdata.searchHistory = mSettings.getString("search_History", null);
 
 		return mysharepreferencesdata;
 	}
@@ -35,9 +34,7 @@ public class MySharePreferences {
 
 	public void SaveMySharePreferences(MySharePreferencesData mysharepreferencesdata) {
 		
-		mEditor.putString("search_musicHistory", mysharepreferencesdata.musicHistory);
-		mEditor.putString("search_vedioHistory", mysharepreferencesdata.vedioHistory);
-
+		mEditor.putString("search_History", mysharepreferencesdata.searchHistory);
 		mEditor.commit();
 	}
 

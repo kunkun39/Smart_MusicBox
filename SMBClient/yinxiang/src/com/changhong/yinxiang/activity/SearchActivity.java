@@ -1,6 +1,11 @@
 package com.changhong.yinxiang.activity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.Activity;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -14,6 +19,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -26,6 +32,7 @@ import android.widget.Toast;
 import com.baidu.android.common.logging.Log;
 import com.changhong.common.service.ClientSendCommandService;
 import com.changhong.common.system.MyApplication;
+import com.changhong.common.utils.StringUtils;
 import com.changhong.common.widgets.BoxSelectAdapter;
 import com.changhong.search.RecommendAdapter;
 import com.changhong.search.XMMusicData;
@@ -49,29 +56,27 @@ public class SearchActivity extends Activity {
 	 * 搜索类型定义
 	 */
 	private static final String music = "music";
-	private static final String movieAndTV= "movie&tv";
-	private static final String[] type_str = { music, movieAndTV };
+	private static final String movie= "movie";
+	private static final String tv= "tv";
+	private static final String[] type_str = { music, movie, tv};
 	private static final String[] type_rcn_str = { "音乐", "影视" };
-	private static final String[] type_vedio_str = { "movie", "tv" };
-
 	private String locType = music;
-	private String localVedioType;
 
 	/**
 	 * 控件
 	 */
 	private EditText search_keywords;
-	private ImageView search_commit;
-	private RadioGroup search_type,videoType;
+	private ImageView search_commit,search_tv,search_movie;
+	private RadioGroup search_type;
 	private GridView recommend;
-   private LinearLayout hotSearch;
+   private LinearLayout hotSearch,videoType;
 	private ArrayAdapter<String> adapter;	
 	private MySharePreferences mSharePreferences=null;
-	private MySharePreferencesData shareData=null;
 	private ListView myHistory;
 	private TextView  noHistoryList;
 	private  Button  clearHistory;
-	
+	String musicRecords,vedioRecords;
+
 	/**
 	 * 推荐专辑名列表
 	 */
@@ -104,12 +109,27 @@ public class SearchActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		
-		//获取搜索历史记录
-		mSharePreferences=new MySharePreferences(this); 
-		shareData=mSharePreferences.InitGetMySharedPreferences();
-		
+		initSearchHistory();
 		initView();
 		initData();
+
+	}
+
+	
+	/**
+	 * 初始化搜索历史记录，并分别对musicRecords和vedioRecords赋值
+	 */
+	private void initSearchHistory() {
+		//获取搜索历史记录
+			mSharePreferences=new MySharePreferences(this); 
+			MySharePreferencesData shareData=mSharePreferences.InitGetMySharedPreferences();
+			if(null != shareData.searchHistory){
+				int index=shareData.searchHistory.indexOf("vedio:");
+				musicRecords=shareData.searchHistory.substring("music:".length(),index);
+				vedioRecords=shareData.searchHistory.substring(index+"vedio:".length());
+			}
+			if(!StringUtils.hasLength(musicRecords))musicRecords="";
+			if(!StringUtils.hasLength(vedioRecords))vedioRecords="";
 
 	}
 
@@ -123,20 +143,17 @@ public class SearchActivity extends Activity {
 		back = (Button) findViewById(R.id.btn_back);
 		clients = (ListView) findViewById(R.id.clients);
 		listClients = (Button) findViewById(R.id.btn_list);
-
-		
-		
 		search_keywords = (EditText) findViewById(R.id.search_keywords);
 		search_commit = (ImageView) findViewById(R.id.search_commit);
 		search_type = (RadioGroup) findViewById(R.id.search_type);
 		recommend = (GridView) findViewById(R.id.hot_tab);
 		hotSearch=(LinearLayout) findViewById(R.id.hot_search);
-		videoType=(RadioGroup) findViewById(R.id.vedio_type);
+		videoType=(LinearLayout) findViewById(R.id.vedio_type);
 		myHistory=(ListView) findViewById(R.id.history_search_infor);	
 		noHistoryList=(TextView) findViewById(R.id.history_search_null);	
 		clearHistory=(Button) findViewById(R.id.clear_search_history);	
-		localVedioType=type_vedio_str[0];
-		
+	    search_movie = (ImageView) findViewById(R.id.vedio_type_movie);
+	    search_tv = (ImageView) findViewById(R.id.vedio_type_tv);		
 	}
 
 	private void initData() {
@@ -162,8 +179,7 @@ public class SearchActivity extends Activity {
 						.get(arg2);
 				ClientSendCommandService.titletxt = ClientSendCommandService
 						.getCurrentConnectBoxName();
-				title.setText(ClientSendCommandService
-						.getCurrentConnectBoxName());
+				title.setText(ClientSendCommandService.getCurrentConnectBoxName());
 				ClientSendCommandService.handler.sendEmptyMessage(2);
 				clients.setVisibility(View.GONE);
 			}
@@ -174,8 +190,7 @@ public class SearchActivity extends Activity {
 				try {
 					MyApplication.vibrator.vibrate(100);
 					if (ClientSendCommandService.serverIpList.isEmpty()) {
-						Toast.makeText(SearchActivity.this,
-								"未获取到服务器IP", Toast.LENGTH_LONG).show();
+						Toast.makeText(SearchActivity.this,"未获取到服务器IP", Toast.LENGTH_LONG).show();
 					} else {
 						clients.setVisibility(View.VISIBLE);
 					}
@@ -202,11 +217,13 @@ public class SearchActivity extends Activity {
 				// 发送命令到机顶盒执行搜索功能
 				String key = search_keywords.getText().toString();
 				if (!TextUtils.isEmpty(key)) {
-					searchKey(key);			
-					if(locType.equals(music)){
-						shareData.musicHistory=key+";"+shareData.musicHistory;
+					searchKey(key);						
+					//保存新增的搜索记录
+					if(locType.equals(music) &&  !musicRecords.contains(key)){
+						musicRecords=key+";"+musicRecords;
 					}else{
-						shareData.vedioHistory=key+";"+shareData.vedioHistory;
+						if(!vedioRecords.contains(key))
+						vedioRecords=key+";"+vedioRecords;
 					}
 					
 				} else {
@@ -215,7 +232,29 @@ public class SearchActivity extends Activity {
 				}
 			}
 		});
-		
+		search_movie.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				MyApplication.vibrator.vibrate(100);
+				// 发送命令到机顶盒执行搜索功能
+				locType = type_str[2];
+				search_movie.setBackgroundColor(SearchActivity.this.getResources().getColor(R.color.tab_textColor_selected));
+				search_tv.setBackgroundColor(0);
+
+			}
+		});
+		search_tv.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				MyApplication.vibrator.vibrate(100);
+				// 发送命令到机顶盒执行搜索功能
+				locType = type_str[1];
+				search_tv.setBackgroundColor(SearchActivity.this.getResources().getColor(R.color.tab_textColor_selected));
+				search_movie.setBackgroundColor(0);
+			}
+		});
 		search_type.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -231,21 +270,6 @@ public class SearchActivity extends Activity {
 			}
 		});
 		
-		videoType.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-			@Override
-			public void onCheckedChanged(RadioGroup group, int checkedId) {
-				MyApplication.vibrator.vibrate(100);
-				// 设备变化
-				int childCount = videoType.getChildCount();
-				for (int i = 0; i < childCount; i++) {
-					RadioButton child = (RadioButton) videoType.getChildAt(i);
-					if (null != child && checkedId == child.getId()) {
-						localVedioType = type_vedio_str[i];
-					}
-				}
-			}
-		});
-		
 		clearHistory.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -255,23 +279,20 @@ public class SearchActivity extends Activity {
 				} else {
 					String  tmpStr="";
 					 for (int i = 0; i < searchHistoryAdapter.selectHistorys.size(); i++) {
-							int id=searchHistoryAdapter.selectHistorys.get(i);
-//							if(locType.equals(music)){
-//								 String[] tokens=shareData.musicHistory.split(";");								
-//								shareData.musicHistory=key+";"+shareData.musicHistory;
-//							}else{
-//								shareData.vedioHistory=key+";"+shareData.vedioHistory;
-//							}
+							String name=searchHistoryAdapter.selectHistorys.get(i);	
+							if(locType.equals(music) ){
+								tmpStr=musicRecords=musicRecords.replace(name+";", "");
+							}else{
+								tmpStr=vedioRecords=vedioRecords.replace(name+";", "");
+							}
 					}
-					
+					 searchHistoryAdapter adapter=(searchHistoryAdapter) myHistory.getAdapter();
+					 adapter.setHistoryList(tmpStr);
+					 adapter.notifyDataSetChanged();
 				}
-			}
-			
-		});
-		
-		
-		setSearchHistory();
-		
+			}			
+		});		
+		setSearchHistory();		
        ((RadioButton) search_type.getChildAt(0)).setChecked(true);
 	   XMMusicData.getInstance(SearchActivity.this).iniData(handler);
 	}
@@ -280,6 +301,8 @@ public class SearchActivity extends Activity {
 	private void setRecommendAlbum() {
 		RecommendAdapter  recAdapter=new RecommendAdapter(SearchActivity.this, mAlbumName);
 		recommend.setAdapter(recAdapter);
+		//取消GridView中Item选中时默认的背景色
+		recommend.setSelector(new ColorDrawable(Color.TRANSPARENT));
 		recommend.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			
 
@@ -294,28 +317,33 @@ public class SearchActivity extends Activity {
 	}
 	
 	
-	
+	/**
+	 * 设置当前搜索类型历史记录的Adapter
+	 */
 	private void setSearchHistory() {
-		if(null== shareData){
+		
+		String historyData=locType.equals(music)?musicRecords:vedioRecords;
+		if(!StringUtils.hasLength(historyData)){
 			noHistoryList.setVisibility(View.VISIBLE);
 			myHistory.setVisibility(View.GONE);
 			return;	
 		}
 		noHistoryList.setVisibility(View.GONE);
-		myHistory.setVisibility(View.VISIBLE);
-		
-		String historyData=locType.equals(music)?shareData.musicHistory:shareData.vedioHistory;		
+		myHistory.setVisibility(View.VISIBLE);		
 		searchHistoryAdapter  historyAdapter=new searchHistoryAdapter(SearchActivity.this, historyData);
 		myHistory.setAdapter(historyAdapter);
 	}
 	
-
-	private void saveSearchHistory() {
-		if(null  != shareData){
-			mSharePreferences.SaveMySharePreferences(shareData);
-		}		
-	}
 	
+   /**
+    * 保存搜索记录到MySharePreferences中
+    */
+	private void saveSearchHistory() {
+		MySharePreferencesData shareData=new MySharePreferencesData();  
+		 shareData.searchHistory="music:"+musicRecords+"vedio:"+vedioRecords;	
+		mSharePreferences.SaveMySharePreferences(shareData);	
+	}
+		
 	
 	private void searchKey(String key) {
 		StringBuffer sb = new StringBuffer();
@@ -335,8 +363,13 @@ public class SearchActivity extends Activity {
 			      hotSearch.setVisibility(View.VISIBLE);	
 				  videoType.setVisibility(View.GONE);
 		}else {
+			  //设置电影为焦点
+		      search_movie.requestFocus();
+		      search_movie.setFocusable(true);
+		      
 			  videoType.setVisibility(View.VISIBLE);
 		      hotSearch.setVisibility(View.GONE);	
+		    
 		}	
 		//更新历史记录:
 		 setSearchHistory();
@@ -354,14 +387,13 @@ public class SearchActivity extends Activity {
 	@Override
 	protected void onPause() {
 		
-		//保存历史记录
-		saveSearchHistory();
 		super.onPause();
 	}
 
 	@Override
 	protected void onDestroy() {
-		// TODO Auto-generated method stub
+		//保存历史记录
+		saveSearchHistory();
 		super.onDestroy();
 	}
   

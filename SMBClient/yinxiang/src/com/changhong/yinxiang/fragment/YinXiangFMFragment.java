@@ -126,13 +126,14 @@ public class YinXiangFMFragment extends Fragment {
 			} else {
 				vh = (ViewHolder) convertView.getTag();
 			}
+			
+			vh.FMplay.setId(position);
 			if (ClientSendCommandService.serverFMInfo.size() > 0) {
 
 				vh.FMname.setText(ClientSendCommandService.serverFMInfo	.get(position));
 				vh.FMplay.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View arg0) {
-						// TODO Auto-generated method stub
 						MyApplication.vibrator.vibrate(100);
 						ClientSendCommandService.msg = "fm:"	+ ClientSendCommandService.serverFMInfo	.get(position);
 						ClientSendCommandService.handler.sendEmptyMessage(1);
@@ -142,10 +143,12 @@ public class YinXiangFMFragment extends Fragment {
 							if (mAnimation.isRunning())mAnimation.stop();
 							mPlayingBtn.setBackgroundResource(R.drawable.fmplay);
 						}
-						mPlayingBtn =( (ViewHolder)arg0.getTag()).FMplay;
-						mPlayingBtn.setBackgroundResource(R.anim.playing_anim);
-						mAnimation = (AnimationDrawable) mPlayingBtn	.getBackground();
-						mAnimation.start();
+						mPlayingBtn =(ImageView) arg0;
+						if(position == mPlayingBtn.getId()){
+							mPlayingBtn.setBackgroundResource(R.anim.playing_anim);
+							mAnimation = (AnimationDrawable) mPlayingBtn	.getBackground();
+							mAnimation.start();
+						}
 					}
 				});
 			}
