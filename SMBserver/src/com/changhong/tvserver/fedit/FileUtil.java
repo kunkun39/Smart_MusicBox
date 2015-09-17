@@ -253,7 +253,7 @@ public class FileUtil {
 	
 
 	// filename是我们的文件全名，包括后缀哦
-	private void updateGallery(Context context, String filename) {
+	public void updateGallery(Context context, String filename) {
 		MediaScannerConnection.scanFile(context, new String[] { filename },
 				null, new MediaScannerConnection.OnScanCompletedListener() {
 					@Override
@@ -265,6 +265,17 @@ public class FileUtil {
 				});
 	}
 	
+	
+	public String getFileName(String filePath){
+		String fileName="";
+	    int startIndex=filePath.lastIndexOf(File.separator);
+	    int endIndex=filePath.lastIndexOf(".");	
+	    if(startIndex>0  && endIndex>(startIndex+1)){
+			fileName=filePath.substring(startIndex+1);
+		}		
+		return fileName;
+	}
+	
 	static class FileComparator implements Comparator<File> {
 		@Override
 		public int compare(File f1, File f2) {
@@ -273,5 +284,7 @@ public class FileUtil {
 			return last1.compareTo(last2);
 		}
 	}
+
+	
 
 }

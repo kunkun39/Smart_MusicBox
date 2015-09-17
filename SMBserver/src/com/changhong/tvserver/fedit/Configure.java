@@ -21,6 +21,7 @@ public class Configure {
 	public final static String  FILE_EDIT= "fileEdit";
 	public final static String  EDIT_TYPE= "editType";
 	public final static String  FILE_EXIST= "fileExist";
+	public final static String  MSG_RESPOND= "respond";
 
 	
 	

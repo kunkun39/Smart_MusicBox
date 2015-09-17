@@ -14,7 +14,7 @@ public class HttpDownloader {
 
 	public static final int DEFAULT_HTTP_READ_TIMEOUT = 20 * 1000;
 
-	private static final int MUTI_THREAD_SIZE_POINT = 1024 * 1024 * 6; // 6M
+	private static final int MUTI_THREAD_SIZE_POINT = 1024 * 1024 * 10; // 6M
 
 	public static final String ALLOWED_URI_CHARS = "@#&=*+-_.,:!?()/~'%";
 
@@ -74,6 +74,7 @@ public class HttpDownloader {
 
 				if (inputStream != null) {
 					inputStream.close();
+					inputStream=null;
 				}
 				if (conn != null) {
 					conn.disconnect();

@@ -29,7 +29,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class DowLoadFloatView {
+public class FileDowLoadTask {
 
 	private  Handler handler;
 
@@ -39,13 +39,13 @@ public class DowLoadFloatView {
 	private TextView downLoadResult = null;
 	private ImageView downLoadProgress = null;
 	
-	private static DowLoadFloatView downLoad=null;
+	private static FileDowLoadTask downLoad=null;
 
 	// 执行文件下载
 	final int ACTION_FILE_DOWNLOAD = 1;
 
-	// 文件下载结果
-	final int FILE_DOWNLOAD_RESULT = 2;
+	// 文件下载完成
+	final int FILE_DOWNLOAD_OK = 2;
 
 	// 文件下载失败
 	final int FILE_DOWNLOAD_ERROR = 3;
@@ -63,16 +63,15 @@ public class DowLoadFloatView {
 	View mFloatView ;
 	
 	Context mContext;
-	String curFlag;
 	
 	
-	public static DowLoadFloatView creatHttpDownLoad(Context context){
+	public static FileDowLoadTask creatFileDownLoad(Context context){
 		  if(null == downLoad){
-			  downLoad=new DowLoadFloatView(context);
+			  downLoad=new FileDowLoadTask(context);
 		  }
 		  return downLoad;
 	}
-	private  DowLoadFloatView(Context context) {
+	private  FileDowLoadTask(Context context) {
 
 	  this.mContext=context;
 	  
@@ -89,8 +88,8 @@ public class DowLoadFloatView {
 			
 				String eidtType = msg.getData().getString(Configure.EDIT_TYPE);
 				String fileUrl = msg.getData().getString(Configure.FILE_URL);
-				String  msgRespod =msg.getData().getString(Configure.MSG_RESPOND);
-
+				String  fileName =msg.getData().getString(Configure.FILE_NAME);
+;
 				switch (msg.what) {
 
 				// 创建新的线程下载音乐文件
@@ -108,7 +107,7 @@ public class DowLoadFloatView {
 						mFileEditController.communicationWithClient(handler,Configure.ACTION_HTTP_DOWNLOAD, params);
 					}
 					break;
-				case FILE_DOWNLOAD_RESULT:
+				case FILE_DOWNLOAD_OK:
 					
 					//如果是闹铃音乐，通知闹铃设置，文件路径	
 					if(null != eidtType && eidtType.equals("clock")){
@@ -116,17 +115,22 @@ public class DowLoadFloatView {
 					}
 					
 					//更新默认媒体数据库音乐文件索引
-					if(!msgRespod.contains("下载失败"))
 					mFileEditController.updateMediaStoreAudio(mContext,fileUrl);
-					//文件下载结果
-					showResult(msgRespod);				
+					// 文件现在成功提示
+					showResult(fileName+",下载成功");
+				
+					break;
+				case FILE_DOWNLOAD_ERROR:
+					// 文件现在失败提示
+					showResult(fileName+",下载失败");
+				case FILE_IS_EXIST:
+					// 文件已存在提示
+					showResult(fileName+",已存在");						
 					break;
 				case ACTION_EXIT:
 					// 退出文件下载
-					if(curFlag.equals(fileUrl)){
-							downLoadProgress.clearAnimation();
-							MyFloatView.removeView(mFloatView);
-					}
+					downLoadProgress.clearAnimation();
+					MyFloatView.removeView(mFloatView);
 					break;
 				default:
 					break;
@@ -204,7 +208,7 @@ public class DowLoadFloatView {
 		downLoadResult.setText(result);
 		downLoadResult.setVisibility(View.VISIBLE);		
 		//设定显示5秒后，退出下载提示，返回。
-		handler.sendEmptyMessageDelayed(ACTION_EXIT, 3000);
+		handler.sendEmptyMessageDelayed(ACTION_EXIT, 5000);
 	}
 	
 	
@@ -215,10 +219,7 @@ public class DowLoadFloatView {
 	 */
 	public void startDownLoad(String fileType, String fileUrl){
 		
-		showFloatView();
-		
-		curFlag=fileUrl;
-		
+		showFloatView();			
 		Message msg = new Message();
         msg.what = 1;
         Bundle bundle = new Bundle();
@@ -227,7 +228,6 @@ public class DowLoadFloatView {
         bundle.putString(Configure.FILE_URL, fileUrl);
         msg.setData(bundle);
         handler.sendMessage(msg);
-        
 	}
 	
 	

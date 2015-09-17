@@ -5,13 +5,14 @@ package com.changhong.tvserver.utils;
  */
 
 import android.content.Context;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 
 public class MyFloatView {
 
-	      static WindowManager wm=null;
+	      private static WindowManager wm=null;
 	      
 	      //浮标显示位置： 左上
 	     public final static int DIRECTION_LEFTTOP=1;
@@ -35,23 +36,18 @@ public class MyFloatView {
 		  		// 指定下载进程显示屏幕下方		          
 		  		WindowManager.LayoutParams lp =new WindowManager.LayoutParams() ;
 		  		lp.type=2002;
-		  		lp.flags|=8;
-		  		
+		  		lp.flags|=8;	
+		  		lp.x=30;
+		  		lp.y=30;	
 		  		lp.width = width;
 		  		lp.height = height;
 		  	
 		  		if(DIRECTION_LEFTTOP == direction)lp.gravity = Gravity.LEFT | Gravity.TOP;
 		  		else if(DIRECTION_LEFTBOTTOM == direction)lp.gravity = Gravity.BOTTOM  | Gravity.LEFT;
 		  		else if(DIRECTION_RIGHTTOP == direction)lp.gravity = Gravity.TOP  | Gravity.RIGHT;
-		  		else if(DIRECTION_RIGHTBOTTOM == direction){
-		  			lp.gravity = Gravity.BOTTOM  | Gravity.RIGHT;
-		  		
-		  		}
+		  		else if(DIRECTION_RIGHTBOTTOM == direction)lp.gravity = Gravity.BOTTOM  | Gravity.RIGHT;	
 		  		else lp.gravity = Gravity.CENTER;
-
-		  		lp.alpha=0.4f;
-		  		lp.horizontalMargin=20;
-		  		lp.verticalMargin=20;
+		  		lp.alpha=0.6f;
 		  		wm.addView(floatView, lp);	  		
 	      }
 	    
@@ -67,7 +63,8 @@ public class MyFloatView {
 						   wm=null;
 	    		  }
 			} catch (IllegalArgumentException e) {
-				
+				    Log.e("MyFloatView::", "removeView  occurred error! ");
+				    e.printStackTrace();
 			}
 	      }
 	  

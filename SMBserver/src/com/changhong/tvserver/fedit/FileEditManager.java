@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Map;
+
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -70,14 +72,21 @@ public class FileEditManager {
 	}
 
 	
-	private String gotFileNameByUrl(String url) {
+	public String gotFileNameByUrl(String url) {
 		String fileName = "";
 		int fileSeparator = url.lastIndexOf(File.separator);
-		if (fileSeparator > 0) {
-			fileName = url.substring(fileSeparator);
+		if (fileSeparator > 0 ) {
+			fileName = url.substring(fileSeparator+1);
 		}
 		return fileName;
 	}
+	
+	public String gotShortFileName(String url) {
+		String fileName = gotFileNameByUrl(url);;
+		if(fileName.length() >= 10)fileName=fileName.substring(0,10)+"···";
+		return fileName;
+	}
+	
 
 	/********************************************************** fileEdit   task *******************************************************************/
 
@@ -104,26 +113,36 @@ public class FileEditManager {
 					//Http通讯方式，根据URL执行文件下载任务
 					case Configure.ACTION_HTTP_DOWNLOAD:						
 						String downLoadResult;
-						String fileUrl = (String) mParams.get("fileUrl");
-						String fileName = (String) mParams.get("fileName");
-						String fileType = "music";
+						String fileUrl = (String) mParams.get(Configure.FILE_URL);
+						String editType = (String) mParams.get(Configure.EDIT_TYPE);
 						if (fileUrl.toLowerCase().startsWith("http://") || fileUrl.toLowerCase().startsWith("https://")) {
 							try {
-								downLoadResult = HttpDownloader.download(fileUrl, fileType, fileName);
-								mFileUtil	.checkMaxFileItemExceedAndProcess(fileType);
-								Bundle bundle = new Bundle();
-								// 当前文件类型: music;
-								bundle.putString(Configure.FILE_NAME, fileName);
-								bundle.putString(Configure.FILE_URL, fileUrl);
-								msg.setData(bundle);
-								Message respondMsg = mParentHandler.obtainMessage();
-								respondMsg.what = 2;
-								if (downLoadResult.equals(Configure.ACTION_SUCCESS)) {
-									respondMsg.what = 3;
-								} else if (downLoadResult.equals(Configure.FILE_EXIST)) {
-									respondMsg.what = 4;
+								String fileName = mFileUtil.getFileName(fileUrl);
+								downLoadResult = HttpDownloader.download(fileUrl, "music", fileName);
+								mFileUtil	.checkMaxFileItemExceedAndProcess("music");
+								
+								//通讯结果回复给主线程
+								if(null != mParentHandler){			
+									   Message respondMsg = mParentHandler.obtainMessage();										
+										Bundle bundle = new Bundle();
+										// 当前文件类型: music;
+										if(fileName.length() >= 8)fileName=fileName.substring(0,8)+"···";
+										String  result;
+										if (downLoadResult.equals(Configure.ACTION_SUCCESS)) {
+											result=fileName+",下载成功";
+										} else if (downLoadResult.equals(Configure.FILE_EXIST)) {
+											result=fileName+",文件已存在";
+										}else if (downLoadResult.equals(Configure.ACTION_FAILED)){
+											result="下载失败,请检查网络！";
+										}else{
+											result=fileName+",文件超大";
+										}
+										bundle.putString(Configure.EDIT_TYPE, editType);
+										bundle.putString(Configure.MSG_RESPOND, result);
+										bundle.putString(Configure.FILE_URL, fileUrl);
+										respondMsg.setData(bundle);
+										mParentHandler.sendMessage(respondMsg);
 								}
-								mParentHandler.sendMessage(respondMsg);
 								Log.e(TAG, "finish download file " + fileUrl);
 							} catch (Exception e) {
 								e.printStackTrace();
@@ -198,7 +217,9 @@ public class FileEditManager {
 	}
 	
 	
-	
+	public void updateMediaStoreAudio(Context context, String fileName){
+		mFileUtil.updateGallery(context, fileName);
+	}
 
 	// 销毁线程池,该方法保证在所有任务都完成的情况下才销毁所有线程，否则等待任务完成才销毁
 	public void destroy() {

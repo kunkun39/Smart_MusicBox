@@ -42,6 +42,7 @@ import android.util.Log;
 
 //import com.changhong.tvserver.alarm.ClockCommonData;
 import com.changhong.tvserver.fedit.DowLoadFloatView;
+import com.changhong.tvserver.fedit.FileDowLoadTask;
 import com.changhong.tvserver.fedit.MusicEdit;
 import com.changhong.tvserver.search.Commonmethod;
 import com.changhong.tvserver.search.SearchActivity;
@@ -788,7 +789,7 @@ public class TVSocketControllerService extends Service {
 		
 			if(editType.equals("copyToYinXiang") || editType.equals("clockRing") ){
 				  
-				new DowLoadFloatView(this).startDownLoad(editType, parameter2);		
+				FileDowLoadTask.creatFileDownLoad(this).startDownLoad(editType, parameter2);		
 				
 			}else{	
 				
