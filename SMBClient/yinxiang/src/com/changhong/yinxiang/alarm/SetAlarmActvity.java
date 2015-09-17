@@ -28,6 +28,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.changhong.common.service.ClientSendCommandService;
+import com.changhong.common.service.SendTCPData;
 import com.changhong.common.utils.NetworkUtils;
 import com.changhong.common.utils.StringUtils;
 import com.changhong.common.widgets.WeekButton;
@@ -57,6 +58,9 @@ public class SetAlarmActvity extends BaseActivity {
 	private int updateContent[];// 记录操作过的数据。0未操作，非0操作过。
 
 	private int curentId;// 设置该alarm的ID。
+	private int resultCode=0;//0为更改，1位新增
+	
+	private SendTCPData sendTCP = null;
 
 	// 进入设置界面后，先设置状态。
 	private enum State {
@@ -75,7 +79,7 @@ public class SetAlarmActvity extends BaseActivity {
 			case YinXiangMusicViewActivity.SHOW_AUDIOEQUIPMENT_MUSICLIST:
 				String str = (String) msg.obj;
 				musicListAll = pareJsonToMusicList(str);
-
+				currentState = new boolean[musicListAll.size()];
 				break;
 
 			}
@@ -96,11 +100,12 @@ public class SetAlarmActvity extends BaseActivity {
 					break;
 				case update:
 					updateAlarm();
+					break;
 				default:
-					dealResultData();
-					finish();
 					break;
 				}
+				dealResultData();
+				finish();
 				break;
 			case R.id.cancel:
 				finish();
@@ -162,14 +167,23 @@ public class SetAlarmActvity extends BaseActivity {
 				MusicUtils.ACTION_SOCKET_COMMUNICATION,
 				MusicUtils.EDIT_REQUEST_MUSICS);
 
+		String serverIP = ClientSendCommandService.serverIP;
+		if (serverIP != null) {
+			sendTCP = SendTCPData.getInstace();
+			sendTCP.setDesIP(serverIP);
+			sendTCP.startPlaying();
+		}
+
 		Intent intent = getIntent();
 		int position = intent.getIntExtra("select", -1);
 		if (position < 0) {
 			state = State.add;
+			resultCode=1;
 			intAddAlarm();
 
 		} else {
 			state = State.update;
+			resultCode=0;
 			initUpdateAlarm(position);
 		}
 
@@ -213,6 +227,8 @@ public class SetAlarmActvity extends BaseActivity {
 
 	// 初始化进入添加流程
 	private void intAddAlarm() {
+		if(null==alarm){
+		alarm = new Alarm();}
 		Calendar cal = Calendar.getInstance();
 		int hour = cal.get(Calendar.HOUR_OF_DAY);
 		int minute = cal.get(Calendar.MINUTE);
@@ -242,7 +258,7 @@ public class SetAlarmActvity extends BaseActivity {
 
 	// 进入添加流程
 	private void addAlarm() {
-		alarm = new Alarm();
+		
 		int length = AlarmMainActivity.mAlarmList.size();
 		curentId = AlarmMainActivity.mAlarmList.get(length - 1).getId() + 1;
 
@@ -261,6 +277,7 @@ public class SetAlarmActvity extends BaseActivity {
 		for (int j = 0; j < currentState.length; j++) {
 			if (currentState[j]) {
 				musics.add(musicListAll.get(j));
+				musics.get(j).setmId(curentId);
 			}
 		}
 		alarm.setMusicBean(musics);
@@ -363,7 +380,7 @@ public class SetAlarmActvity extends BaseActivity {
 			}
 			musicListInit = alarm.getMusicBean();
 			// 设置复选框初始选中状态
-			currentState = new boolean[musicListAll.size()];
+			
 			updateContent = new int[musicListAll.size()];
 			for (int i = 0; i < currentState.length; i++) {
 				currentState[i] = false;
@@ -437,27 +454,46 @@ public class SetAlarmActvity extends BaseActivity {
 	// 回传数据给闹铃主界面，并且发送给音响。
 
 	private void dealResultData() {
+		String content=null;
 		Intent intent = new Intent();
 		String str = ResolveAlarmInfor.alarmToStr(alarm);
 		intent.putExtra("alarm", str);
-		SetAlarmActvity.this.setResult(0, intent);
+		SetAlarmActvity.this.setResult(resultCode, intent);
+		String ip = ClientSendCommandService.serverIP;
+		// 考虑是否用TCP发送数据回音响端???
 		switch (state) {
 		case update:
-			ClientSendCommandService.msg = Alarm.update + curentId + "|" + str;
-			ClientSendCommandService.handler.sendEmptyMessage(1);
+			 ClientSendCommandService.msg = Alarm.update + curentId + "|" +str;
+//			content = Alarm.update + curentId + "|" + str;
 			break;
 		case add:
 
-			ClientSendCommandService.msg = Alarm.add + str;
-			ClientSendCommandService.handler.sendEmptyMessage(1);
+			 ClientSendCommandService.msg = Alarm.add + str;
+			// ClientSendCommandService.handler.sendEmptyMessage(1);
+//			content = Alarm.update + curentId + "|" + str;
+			break;
+		default:
 			break;
 		}
+//		if (content != null && ip != null) {
+//			sendTCP.addData(content, ip);
+//		}
+		ClientSendCommandService.handler.sendEmptyMessage(1);
 	}
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		// TODO Auto-generated method stub
 		return super.onKeyDown(keyCode, event);
+	}
+
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		if (sendTCP != null) {
+			sendTCP.stopPlaying();
+		}
+		super.onDestroy();
 	}
 
 }

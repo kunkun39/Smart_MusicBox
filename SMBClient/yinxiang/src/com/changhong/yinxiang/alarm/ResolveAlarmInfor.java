@@ -52,8 +52,8 @@ public class ResolveAlarmInfor {
 					alarm.setDaysOfWeek(alarmJson.getInt("daysOfWeek"));
 					alarm.setTime(alarmJson.getLong("time"));
 					alarm.setVibrate(alarmJson.getBoolean("vibrate"));
-					alarm.setLabel(alarmJson.getString("id"));
-					// alarm.setAlert(alarmJson.get("alert"));
+//					alarm.setLabel(alarmJson.getString("label"));
+					 alarm.setAlert(Uri.parse(alarmJson.get("alert").toString()));
 					alarm.setSilent(alarmJson.getBoolean("silent"));
 
 					JSONArray musicsJA = alarmJson.getJSONArray("musics");
@@ -250,7 +250,7 @@ public class ResolveAlarmInfor {
 			alarm.setDaysOfWeek(json.getInt("daysOfWeek"));
 			alarm.setTime(json.getLong("time"));
 			alarm.setVibrate(json.getBoolean("vibrate"));
-			alarm.setLabel(json.getString("id"));
+//			alarm.setLabel(json.getString("label"));
 			// alarm.setAlert(json.get("alert"));
 			alarm.setSilent(json.getBoolean("silent"));
 
@@ -263,7 +263,7 @@ public class ResolveAlarmInfor {
 				musicBean.setmId(musicsJson.getInt("mId"));
 				musicBean.setId(musicsJson.getLong("id"));
 				musicBean.setTitle(musicsJson.getString("title"));
-				musicBean.setAlbum(musicsJson.getString("album"));
+//				musicBean.setAlbum(musicsJson.getString("album"));
 				musicBean.setDuration(musicsJson.getInt("duration"));
 				musicBean.setSize(musicsJson.getLong("size"));
 				musicBean.setArtist(musicsJson.getString("artist"));

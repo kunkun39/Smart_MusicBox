@@ -17,6 +17,7 @@
 package com.changhong.yinxiang.alarm;
 
 import java.text.DateFormatSymbols;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -147,6 +148,8 @@ public final class Alarm {
 	}
 
 	public Alarm() {
+		daysOfWeek=new DaysOfWeek(0);
+		musicBean=new ArrayList<MusicBean>();
     }
 
 

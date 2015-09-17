@@ -94,7 +94,7 @@ public class AlarmMainActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-
+				
 			}
 		});
 		
@@ -127,7 +127,7 @@ public class AlarmMainActivity extends BaseActivity {
 	private void startSetAlarm() {
 		Intent intent = new Intent(AlarmMainActivity.this,
 				SetAlarmActvity.class);
-		startActivity(intent);
+		startActivityForResult(intent, 1);
 	}
 	
 	
@@ -146,7 +146,11 @@ public class AlarmMainActivity extends BaseActivity {
 			break;
 			
 		case 1:
-			
+			//增加闹铃
+			String addStr=data.getExtras().getString("alarm");
+			Alarm addAlarm=ResolveAlarmInfor.jsonToAlarm(addStr);
+			mAlarmList.add(addAlarm);
+			adapter.notifyDataSetChanged();
 			break;
 		}
 		
