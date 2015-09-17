@@ -38,10 +38,7 @@ import android.os.Message;
 import android.os.SystemClock;
 import android.util.JsonReader;
 import android.util.Log;
-
-
-//import com.changhong.tvserver.alarm.ClockCommonData;
-import com.changhong.tvserver.fedit.DowLoadFloatView;
+import com.changhong.tvserver.alarm.ClockCommonData;
 import com.changhong.tvserver.fedit.FileDowLoadTask;
 import com.changhong.tvserver.fedit.MusicEdit;
 import com.changhong.tvserver.search.Commonmethod;
