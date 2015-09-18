@@ -35,8 +35,8 @@ public class DeleteAlarmActivity extends BaseActivity{
 		// TODO Auto-generated method stub
 		setContentView(R.layout.alarm_delete_main);
 		checkAll=(CheckBox)findViewById(R.id.checkAll);
-		confirm=(Button)findViewById(R.id.confirm);
-		cancel=(Button)findViewById(R.id.cancel);
+		confirm=(Button)findViewById(R.id.confirm_delete);
+		cancel=(Button)findViewById(R.id.cancel_delete);
 		list=(ListView)findViewById(R.id.list);
 		adapter=new AlarmDeleteAdapter(this);
 		list.setAdapter(adapter);
@@ -46,6 +46,8 @@ public class DeleteAlarmActivity extends BaseActivity{
 	@Override
 	protected void initData() {
 		// TODO Auto-generated method stub
+		
+		
 		confirm.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -62,6 +64,7 @@ public class DeleteAlarmActivity extends BaseActivity{
 					ClientSendCommandService.handler.sendEmptyMessage(1);
 					
 				}
+				finish();
 			}
 		});
 		
