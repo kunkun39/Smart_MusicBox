@@ -44,14 +44,8 @@ public class FileDowLoadTask {
 	// 执行文件下载
 	final int ACTION_FILE_DOWNLOAD = 1;
 
-	// 文件下载完成
-	final int FILE_DOWNLOAD_OK = 2;
-
-	// 文件下载失败
-	final int FILE_DOWNLOAD_ERROR = 3;
-	
-	// 文件已存在 
-	final int FILE_IS_EXIST = 4;
+	// 文件下载结果
+	final int FILE_DOWNLOAD_RESULT = 2;
 	
 	// 退出进程显示
 	final int ACTION_EXIT = 5;
@@ -88,7 +82,7 @@ public class FileDowLoadTask {
 			
 				String eidtType = msg.getData().getString(Configure.EDIT_TYPE);
 				String fileUrl = msg.getData().getString(Configure.FILE_URL);
-				String  fileName =msg.getData().getString(Configure.FILE_NAME);
+				String  msgRepond =msg.getData().getString(Configure.MSG_RESPOND);
 ;
 				switch (msg.what) {
 
@@ -107,7 +101,7 @@ public class FileDowLoadTask {
 						mFileEditController.communicationWithClient(handler,Configure.ACTION_HTTP_DOWNLOAD, params);
 					}
 					break;
-				case FILE_DOWNLOAD_OK:
+				case FILE_DOWNLOAD_RESULT:
 					
 					//如果是闹铃音乐，通知闹铃设置，文件路径	
 					if(null != eidtType && eidtType.equals("clock")){
@@ -115,17 +109,10 @@ public class FileDowLoadTask {
 					}
 					
 					//更新默认媒体数据库音乐文件索引
+					if(msgRepond.contains("成功") || msgRepond.contains("存在"))
 					mFileEditController.updateMediaStoreAudio(mContext,fileUrl);
 					// 文件现在成功提示
-					showResult(fileName+",下载成功");
-				
-					break;
-				case FILE_DOWNLOAD_ERROR:
-					// 文件现在失败提示
-					showResult(fileName+",下载失败");
-				case FILE_IS_EXIST:
-					// 文件已存在提示
-					showResult(fileName+",已存在");						
+					showResult(msgRepond);				
 					break;
 				case ACTION_EXIT:
 					// 退出文件下载
@@ -186,10 +173,10 @@ public class FileDowLoadTask {
 			
 		} else if (fileType.contains("music")) {
 			String title=mFileEditController.gotShortFileName(fileUrl);
-			downLoadTitle.setText(title+=",正在下载中");
+			downLoadTitle.setText(title+=",下载中");
 		} else {
 			String title=mFileEditController.gotShortFileName(fileUrl);
-			downLoadTitle.setText(title+=",正在下载中");
+			downLoadTitle.setText(title+=",下载中");
 		}
 
 	}

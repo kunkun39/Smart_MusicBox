@@ -83,7 +83,7 @@ public class FileEditManager {
 	
 	public String gotShortFileName(String url) {
 		String fileName = gotFileNameByUrl(url);;
-		if(fileName.length() >= 10)fileName=fileName.substring(0,10)+"···";
+		if(fileName.length() >= 8)fileName=fileName.substring(0,8)+"···";
 		return fileName;
 	}
 	
@@ -141,6 +141,7 @@ public class FileEditManager {
 										bundle.putString(Configure.MSG_RESPOND, result);
 										bundle.putString(Configure.FILE_URL, fileUrl);
 										respondMsg.setData(bundle);
+										respondMsg.what=2;
 										mParentHandler.sendMessage(respondMsg);
 								}
 								Log.e(TAG, "finish download file " + fileUrl);

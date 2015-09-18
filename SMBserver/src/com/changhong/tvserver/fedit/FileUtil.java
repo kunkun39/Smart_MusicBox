@@ -31,7 +31,7 @@ public class FileUtil {
 	public static final String VEDIO_PATH = "video";
 
 	// 文件读取Buffer size
-	private static final int BUFFER_SIZE = 4 * 1024; // 4K
+	private static final int BUFFER_SIZE = 1024 * 1024; // 1M
 
 	public final static int MAX_FILE_ITEM_SIZE = 10;
 

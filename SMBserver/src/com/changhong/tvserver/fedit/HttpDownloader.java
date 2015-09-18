@@ -42,7 +42,7 @@ public class HttpDownloader {
     */
 	public static String download(String fileUri, String fileType,	String fileName) {
 
-		String result = "downLoadOK";
+		String result =Configure.ACTION_FAILED;
 		InputStream inputStream = null;
 		HttpURLConnection conn = null;
 		try {
@@ -51,23 +51,21 @@ public class HttpDownloader {
 			int contentLength = conn.getContentLength();
 
 			// 下载文件最大值限定=6M
-			if (contentLength <= MUTI_THREAD_SIZE_POINT) {
+			if (contentLength>0 && contentLength <MUTI_THREAD_SIZE_POINT) {
 				inputStream = conn.getInputStream();
 				FileUtil fileUtils = new FileUtil();
 
 				// 判断文件是否存在
 				if (fileUtils.isFileExist(fileType, fileName)) {
-					result = "fileExist";
+					result = Configure.FILE_EXIST;
 				} else {
 					File fileResult = fileUtils.writeToSDCard(fileType,fileName, inputStream);
-					// 如果fileResult=null,下载失败。
-					if (null == fileResult) {
-						result = "downloadError";
-					}
+					// 如果fileResult  !=null,下载成功。
+					if (null != fileResult)
+						result = Configure.ACTION_SUCCESS;
 				}
 			}
 		} catch (IOException e) {
-			result = "downloadError";
 			e.printStackTrace();
 		} finally {
 			try {
