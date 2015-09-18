@@ -42,7 +42,7 @@
     <!--中间内容-->
 
     <LinearLayout
-            android:layout_height="500dp"
+            android:layout_height="match_parent"
             android:layout_width="fill_parent"
             android:layout_marginTop="60dip"
             android:focusable="false"

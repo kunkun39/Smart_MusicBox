@@ -1,6 +1,7 @@
 package com.changhong.yinxiang.nanohttpd;
 
 import android.net.Uri;
+import android.util.Log;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -18,7 +19,7 @@ public class HttpDownloader {
 
 	public static final int DEFAULT_HTTP_READ_TIMEOUT = 20 * 1000;
 
-	private static final int MUTI_THREAD_SIZE_POINT = 1024 * 1024 * 6; // 6M
+	private static final int MUTI_THREAD_SIZE_POINT = 1024 * 1024 * 20; // 6M
 
 	public static final String ALLOWED_URI_CHARS = "@#&=*+-_.,:!?()/~'%";
 
@@ -46,15 +47,17 @@ public class HttpDownloader {
     */
 	public static String download(String fileUri, String fileType) {
 
-		String result = MusicUtils.ACTION_SUCCESS;
+		String result = MusicUtils.ACTION_FAILED;
 		InputStream inputStream = null;
 		HttpURLConnection conn = null;
 		try {
 
+			Log.e("YDINFOR::", "-----------------------HttpURLConnection创建链接----------------------");
+			fileUri=fileUri.replace("12345", "8888"); 
 			conn = createConnection(fileUri);
 			int contentLength = conn.getContentLength();
 
-			// 下载文件最大值限定=6M
+			// 下载文件最大值限定=20M
 			if (contentLength <= MUTI_THREAD_SIZE_POINT) {
 				inputStream = conn.getInputStream();
 				FileUtil fileUtils = new FileUtil();
@@ -65,8 +68,8 @@ public class HttpDownloader {
 				} else {
 					File fileResult = fileUtils.writeToSDCard(fileType,fileName, inputStream);
 					// 如果fileResult=null,下载失败。
-					if (null == fileResult) {
-						result = MusicUtils.ACTION_FAILED;
+					if (null != fileResult) {
+						result = MusicUtils.ACTION_SUCCESS;
 					}					
 					fileUtils.checkMaxFileItemExceedAndProcess(fileType);
 				}

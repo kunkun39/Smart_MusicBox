@@ -268,6 +268,16 @@ public class MusicEditServer {
 	
 	}
 
-	
+	/**
+	 * 特殊字符还原
+	 * @param url  url字符串
+	 * @return
+	 */
+	public  String convertHttpURLToFileUrl(String url) {
+        if (null !=url && url.length()>0) {
+            return url.replace("%25", "%").replace("%20"," ").replace("%2B","+").replace( "%23","#").replace( "%26","&").replace("%3D","=").replace("%3F","?").replace("%5E","^");
+        }
+        return url;
+    }
 	
 }

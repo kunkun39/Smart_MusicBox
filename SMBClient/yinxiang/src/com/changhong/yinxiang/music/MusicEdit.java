@@ -23,6 +23,7 @@ import com.changhong.common.system.MyApplication;
 import com.changhong.common.utils.StringUtils;
 import com.changhong.yinxiang.R;
 import com.changhong.yinxiang.activity.YinXiangMusicViewActivity;
+import com.changhong.yinxiang.nanohttpd.HttpDownloader;
 import com.changhong.yinxiang.utils.FileUtil;
 import com.changhong.yinxiang.view.FileDownLoadDialog;
 import com.changhong.yinxiang.view.FileEditDialog;
@@ -228,8 +229,7 @@ public class MusicEdit {
 									// 本地重命名文件，成功，则，更新媒体库记录。
 									if (mFileUtil.reNameFile(	filePath, newName)) {		
 										String newFilePath=mFileUtil.getNewFilePath(filePath, newName);
-										upDateMediaStoreFile(filePath);
-										upDateMediaStoreFile(newFilePath);
+										upDateMediaStoreFile(filePath,newFilePath);
 									} else {									
 										newName = "";
 									}
@@ -259,20 +259,17 @@ public class MusicEdit {
 	 * @param fileUrl  文件定位符
 	 */
 	public void upDateMediaStoreFile(String fileUrl) {
-
-		//参数检查
-		if (!StringUtils.hasLength(fileUrl) )return;	
-		
-		//文件定位符转换成本地文件路径
-	   if (fileUrl.toLowerCase().startsWith("http://") || fileUrl.toLowerCase().startsWith("https://")) {
-		        fileUrl=mFileUtil.getLocalFilePathOfDownLoad(fileUrl);
-	   }
-
-		//更新mediaStorage中 指定文件信息
-		Intent scanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-		scanIntent.setData(Uri.fromFile(new File(fileUrl)));
-		mContext.sendBroadcast(scanIntent);	
+	   
+		if (fileUrl.toLowerCase().startsWith("http://") || fileUrl.toLowerCase().startsWith("https://")) {
+			String encodedUrl = Uri.encode(fileUrl,HttpDownloader.ALLOWED_URI_CHARS);
+			fileUrl=mFileUtil.convertHttpUrlToLocalFilePath(encodedUrl);
+		}
+	   mFileUtil.updateGallery(mContext, fileUrl);      
 	}
 
-
+	public void upDateMediaStoreFile(String oldFile, String newFile) {
+	   mFileUtil.updateGallery(mContext, oldFile,newFile);
+       
+	}
+	
 }

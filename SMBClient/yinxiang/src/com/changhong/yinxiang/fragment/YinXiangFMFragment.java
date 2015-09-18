@@ -3,25 +3,19 @@ package com.changhong.yinxiang.fragment;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.view.*;
 import android.view.View.OnClickListener;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.changhong.common.service.ClientSendCommandService;
 import com.changhong.common.system.MyApplication;
-import com.changhong.common.widgets.BoxSelectAdapter;
 import com.changhong.yinxiang.R;
 
 public class YinXiangFMFragment extends Fragment {
@@ -67,6 +61,8 @@ public class YinXiangFMFragment extends Fragment {
 
 	private void initViewAndEvent(View v) {
 		FMlist = (GridView) v.findViewById(R.id.fmlist);
+		//取消GridView中Item选中时默认的背景色
+		FMlist.setSelector(new ColorDrawable(Color.TRANSPARENT));
 		adapter = new FMAdapter(getActivity());
 		FMlist.setAdapter(adapter);
 		
@@ -127,28 +123,36 @@ public class YinXiangFMFragment extends Fragment {
 				vh = (ViewHolder) convertView.getTag();
 			}
 			
-			vh.FMplay.setId(position);
 			if (ClientSendCommandService.serverFMInfo.size() > 0) {
 
 				vh.FMname.setText(ClientSendCommandService.serverFMInfo	.get(position));
+				vh.FMplay.setTag(vh);
 				vh.FMplay.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View arg0) {
 						MyApplication.vibrator.vibrate(100);
-						ClientSendCommandService.msg = "fm:"	+ ClientSendCommandService.serverFMInfo	.get(position);
+						String serverFMInfor=ClientSendCommandService.serverFMInfo.get(position);
+						ClientSendCommandService.msg = "fm:"	+serverFMInfor;
 						ClientSendCommandService.handler.sendEmptyMessage(1);
 
-						if (null != mPlayingBtn) {
-							mAnimation = (AnimationDrawable) mPlayingBtn	.getBackground();
+						if (null != mPlayingBtn && null !=mAnimation) {
 							if (mAnimation.isRunning())mAnimation.stop();
 							mPlayingBtn.setBackgroundResource(R.drawable.fmplay);
 						}
-						mPlayingBtn =(ImageView) arg0;
-						if(position == mPlayingBtn.getId()){
-							mPlayingBtn.setBackgroundResource(R.anim.playing_anim);
-							mAnimation = (AnimationDrawable) mPlayingBtn	.getBackground();
-							mAnimation.start();
+						
+						//检查是否同一电台
+						if(!arg0.equals(mPlayingBtn)){					
+							ViewHolder vh = (ViewHolder) arg0.getTag();
+							String  fmName=(String) vh.FMname.getText();
+							if(fmName.equals(serverFMInfor)){
+								arg0.setBackgroundResource(R.anim.playing_anim);
+								mAnimation = (AnimationDrawable) arg0.getBackground();
+								mAnimation.start();
+								mPlayingBtn =(ImageView) arg0;
+							}
 						}
+						
+
 					}
 				});
 			}

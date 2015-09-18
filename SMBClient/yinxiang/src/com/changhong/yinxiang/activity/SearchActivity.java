@@ -1,8 +1,5 @@
 package com.changhong.yinxiang.activity;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -14,18 +11,15 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,7 +32,6 @@ import com.changhong.search.RecommendAdapter;
 import com.changhong.search.XMMusicData;
 import com.changhong.search.searchHistoryAdapter;
 import com.changhong.yinxiang.R;
-import com.changhong.yinxiang.music.YinXiangMusicAdapter;
 import com.changhong.yinxiang.utils.MySharePreferences;
 import com.changhong.yinxiang.utils.MySharePreferencesData;
 

@@ -14,6 +14,7 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -228,7 +229,7 @@ public class FileUtil {
 	 * @param fileURL 文件远程定位符
 	 * @return 本地保存文件路径
 	 */
-	public String getLocalFilePathOfDownLoad(String fileUrl){
+	public String convertHttpUrlToLocalFilePath(String fileUrl){
 		
 	    int startIndex=fileUrl.lastIndexOf(File.separator);
 		String fileName=fileUrl.substring(startIndex+1);
@@ -338,15 +339,51 @@ public class FileUtil {
 	 * @param fileUrl  文件定位符
 	 * @param newFile 新文件定位符
 	 */
-	public void upDateMediaStoreFile(Context context,String fileUrl) {
-
+//	public void upDateMediaStoreFile(Context context,String fileUrl) {
+//
+//		//参数检查
+//		if (!StringUtils.hasLength(fileUrl) )return;		
+//		//更新mediaStorage中 指定文件信息
+//		Intent scanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+//		scanIntent.setData(Uri.fromFile(new File(fileUrl)));
+//		context.sendBroadcast(scanIntent);	
+//	}
+	
+	
+	// filename是我们的文件全名，包括后缀哦
+	public void updateGallery(Context context, String filename) {
 		//参数检查
-		if (!StringUtils.hasLength(fileUrl) )return;		
-		//更新mediaStorage中 指定文件信息
-		Intent scanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-		scanIntent.setData(Uri.fromFile(new File(fileUrl)));
-		context.sendBroadcast(scanIntent);	
+		if (!StringUtils.hasLength(filename) )return;		
+		
+		MediaScannerConnection.scanFile(context, new String[] { filename },
+				null, new MediaScannerConnection.OnScanCompletedListener() {
+					@Override
+					public void onScanCompleted(String path, Uri uri) {
+						// TODO 自动生成的方法存根
+						Log.i("ExternalStorage", "Scanned " + path + ":");
+						Log.i("ExternalStorage", "-> uri=" + uri);
+					}
+				});
+	
 	}
+	
+	//同时更新媒体库多个文件，用于重命名更新
+	public void updateGallery(Context context,String oldFile, String newFile) {
+		//参数检查
+	   if (!StringUtils.hasLength(oldFile) )return;	
+	   if (!StringUtils.hasLength(newFile) )return;	
+				
+		MediaScannerConnection.scanFile(context, new String[] { oldFile, newFile},
+				null, new MediaScannerConnection.OnScanCompletedListener() {
+					@Override
+					public void onScanCompleted(String path, Uri uri) {
+						// TODO 自动生成的方法存根
+						Log.i("ExternalStorage", "Scanned " + path + ":");
+						Log.i("ExternalStorage", "-> uri=" + uri);
+					}
+				});
+	}
+	
 	
 
 	static class FileComparator implements Comparator<File> {

@@ -32,7 +32,7 @@ public class AlarmMainActivity extends BaseActivity {
 	private ListView alarmInfor;
 	private static AlarmAdapter adapter;
 	public static ArrayList<Alarm> mAlarmList = null;
-
+   private  MusicEditServer mMusicEditServer=null;
 	private static String action = "alarmInfor";
 	public static Handler handler = new Handler() {
 
@@ -76,6 +76,8 @@ public class AlarmMainActivity extends BaseActivity {
 		alarmInfor = (ListView) findViewById(R.id.alarm_info);
 		adapter=new AlarmAdapter(AlarmMainActivity.this);
 		alarmInfor.setAdapter(adapter);
+		mMusicEditServer = MusicEditServer.creatFileEditServer();
+
 	}
 
 	@Override
@@ -116,14 +118,16 @@ public class AlarmMainActivity extends BaseActivity {
 
 	private void getAlarmMsg() {
 		
-		// 启动TCP接收线程
-				MusicEditServer.creatFileEditServer().communicationWithServer(handler,
-						MusicUtils.ACTION_SOCKET_COMMUNICATION, action);
+		
 				
 		// 触发音响端数据发送
 		String ipString = NetworkUtils.getLocalHostIp();
 		ClientSendCommandService.msg = Alarm.get + ipString;
 		ClientSendCommandService.handler.sendEmptyMessage(1);
+		
+		// 启动TCP接收线程
+		mMusicEditServer.communicationWithServer(handler,
+								MusicUtils.ACTION_SOCKET_COMMUNICATION, action);
 
 		
 		Log.i("mmmm", "getAlarmMsg:"+ipString);
@@ -170,6 +174,8 @@ public class AlarmMainActivity extends BaseActivity {
 	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
+		mMusicEditServer.close();
+
 		super.onDestroy();
 	}
 

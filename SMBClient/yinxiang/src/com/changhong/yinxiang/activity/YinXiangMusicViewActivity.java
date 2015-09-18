@@ -507,16 +507,6 @@ public class YinXiangMusicViewActivity extends Activity {
 					Runtime.getRuntime().exec("mv " + fullpath + " " + newFile);
 					mHttpAddress = httpAddress + newFile;
 
-					/**
-					 * 更改Content Provider的文件
-					 */
-					ContentResolver mContentResolver = getContentResolver();
-					Uri mAudioUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-					ContentValues values = new ContentValues();
-					values.put(MediaStore.Audio.Media.DATA, newFile);
-					mContentResolver.update(mAudioUri, values,
-							MediaStore.Audio.Media.DATA + " = '" + fullpath
-									+ "'", null);
 				}
 			} catch (Exception e1) {
 				e.printStackTrace();
@@ -563,7 +553,7 @@ public class YinXiangMusicViewActivity extends Activity {
 						result = "远程操作失败";
 					} else if (result.contains("文件拷贝成功")) {
 						// 拷贝成功，更新媒体库记录
-						String fileUrl = mEditMusic.getFileUrl();
+						String fileUrl=mEditMusic.getFileUrl();
 						mFileEdit.upDateMediaStoreFile(fileUrl);
 					}
 
@@ -582,9 +572,7 @@ public class YinXiangMusicViewActivity extends Activity {
 
 				if (STORAGE_YINXIANG == curStorage) {
 					remoteMusics = (String) msg.obj;
-					musicAdapter = new YinXiangMusicAdapter(
-							YinXiangMusicViewActivity.this, mHandle, keyStr,
-							remoteMusics);
+					musicAdapter = new YinXiangMusicAdapter(	YinXiangMusicViewActivity.this, mHandle, keyStr,	remoteMusics);
 					musicListView.setAdapter(musicAdapter);
 					// musicAdapter.createAdapterData(musicList);
 					// musicAdapter.notifyDataSetChanged();
@@ -695,6 +683,7 @@ public class YinXiangMusicViewActivity extends Activity {
 		}
 		return url;
 	}
+
 
 	/********************************************** 系统发发重载 *********************************************************/
 

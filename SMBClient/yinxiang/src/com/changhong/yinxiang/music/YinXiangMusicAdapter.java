@@ -135,9 +135,9 @@ public class YinXiangMusicAdapter extends BaseAdapter {
                     String artist = musicObj.getString("artist");
                     String fileUrl = musicObj.getString("httpUrl");;
 
-                    YinXiangMusic music = new YinXiangMusic(id, title, path, i, artist,i, 0, 4);
-                    
+                    YinXiangMusic music = new YinXiangMusic(id, title, path, i, artist,i, 0, 4);                    
                     //增加文件远程访问定位符
+                    fileUrl=convertHttpURLToFileUrl(fileUrl);
                     music.setFileUrl(fileUrl);
                     list.add(music);
 				}	
@@ -277,7 +277,18 @@ public class YinXiangMusicAdapter extends BaseAdapter {
 		}
 	}
 
-	
+	/**
+	 * 特殊字符还原
+	 * @param url  url字符串
+	 * @return
+	 */
+	public  String convertHttpURLToFileUrl(String url) {
+        if (null !=url && url.length()>0) {
+            return url.replace("%25", "%").replace("%20"," ").replace("%2B","+").replace( "%23","#").replace( "%26","&").replace("%3D","=").replace("%3F","?").replace("%5E","^");
+
+        }
+        return url;
+    }
 	
 
 	

@@ -261,7 +261,7 @@ public class ClientGetCommandService extends Service implements
 							break;
 						}
 
-						/*************************************************** 20150726 YD add for autoCtrl Audio ********************************************************/
+						/*************************************************** 20150726 YD add for autoCtrl YinXiang ********************************************************/
 						// 将服务器的ip地址作为发送内容发给服务器.没30秒发送一次
 						long curTime = System.currentTimeMillis();
 						if ((curTime - delaySend) > 30000) {
