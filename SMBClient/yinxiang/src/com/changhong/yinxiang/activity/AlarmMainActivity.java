@@ -115,14 +115,17 @@ public class AlarmMainActivity extends BaseActivity {
 	}
 
 	private void getAlarmMsg() {
+		
+		// 启动TCP接收线程
+				MusicEditServer.creatFileEditServer().communicationWithServer(handler,
+						MusicUtils.ACTION_SOCKET_COMMUNICATION, action);
+				
 		// 触发音响端数据发送
 		String ipString = NetworkUtils.getLocalHostIp();
 		ClientSendCommandService.msg = Alarm.get + ipString;
 		ClientSendCommandService.handler.sendEmptyMessage(1);
 
-		// 启动TCP接收线程
-		MusicEditServer.creatFileEditServer().communicationWithServer(handler,
-				MusicUtils.ACTION_SOCKET_COMMUNICATION, action);
+		
 		Log.i("mmmm", "getAlarmMsg:"+ipString);
 	}
 
