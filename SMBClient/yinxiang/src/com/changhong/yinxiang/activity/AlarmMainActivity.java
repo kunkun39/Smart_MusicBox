@@ -19,6 +19,7 @@ import com.changhong.common.utils.NetworkUtils;
 import com.changhong.yinxiang.R;
 import com.changhong.yinxiang.alarm.Alarm;
 import com.changhong.yinxiang.alarm.AlarmAdapter;
+import com.changhong.yinxiang.alarm.DeleteAlarmActivity;
 import com.changhong.yinxiang.alarm.ResolveAlarmInfor;
 import com.changhong.yinxiang.alarm.SetAlarmActvity;
 import com.changhong.yinxiang.music.MusicEditServer;
@@ -94,7 +95,8 @@ public class AlarmMainActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				
+				Intent intent=new Intent(AlarmMainActivity.this,DeleteAlarmActivity.class);
+				startActivity(intent);
 			}
 		});
 		
