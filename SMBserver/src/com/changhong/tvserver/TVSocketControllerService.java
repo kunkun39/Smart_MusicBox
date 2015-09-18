@@ -232,10 +232,10 @@ public class TVSocketControllerService extends Service {
 						} else if (msg1.equals("key:music")) {
 							Log.e(TAG, "key:music");
 							t.vkey_input(0x190, 1);
-						}else if (msg1.equals("key:xiami")) {
-							//启动虾米音乐
+						} else if (msg1.equals("key:xiami")) {
+							// 启动虾米音乐
 							Log.e(TAG, "key:xiami");
-//							t.vkey_input(0x190, 1);
+							// t.vkey_input(0x190, 1);
 						}
 						// 选择输入源部�?
 						else if (msg1.equals("source:av1")) {
@@ -458,18 +458,18 @@ public class TVSocketControllerService extends Service {
 						}
 						// 增加文件编辑
 						else if (msg1.contains("fileEdit")) {
-							 
+
 							handleFileEditMsg(msg1);
-							 
+
 							// 获取闹铃设置信息
 						} else if (msg1.startsWith("getAlarmMsg:")) {
-							Log.i("mmmm", TAG +":"+ msg1);
+							Log.i("mmmm", TAG + ":" + msg1);
 							handleAlarm(msg1);
 						}
 						break;
 
 					default:
-						
+
 						break;
 					}
 				} catch (Exception e) {
@@ -782,18 +782,21 @@ public class TVSocketControllerService extends Service {
 
 			String editType = files.get(0);
 			String parameter1 = files.get(1);
-			String parameter2= files.get(2);
-		
-			if(editType.equals("copyToYinXiang") || editType.equals("clockRing") ){
-				  
-				FileDowLoadTask.creatFileDownLoad(this).startDownLoad(editType, parameter2);		
-				
-			}else{	
-				
-					if(null == mMusicEdit){
-						mMusicEdit=new MusicEdit();
-					}
-			       mMusicEdit.doFileEdit(this, clientIP, editType, parameter1,parameter2);
+			String parameter2 = files.get(2);
+
+			if (editType.equals("copyToYinXiang")
+					|| editType.equals("clockRing")) {
+
+				FileDowLoadTask.creatFileDownLoad(this).startDownLoad(editType,
+						parameter2);
+
+			} else {
+
+				if (null == mMusicEdit) {
+					mMusicEdit = new MusicEdit();
+				}
+				mMusicEdit.doFileEdit(this, clientIP, editType, parameter1,
+						parameter2);
 			}
 		} else {
 			Log.e(TAG, "no picture url");
@@ -933,38 +936,41 @@ public class TVSocketControllerService extends Service {
 		startActivity(intent);
 	}
 
-	//处理搜索消息
+	// 处理搜索消息
 	private void handleSearchMsg(String str) {
 		String[] keys = StringUtils.delimitedListToStringArray(str, "|");
 		if (keys.length != 2) {
 			return;
-		}	
-		//文字搜索，去掉类型
-		String[]  tokens=StringUtils.delimitedListToStringArray(keys[1], ";");
-		String searchContent=(2==tokens.length)?tokens[1]:tokens[0];
-		
-		if (keys[1].contains("music") || keys[1].contains("音乐")|| keys[1].contains("歌曲")) {
-			String musickey=searchContent.replace("音乐", "");
-			musickey=musickey.replace("歌曲", "");
-			boolean flag=Commonmethod.isActivityForeground(this, "com.changhong.tvserver.search.SearchActivity");
+		}
+		// 文字搜索，去掉类型
+		String[] tokens = StringUtils.delimitedListToStringArray(keys[1], ";");
+		String searchContent = (2 == tokens.length) ? tokens[1] : tokens[0];
+
+		if (keys[1].contains("music") || keys[1].contains("音乐")
+				|| keys[1].contains("歌曲")) {
+			String musickey = searchContent.replace("音乐", "");
+			musickey = musickey.replace("歌曲", "");
+			boolean flag = Commonmethod.isActivityForeground(this,
+					"com.changhong.tvserver.search.SearchActivity");
 			if (flag) {
 				Intent intent = new Intent();
 				intent.putExtra(SearchActivity.keyWordsName, musickey);
 				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 				intent.setClass(this, SearchActivity.class);
 				startActivity(intent);
-			}else {
-				Message msg=new Message();
-				msg.what=1;
-				msg.obj=musickey;
+			} else {
+				Message msg = new Message();
+				msg.what = 1;
+				msg.obj = musickey;
 				SearchActivity.handler.sendMessage(msg);
 			}
-		} else {			
-			  Intent intent = new Intent();
-			  intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK); 
-			  intent.setClass(getApplicationContext(),com.changhong.tvserver.search.MallListActivity.class);
-			  intent.putExtra("command", "movie&tv:"+searchContent);
-			 startActivity(intent);
+		} else {
+			Intent intent = new Intent();
+			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			intent.setClass(getApplicationContext(),
+					com.changhong.tvserver.search.MallListActivity.class);
+			intent.putExtra("command", "movie&tv:" + searchContent);
+			startActivity(intent);
 		}
 	}
 
@@ -1015,10 +1021,12 @@ public class TVSocketControllerService extends Service {
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		// TODO Auto-generated method stub
 
+		// if(!(null==intent)){
 		int i = intent.getIntExtra("message", 0);
 		if (1 == i) {
 			initFM();
 		}
+		// }
 		return super.onStartCommand(intent, flags, startId);
 	}
 
@@ -1031,7 +1039,8 @@ public class TVSocketControllerService extends Service {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			String action = intent.getAction();
-			if (action	.equals(ClientOnLineMonitorService.ACTION_AUTOCTRL_COMMAND)) {
+			if (action
+					.equals(ClientOnLineMonitorService.ACTION_AUTOCTRL_COMMAND)) {
 				msg1 = intent.getStringExtra("cmd");
 				Log.i(TAG, "autoCtrlCommand is " + msg1);
 				handler.sendEmptyMessage(1);

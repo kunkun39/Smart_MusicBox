@@ -17,7 +17,9 @@
 package com.changhong.tvserver.alarm;
 
 import java.text.DateFormatSymbols;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -166,6 +168,96 @@ public final class Alarm implements Parcelable {
     public String     label;//闹钟的名字
     public Uri        alert;//用户设置的闹铃的地址
     public boolean    silent;
+    public ArrayList<MusicBean> musicBean;
+    
+    public ArrayList<MusicBean> getMusicBean() {
+		return musicBean;
+	}
+
+	public void setMusicBean(ArrayList<MusicBean> musicBean) {
+		this.musicBean = musicBean;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+
+	public int getHour() {
+		return hour;
+	}
+
+	public void setHour(int hour) {
+		this.hour = hour;
+	}
+
+	public int getMinutes() {
+		return minutes;
+	}
+
+	public void setMinutes(int minutes) {
+		this.minutes = minutes;
+	}
+
+	public DaysOfWeek getDaysOfWeek() {
+		return daysOfWeek;
+	}
+
+	public void setDaysOfWeek(int daysOfWeek) {
+		this.daysOfWeek = new DaysOfWeek(daysOfWeek);
+	}
+
+	public long getTime() {
+		return time;
+	}
+
+	public void setTime(long time) {
+		this.time = time;
+	}
+
+	public boolean isVibrate() {
+		return vibrate;
+	}
+
+	public void setVibrate(boolean vibrate) {
+		this.vibrate = vibrate;
+	}
+
+	public String getLabel() {
+		return label;
+	}
+
+	public void setLabel(String label) {
+		this.label = label;
+	}
+
+	public Uri getAlert() {
+		return alert;
+	}
+
+	public void setAlert(Uri alert) {
+		this.alert = alert;
+	}
+
+	public boolean isSilent() {
+		return silent;
+	}
+
+	public void setSilent(boolean silent) {
+		this.silent = silent;
+	}
+
 
     public Alarm(Cursor c) {
         id = c.getInt(Columns.ALARM_ID_INDEX);
@@ -216,6 +308,7 @@ public final class Alarm implements Parcelable {
         minutes = c.get(Calendar.MINUTE);
         vibrate = true;
         daysOfWeek = new DaysOfWeek(0);
+        musicBean=new ArrayList<MusicBean>();
         alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
     }
 

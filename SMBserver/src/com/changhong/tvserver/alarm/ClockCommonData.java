@@ -9,6 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -22,20 +23,23 @@ public class ClockCommonData {
 
 	public static ClockCommonData myData;
 	private Cursor clockCursor;
-	private List<Alarm> alarms = null;
-	
-	/**
-     * The content:// 为这个表定义一个共享的Url
-     */
-    public static final Uri MUSIC_URL =
-            Uri.parse("content://com.changhong.provider.musicprovider/musics");
+	private ArrayList<Alarm> alarms = null;
 
-    public static final String[] MUSIC_QUERY_COLUMNS = {
-        "mId","id","title","album","duration","size","artist" ,"url"};
-    
-    /*Default sort order*/  
-    public static final String DEFAULT_SORT_ORDER = "_id asc";  
-    
+	private AlarmProvider alarmProvider;
+	
+
+	/**
+	 * The content:// 为这个表定义一个共享的Url
+	 */
+	public static final Uri MUSIC_URL = Uri
+			.parse("content://com.changhong.provider.musicprovider/musics");
+
+	public static final String[] MUSIC_QUERY_COLUMNS = { "mId", "id", "title",
+			"album", "duration", "size", "artist", "url" };
+
+	/* Default sort order */
+	public static final String DEFAULT_SORT_ORDER = "_id asc";
+
 	public static ClockCommonData getInstance() {
 		if (null == myData) {
 			myData = new ClockCommonData();
@@ -43,25 +47,31 @@ public class ClockCommonData {
 		return myData;
 	}
 
-	//0位不处理，1位为操作类型，2位客户端的IP，3位
+	// 0位不处理，1位为操作类型，2位客户端的IP，3位
 	public void dealMsg(String[] keys) {
+
+		if (null == alarmProvider) {
+			alarmProvider = new AlarmProvider();
+		}
+
 		if (keys[1].equals("get")) {
 			refreshAlarmsData();
-			String alarmInfor=formatData();
-			
+			String alarmInfor = formatData();
+
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put(Configure.MSG_SEND, alarmInfor);
 			params.put(Configure.IP_ADD, keys[2]);
-			
-			FileEditManager.getInstance().communicationWithClient(null, Configure.ACTION_SOCKET_COMMUNICATION, params);
-			
+
+			FileEditManager.getInstance().communicationWithClient(null,
+					Configure.ACTION_SOCKET_COMMUNICATION, params);
+
 			Log.i("mmmm", "alarms" + alarms);
 		} else if (keys[1].equals("delete")) {
 
 		} else if (keys[1].equals("insert")) {
 
 		} else if (keys[1].equals("update")) {
-
+			updateAlarm(keys);
 		}
 	}
 
@@ -73,26 +83,34 @@ public class ClockCommonData {
 
 	// 根据闹铃ID获取音乐信息
 	public List<MusicBean> getMusics(int id) {
-		ContentResolver contentResolver=MyApplication.getContext().getContentResolver();
-		Cursor musicCursor=contentResolver.query(MUSIC_URL, null, "mId=?",new String[] { String.valueOf(id) }, DEFAULT_SORT_ORDER);
-		List<MusicBean> musicBeans=new ArrayList<MusicBean>();
-		
-//		 while (musicCursor.moveToNext()) {
-//				String nameString=musicCursor.getString(musicCursor.getColumnIndex("title"));
-//				Log.i("mmmm", id+"="+nameString);
-//				
-//				String nameString1=musicCursor.getString(musicCursor.getColumnIndex("url"));
-//				Log.i("mmmm", id+"="+nameString1);
-//			}
-		while(musicCursor.moveToNext()){
-			MusicBean bean=new MusicBean();
+		ContentResolver contentResolver = MyApplication.getContext()
+				.getContentResolver();
+		Cursor musicCursor = contentResolver.query(MUSIC_URL, null, "mId=?",
+				new String[] { String.valueOf(id) }, DEFAULT_SORT_ORDER);
+		List<MusicBean> musicBeans = new ArrayList<MusicBean>();
+
+		// while (musicCursor.moveToNext()) {
+		// String
+		// nameString=musicCursor.getString(musicCursor.getColumnIndex("title"));
+		// Log.i("mmmm", id+"="+nameString);
+		//
+		// String
+		// nameString1=musicCursor.getString(musicCursor.getColumnIndex("url"));
+		// Log.i("mmmm", id+"="+nameString1);
+		// }
+		while (musicCursor.moveToNext()) {
+			MusicBean bean = new MusicBean();
 			bean.setmId(musicCursor.getInt(musicCursor.getColumnIndex("mId")));
 			bean.setId(musicCursor.getInt(musicCursor.getColumnIndex("id")));
-			bean.setTitle(musicCursor.getString(musicCursor.getColumnIndex("title")));
-			bean.setAlbum(musicCursor.getString(musicCursor.getColumnIndex("album")));
-			bean.setDuration(musicCursor.getInt(musicCursor.getColumnIndex("duration")));
+			bean.setTitle(musicCursor.getString(musicCursor
+					.getColumnIndex("title")));
+			bean.setAlbum(musicCursor.getString(musicCursor
+					.getColumnIndex("album")));
+			bean.setDuration(musicCursor.getInt(musicCursor
+					.getColumnIndex("duration")));
 			bean.setSize(musicCursor.getInt(musicCursor.getColumnIndex("size")));
-			bean.setArtist(musicCursor.getString(musicCursor.getColumnIndex("artist")));
+			bean.setArtist(musicCursor.getString(musicCursor
+					.getColumnIndex("artist")));
 			bean.setUrl(musicCursor.getString(musicCursor.getColumnIndex("url")));
 			musicBeans.add(bean);
 		}
@@ -103,7 +121,7 @@ public class ClockCommonData {
 	// 获取闹铃基本信息
 	private void refreshAlarmsData() {
 		// TODO Auto-generated method stub
-		clockCursor = MyApplication.getContext().getContentResolver().query(Alarm.Columns.CONTENT_URI,
+		clockCursor = alarmProvider.query(Alarm.Columns.CONTENT_URI,
 				Alarm.Columns.ALARM_QUERY_COLUMNS, null, null,
 				Alarm.Columns.DEFAULT_SORT_ORDER);
 		alarms = new ArrayList<Alarm>();
@@ -120,9 +138,10 @@ public class ClockCommonData {
 				alarms.add(alarm);
 			}
 		}
+		clockCursor.close();
 	}
 
-	// 将获取到的数据打包成json
+	// 将获取到的数据打包成json，音乐是从CP中解析不是alarm里解析的，方法有区别。
 	private String formatData() {
 
 		JSONObject json = new JSONObject();
@@ -148,7 +167,7 @@ public class ClockCommonData {
 					// 打包音乐信息
 					JSONArray musics = new JSONArray();
 
-					List<MusicBean> musicBeans =getMusics(alarm.id);
+					List<MusicBean> musicBeans = getMusics(alarm.id);
 					for (int j = 0; j < musicBeans.size(); j++) {
 						JSONObject music = new JSONObject();
 						MusicBean musicBean = musicBeans.get(j);
@@ -163,8 +182,8 @@ public class ClockCommonData {
 						musics.put(music);
 					}
 					member.put("musics", musics);
-					
-					//将组装好的闹铃放进数组里
+
+					// 将组装好的闹铃放进数组里
 					alarmMembers.put(member);
 				}
 				json.put("alarms", alarmMembers);
@@ -175,5 +194,29 @@ public class ClockCommonData {
 		}
 
 		return json.toString();
+	}
+	
+	private void updateAlarm(String keys[]){
+		if(4==keys.length){
+		long id=Integer.parseInt(keys[2]);
+		String content=keys[3];
+		Alarm alarm=ResolveAlarmInfor.jsonToAlarm(content);
+		
+		ContentValues values=new ContentValues();
+		values.put(Alarm.Columns._ID, alarm.id);
+		values.put(Alarm.Columns.ENABLED, alarm.enabled);
+		values.put(Alarm.Columns.HOUR, alarm.hour);
+		values.put(Alarm.Columns.MINUTES, alarm.minutes);
+		values.put(Alarm.Columns.DAYS_OF_WEEK, alarm.daysOfWeek.getCoded());
+		values.put(Alarm.Columns.ALARM_TIME, alarm.time);
+		values.put(Alarm.Columns.VIBRATE, alarm.vibrate);
+		values.put(Alarm.Columns.MESSAGE, alarm.label);
+		values.put(Alarm.Columns.ALERT, alarm.alert.toString());
+		
+		alarmProvider.update(MUSIC_URL, values, Alarm.Columns._ID+"="  +id, null);
+		
+		ArrayList<MusicBean> musics=new ArrayList<MusicBean>();
+		musics=alarm.getMusicBean();
+		}
 	}
 }
