@@ -59,7 +59,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:text="@string/file_download_result" 
-        android:textSize="26sp"
+        android:textSize="20sp"
         android:visibility="gone" />
 
 </RelativeLayout>
