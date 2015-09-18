@@ -41,8 +41,16 @@ public class MusicEdit {
 
 		if (editType.equals(Configure.EDIT_RENAME)) {
 			doResult = mFileUtil.reNameFile(fileUrl, param);
+			//更新新文件
+			String newFile=mFileUtil.getNewFilePath(fileUrl, param);
+            mFileEditManager.updateMediaStoreAudio(context,fileUrl,newFile);
+            
+  
 		} else if (editType.equals(Configure.EDIT_REMOVE)) {
 			doResult = mFileUtil.removeFileFromSDCard(fileUrl);
+			 //更新文件
+            mFileEditManager.updateMediaStoreAudio(context, fileUrl);
+            
 		} else if (editType.equals(Configure.EDIT_REQUEST_MUSICS)) {
 			// 获取媒体库文件
 			MusicProvider provider = new MusicProvider(context);
@@ -57,13 +65,8 @@ public class MusicEdit {
 			params.put(Configure.MSG_SEND, jsonStr);
 			params.put(Configure.IP_ADD, clientIp);
 			params.put(Configure.EDIT_TYPE, editType);
-			mFileEditManager.communicationWithClient(null,	Configure.ACTION_SOCKET_COMMUNICATION, params);
+			mFileEditManager.communicationWithClient(null,	Configure.ACTION_SOCKET_COMMUNICATION, params);	
 			
-            //文件修改成功，更新媒体库文件
-			if(doResult.equals(Configure.ACTION_SUCCESS)){
-				      String newFile=mFileUtil.getNewFilePath(fileUrl, param);
-			         upDateMediaStore(context,editType,fileUrl,newFile);
-            }
 		}
 	}
 

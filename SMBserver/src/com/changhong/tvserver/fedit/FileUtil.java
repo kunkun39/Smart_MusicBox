@@ -8,6 +8,8 @@ import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.Comparator;
 
+import com.changhong.tvserver.utils.StringUtils;
+
 import android.content.Context;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
@@ -31,7 +33,7 @@ public class FileUtil {
 	public static final String VEDIO_PATH = "video";
 
 	// 文件读取Buffer size
-	private static final int BUFFER_SIZE = 1024 * 1024; // 1M
+	private static final int BUFFER_SIZE = 1024 * 50; // 50K
 
 	public final static int MAX_FILE_ITEM_SIZE = 10;
 
@@ -160,7 +162,7 @@ public class FileUtil {
 			file.delete();
 			reValue = true;
 		}
-		return reValue?Configure.ACTION_SUCCESS:Configure.ACTION_FAILED;
+		return reValue ? Configure.ACTION_SUCCESS : Configure.ACTION_FAILED;
 	}
 
 	/**
@@ -180,7 +182,7 @@ public class FileUtil {
 			File newFile = new File(newFilePath);
 			reValue = file.renameTo(newFile);
 		}
-		return reValue?Configure.ACTION_SUCCESS:Configure.ACTION_FAILED;
+		return reValue ? Configure.ACTION_SUCCESS : Configure.ACTION_FAILED;
 	}
 
 	/**
@@ -192,14 +194,16 @@ public class FileUtil {
 	 */
 	public String getNewFilePath(String filePath, String newName) {
 		String newPath = "";
-		
-		//参数有效性检查
-		if(null == filePath || filePath.length() <=0 )return newPath;
-		if(null == newName || newName.length() <=0 )return newPath;
 
-		//获取文件文件名，并替换。
+		// 参数有效性检查
+		if (!StringUtils.hasLength(filePath))
+			return newPath;
+		if (!StringUtils.hasLength(newName))
+			return newPath;
+
+		// 获取文件文件名，并替换。
 		int startIndex = filePath.lastIndexOf(File.separator);
-		int endIndex = filePath.indexOf(".");
+		int endIndex = filePath.lastIndexOf(".");
 		if (startIndex > 0 && endIndex > (startIndex + 1)) {
 			String oldName = filePath.substring(startIndex + 1, endIndex);
 			if (null != oldName && oldName.length() > 0) {
@@ -250,8 +254,6 @@ public class FileUtil {
 		}
 	}
 
-	
-
 	// filename是我们的文件全名，包括后缀哦
 	public void updateGallery(Context context, String filename) {
 		MediaScannerConnection.scanFile(context, new String[] { filename },
@@ -263,19 +265,42 @@ public class FileUtil {
 						Log.i("ExternalStorage", "-> uri=" + uri);
 					}
 				});
+	
 	}
 	
+	//重新扫描媒体文件目录、music
+	public void updateGallery(Context context,String oldFile, String newFile) {
+		MediaScannerConnection.scanFile(context, new String[] { oldFile, newFile},
+				null, new MediaScannerConnection.OnScanCompletedListener() {
+					@Override
+					public void onScanCompleted(String path, Uri uri) {
+						// TODO 自动生成的方法存根
+						Log.i("ExternalStorage", "Scanned " + path + ":");
+						Log.i("ExternalStorage", "-> uri=" + uri);
+					}
+				});
 	
-	public String getFileName(String filePath){
-		String fileName="";
-	    int startIndex=filePath.lastIndexOf(File.separator);
-	    int endIndex=filePath.lastIndexOf(".");	
-	    if(startIndex>0  && endIndex>(startIndex+1)){
-			fileName=filePath.substring(startIndex+1);
-		}		
+	}
+
+	public String getFileName(String filePath) {
+		String fileName = "";
+		int startIndex = filePath.lastIndexOf(File.separator);
+		if (startIndex > 0) {
+			fileName = filePath.substring(startIndex + 1);
+		}
 		return fileName;
 	}
 	
+	public String convertHttpURLToLocalFile(String fileUrl) {
+		
+		String localFile=getSDCARDPATH() + MUSIC_PATH+File.separator;	
+		String fileName = getFileName(fileUrl);
+		localFile=localFile+fileName;
+		return localFile;
+	}
+	
+	
+
 	static class FileComparator implements Comparator<File> {
 		@Override
 		public int compare(File f1, File f2) {
@@ -286,5 +311,4 @@ public class FileUtil {
 	}
 
 	
-
 }

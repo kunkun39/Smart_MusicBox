@@ -137,9 +137,11 @@ public class FileEditManager {
 										}else{
 											result=fileName+",文件超大";
 										}
+										
+										//获取本地媒体文件路径：
 										bundle.putString(Configure.EDIT_TYPE, editType);
 										bundle.putString(Configure.MSG_RESPOND, result);
-										bundle.putString(Configure.FILE_URL, fileUrl);
+										bundle.putString(Configure.FILE_URL, mFileUtil.convertHttpURLToLocalFile(fileUrl));
 										respondMsg.setData(bundle);
 										respondMsg.what=2;
 										mParentHandler.sendMessage(respondMsg);
@@ -220,6 +222,10 @@ public class FileEditManager {
 	
 	public void updateMediaStoreAudio(Context context, String fileName){
 		mFileUtil.updateGallery(context, fileName);
+	}
+	
+	public void updateMediaStoreAudio(Context context,String oldFile,String newFile){
+		mFileUtil.updateGallery(context,oldFile,newFile);
 	}
 
 	// 销毁线程池,该方法保证在所有任务都完成的情况下才销毁所有线程，否则等待任务完成才销毁
