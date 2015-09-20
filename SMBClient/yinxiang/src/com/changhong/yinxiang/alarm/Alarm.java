@@ -56,14 +56,14 @@ public final class Alarm {
     public Uri        alert;//用户设置的闹铃的地址
     public boolean    silent;
 
-	public List<MusicBean> musicBean;
+	public ArrayList<MusicBean> musicBean;
 	
 
-    public List<MusicBean> getMusicBean() {
+    public ArrayList<MusicBean> getMusicBean() {
 		return musicBean;
 	}
 
-	public void setMusicBean(List<MusicBean> musicBean) {
+	public void setMusicBean(ArrayList<MusicBean> musicBean) {
 		this.musicBean = musicBean;
 	}
 

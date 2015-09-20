@@ -53,7 +53,7 @@ public class SetAlarmActvity extends BaseActivity {
 	private WeekButton myWBList[] = null;
 
 	private List<MusicBean> musicListAll = new ArrayList<MusicBean>();
-	private List<MusicBean> musicListInit = new ArrayList<MusicBean>();
+	private ArrayList<MusicBean> musicListInit = new ArrayList<MusicBean>();
 	private boolean currentState[];
 	private int updateContent[];// 记录操作过的数据。0未操作，非0操作过。
 

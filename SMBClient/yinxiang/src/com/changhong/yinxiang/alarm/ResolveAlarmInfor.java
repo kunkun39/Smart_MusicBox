@@ -57,7 +57,7 @@ public class ResolveAlarmInfor {
 					alarm.setSilent(alarmJson.getBoolean("silent"));
 
 					JSONArray musicsJA = alarmJson.getJSONArray("musics");
-					List<MusicBean> musicsList = new ArrayList<MusicBean>();
+					ArrayList<MusicBean> musicsList = new ArrayList<MusicBean>();
 					for (int j = 0; j < musicsJA.length(); j++) {
 
 						JSONObject musicsJson = (JSONObject) musicsJA.get(j);
@@ -255,7 +255,7 @@ public class ResolveAlarmInfor {
 			alarm.setSilent(json.getBoolean("silent"));
 
 			JSONArray musicsJA = json.getJSONArray("musics");
-			List<MusicBean> musicsList = new ArrayList<MusicBean>();
+			ArrayList<MusicBean> musicsList = new ArrayList<MusicBean>();
 			for (int j = 0; j < musicsJA.length(); j++) {
 
 				JSONObject musicsJson = (JSONObject) musicsJA.get(j);
