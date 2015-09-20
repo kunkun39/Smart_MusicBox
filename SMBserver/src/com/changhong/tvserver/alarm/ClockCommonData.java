@@ -26,19 +26,7 @@ public class ClockCommonData {
 	private ArrayList<Alarm> alarms = null;
 
 	private AlarmProvider alarmProvider;
-	
-
-	/**
-	 * The content:// 为这个表定义一个共享的Url
-	 */
-	public static final Uri MUSIC_URL = Uri
-			.parse("content://com.changhong.provider.musicprovider/musics");
-
-	public static final String[] MUSIC_QUERY_COLUMNS = { "mId", "id", "title",
-			"album", "duration", "size", "artist", "url" };
-
-	/* Default sort order */
-	public static final String DEFAULT_SORT_ORDER = "_id asc";
+	private MusicProvider musicProvider;
 
 	public static ClockCommonData getInstance() {
 		if (null == myData) {
@@ -52,6 +40,9 @@ public class ClockCommonData {
 
 		if (null == alarmProvider) {
 			alarmProvider = new AlarmProvider();
+		}
+		if (null == musicProvider) {
+			musicProvider = new MusicProvider();
 		}
 
 		if (keys[1].equals("get")) {
@@ -67,9 +58,9 @@ public class ClockCommonData {
 
 			Log.i("mmmm", "alarms" + alarms);
 		} else if (keys[1].equals("delete")) {
-
+			deleteAlarm(keys);
 		} else if (keys[1].equals("insert")) {
-
+			insertAlarm(keys);
 		} else if (keys[1].equals("update")) {
 			updateAlarm(keys);
 		}
@@ -83,10 +74,10 @@ public class ClockCommonData {
 
 	// 根据闹铃ID获取音乐信息
 	public List<MusicBean> getMusics(int id) {
-		ContentResolver contentResolver = MyApplication.getContext()
-				.getContentResolver();
-		Cursor musicCursor = contentResolver.query(MUSIC_URL, null, "mId=?",
-				new String[] { String.valueOf(id) }, DEFAULT_SORT_ORDER);
+
+		Cursor musicCursor = musicProvider.query(MusicBean.Columns.MUSIC_URL, null,
+				"mId=?", new String[] { String.valueOf(id) },
+				MusicBean.Columns.DEFAULT_SORT_ORDER);
 		List<MusicBean> musicBeans = new ArrayList<MusicBean>();
 
 		// while (musicCursor.moveToNext()) {
@@ -195,14 +186,52 @@ public class ClockCommonData {
 
 		return json.toString();
 	}
-	
-	private void updateAlarm(String keys[]){
-		if(4==keys.length){
-		long id=Integer.parseInt(keys[2]);
-		String content=keys[3];
-		Alarm alarm=ResolveAlarmInfor.jsonToAlarm(content);
-		
-		ContentValues values=new ContentValues();
+
+	/*
+	 * 
+	 * 对数据库的增删改查
+	 */
+	private void updateAlarm(String keys[]) {
+		if (4 == keys.length) {
+			int id = Integer.parseInt(keys[2]);
+			String content = keys[3];
+			Alarm alarm = ResolveAlarmInfor.jsonToAlarm(content);
+
+			ContentValues alarmValues = formAlarm(alarm);
+			// alarmProvider.update(Alarm.Columns.CONTENT_URI, values,
+			// Alarm.Columns._ID+"=" +id, null);
+			alarmProvider.insert(Alarm.Columns.CONTENT_URI, alarmValues);
+
+			formMusicValues("update", alarm);
+		}
+	}
+
+	private void deleteAlarm(String keys[]) {
+		if (keys.length > 2) {
+
+			for (int i = 2; i < keys.length; i++) {
+				int id = Integer.parseInt(keys[i]);
+				alarmProvider.delete(Alarm.Columns.CONTENT_URI,
+						Alarm.Columns._ID + "=" + id, null);
+				musicProvider.delete(MusicBean.Columns.MUSIC_URL, MusicBean.Columns.MID + "=" + id, null);
+
+			}
+		}
+	}
+
+	private void insertAlarm(String keys[]) {
+		if (3 == keys.length) {
+			String content = keys[2];
+			Alarm alarm = ResolveAlarmInfor.jsonToAlarm(content);
+
+			ContentValues values = formAlarm(alarm);
+			alarmProvider.insert(Alarm.Columns.CONTENT_URI, values);
+			formMusicValues("insert", alarm);
+		}
+	}
+
+	private ContentValues formAlarm(Alarm alarm) {
+		ContentValues values = new ContentValues();
 		values.put(Alarm.Columns._ID, alarm.id);
 		values.put(Alarm.Columns.ENABLED, alarm.enabled);
 		values.put(Alarm.Columns.HOUR, alarm.hour);
@@ -212,11 +241,33 @@ public class ClockCommonData {
 		values.put(Alarm.Columns.VIBRATE, alarm.vibrate);
 		values.put(Alarm.Columns.MESSAGE, alarm.label);
 		values.put(Alarm.Columns.ALERT, alarm.alert.toString());
-		
-		alarmProvider.update(MUSIC_URL, values, Alarm.Columns._ID+"="  +id, null);
-		
-		ArrayList<MusicBean> musics=new ArrayList<MusicBean>();
-		musics=alarm.getMusicBean();
-		}
+		return values;
 	}
+
+	private void formMusicValues(String str, Alarm alarm) {
+			ArrayList<MusicBean> musics = new ArrayList<MusicBean>();
+			musics = alarm.getMusicBean();
+			for (int i = 0; i < musics.size(); i++) {
+				MusicBean music=musics.get(i);
+				
+				ContentValues values = new ContentValues();
+				values.put(MusicBean.Columns.MID, music.getmId());
+				values.put(MusicBean.Columns.ID, music.getId());
+				values.put(MusicBean.Columns.TITLE, music.getTitle());
+				values.put(MusicBean.Columns.ALBUM, music.getAlbum());
+				values.put(MusicBean.Columns.DURATION, music.getDuration());
+				values.put(MusicBean.Columns.SIZE, music.getSize());
+				values.put(MusicBean.Columns.ARTIST, music.getArtist());
+				values.put(MusicBean.Columns.URL, music.getUrl());
+				if (str.equals("update")) {
+					//处理音乐，采用添加和删除的方式。
+					
+					
+				} else if (str.equals("insert")) {
+					musicProvider.insert(MusicBean.Columns.MUSIC_URL, values);
+				}
+			}
+		}
+	
+
 }

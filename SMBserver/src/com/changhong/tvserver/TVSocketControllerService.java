@@ -627,7 +627,7 @@ public class TVSocketControllerService extends Service {
 			try {
 				dgSocket = new DatagramSocket(9002);
 				DatagramPacket dgPacket = null;
-
+				Log.i("mmmm", "TVSocketControllerService>get_command");
 				while (true) {
 					try {
 						byte[] by = new byte[1024];

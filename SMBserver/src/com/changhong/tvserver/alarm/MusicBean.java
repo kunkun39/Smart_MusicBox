@@ -2,6 +2,9 @@ package com.changhong.tvserver.alarm;
 
 import java.io.Serializable;
 
+import android.net.Uri;
+import android.provider.BaseColumns;
+
 /**
  * 定义的音乐数据的子类，用来保存每首歌相应的信息。
  * 
@@ -17,9 +20,8 @@ public class MusicBean implements Serializable {
 		this.mId = mId;
 	}
 
-
 	private static final long serialVersionUID = 1L;
-	/*这是标识闹钟的id,代表这首歌是属于id为mid的闹钟的音乐*/
+	/* 这是标识闹钟的id,代表这首歌是属于id为mid的闹钟的音乐 */
 	private int mId;
 	/* 标识每首音乐的唯一id */
 	private long id;
@@ -92,9 +94,37 @@ public class MusicBean implements Serializable {
 		this.url = url;
 	}
 
-	
-	public MusicBean()
-	{
-		
+	public MusicBean() {
+
+	}
+
+	public static class Columns implements BaseColumns {
+		/**
+		 * The content:// 为这个表定义一个共享的Url
+		 */
+		public static final Uri MUSIC_URL = Uri
+				.parse("content://com.changhong.provider.musicprovider/musics");
+		private static final long serialVersionUID = 1L;
+
+		public static final String MID = "mId";
+
+		public static final String ID = "id";
+
+		public static final String TITLE = "title";
+
+		public static final String ALBUM = "album";
+
+		public static final String DURATION = "duration";
+
+		public static final String SIZE = "size";
+
+		public static final String ARTIST = "artist";
+
+		public static final String URL = "url";
+
+		 public static final String[] MUSIC_QUERY_COLUMNS = { "mId", "id",
+		 "title", "album", "duration", "size", "artist", "url" };
+
+		public static final String DEFAULT_SORT_ORDER = "_id asc";
 	}
 }

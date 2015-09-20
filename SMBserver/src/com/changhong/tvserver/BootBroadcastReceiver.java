@@ -16,7 +16,7 @@ public class BootBroadcastReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.e(TAG, "android.intent.action.BOOT_COMPLETED");
-        Intent mIntent = new Intent(context, TVSocketControllerService.class);
+        Intent mIntent = new Intent(MyApplication.getContext(), TVSocketControllerService.class);
         mIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         mIntent.putExtra("message", 1);
         context.startService(mIntent);
