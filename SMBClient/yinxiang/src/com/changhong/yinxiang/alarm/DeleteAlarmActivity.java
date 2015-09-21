@@ -55,12 +55,12 @@ public class DeleteAlarmActivity extends BaseActivity{
 				// TODO Auto-generated method stub
 				
 				ArrayList<Alarm> selectAlarm=AlarmDeleteAdapter.selectAlarm;
-				String data=null;
+				StringBuffer data=new StringBuffer();
 				if(selectAlarm.size()>0){
 					for(int i=0;i<selectAlarm.size();i++){
-						data=data+selectAlarm.get(i).getId()+"|";
+						data.append(selectAlarm.get(i).getId()+"|");
 					}
-					ClientSendCommandService.msg=Alarm.delete+data;
+					ClientSendCommandService.msg=Alarm.delete+data.toString();
 					ClientSendCommandService.handler.sendEmptyMessage(1);
 					
 				}

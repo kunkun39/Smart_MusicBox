@@ -65,7 +65,7 @@ public class ResolveAlarmInfor {
 						musicBean.setmId(musicsJson.getInt("mId"));
 						musicBean.setId(musicsJson.getLong("id"));
 						musicBean.setTitle(musicsJson.getString("title"));
-						musicBean.setAlbum(musicsJson.getString("album"));
+//						musicBean.setAlbum(musicsJson.getString("album"));
 						musicBean.setDuration(musicsJson.getInt("duration"));
 						musicBean.setSize(musicsJson.getLong("size"));
 						musicBean.setArtist(musicsJson.getString("artist"));

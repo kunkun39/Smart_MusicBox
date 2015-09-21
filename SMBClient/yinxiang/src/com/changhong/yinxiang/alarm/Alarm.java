@@ -29,7 +29,7 @@ import com.changhong.yinxiang.R;
 public final class Alarm {
 	
 	
-	public static final String add="getAlarmMsg:|add|";
+	public static final String insert="getAlarmMsg:|insert|";
 	public static final String delete="getAlarmMsg:|delete|";
 	public static final String update="getAlarmMsg:|update|";
 	public static final String get="getAlarmMsg:|get|";

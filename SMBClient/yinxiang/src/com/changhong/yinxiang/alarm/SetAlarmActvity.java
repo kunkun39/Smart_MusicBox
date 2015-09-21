@@ -58,8 +58,8 @@ public class SetAlarmActvity extends BaseActivity {
 	private int updateContent[];// 记录操作过的数据。0未操作，非0操作过。
 
 	private int curentId;// 设置该alarm的ID。
-	private int resultCode=0;//0为更改，1位新增
-	
+	private int resultCode = 0;// 0为更改，1位新增
+
 	private SendTCPData sendTCP = null;
 
 	// 进入设置界面后，先设置状态。
@@ -178,12 +178,12 @@ public class SetAlarmActvity extends BaseActivity {
 		int position = intent.getIntExtra("select", -1);
 		if (position < 0) {
 			state = State.add;
-			resultCode=1;
+			resultCode = 1;
 			intAddAlarm();
 
 		} else {
 			state = State.update;
-			resultCode=0;
+			resultCode = 0;
 			initUpdateAlarm(position);
 		}
 
@@ -227,8 +227,9 @@ public class SetAlarmActvity extends BaseActivity {
 
 	// 初始化进入添加流程
 	private void intAddAlarm() {
-		if(null==alarm){
-		alarm = new Alarm();}
+		if (null == alarm) {
+			alarm = new Alarm();
+		}
 		Calendar cal = Calendar.getInstance();
 		int hour = cal.get(Calendar.HOUR_OF_DAY);
 		int minute = cal.get(Calendar.MINUTE);
@@ -258,7 +259,7 @@ public class SetAlarmActvity extends BaseActivity {
 
 	// 进入添加流程
 	private void addAlarm() {
-		
+
 		int length = AlarmMainActivity.mAlarmList.size();
 		curentId = AlarmMainActivity.mAlarmList.get(length - 1).getId() + 1;
 
@@ -274,10 +275,12 @@ public class SetAlarmActvity extends BaseActivity {
 
 		ArrayList<MusicBean> musics = new ArrayList<MusicBean>();
 
-		for (int j = 0; j < currentState.length; j++) {
-			if (currentState[j]) {
-				musics.add(musicListAll.get(j));
-				musics.get(j).setmId(curentId);
+		if (currentState != null && currentState.length > 0) {
+			for (int j = 0; j < currentState.length; j++) {
+				if (currentState[j]) {
+					musics.add(musicListAll.get(j));
+					musics.get(j).setmId(curentId);
+				}
 			}
 		}
 		alarm.setMusicBean(musics);
@@ -380,7 +383,7 @@ public class SetAlarmActvity extends BaseActivity {
 			}
 			musicListInit = alarm.getMusicBean();
 			// 设置复选框初始选中状态
-			
+
 			updateContent = new int[musicListAll.size()];
 			for (int i = 0; i < currentState.length; i++) {
 				currentState[i] = false;
@@ -454,7 +457,7 @@ public class SetAlarmActvity extends BaseActivity {
 	// 回传数据给闹铃主界面，并且发送给音响。
 
 	private void dealResultData() {
-		String content=null;
+		String content = null;
 		Intent intent = new Intent();
 		String str = ResolveAlarmInfor.alarmToStr(alarm);
 		intent.putExtra("alarm", str);
@@ -463,21 +466,21 @@ public class SetAlarmActvity extends BaseActivity {
 		// 考虑是否用TCP发送数据回音响端???
 		switch (state) {
 		case update:
-			 ClientSendCommandService.msg = Alarm.update + curentId + "|" +str;
-//			content = Alarm.update + curentId + "|" + str;
+			ClientSendCommandService.msg = Alarm.update + curentId + "|" + str;
+			// content = Alarm.update + curentId + "|" + str;
 			break;
 		case add:
 
-			 ClientSendCommandService.msg = Alarm.add + str;
+			ClientSendCommandService.msg = Alarm.insert + str;
 			// ClientSendCommandService.handler.sendEmptyMessage(1);
-//			content = Alarm.update + curentId + "|" + str;
+			// content = Alarm.update + curentId + "|" + str;
 			break;
 		default:
 			break;
 		}
-//		if (content != null && ip != null) {
-//			sendTCP.addData(content, ip);
-//		}
+		// if (content != null && ip != null) {
+		// sendTCP.addData(content, ip);
+		// }
 		ClientSendCommandService.handler.sendEmptyMessage(1);
 	}
 

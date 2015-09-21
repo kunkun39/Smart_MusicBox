@@ -32,7 +32,7 @@ public class AlarmMainActivity extends BaseActivity {
 	private ListView alarmInfor;
 	private static AlarmAdapter adapter;
 	public static ArrayList<Alarm> mAlarmList = null;
-   private  MusicEditServer mMusicEditServer=null;
+	private MusicEditServer mMusicEditServer = null;
 	private static String action = "alarmInfor";
 	public static Handler handler = new Handler() {
 
@@ -42,17 +42,17 @@ public class AlarmMainActivity extends BaseActivity {
 			switch (msg.what) {
 			case YinXiangMusicViewActivity.SHOW_ACTION_RESULT:
 
-				Bundle bund=msg.getData();
+				Bundle bund = msg.getData();
 				String resAction = (String) bund.get("action");
 				if (resAction.equals(action)) {
-					String result =bund.getString("result");
-					Log.i("mmmm", "AlarmMainActivity-result="+result);
-					mAlarmList=ResolveAlarmInfor.strToList(result);
+					String result = bund.getString("result");
+					Log.i("mmmm", "AlarmMainActivity-result=" + result);
+					mAlarmList = ResolveAlarmInfor.strToList(result);
 					adapter.setData(mAlarmList);
 				}
 
 				break;
-				
+
 			}
 			super.handleMessage(msg);
 
@@ -70,14 +70,18 @@ public class AlarmMainActivity extends BaseActivity {
 	@Override
 	protected void initView() {
 		// TODO Auto-generated method stub
+		// 启动TCP接收线程
+		mMusicEditServer = MusicEditServer.creatFileEditServer();
+		mMusicEditServer.communicationWithServer(handler,
+				MusicUtils.ACTION_SOCKET_COMMUNICATION, action);
+		
 		setContentView(R.layout.alarm_main);
 		add = (Button) findViewById(R.id.add);
 		delete = (Button) findViewById(R.id.delete);
 		alarmInfor = (ListView) findViewById(R.id.alarm_info);
-		adapter=new AlarmAdapter(AlarmMainActivity.this);
+		adapter = new AlarmAdapter(AlarmMainActivity.this);
 		alarmInfor.setAdapter(adapter);
-		mMusicEditServer = MusicEditServer.creatFileEditServer();
-
+		
 	}
 
 	@Override
@@ -97,40 +101,35 @@ public class AlarmMainActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Intent intent=new Intent(AlarmMainActivity.this,DeleteAlarmActivity.class);
+				Intent intent = new Intent(AlarmMainActivity.this,
+						DeleteAlarmActivity.class);
 				startActivity(intent);
 			}
 		});
-		
-//		alarmInfor.setOnItemClickListener(new OnItemClickListener() {
-//
-//			@Override
-//			public void onItemClick(AdapterView<?> parent, View view,
-//					int position, long id) {
-//				// TODO Auto-generated method stub
-//				Intent intent=new Intent(AlarmMainActivity.this,SetAlarmActvity.class);
-//				intent.putExtra("select", position);
-//				startActivityForResult(intent, 0);
-//			}
-//		});
+
+		// alarmInfor.setOnItemClickListener(new OnItemClickListener() {
+		//
+		// @Override
+		// public void onItemClick(AdapterView<?> parent, View view,
+		// int position, long id) {
+		// // TODO Auto-generated method stub
+		// Intent intent=new
+		// Intent(AlarmMainActivity.this,SetAlarmActvity.class);
+		// intent.putExtra("select", position);
+		// startActivityForResult(intent, 0);
+		// }
+		// });
 		getAlarmMsg();
 	}
 
 	private void getAlarmMsg() {
-		
-		
-				
+
 		// 触发音响端数据发送
 		String ipString = NetworkUtils.getLocalHostIp();
 		ClientSendCommandService.msg = Alarm.get + ipString;
 		ClientSendCommandService.handler.sendEmptyMessage(1);
-		
-		// 启动TCP接收线程
-		mMusicEditServer.communicationWithServer(handler,
-								MusicUtils.ACTION_SOCKET_COMMUNICATION, action);
 
-		
-		Log.i("mmmm", "getAlarmMsg:"+ipString);
+		Log.i("mmmm", "getAlarmMsg:" + ipString);
 	}
 
 	private void startSetAlarm() {
@@ -138,31 +137,29 @@ public class AlarmMainActivity extends BaseActivity {
 				SetAlarmActvity.class);
 		startActivityForResult(intent, 1);
 	}
-	
-	
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// TODO Auto-generated method stub
-		if(data==null)
+		if (data == null)
 			return;
-		switch (requestCode){
+		switch (requestCode) {
 		case 0:
-		//更改闹铃信息后的处理
-			String str=data.getExtras().getString("alarm");
-			Alarm alarm=ResolveAlarmInfor.jsonToAlarm(str);
+			// 更改闹铃信息后的处理
+			String str = data.getExtras().getString("alarm");
+			Alarm alarm = ResolveAlarmInfor.jsonToAlarm(str);
 			adapter.update(alarm);
 			break;
-			
+
 		case 1:
-			//增加闹铃
-			String addStr=data.getExtras().getString("alarm");
-			Alarm addAlarm=ResolveAlarmInfor.jsonToAlarm(addStr);
+			// 增加闹铃
+			String addStr = data.getExtras().getString("alarm");
+			Alarm addAlarm = ResolveAlarmInfor.jsonToAlarm(addStr);
 			mAlarmList.add(addAlarm);
 			adapter.notifyDataSetChanged();
 			break;
 		}
-		
+
 	}
 
 	@Override
