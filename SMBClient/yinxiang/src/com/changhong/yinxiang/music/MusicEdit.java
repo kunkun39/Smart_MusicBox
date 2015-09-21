@@ -261,8 +261,8 @@ public class MusicEdit {
 	public void upDateMediaStoreFile(String fileUrl) {
 	   
 		if (fileUrl.toLowerCase().startsWith("http://") || fileUrl.toLowerCase().startsWith("https://")) {
-			String encodedUrl = Uri.encode(fileUrl,HttpDownloader.ALLOWED_URI_CHARS);
-			fileUrl=mFileUtil.convertHttpUrlToLocalFilePath(encodedUrl);
+			fileUrl=convertHttpURLToFileUrl(fileUrl);
+			fileUrl=mFileUtil.convertHttpUrlToLocalFilePath(fileUrl);
 		}
 	   mFileUtil.updateGallery(mContext, fileUrl);      
 	}
@@ -271,5 +271,21 @@ public class MusicEdit {
 	   mFileUtil.updateGallery(mContext, oldFile,newFile);
        
 	}
+	
+	
+	/**
+	 * 特殊字符还原
+	 * @param url  url字符串
+	 * @return
+	 */
+	public  String convertHttpURLToFileUrl(String url) {
+        if (null !=url && url.length()>0) {
+//            return url.replace("%", "%25").replace(" ", "%20").replace("+", "%2B").replace("#", "%23").replace("&", "%26").replace("=", "%3D").replace("?", "%3F").replace("^", "%5E");
+            return url.replace("%25", "%").replace("%20"," ").replace("%2B","+").replace( "%23","#").replace( "%26","&").replace("%3D","=").replace("%3F","?").replace("%5E","^");
+
+        }
+        return url;
+    }
+
 	
 }
