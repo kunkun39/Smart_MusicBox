@@ -53,12 +53,17 @@ public class HttpDownloader {
 		try {
 
 			Log.e("YDINFOR::", "-----------------------HttpURLConnection创建链接----------------------");
-			fileUri=fileUri.replace("12345", "8888"); 
+//			fileUri=fileUri.replace("12345", "12345/storage/emulated/0/");
 			conn = createConnection(fileUri);
 			int contentLength = conn.getContentLength();
+            int code= conn.getResponseCode() ;
+			if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
+				Log.e("YDINFOR::", "-----------------------HttpURLConnection.HTTP_OK----------------------");
+			}
+			Log.e("YDINFOR::", "-----------------------HttpURLConnection  end----------------------");
 
 			// 下载文件最大值限定=20M
-			if (contentLength <= MUTI_THREAD_SIZE_POINT) {
+//			if (contentLength <= MUTI_THREAD_SIZE_POINT) {
 				inputStream = conn.getInputStream();
 				FileUtil fileUtils = new FileUtil();
 				String fileName=fileUtils.getFileName(fileUri);
@@ -73,10 +78,12 @@ public class HttpDownloader {
 					}					
 					fileUtils.checkMaxFileItemExceedAndProcess(fileType);
 				}
-			}
+//			}
 		} catch (IOException e) {
 			result = MusicUtils.ACTION_FAILED;
 			e.printStackTrace();
+			Log.e("YDINFOR::", "-----------------------HttpURLConnection  end1212----------------------");
+
 		} finally {
 			try {
 
