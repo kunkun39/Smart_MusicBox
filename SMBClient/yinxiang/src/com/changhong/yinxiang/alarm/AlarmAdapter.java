@@ -116,7 +116,7 @@ public class AlarmAdapter extends BaseAdapter {
 			dataHolder = (DataHolder) convertView.getTag();
 		}
 		// 设置闹铃标签
-		Alarm alarm = mAlarmList.get(position);
+		final Alarm alarm = mAlarmList.get(position);
 		if (alarm.label != null && alarm.label.length() != 0) {
 			dataHolder.alarmLabel.setText(alarm.label);
 			dataHolder.alarmLabel.setVisibility(View.VISIBLE);
@@ -145,10 +145,12 @@ public class AlarmAdapter extends BaseAdapter {
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				// TODO Auto-generated method stub
 				if(isChecked){
-					ClientSendCommandService.msg = Alarm.update + 1;
+					alarm.setEnabled(true);
 				}else{
-					ClientSendCommandService.msg = Alarm.update + 0;
+					alarm.setEnabled(false);
 				}
+				String sendContent=ResolveAlarmInfor.alarmToStr(alarm);
+				ClientSendCommandService.msg = Alarm.update + sendContent;
 				ClientSendCommandService.handler.sendEmptyMessage(1);
 			}
 		});

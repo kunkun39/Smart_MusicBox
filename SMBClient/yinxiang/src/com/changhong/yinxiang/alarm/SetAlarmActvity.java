@@ -218,9 +218,10 @@ public class SetAlarmActvity extends BaseActivity {
 			}
 		}
 
-		String name = alarm.musicBean.get(0).getTitle();
-		curMusic.setText(name);
-
+		if (alarm.musicBean != null) {
+			String name = alarm.musicBean.get(0).getTitle();
+			curMusic.setText(name);
+		}
 		tag.setText(alarm.getLabel());
 
 	}
@@ -259,9 +260,13 @@ public class SetAlarmActvity extends BaseActivity {
 
 	// 进入添加流程
 	private void addAlarm() {
-
-		int length = AlarmMainActivity.mAlarmList.size();
-		curentId = AlarmMainActivity.mAlarmList.get(length - 1).getId() + 1;
+		int length = 0;
+		int id=0;
+		if (AlarmMainActivity.mAlarmList != null) {
+			length = AlarmMainActivity.mAlarmList.size();
+			id = AlarmMainActivity.mAlarmList.get(length - 1).getId();
+		}
+		curentId = id + 1;
 
 		alarm.setId(curentId);
 		alarm.setHour(timePicker.getCurrentHour());
@@ -436,7 +441,7 @@ public class SetAlarmActvity extends BaseActivity {
 							.equals(musicListInit.get(j).getTitle())) {
 						break;
 					} else if (j == (musicListInit.size() - 1)) {
-						MusicBean music=musicListAll.get(i); 
+						MusicBean music = musicListAll.get(i);
 						music.setmId(alarm.id);
 						musicListInit.add(music);
 					}
