@@ -436,7 +436,9 @@ public class SetAlarmActvity extends BaseActivity {
 							.equals(musicListInit.get(j).getTitle())) {
 						break;
 					} else if (j == (musicListInit.size() - 1)) {
-						musicListInit.add(musicListAll.get(i));
+						MusicBean music=musicListAll.get(i); 
+						music.setmId(alarm.id);
+						musicListInit.add(music);
 					}
 				}
 
