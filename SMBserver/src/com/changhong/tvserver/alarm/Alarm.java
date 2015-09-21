@@ -76,7 +76,7 @@ public final class Alarm implements Parcelable {
          */
         public static final Uri CONTENT_URI =
                 Uri.parse("content://com.changhong.musicclocks/alarm");
-
+        public static final String CONTENT_STRING ="content://com.changhong.musicclocks/alarm";
         /**
          * Hour in 24-hour localtime 0 - 23.
          * <P>Type: INTEGER</P>

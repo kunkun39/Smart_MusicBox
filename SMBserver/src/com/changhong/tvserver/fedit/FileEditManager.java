@@ -204,9 +204,10 @@ public class FileEditManager {
 		try {
 
 			// 新建一个socket
+			client = new Socket(clientIp, Configure.SOCKET_PORT);
 			System.out
 					.println("++++++++++++++++++++++create  newSocket+++++++++++++++++++++++");
-			client = new Socket(clientIp, Configure.SOCKET_PORT);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

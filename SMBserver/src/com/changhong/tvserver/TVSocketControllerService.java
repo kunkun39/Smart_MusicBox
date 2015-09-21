@@ -1021,13 +1021,14 @@ public class TVSocketControllerService extends Service {
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		// TODO Auto-generated method stub
 
-		// if(!(null==intent)){
-		int i = intent.getIntExtra("message", 0);
-		if (1 == i) {
-			initFM();
+		if (intent != null) {
+			int i = intent.getIntExtra("message", 0);
+			if (1 == i) {
+				initFM();
+			}
 		}
-		// }
-		return super.onStartCommand(intent, flags, startId);
+		return super.onStartCommand(intent, Service.START_REDELIVER_INTENT,
+				startId);
 	}
 
 	// ---------系统方法

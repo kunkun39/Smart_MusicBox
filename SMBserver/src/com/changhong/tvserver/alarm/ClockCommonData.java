@@ -1,5 +1,7 @@
 package com.changhong.tvserver.alarm;
 
+import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -56,7 +58,7 @@ public class ClockCommonData {
 			FileEditManager.getInstance().communicationWithClient(null,
 					Configure.ACTION_SOCKET_COMMUNICATION, params);
 
-			Log.i("mmmm", "alarms" + alarms);
+			Log.i("mmmm", "get-alarms" + ResolveAlarmInfor.alarmsToJson(MyApplication.getContext(), alarms));
 		} else if (keys[1].equals("delete")) {
 			deleteAlarm(keys);
 		} else if (keys[1].equals("insert")) {
@@ -196,11 +198,11 @@ public class ClockCommonData {
 			int id = Integer.parseInt(keys[2]);
 			String content = keys[3];
 			Alarm alarm = ResolveAlarmInfor.jsonToAlarm(content);
-
+			
+			Uri uri=Uri.parse(Alarm.Columns.CONTENT_STRING+"/"+alarm.id);
 			ContentValues alarmValues = formAlarm(alarm);
-			// alarmProvider.update(Alarm.Columns.CONTENT_URI, values,
-			// Alarm.Columns._ID+"=" +id, null);
-			alarmProvider.insert(Alarm.Columns.CONTENT_URI, alarmValues);
+			 alarmProvider.update(uri, alarmValues,
+			 Alarm.Columns._ID+"=" +id, null);
 
 			formMusicValues("update", alarm);
 		}
@@ -211,8 +213,9 @@ public class ClockCommonData {
 
 			for (int i = 2; i < keys.length; i++) {
 				int id = Integer.parseInt(keys[i]);
-				alarmProvider.delete(Alarm.Columns.CONTENT_URI,
-						Alarm.Columns._ID + "=" + id, null);
+				Uri uri=Uri.parse(Alarm.Columns.CONTENT_STRING+"/"+id);
+				alarmProvider.delete(uri,
+						null, null);
 				musicProvider.delete(MusicBean.Columns.MUSIC_URL, MusicBean.Columns.MID + "=" + id, null);
 
 			}
@@ -223,7 +226,7 @@ public class ClockCommonData {
 		if (3 == keys.length) {
 			String content = keys[2];
 			Alarm alarm = ResolveAlarmInfor.jsonToAlarm(content);
-
+//			Uri uri=Uri.parse(Alarm.Columns.CONTENT_STRING+"/"+alarm.id);
 			ContentValues values = formAlarm(alarm);
 			alarmProvider.insert(Alarm.Columns.CONTENT_URI, values);
 			formMusicValues("insert", alarm);
@@ -261,8 +264,16 @@ public class ClockCommonData {
 				values.put(MusicBean.Columns.URL, music.getUrl());
 				if (str.equals("update")) {
 					//处理音乐，采用添加和删除的方式。
-					
-					
+					boolean flag=false;
+					String[] projection=new String[]{MusicBean.Columns.MID,MusicBean.Columns.TITLE};
+					String[] selectionArgs=new String[]{String.valueOf(music.getmId()),music.getTitle()};
+					String selection=MusicBean.Columns.MID+"=? and "+MusicBean.Columns.TITLE+"=?";
+					Cursor cursor=musicProvider.query(MusicBean.Columns.MUSIC_URL, projection, selection,selectionArgs, MusicBean.Columns.DEFAULT_SORT_ORDER);
+					flag=cursor.moveToNext();
+					if(!flag){
+						musicProvider.insert(MusicBean.Columns.MUSIC_URL, values);
+					}
+					cursor.close();
 				} else if (str.equals("insert")) {
 					musicProvider.insert(MusicBean.Columns.MUSIC_URL, values);
 				}

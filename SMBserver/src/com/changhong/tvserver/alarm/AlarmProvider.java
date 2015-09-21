@@ -7,6 +7,7 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 
 public class AlarmProvider extends ContentProvider {
@@ -65,6 +66,8 @@ public class AlarmProvider extends ContentProvider {
 			String arg4) {
 		// TODO Auto-generated method stub
 		Cursor cur;
+//		SQLiteQueryBuilder sqlBuilder=new SQLiteQueryBuilder();
+//		sqlBuilder.setTables(Alarm.Columns.CONTENT_URI.toString());
 		cur = contentResolver.query(Alarm.Columns.CONTENT_URI,
 				Alarm.Columns.ALARM_QUERY_COLUMNS, null, null,
 				Alarm.Columns.DEFAULT_SORT_ORDER);
@@ -76,7 +79,7 @@ public class AlarmProvider extends ContentProvider {
 		// TODO Auto-generated method stub
 		int count = 0;
 
-		contentResolver.update(arg0, arg1, arg2, arg3);
+		count=contentResolver.update(arg0, arg1, arg2, arg3);
 		contentResolver.notifyChange(arg0, null);
 		return count;
 	}
