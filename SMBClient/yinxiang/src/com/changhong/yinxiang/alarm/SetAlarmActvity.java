@@ -261,9 +261,14 @@ public class SetAlarmActvity extends BaseActivity {
 	// 进入添加流程
 	private void addAlarm() {
 		int length = 0;
-		int id=0;
+		int id = 0;
 		if (AlarmMainActivity.mAlarmList != null) {
 			length = AlarmMainActivity.mAlarmList.size();
+			for (int i = 0; i < length; i++) {
+				int cache = AlarmMainActivity.mAlarmList.get(i).getId();
+				id = cache > id ? cache : id;
+			}
+
 			id = AlarmMainActivity.mAlarmList.get(length - 1).getId();
 		}
 		curentId = id + 1;
@@ -283,8 +288,9 @@ public class SetAlarmActvity extends BaseActivity {
 		if (currentState != null && currentState.length > 0) {
 			for (int j = 0; j < currentState.length; j++) {
 				if (currentState[j]) {
-					musics.add(musicListAll.get(j));
-					musics.get(j).setmId(curentId);
+					MusicBean cacheMusic =musicListAll.get(j);
+					cacheMusic.setmId(curentId);
+					musics.add(cacheMusic);
 				}
 			}
 		}
