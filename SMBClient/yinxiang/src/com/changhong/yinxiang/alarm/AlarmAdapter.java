@@ -38,7 +38,10 @@ public class AlarmAdapter extends BaseAdapter {
 
 	// 初始化设置数据
 	public void setData(ArrayList<Alarm> list) {
-		mAlarmList.clear();
+		if(null==mAlarmList){
+			mAlarmList=new ArrayList<Alarm>();
+		}
+//		mAlarmList.clear();
 		this.mAlarmList = list;
 		notifyDataSetChanged();
 	}
@@ -79,7 +82,7 @@ public class AlarmAdapter extends BaseAdapter {
 	@Override
 	public int getCount() {
 		// TODO Auto-generated method stub
-		return mAlarmList.size();
+		return mAlarmList!=null ? mAlarmList.size():0;
 	}
 
 	@Override

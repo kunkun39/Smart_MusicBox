@@ -63,8 +63,13 @@ public class DeleteAlarmActivity extends BaseActivity {
 					ClientSendCommandService.msg = Alarm.delete
 							+ data.toString();
 					ClientSendCommandService.handler.sendEmptyMessage(1);
-
+					
+					//删除主界面的队列里的alarm
+					for (int i = 0; i < selectAlarm.size(); i++) {
+						AlarmMainActivity.mAlarmList.remove(selectAlarm.get(i));
+					}
 				}
+//				DeleteAlarmActivity.this.setResult(2);
 				finish();
 			}
 		});

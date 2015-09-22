@@ -114,7 +114,7 @@ public class AlarmMainActivity extends BaseActivity {
 				// TODO Auto-generated method stub
 				Intent intent = new Intent(AlarmMainActivity.this,
 						DeleteAlarmActivity.class);
-				startActivity(intent);
+				startActivityForResult(intent,2);
 			}
 		});
 
@@ -193,6 +193,9 @@ public class AlarmMainActivity extends BaseActivity {
 			mAlarmList.add(addAlarm);
 			adapter.notifyDataSetChanged();
 			break;
+		case 2:
+			adapter.setData(mAlarmList);
+			break;
 		}
 
 	}
@@ -215,6 +218,7 @@ public class AlarmMainActivity extends BaseActivity {
 	@Override
 	protected void onResume() {
 		// TODO Auto-generated method stub
+		adapter.setData(mAlarmList);
 		super.onResume();
 	}
 
