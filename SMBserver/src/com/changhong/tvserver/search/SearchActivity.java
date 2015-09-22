@@ -99,7 +99,7 @@ public class SearchActivity extends Activity {
 
 			}
 		});
-		searchResultList.setItemsCanFocus(true);
+//		searchResultList.setItemsCanFocus(true);
 
 		handler = new Handler() {
 

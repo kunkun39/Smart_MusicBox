@@ -92,7 +92,7 @@ public class SearchSummaryAdapter extends BaseAdapter {
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				packageData(position);
+//				packageData(position);
 			}
 		});
 		return convertView;
