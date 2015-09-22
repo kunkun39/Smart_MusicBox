@@ -465,6 +465,9 @@ public class TVSocketControllerService extends Service {
 						} else if (msg1.startsWith("getAlarmMsg:")) {
 							Log.i("mmmm", TAG + ":" + msg1);
 							handleAlarm(msg1);
+						}else if (msg1.startsWith("autoctrl:")) {
+							Log.i("mmmm", TAG + ":" + msg1);
+							handleAutoCtrl(msg1);
 						}
 						break;
 
@@ -809,7 +812,20 @@ public class TVSocketControllerService extends Service {
 	private void handleAlarm(String str) {
 		if (str == null || str.equals(""))
 			return;
-		String[] keys = StringUtils.delimitedListToStringArray(str, "|");
+		
+		//获取命令		
+		String  command= str.substring("autoctrl:".length()+1);
+		//设置自动控制标记
+		ClientOnLineMonitorService.setAutoControlFlag(command.equals("auto_on")?true:false);
+		
+	}
+	
+	
+	
+	private void handleAutoCtrl(String str) {
+		if (str == null || str.equals(""))
+			return;
+		String[] keys = StringUtils.delimitedListToStringArray(str, ":");
 		ClockCommonData.getInstance().dealMsg(keys);
 	}
 

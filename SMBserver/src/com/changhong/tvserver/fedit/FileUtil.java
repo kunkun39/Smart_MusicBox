@@ -1,5 +1,7 @@
 package com.changhong.tvserver.fedit;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -8,6 +10,8 @@ import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.Comparator;
 
+import com.changhong.tvserver.touying.image.loader.exception.ThreadKillException;
+import com.changhong.tvserver.touying.image.loader.task.ImageDownloadTask;
 import com.changhong.tvserver.utils.StringUtils;
 
 import android.content.Context;
@@ -45,7 +49,7 @@ public class FileUtil {
 	 * @return SDcard根目录路径
 	 */
 	public String getSDCARDPATH() {
-		return SDCARDPATH;
+		return Environment.getExternalStorageDirectory()+"";
 	}
 
 	public FileUtil() {
@@ -106,9 +110,10 @@ public class FileUtil {
 	 *            数据来源
 	 * @return
 	 */
-	public File writeToSDCard(String type, String fileName, InputStream input) {
+	public File writeToSDCard(String type, String fileName, InputStream inputStream) {
 		File file = null;
-		OutputStream output = null;
+		BufferedInputStream in = null;
+	    BufferedOutputStream output = null;
 		// 默认状态下，路径为音乐文件
 		String path = MUSIC_PATH;
 		try {
@@ -125,13 +130,17 @@ public class FileUtil {
 			// 添加文件分隔符
 			path = path + File.separator;
 			// 创建文件
-			file = creatSDFile(path + fileName);
-			output = new FileOutputStream(file);
-			// 以4K为单位，每次写4k
+			file = creatSDFile(path + fileName);			
+		    in = new BufferedInputStream(inputStream, BUFFER_SIZE);
+		    output = new BufferedOutputStream(new FileOutputStream(file), BUFFER_SIZE);
+			// 以4K为单位，每次写50k
+            int byteCount = 0;
 			byte buffer[] = new byte[BUFFER_SIZE];
-			while ((input.read(buffer)) != -1) {
-				output.write(buffer);
-			}
+			int bytesRead = -1;
+			while ((bytesRead = in.read(buffer)) != -1) {
+				output.write(buffer, 0, bytesRead);
+			    byteCount += bytesRead;
+			}			
 			// 清除缓存
 			output.flush();
 		} catch (IOException e) {
@@ -268,7 +277,7 @@ public class FileUtil {
 	
 	}
 	
-	//重新扫描媒体文件目录、music
+	//同时更新媒体库多个文件，用于重命名更新
 	public void updateGallery(Context context,String oldFile, String newFile) {
 		MediaScannerConnection.scanFile(context, new String[] { oldFile, newFile},
 				null, new MediaScannerConnection.OnScanCompletedListener() {
@@ -279,7 +288,6 @@ public class FileUtil {
 						Log.i("ExternalStorage", "-> uri=" + uri);
 					}
 				});
-	
 	}
 
 	public String getFileName(String filePath) {
@@ -291,9 +299,15 @@ public class FileUtil {
 		return fileName;
 	}
 	
+	
+	public String getMusicFileDir() {
+		return SDCARDPATH + MUSIC_PATH+File.separator;	
+	}
+	
+	
 	public String convertHttpURLToLocalFile(String fileUrl) {
 		
-		String localFile=getSDCARDPATH() + MUSIC_PATH+File.separator;	
+		String localFile=getMusicFileDir();	
 		String fileName = getFileName(fileUrl);
 		localFile=localFile+fileName;
 		return localFile;

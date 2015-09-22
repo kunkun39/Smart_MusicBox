@@ -1,9 +1,13 @@
 package com.changhong.tvserver.fedit;
 
 import android.net.Uri;
+import android.util.Log;
+
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
+import com.changhong.tvserver.touying.image.loader.exception.ThreadKillException;
 
 
 public class HttpDownloader {
@@ -45,15 +49,16 @@ public class HttpDownloader {
 		String result =Configure.ACTION_FAILED;
 		InputStream inputStream = null;
 		HttpURLConnection conn = null;
+		FileUtil fileUtils = new FileUtil();
+
 		try {
 
 			conn = createConnection(fileUri);
 			int contentLength = conn.getContentLength();
 
 			// 下载文件最大值限定=6M
-			if (contentLength>0 && contentLength <MUTI_THREAD_SIZE_POINT) {
+			if ( contentLength <MUTI_THREAD_SIZE_POINT) {
 				inputStream = conn.getInputStream();
-				FileUtil fileUtils = new FileUtil();
 
 				// 判断文件是否存在
 				if (fileUtils.isFileExist(fileType, fileName)) {
@@ -62,12 +67,28 @@ public class HttpDownloader {
 					File fileResult = fileUtils.writeToSDCard(fileType,fileName, inputStream);
 					// 如果fileResult  !=null,下载成功。
 					if (null != fileResult)
-						result = Configure.ACTION_SUCCESS;
+						result = Configure.ACTION_SUCCESS;   
+					
+					//检测文件长度：
+					long length=fileResult.length();
+					Log.e("YDINFOR:: ","file length is "+length);
 				}
 			}
 		} catch (IOException e) {
+			
+			//操作过程中，出现异常，删除不完整文件。
+			if (fileUtils.isFileExist(fileType, fileName)) {
+				String filePath=fileUtils.getMusicFileDir()+fileName;
+				fileUtils.removeFileFromSDCard(filePath);
+			}		
 			e.printStackTrace();
-		} finally {
+		} catch (ThreadKillException e) {
+            Log.e(TAG, e.toString());
+            if (fileUtils.isFileExist(fileType, fileName)) {
+				String filePath=fileUtils.getMusicFileDir()+fileName;
+				fileUtils.removeFileFromSDCard(filePath);
+			}
+        }finally {
 			try {
 
 				if (inputStream != null) {

@@ -24,7 +24,7 @@ public class ClientOnLineMonitorService extends Service {
 
 	private   Boolean  debug=true;
 	// 自动控制音响设备标志,true自动控制音响设备开机关机，false，不启用自动设置。
-	private Boolean isAutoControl = true;
+	private static Boolean isAutoControl = true;
 	
 	Boolean  isRunning=true;
 
@@ -89,8 +89,8 @@ public class ClientOnLineMonitorService extends Service {
 		return isAutoControl;
 	}
 
-	public void setAutoControlFlag(Boolean isAutoControl) {
-		this.isAutoControl = isAutoControl;
+	public static void setAutoControlFlag(Boolean autoControl) {
+		isAutoControl = autoControl;
 	}
 
 	/************************************************* get client heartBeat *************************************************/

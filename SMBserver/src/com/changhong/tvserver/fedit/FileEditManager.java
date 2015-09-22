@@ -149,13 +149,9 @@ public class FileEditManager {
 									}
 
 									// 获取本地媒体文件路径：
-									bundle.putString(Configure.EDIT_TYPE,
-											editType);
-									bundle.putString(Configure.MSG_RESPOND,
-											result);
-									bundle.putString(
-											Configure.FILE_URL,
-											mFileUtil
+									bundle.putString(Configure.EDIT_TYPE,	editType);
+									bundle.putString(Configure.MSG_RESPOND,result);
+									bundle.putString(	Configure.FILE_URL,mFileUtil
 													.convertHttpURLToLocalFile(fileUrl));
 									respondMsg.setData(bundle);
 									respondMsg.what = 2;
