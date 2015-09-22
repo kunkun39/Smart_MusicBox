@@ -1,7 +1,5 @@
 package com.changhong.tvserver.alarm;
 
-import java.net.URI;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,7 +8,6 @@ import java.util.Map;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -60,10 +57,13 @@ public class ClockCommonData {
 
 			Log.i("mmmm", "get-alarms" + ResolveAlarmInfor.alarmsToJson(MyApplication.getContext(), alarms));
 		} else if (keys[1].equals("delete")) {
+			//getAlarmMsg:|delete|3|1|4|3|
 			deleteAlarm(keys);
 		} else if (keys[1].equals("insert")) {
+			//getAlarmMsg:|insert|alarm
 			insertAlarm(keys);
 		} else if (keys[1].equals("update")) {
+			//格式getAlarmMsg:|update|3|alarm
 			updateAlarm(keys);
 		}
 	}
