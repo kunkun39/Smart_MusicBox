@@ -39,7 +39,7 @@ public class AlarmMainActivity extends BaseActivity {
 	private static String action = "alarmInfor";
 	private  MyProgressDialog myProgressDialog = null;// 远程数据获取进度条
 
-	public static  final int SEND_GET_REQUEST=1;
+	public static  final int SEND_GET_REQUEST=1001;
 	
 	public Handler handler = new Handler() {
 

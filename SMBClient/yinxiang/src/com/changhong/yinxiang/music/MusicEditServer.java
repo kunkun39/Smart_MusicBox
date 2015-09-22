@@ -177,7 +177,7 @@ public class MusicEditServer {
 				//发送请求数据消息
 				mParentHandler.sendEmptyMessage(AlarmMainActivity.SEND_GET_REQUEST);
 				// 设置接收延迟时间
-				mServerSocket.setSoTimeout(30000);
+				mServerSocket.setSoTimeout(10000);
 				// 获取音响端发送的socket的对象
 				socketclient = mServerSocket.accept();
 				in = new BufferedReader(new InputStreamReader(socketclient.getInputStream()));
@@ -214,6 +214,7 @@ public class MusicEditServer {
 				try {
 					if (null != in) {
 						in.close();
+						in=null;
 					}
 					if (null != socketclient) {
 						socketclient.close();
