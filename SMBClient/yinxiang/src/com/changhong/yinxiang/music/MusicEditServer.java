@@ -12,6 +12,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import com.changhong.yinxiang.activity.AlarmMainActivity;
 import com.changhong.yinxiang.activity.YinXiangMusicViewActivity;
 import com.changhong.yinxiang.nanohttpd.HttpDownloader;
 import com.changhong.yinxiang.utils.FileUtil;
@@ -56,7 +57,6 @@ public class MusicEditServer {
 		clientCommunicationThread commThread = new clientCommunicationThread();
 		mSocketCommunication = new Thread(commThread);
 		mSocketCommunication.start();
-		
 		
 	}
 
@@ -174,6 +174,8 @@ public class MusicEditServer {
 					mServerSocket = new ServerSocket(SOCKET_PORT);			
 				}
 				
+				//发送请求数据消息
+				mParentHandler.sendEmptyMessage(AlarmMainActivity.SEND_GET_REQUEST);
 				// 设置接收延迟时间
 				mServerSocket.setSoTimeout(30000);
 				// 获取音响端发送的socket的对象

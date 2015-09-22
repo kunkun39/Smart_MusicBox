@@ -39,6 +39,8 @@ public class AlarmMainActivity extends BaseActivity {
 	private static String action = "alarmInfor";
 	private  MyProgressDialog myProgressDialog = null;// 远程数据获取进度条
 
+	public static  final int SEND_GET_REQUEST=1;
+	
 	public Handler handler = new Handler() {
 
 		@Override
@@ -57,6 +59,10 @@ public class AlarmMainActivity extends BaseActivity {
 					setClickable(true);
 					cancelMyDialog();
 				}
+				break;
+				
+			case SEND_GET_REQUEST:
+				getAlarmMsg();
 				break;
 
 			}
@@ -78,8 +84,7 @@ public class AlarmMainActivity extends BaseActivity {
 		// TODO Auto-generated method stub
 		// 启动TCP接收线程
 		mMusicEditServer = MusicEditServer.creatFileEditServer();
-		mMusicEditServer.communicationWithServer(handler,
-				MusicUtils.ACTION_SOCKET_COMMUNICATION, action);
+		
 
 		setContentView(R.layout.alarm_main);
 		add = (Button) findViewById(R.id.add);
@@ -125,7 +130,10 @@ public class AlarmMainActivity extends BaseActivity {
 		// startActivityForResult(intent, 0);
 		// }
 		// });
-		getAlarmMsg();
+		
+		
+		mMusicEditServer.communicationWithServer(handler,
+				MusicUtils.ACTION_SOCKET_COMMUNICATION, action);
 		showMyDialog();
 	}
 

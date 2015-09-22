@@ -138,6 +138,14 @@ public class AlarmAdapter extends BaseAdapter {
 		} else {
 			dataHolder.alarmWeeks.setVisibility(View.GONE);
 		}
+		
+		//设置启用按钮的状态
+		if(alarm.enabled){
+			dataHolder.alarmEnable.setChecked(true);
+		}else{
+			dataHolder.alarmEnable.setChecked(false);
+		}
+		
 		//设置闹铃启用按钮的监听器
 		dataHolder.alarmEnable.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			
@@ -150,7 +158,7 @@ public class AlarmAdapter extends BaseAdapter {
 					alarm.setEnabled(false);
 				}
 				String sendContent=ResolveAlarmInfor.alarmToStr(alarm);
-				ClientSendCommandService.msg = Alarm.update + sendContent;
+				ClientSendCommandService.msg = Alarm.update +alarm.id+ "|"+sendContent;
 				ClientSendCommandService.handler.sendEmptyMessage(1);
 			}
 		});
