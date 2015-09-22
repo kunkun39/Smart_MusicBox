@@ -820,10 +820,14 @@ public class TVSocketControllerService extends Service {
 		
 	}
 
+	/*
+	 * 
+	 * 处理闹铃的操作请求
+	 */
 	private void handleAlarm(String str) {
 		if (str == null || str.equals(""))
 			return;
-		String[] keys = StringUtils.delimitedListToStringArray(str, ":");
+		String[] keys = StringUtils.delimitedListToStringArray(str, "|");
 		ClockCommonData.getInstance().dealMsg(keys);
 	}
 
