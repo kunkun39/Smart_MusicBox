@@ -65,16 +65,15 @@ public class ClientOnLineMonitorService extends Service {
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		initSmartCtrlService();
+	    flags = START_STICKY;  
 		return super.onStartCommand(intent, flags, startId);
 	}
 
 	private void initSmartCtrlService() {
 
-		clientOnLineList.clear();
-		
+		clientOnLineList.clear();	
         isRun = true;
-        mTime=0;
-        
+        mTime=0;     
 		/**
 		 * 需创建一个新的线程，否则，4.0版本以上会报异常
 		 */
@@ -158,16 +157,17 @@ public class ClientOnLineMonitorService extends Service {
 						} finally {
 							dgPacket = null;
 						}
-					}	
-					
-					//自动关机检查
-					if (isStopTVService()) {
-						if(debug)
-							 Log.e(TAG, "**************************************isStopTVService*******************************************************");
-						// 局域网内无联网客户端，延迟30分自动关机，
-						autoStopTVService();
-					}
-					
+						
+						
+						//自动关机检查
+						if (isStopTVService()) {
+							if(debug)
+								 Log.e(TAG, "**************************************isStopTVService*******************************************************");
+							// 局域网内无联网客户端，延迟30分自动关机，
+							autoStopTVService();
+						}
+						
+					}									
 					//线程休眠1秒
 					Thread.sleep(30000);
 					
@@ -208,7 +208,7 @@ public class ClientOnLineMonitorService extends Service {
 
 		 long curTime=System.currentTimeMillis();
 		// 自动关机 , 条件1：局域网内无联网设备，连续时间长达30分
-		 if (0 == clientOnLineList.size() && mTime > 100  && (curTime-mTime) > 100000) {
+		 if (0 == clientOnLineList.size() && mTime > 100  && (curTime-mTime) > 120*1000) {
 			 
 			
 			// 自动关机 , 条件2：增加时间区限制：早上7:00~9:00
@@ -220,7 +220,7 @@ public class ClientOnLineMonitorService extends Service {
 			}
             
 			//预设自动关机时间早上7:00~9:00;
-			if (hour >= 7 && hour < 9) {
+			if (hour >= 7 && hour < 20) {
 				rValue = true;
 			}
 			mTime=20;
