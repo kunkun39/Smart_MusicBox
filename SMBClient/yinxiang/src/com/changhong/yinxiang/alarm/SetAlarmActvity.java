@@ -237,7 +237,7 @@ public class SetAlarmActvity extends BaseActivity {
 
 		timePicker.setCurrentHour(hour);
 		timePicker.setCurrentMinute(minute);
-		for (int i = 1; i < 6; i++) {
+		for (int i = 0; i < 5; i++) {
 			myWBList[i].setFlag(true);
 		}
 	}
