@@ -53,17 +53,10 @@ public class HttpDownloader {
 		try {
 
 			Log.e("YDINFOR::", "-----------------------HttpURLConnection创建链接----------------------");
-//			fileUri=fileUri.replace("12345", "12345/storage/emulated/0/");
 			conn = createConnection(fileUri);
 			int contentLength = conn.getContentLength();
-            int code= conn.getResponseCode() ;
-			if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
-				Log.e("YDINFOR::", "-----------------------HttpURLConnection.HTTP_OK----------------------");
-			}
-			Log.e("YDINFOR::", "-----------------------HttpURLConnection  end----------------------");
-
-			// 下载文件最大值限定=20M
-//			if (contentLength <= MUTI_THREAD_SIZE_POINT) {
+            // 下载文件最大值限定=20M
+			if (contentLength <= MUTI_THREAD_SIZE_POINT) {
 				inputStream = conn.getInputStream();
 				FileUtil fileUtils = new FileUtil();
 				String fileName=fileUtils.getFileName(fileUri);
@@ -71,14 +64,18 @@ public class HttpDownloader {
 				if (fileUtils.isFileExist(fileType, fileName)) {
 					result = MusicUtils.FILE_EXIST;
 				} else {
-					File fileResult = fileUtils.writeToSDCard(fileType,fileName, inputStream);
+					long fileLength = fileUtils.writeToSDCard(fileType,fileName, inputStream);
 					// 如果fileResult=null,下载失败。
-					if (null != fileResult) {
+					if (contentLength == fileLength) {
 						result = MusicUtils.ACTION_SUCCESS;
-					}					
+					}else{				
+						//文件不完整，删除
+						String removeFile=fileUtils.getLocalFileDir()+fileName;
+						fileUtils.removeFileFromSDCard(removeFile);
+					}
 					fileUtils.checkMaxFileItemExceedAndProcess(fileType);
 				}
-//			}
+			}
 		} catch (IOException e) {
 			result = MusicUtils.ACTION_FAILED;
 			e.printStackTrace();

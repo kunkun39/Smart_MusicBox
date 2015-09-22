@@ -1,5 +1,7 @@
 package com.changhong.yinxiang.utils;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -124,13 +126,12 @@ public class FileUtil {
 	 *            数据来源
 	 * @return
 	 */
-	public File writeToSDCard(String type, String fileName, InputStream input) {
+	public long  writeToSDCard(String type, String fileName, InputStream input) {
+		
+        int byteCount = 0;
 		File file = null;
-		
-		if(!StringUtils.hasLength(fileName))return null;
-		if(null == input)return null;
-		
-		OutputStream output = null;
+		BufferedInputStream in = null;
+	    BufferedOutputStream output = null;
 		// 默认状态下，路径为音乐文件
 		String path = MUSIC_PATH;
 		try {
@@ -147,13 +148,16 @@ public class FileUtil {
 			// 添加文件分隔符
 			path = path + File.separator;
 			// 创建文件
-			file = creatSDFile(path + fileName);
-			output = new FileOutputStream(file);
+			file = creatSDFile(path + fileName);			
+		    in = new BufferedInputStream(input, BUFFER_SIZE);
+		    output = new BufferedOutputStream(new FileOutputStream(file), BUFFER_SIZE);
 			// 以4K为单位，每次写4k
 			byte buffer[] = new byte[BUFFER_SIZE];
-			while ((input.read(buffer)) != -1) {
-				output.write(buffer);
-			}
+			int bytesRead = -1;
+			while ((bytesRead = in.read(buffer)) != -1) {
+				output.write(buffer, 0, bytesRead);
+			    byteCount += bytesRead;
+			}			
 			// 清除缓存
 			output.flush();
 		} catch (IOException e) {
@@ -168,7 +172,7 @@ public class FileUtil {
 				e.printStackTrace();
 			}
 		}
-		return file;
+		return byteCount;
 	}
 
 	/**
@@ -393,5 +397,11 @@ public class FileUtil {
 			Long last2 = f2.lastModified();
 			return last1.compareTo(last2);
 		}
+	}
+
+
+
+	public String getLocalFileDir() {
+		return SDCARDPATH + MUSIC_PATH+File.separator;	
 	}
 }
