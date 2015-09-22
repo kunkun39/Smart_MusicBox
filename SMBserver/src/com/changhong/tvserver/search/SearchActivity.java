@@ -99,6 +99,7 @@ public class SearchActivity extends Activity {
 
 			}
 		});
+		//取消item焦点，同时配合android:descendantFocusability="afterDescendants"
 //		searchResultList.setItemsCanFocus(true);
 
 		handler = new Handler() {
