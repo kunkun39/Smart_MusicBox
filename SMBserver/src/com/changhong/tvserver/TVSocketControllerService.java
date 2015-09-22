@@ -809,7 +809,7 @@ public class TVSocketControllerService extends Service {
 	/**
 	 * 
 	 */
-	private void handleAlarm(String str) {
+	private void handleAutoCtrl(String str) {
 		if (str == null || str.equals(""))
 			return;
 		
@@ -819,10 +819,8 @@ public class TVSocketControllerService extends Service {
 		ClientOnLineMonitorService.setAutoControlFlag(command.equals("auto_on")?true:false);
 		
 	}
-	
-	
-	
-	private void handleAutoCtrl(String str) {
+
+	private void handleAlarm(String str) {
 		if (str == null || str.equals(""))
 			return;
 		String[] keys = StringUtils.delimitedListToStringArray(str, ":");
