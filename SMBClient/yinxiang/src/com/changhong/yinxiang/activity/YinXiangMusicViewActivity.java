@@ -256,24 +256,26 @@ public class YinXiangMusicViewActivity extends Activity {
 								String title = selectMusic.getTitle();
 								String artist = selectMusic.getArtist();
 								int duration = selectMusic.getDuration();
-
-								if (tempPath
-										.startsWith(HTTPDService.defaultHttpServerPath)) {
-									tempPath = tempPath.replace(
-											HTTPDService.defaultHttpServerPath,
-											"").replace(" ", "%20");
-								} else {
-									for (String otherHttpServerPath : HTTPDService.otherHttpServerPaths) {
-										if (tempPath
-												.startsWith(otherHttpServerPath)) {
-											tempPath = tempPath.replace(
-													otherHttpServerPath, "")
-													.replace(" ", "%20");
-										}
-									}
-								}
 								JSONObject music = new JSONObject();
-								music.put("tempPath", httpAddress + tempPath);
+
+								if (STORAGE_MOBILE == curStorage) {
+								
+										if (tempPath.startsWith(HTTPDService.defaultHttpServerPath)) {
+											tempPath = tempPath.replace(
+													HTTPDService.defaultHttpServerPath,
+													"").replace(" ", "%20");
+										} else {	for (String otherHttpServerPath : HTTPDService.otherHttpServerPaths) {
+												if (tempPath
+														.startsWith(otherHttpServerPath)) {
+													tempPath = tempPath.replace(
+															otherHttpServerPath, "")
+															.replace(" ", "%20");
+												}
+											}
+										}
+										tempPath=httpAddress + tempPath;
+								}
+								music.put("tempPath",  tempPath);
 								music.put("title", title);
 								music.put("artist", artist);
 								music.put("duration", duration);
