@@ -62,6 +62,8 @@ public class FileEditManager {
 
 		mParentHandler = handler;
 		if (null != mMsgHandler) {// 发送消息给子线程
+			System.out.println("now start to send   msg to  MsgHandler ");
+
 			Message sendMsg = mMsgHandler.obtainMessage();
 			sendMsg.what = communicationType;
 			sendMsg.obj = params;
@@ -102,6 +104,9 @@ public class FileEditManager {
 
 				public void handleMessage(Message msg) {
 
+					System.out.println("got parent  msg  and  communicationType is "+communicationType);
+
+					
 					communicationType = msg.what;
 					mParams = (Map<String, Object>) msg.obj;
 
@@ -167,11 +172,15 @@ public class FileEditManager {
 					// 执行socket通讯 发送信息： 机顶盒------> 手机。
 					case Configure.ACTION_SOCKET_COMMUNICATION:
 
+						System.out	.println("++++++++++++++++++++++start  postMassageBySocket+++++++++++++++++++++++");
+
 						String sendmsg = (String) mParams
 								.get(Configure.MSG_SEND);
 						String clientIp = (String) mParams
 								.get(Configure.IP_ADD);
 						postMassageBySocket(clientIp, sendmsg);
+						System.out	.println("++++++++++++++++++++++end  postMassageBySocket+++++++++++++++++++++++");
+
 						break;
 					default:
 						break;
@@ -194,42 +203,36 @@ public class FileEditManager {
 	 */
 	private String postMassageBySocket(String clientIp, String sendMsg) {
 
-		String result = "OK";
+		String result = "error";
 		Socket client = null;
 		PrintWriter socketoutput = null;
 		try {
 
 			// 新建一个socket
 			client = new Socket(clientIp, Configure.SOCKET_PORT);
-			System.out
-					.println("++++++++++++++++++++++create  newSocket+++++++++++++++++++++++");
+			System.out	.println("++++++++++++++++++++++create  newSocket+++++++++++++++++++++++");
+			if(null != client){
+				
+					// 从Socket获取一个输出对象，以便把sendMsg输入的数据发给客户端
+					socketoutput = new PrintWriter(client.getOutputStream(), true);
+					socketoutput.println(sendMsg);// 发送给服务器
+					socketoutput.flush();// 清空缓存
+					result = "OK";
+
+			}
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
-		try {
-
-			// 从Socket获取一个输出对象，以便把sendMsg输入的数据发给客户端
-			socketoutput = new PrintWriter(client.getOutputStream(), true);
-			socketoutput.println(sendMsg);// 发送给服务器
-			socketoutput.flush();// 清空缓存
-
-			Thread.sleep(5000);
-
-		} catch (Exception e) {
-			result = "error";
-			e.printStackTrace();
-			System.out
-					.println("++++++++++++++++++++++create  newSocket error+++++++++++++++++++++++");
-
 		} finally {
 
 			try {
 				if (null != socketoutput) {
 					socketoutput.close();
+					socketoutput=null;
 				}
 				if (null != client) {
 					client.close();
+					client=null;
 				}
 			} catch (IOException e) {
 				e.printStackTrace();

@@ -37,7 +37,7 @@ public class FileUtil {
 	public static final String VEDIO_PATH = "video";
 
 	// 文件读取Buffer size
-	private static final int BUFFER_SIZE = 1024 * 50; // 50K
+	private static final int BUFFER_SIZE = 1024 * 30; // 30K
 
 	public final static int MAX_FILE_ITEM_SIZE = 10;
 
@@ -110,7 +110,9 @@ public class FileUtil {
 	 *            数据来源
 	 * @return
 	 */
-	public File writeToSDCard(String type, String fileName, InputStream inputStream) {
+	public long writeToSDCard(String type, String fileName, InputStream inputStream) {
+		
+        int byteCount = 0;
 		File file = null;
 		BufferedInputStream in = null;
 	    BufferedOutputStream output = null;
@@ -134,7 +136,6 @@ public class FileUtil {
 		    in = new BufferedInputStream(inputStream, BUFFER_SIZE);
 		    output = new BufferedOutputStream(new FileOutputStream(file), BUFFER_SIZE);
 			// 以4K为单位，每次写50k
-            int byteCount = 0;
 			byte buffer[] = new byte[BUFFER_SIZE];
 			int bytesRead = -1;
 			while ((bytesRead = in.read(buffer)) != -1) {
@@ -155,7 +156,7 @@ public class FileUtil {
 				e.printStackTrace();
 			}
 		}
-		return file;
+		return byteCount;
 	}
 
 	/**

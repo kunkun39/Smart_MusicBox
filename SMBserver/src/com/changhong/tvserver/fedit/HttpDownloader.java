@@ -64,14 +64,16 @@ public class HttpDownloader {
 				if (fileUtils.isFileExist(fileType, fileName)) {
 					result = Configure.FILE_EXIST;
 				} else {
-					File fileResult = fileUtils.writeToSDCard(fileType,fileName, inputStream);
+					long fileLength = fileUtils.writeToSDCard(fileType,fileName, inputStream);
 					// 如果fileResult  !=null,下载成功。
-					if (null != fileResult)
-						result = Configure.ACTION_SUCCESS;   
-					
-					//检测文件长度：
-					long length=fileResult.length();
-					Log.e("YDINFOR:: ","file length is "+length);
+					if (contentLength == fileLength){
+						 result = Configure.ACTION_SUCCESS; 
+					}else{
+						//文件不完整，删除
+						String removeFile=fileUtils.getMusicFileDir()+fileName;
+						fileUtils.removeFileFromSDCard(removeFile);
+					}				
+					Log.e("YDINFOR:: ","file length is "+fileLength);
 				}
 			}
 		} catch (IOException e) {
