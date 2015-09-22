@@ -980,7 +980,7 @@ public class TVSocketControllerService extends Service {
 	private void initFM() {
 		try {
 			JSONArray all = new JSONArray();
-			ContentResolver contentResolver = TVSocketControllerService.this
+			ContentResolver contentResolver = MyApplication.getContext()
 					.getContentResolver();
 			Uri selectUri = Uri
 					.parse("content://com.changhong.provider.fmprovider");
