@@ -57,7 +57,7 @@ public class ClockCommonData {
 
 			Log.i("mmmm", "get-alarms" + ResolveAlarmInfor.alarmsToJson(MyApplication.getContext(), alarms));
 		} else if (keys[1].equals("delete")) {
-			//getAlarmMsg:|delete|3|1|4|3|
+			//getAlarmMsg:|delete|3|1|4|2|
 			deleteAlarm(keys);
 		} else if (keys[1].equals("insert")) {
 			//getAlarmMsg:|insert|alarm
