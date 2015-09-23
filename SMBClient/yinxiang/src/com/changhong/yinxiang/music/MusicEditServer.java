@@ -165,6 +165,7 @@ public class MusicEditServer {
 			BufferedReader in = null;
 			String content = "";
 			Socket socketclient = null;
+
 			try {
 				
 				if(null == mServerSocket){
@@ -182,7 +183,7 @@ public class MusicEditServer {
 					content += line;
 				}
 				System.out.println("recieve Infor::" + content);
-				// 发送信息给主线程，更新YinXiangMusicViewActivityUI
+				// 发送信息给主线程，返回响应结果
 				Message newMsg = mParentHandler.obtainMessage();
 				if(editType.equals("requestMusicList")){
 					 newMsg.what = YinXiangMusicViewActivity.SHOW_AUDIOEQUIPMENT_MUSICLIST;
@@ -198,11 +199,8 @@ public class MusicEditServer {
 
 			} catch (IOException e) {
 				// TODO 自动生成的 catch 块
-				
-				System.out.println("mServerSocket.accept（） error:::::::::::::::::::::::::::::::::::::::::");
-
+				mParentHandler.sendEmptyMessage(1000);
 				e.printStackTrace();
-				System.out.println("mServerSocket.accept（） error  end:::::::::::::::::::::::::::::::::::::::::");
 
 			} finally {
 
@@ -217,6 +215,7 @@ public class MusicEditServer {
 					}						
 				} catch (IOException e) {
 					// TODO 自动生成的 catch 块
+					mParentHandler.sendEmptyMessage(1000);
 					e.printStackTrace();
 				}
 			}

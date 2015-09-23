@@ -5,16 +5,11 @@ import android.content.Intent;
 import android.media.MediaScannerConnection;
 import android.os.Bundle;
 import android.os.Environment;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
-
-import com.changhong.common.service.ClientSendCommandService;
 import com.changhong.common.system.MyApplication;
-import com.changhong.common.widgets.BoxSelectAdapter;
 import com.changhong.yinxiang.R;
 import com.changhong.yinxiang.activity.SearchActivity;
 import com.changhong.yinxiang.activity.YinXiangMusicViewActivity;
@@ -25,13 +20,6 @@ import com.changhong.yinxiang.nanohttpd.HTTPDService;
 
 public class YinXiangCategoryFragment extends Fragment {
 
-	/************************************************** IP连接部分 *******************************************************/
-
-//    public static TextView title = null;
-//    private Button listClients;
-//    private Button back;
-//    private ListView clients = null;
-//    private BoxSelectAdapter IpAdapter;
 
 	/************************************************** 菜单部分 *******************************************************/
 	private ImageView imageTouYing;
@@ -56,8 +44,6 @@ public class YinXiangCategoryFragment extends Fragment {
    	public View onCreateView(LayoutInflater inflater, ViewGroup container,
    			Bundle savedInstanceState) {
        	View view= inflater.inflate(R.layout.fragment_yinxiang_category, container,	false);
-       	
-
 	
        	initView(view);
 		initEvent();
@@ -76,15 +62,6 @@ public class YinXiangCategoryFragment extends Fragment {
     }
 
 	private void initView(View v) {
-//		setContentView(R.layout.activity_yinxiang_category);
-        /**
-         * IP连接部分
-         */
-//        title = (TextView) v.findViewById(R.id.title);
-//        back = (Button) v.findViewById(R.id.btn_back);
-//        clients = (ListView) v.findViewById(R.id.clients);
-//        listClients = (Button) v.findViewById(R.id.btn_list);
-
 		/**
 		 * 菜单部分
 		 */
@@ -96,52 +73,6 @@ public class YinXiangCategoryFragment extends Fragment {
 	}
 
 	private void initEvent() {
-        /**
-         * IP连接部分
-         */
-//        IpAdapter = new BoxSelectAdapter(getActivity(),
-//                ClientSendCommandService.serverIpList);
-//        clients.setAdapter(IpAdapter);
-//        clients.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                clients.setVisibility(View.GONE);
-//                return false;
-//            }
-//        });
-//        clients.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-//                ClientSendCommandService.serverIP = ClientSendCommandService.serverIpList.get(arg2);
-//                ClientSendCommandService.titletxt=ClientSendCommandService.getCurrentConnectBoxName();
-//                title.setText(ClientSendCommandService.getCurrentConnectBoxName());
-//                ClientSendCommandService.handler.sendEmptyMessage(2);
-//                clients.setVisibility(View.GONE);
-//            }
-//        });
-//        listClients.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                try {
-//                    MyApplication.vibrator.vibrate(100);
-//                    if (ClientSendCommandService.serverIpList.isEmpty()) {
-//                        Toast.makeText(getActivity(), "未获取到服务器IP", Toast.LENGTH_LONG).show();
-//                    } else {
-//                        clients.setVisibility(View.VISIBLE);
-//                    }
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        });
-//        back.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                MyApplication.vibrator.vibrate(100);
-//                getActivity().onBackPressed();
-//            }
-//        });
-
 		/**
 		 * 菜单部分
 		 */
@@ -175,32 +106,14 @@ public class YinXiangCategoryFragment extends Fragment {
                 MyApplication.vibrator.vibrate(100);
                 Intent intent = new Intent(getActivity(), SearchActivity.class);
                 startActivity(intent);
-//                Toast.makeText(getActivity(), "暂不支持，敬请期待...", 3000).show();
             }
         });
 
 	}
 
-	/********************************************** 系统发发重载 *********************************************************/
-
 	@Override
 	public void onResume() {
 		super.onResume();
-//        if (ClientSendCommandService.titletxt != null) {
-//            title.setText(ClientSendCommandService.titletxt);
-//        }
 	}
-
-//	@Override
-//	public boolean onKeyDown(int keyCode, KeyEvent event) {
-//		switch (keyCode) {
-//		case KeyEvent.KEYCODE_BACK:
-//			finish();
-//			break;
-//		default:
-//			break;
-//		}
-//		return super.onKeyDown(keyCode, event);
-//	}
 
 }

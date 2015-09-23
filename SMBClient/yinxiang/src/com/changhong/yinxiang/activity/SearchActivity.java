@@ -11,6 +11,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -285,6 +286,19 @@ public class SearchActivity extends Activity {
 				}
 			}			
 		});		
+		
+		myHistory.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {   
+				     searchHistoryAdapter adapter=(searchHistoryAdapter) myHistory.getAdapter();
+				     String record=adapter.getItemLable(view);	
+				     search_keywords.setText(record);
+			}
+		});
+		
+		
 		setSearchHistory();		
        ((RadioButton) search_type.getChildAt(0)).setChecked(true);
 	   XMMusicData.getInstance(SearchActivity.this).iniData(handler);
@@ -305,6 +319,8 @@ public class SearchActivity extends Activity {
 				// TODO Auto-generated method stub
 				Log.i("mmmm","mAlbumName[position]"+ mAlbumName[position]);
 				searchKey(mAlbumName[position]);
+			    search_keywords.setText(mAlbumName[position]);
+
 			}
 		});
 	}

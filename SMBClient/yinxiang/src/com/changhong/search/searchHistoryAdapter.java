@@ -99,13 +99,19 @@ public class searchHistoryAdapter extends BaseAdapter {
 			}		
 	}
 	
+	public String getItemLable(View view){
+		DataHolder holder=(DataHolder) view.getTag();
+		String lable=(String) holder.name.getText();
+		return lable;
+	}
 
 	private class DataHolder {
-
 		// 推荐的图�?
 		public TextView name;	
 		// 删除是否被选中
 		public CheckBox removeChecked;
-	
 	}
+	
+	
+	
 }

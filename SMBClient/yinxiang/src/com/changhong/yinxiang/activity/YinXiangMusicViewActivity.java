@@ -111,6 +111,8 @@ public class YinXiangMusicViewActivity extends Activity {
 	public static final int FILE_EDIT_COPY = 3;
 	public static final int FILE_EDIT_RENAME = 4;
 	public static final int FILE_EDIT_REMOVE = 5;
+	
+	public static final int COMMUNICATION_ERROR = 1000;
 
 	// 请求音响设备的音乐文件
 	public static final int REQUEST_AUDIOEQUIPMENT_MUSIC = 6;
@@ -618,7 +620,8 @@ public class YinXiangMusicViewActivity extends Activity {
 			case FILE_EDIT_RENAME:
 
 				musicPath = mEditMusic.getPath();
-				String newName = (String) msg.obj;
+				String newName = (String) msg.getData().get("newName");
+				String newFilePath= (String) msg.getData().get("newFilePath");
 				if (STORAGE_YINXIANG == curStorage) {
 					
 					mEditMusic.setTitle(newName);
@@ -632,6 +635,7 @@ public class YinXiangMusicViewActivity extends Activity {
 					String result = "重命名失败";
 					if (StringUtils.hasLength(newName)) {
 						mEditMusic.setTitle(newName);
+						mEditMusic.setPath(newFilePath);
 						musicAdapter.changeAdapterData(MusicUtils.EDIT_RENAME,	mEditMusic);
 						musicAdapter.notifyDataSetChanged();
 						result = "重命名成功";
@@ -662,6 +666,13 @@ public class YinXiangMusicViewActivity extends Activity {
 					// 提示操作结果
 					Toast.makeText(YinXiangMusicViewActivity.this, result,Toast.LENGTH_SHORT).show();
 				}
+				break;
+			case COMMUNICATION_ERROR:
+				// 关闭进度条
+				if (null != mFileEdit) {
+					mFileEdit.closeProgressDialog();
+				}
+				Toast.makeText(YinXiangMusicViewActivity.this, "通讯失败",Toast.LENGTH_SHORT).show();
 				break;
 			default:
 				break;

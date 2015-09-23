@@ -53,6 +53,8 @@ public class FileEditDialog extends Dialog {
     public void show(int type){
     	    if(2==type){
     	    	edit_copy1.setImageResource(R.drawable.copytomobile);
+    	    }else{
+    	    	edit_copy1.setImageResource(R.drawable.copytoyinxiang);
     	    }
     	    this.show();
     }

@@ -11,6 +11,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.Gravity;
@@ -219,6 +220,7 @@ public class MusicEdit {
 						public void onClick(DialogInterface dialog, int which) {
 							// TODO 自动生成的方法存根
 							String newName = mEditText.getText().toString();
+							String newFilePath="";
 							if (null != newName && newName.length() > 0) {
 								reNameDialog.dismiss();
 								// 获取焦点文件
@@ -228,7 +230,7 @@ public class MusicEdit {
 								
 									// 本地重命名文件，成功，则，更新媒体库记录。
 									if (mFileUtil.reNameFile(	filePath, newName)) {		
-										String newFilePath=mFileUtil.getNewFilePath(filePath, newName);
+										newFilePath=mFileUtil.getNewFilePath(filePath, newName);
 										upDateMediaStoreFile(filePath,newFilePath);
 									} else {									
 										newName = "";
@@ -236,7 +238,10 @@ public class MusicEdit {
 								}
 								Message msg = parentHandler.obtainMessage();
 								msg.what = YinXiangMusicViewActivity.FILE_EDIT_RENAME;
-								msg.obj = newName;
+								Bundle bundle=new Bundle();
+								bundle.putString("newName", newName);
+								bundle.putString("newFilePath", newFilePath);
+								msg.setData(bundle);
 								parentHandler.sendMessage(msg);
 							}
 						}

@@ -10,6 +10,8 @@ import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.view.*;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -25,28 +27,20 @@ public class YinXiangFMFragment extends Fragment {
 	 */
 	public static Handler mHandler = null;
 
-	/************************************************** IP连接部分 *******************************************************/
-   
-//	private BoxSelectAdapter ipAdapter = null;
-//	public static TextView title = null;
-//	private ListView clients = null;
-//	private Button list = null;
-//	private Button back = null;
-
 	/************************************************** 频道部分 *******************************************************/
 
 	private GridView FMlist = null;
 	private FMAdapter adapter = null;
 
 	/********************************************************** play按钮 ***********************************************************/
-	private ImageView mPlayingBtn = null;
 	private AnimationDrawable mAnimation = null;
+	private  int  curPlayingIndex;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		// // 请求Fm列表信息
-		 ClientSendCommandService.handler.sendEmptyMessage(2);
+		// 请求Fm列表信息
+		ClientSendCommandService.handler.sendEmptyMessage(2);
 
 	}
 
@@ -65,6 +59,15 @@ public class YinXiangFMFragment extends Fragment {
 		FMlist.setSelector(new ColorDrawable(Color.TRANSPARENT));
 		adapter = new FMAdapter(getActivity());
 		FMlist.setAdapter(adapter);
+//		FMlist.setOnItemClickListener(new OnItemClickListener() {
+//
+//			@Override
+//			public void onItemClick(AdapterView<?> parent, View view,
+//					int position, long id) {
+//				adapter.changeImageMode(view, position);  			
+//			}
+//		});
+	
 		
 		mHandler=new Handler(){
 			  public void handleMessage(Message msg1) {
@@ -90,10 +93,14 @@ public class YinXiangFMFragment extends Fragment {
 	 */
 	private class FMAdapter extends BaseAdapter {
 
-		private LayoutInflater minflater;
-
+		private  Context  mContext;
+		private View mLastView = null;
+		private int mLastPosition=-1;
+		private ImageView  mPlayingImage=null;
+		
+      
 		public FMAdapter(Context context) {
-			this.minflater = LayoutInflater.from(context);
+			this.mContext = context;
 		}
 
 		public int getCount() {
@@ -107,27 +114,72 @@ public class YinXiangFMFragment extends Fragment {
 		public long getItemId(int position) {
 			return position;
 		}
-
+		
+//		public View getView(final int position, View convertView,	ViewGroup parent) {
+//			/**
+//			 * VIEW HOLDER的配置
+//			 */
+//			final ViewHolder vh;
+//			if (convertView == null) {
+//			    LayoutInflater minflater=LayoutInflater.from(mContext);
+//				convertView = minflater.inflate(R.layout.activity_fm_item, null);
+//				vh = new ViewHolder();
+//				vh.FMname = (TextView) convertView.findViewById(R.id.fmtxt);
+//				vh.FMplay = (ImageView) convertView.findViewById(R.id.btn_fm);
+//				convertView.setTag(vh);
+//			} else {
+//				vh = (ViewHolder) convertView.getTag();
+//			}
+//			
+//			
+//			if (ClientSendCommandService.serverFMInfo.size() > 0) {
+//
+//				vh.FMname.setText(ClientSendCommandService.serverFMInfo	.get(position));
+////				vh.FMplay.setTag(position);
+////				vh.FMplay.setOnClickListener(new OnClickListener() {
+////					@Override
+////					public void onClick(View arg0) {
+////						MyApplication.vibrator.vibrate(100);
+////						String serverFMInfor=ClientSendCommandService.serverFMInfo.get(position);
+////						ClientSendCommandService.msg = "fm:"	+serverFMInfor;
+////						ClientSendCommandService.handler.sendEmptyMessage(1);
+//
+////						if (null != mPlayingImage && null !=mAnimation) {
+////							if (mAnimation.isRunning())mAnimation.stop();
+////							mPlayingImage.setBackgroundResource(R.drawable.fmplay);
+////						}
+////						int pos=Integer.parseInt(arg0.getTag().toString());
+////						//检查是否同一电台
+////						if(position == pos){					
+////							arg0.setBackgroundResource(R.anim.playing_anim);
+////							mAnimation = (AnimationDrawable) arg0.getBackground();
+////							mAnimation.start();
+////							mPlayingImage =(ImageView) arg0;
+////							curFocusIndex=position;
+////						}
+////					}
+////				});
+//			}
+//			return convertView;
+//		}
+		
+		
 		public View getView(final int position, View convertView,	ViewGroup parent) {
 			/**
 			 * VIEW HOLDER的配置
 			 */
 			final ViewHolder vh;
 			if (convertView == null) {
-				vh = new ViewHolder();
+			    LayoutInflater minflater=LayoutInflater.from(mContext);
 				convertView = minflater.inflate(R.layout.activity_fm_item, null);
-				vh.FMname = (TextView) convertView.findViewById(R.id.fmtxt);
-				vh.FMplay = (ImageView) convertView.findViewById(R.id.btn_fm);
-				convertView.setTag(vh);
-			} else {
-				vh = (ViewHolder) convertView.getTag();
-			}
-			
+			} 			
+			TextView FMname= (TextView) convertView.findViewById(R.id.fmtxt);
+			ImageView FMplay = (ImageView) convertView.findViewById(R.id.btn_fm);
 			if (ClientSendCommandService.serverFMInfo.size() > 0) {
 
-				vh.FMname.setText(ClientSendCommandService.serverFMInfo	.get(position));
-				vh.FMplay.setTag(vh);
-				vh.FMplay.setOnClickListener(new OnClickListener() {
+				FMname.setText(ClientSendCommandService.serverFMInfo	.get(position));
+				FMplay.setTag(position);
+			    FMplay.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View arg0) {
 						MyApplication.vibrator.vibrate(100);
@@ -135,34 +187,48 @@ public class YinXiangFMFragment extends Fragment {
 						ClientSendCommandService.msg = "fm:"	+serverFMInfor;
 						ClientSendCommandService.handler.sendEmptyMessage(1);
 
-						if (null != mPlayingBtn && null !=mAnimation) {
+						if (null != mPlayingImage && null !=mAnimation) {
 							if (mAnimation.isRunning())mAnimation.stop();
-							mPlayingBtn.setBackgroundResource(R.drawable.fmplay);
+							mPlayingImage.setBackgroundResource(R.drawable.fmplay);
 						}
-						
+						int pos=Integer.parseInt(arg0.getTag().toString());
 						//检查是否同一电台
-						if(!arg0.equals(mPlayingBtn)){					
-							ViewHolder vh = (ViewHolder) arg0.getTag();
-							String  fmName=(String) vh.FMname.getText();
-							if(fmName.equals(serverFMInfor)){
-								arg0.setBackgroundResource(R.anim.playing_anim);
-								mAnimation = (AnimationDrawable) arg0.getBackground();
-								mAnimation.start();
-								mPlayingBtn =(ImageView) arg0;
-							}
+						if(pos != mLastPosition){					
+							arg0.setBackgroundResource(R.anim.playing_anim);
+							mAnimation = (AnimationDrawable) arg0.getBackground();
+							mAnimation.start();
+							mPlayingImage =(ImageView) arg0;
+							mLastPosition=position;
 						}
-						
-
 					}
 				});
 			}
 			return convertView;
 		}
 		
-	
 		
-		
-		
+		public void changeImageMode(View view,int position) { 
+			
+			MyApplication.vibrator.vibrate(100);
+			String serverFMInfor=ClientSendCommandService.serverFMInfo.get(position);
+			ClientSendCommandService.msg = "fm:"	+serverFMInfor;
+			ClientSendCommandService.handler.sendEmptyMessage(1);
+			
+	        if(mLastView != null && mLastPosition != position ) {  
+	        	ViewHolder holder = (ViewHolder) mLastView.getTag();  
+				if (mAnimation.isRunning())mAnimation.stop();
+				holder.FMplay.setBackgroundResource(R.drawable.fmplay);	            
+	        }  	        
+	        if(mLastPosition !=position){
+		            mLastPosition = position;  
+			        mLastView = view;  
+			        ViewHolder holder = (ViewHolder) view.getTag();  
+			        holder.FMplay.setBackgroundResource(R.anim.playing_anim);
+			        mAnimation = (AnimationDrawable) holder.FMplay.getBackground();
+					mAnimation.start();	 
+	        }
+	        
+	    }  
 		
 		
 

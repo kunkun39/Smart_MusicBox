@@ -44,7 +44,7 @@ public class BaiDuVoiceConfiguration {
      * 获得百度语音配置文件
      */
     public static VoiceRecognitionConfig getVoiceRecognitionConfig() {
-        VoiceRecognitionConfig config = new VoiceRecognitionConfig();
+        final VoiceRecognitionConfig config = new VoiceRecognitionConfig();
         config.setProp(BaiDuVoiceConfiguration.CURRENT_PROP);
         config.setLanguage(BaiDuVoiceConfiguration.CURRENT_LANGUAGE);
         config.enableContacts(); // 启用通讯录
