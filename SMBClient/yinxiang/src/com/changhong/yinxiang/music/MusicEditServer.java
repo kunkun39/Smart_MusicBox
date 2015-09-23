@@ -5,24 +5,21 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import com.changhong.yinxiang.activity.AlarmMainActivity;
-import com.changhong.yinxiang.activity.YinXiangMusicViewActivity;
-import com.changhong.yinxiang.nanohttpd.HttpDownloader;
-import com.changhong.yinxiang.utils.FileUtil;
-
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
-import android.widget.Toast;
+
+import com.changhong.yinxiang.activity.AlarmMainActivity;
+import com.changhong.yinxiang.activity.YinXiangMusicViewActivity;
+import com.changhong.yinxiang.nanohttpd.HttpDownloader;
 
 
 public class MusicEditServer {
@@ -174,8 +171,6 @@ public class MusicEditServer {
 					mServerSocket = new ServerSocket(SOCKET_PORT);			
 				}
 				
-//				//发送请求数据消息
-//				mParentHandler.sendEmptyMessage(AlarmMainActivity.SEND_GET_REQUEST);
 				// 设置接收延迟时间
 				mServerSocket.setSoTimeout(10000);
 				// 获取音响端发送的socket的对象

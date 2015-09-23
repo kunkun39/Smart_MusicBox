@@ -62,7 +62,7 @@ public class AlarmMainActivity extends BaseActivity {
 				break;
 				
 			case SEND_GET_REQUEST:
-				getAlarmMsg();
+				
 				break;
 
 			}
@@ -84,7 +84,8 @@ public class AlarmMainActivity extends BaseActivity {
 		// TODO Auto-generated method stub
 		// 启动TCP接收线程
 		mMusicEditServer = MusicEditServer.creatFileEditServer();
-		
+		mMusicEditServer.communicationWithServer(handler,
+				MusicUtils.ACTION_SOCKET_COMMUNICATION, action);
 
 		setContentView(R.layout.alarm_main);
 		add = (Button) findViewById(R.id.add);
@@ -132,8 +133,8 @@ public class AlarmMainActivity extends BaseActivity {
 		// });
 		
 		
-		mMusicEditServer.communicationWithServer(handler,
-				MusicUtils.ACTION_SOCKET_COMMUNICATION, action);
+		
+		getAlarmMsg();
 		showMyDialog();
 	}
 
