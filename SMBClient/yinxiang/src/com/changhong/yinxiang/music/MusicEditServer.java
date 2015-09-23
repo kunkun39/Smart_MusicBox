@@ -174,8 +174,8 @@ public class MusicEditServer {
 					mServerSocket = new ServerSocket(SOCKET_PORT);			
 				}
 				
-				//发送请求数据消息
-				mParentHandler.sendEmptyMessage(AlarmMainActivity.SEND_GET_REQUEST);
+//				//发送请求数据消息
+//				mParentHandler.sendEmptyMessage(AlarmMainActivity.SEND_GET_REQUEST);
 				// 设置接收延迟时间
 				mServerSocket.setSoTimeout(10000);
 				// 获取音响端发送的socket的对象

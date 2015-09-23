@@ -53,6 +53,7 @@ import com.changhong.yinxiang.fragment.YinXiangFMFragment;
 import com.changhong.yinxiang.fragment.YinXiangNetMusicFragment;
 import com.changhong.yinxiang.fragment.YinXiangRemoteControlFragment;
 import com.changhong.yinxiang.fragment.YinXiangSettingFragment;
+import com.changhong.yinxiang.music.MusicEditServer;
 import com.changhong.yinxiang.service.AppLogService;
 import com.changhong.yinxiang.service.ClientGetCommandService;
 import com.changhong.yinxiang.service.ClientLocalThreadRunningService;
@@ -128,6 +129,11 @@ public class YinXiangMainActivity extends FragmentActivity {
 		Intent service3 = new Intent(YinXiangMainActivity.this,
 				ClientLocalThreadRunningService.class);
 		startService(service3);
+		
+		/**
+		 * 启动通讯服务
+		 */
+		MusicEditServer.creatFileEditServer();
 	}
 
 	private void initViewAndEvent() {
