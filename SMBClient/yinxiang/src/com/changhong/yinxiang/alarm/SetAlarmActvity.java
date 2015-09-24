@@ -262,7 +262,7 @@ public class SetAlarmActvity extends BaseActivity {
 	private void addAlarm() {
 		int length = 0;
 		int id = 0;
-		if (AlarmMainActivity.mAlarmList != null) {
+		if (AlarmMainActivity.mAlarmList != null&&AlarmMainActivity.mAlarmList.size()>0) {
 			length = AlarmMainActivity.mAlarmList.size();
 			for (int i = 0; i < length; i++) {
 				int cache = AlarmMainActivity.mAlarmList.get(i).getId();
@@ -464,6 +464,13 @@ public class SetAlarmActvity extends BaseActivity {
 		}
 		if (alarm != null) {
 			alarm.setMusicBean(musicListInit);
+		}
+		//设置音乐名字，用设置的音乐列表中的第一首歌曲作为名字
+		if(musicListInit!=null&&musicListInit.size()>0){
+			String name =musicListInit.get(0).getTitle();
+			curMusic.setText(name);
+		}else {
+			curMusic.setText("");
 		}
 	}
 
