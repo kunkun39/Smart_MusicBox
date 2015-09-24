@@ -8,13 +8,16 @@ import java.util.Date;
 
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
 import android.net.Uri;
+import android.net.wifi.WifiManager;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.util.JsonReader;
 import android.view.MotionEvent;
 
 import com.changhong.common.service.ClientSendCommandService;
+import com.changhong.common.service.NetworkConnectChangedReceiver;
 import com.changhong.common.system.MyApplication;
 import com.changhong.common.utils.DateUtils;
 
@@ -79,6 +82,11 @@ import android.content.IntentFilter;
 public class YinXiangMainActivity extends FragmentActivity {
 
 	private static final String TAG = "YinXiangMainFragmentActivity";
+	/*
+	 * wifi监听
+	 */
+	private IntentFilter wifiFilter = null;
+	private NetworkConnectChangedReceiver networkConnectChange = null;
 
 	/************************************************** IP连接部分 *******************************************************/
 
@@ -134,6 +142,11 @@ public class YinXiangMainActivity extends FragmentActivity {
 		 * 启动通讯服务
 		 */
 		MusicEditServer.creatFileEditServer();
+		
+		/*
+		 * 启动WiFi监听的广播接收器
+		 */
+		regWifiBroadcastRec();
 	}
 
 	private void initViewAndEvent() {
@@ -296,6 +309,7 @@ public class YinXiangMainActivity extends FragmentActivity {
 			unregisterReceiver(updateReceiver);
 			updateReceiver = null;
 		}
+		unregisterWifiBroad();
 	}
 
 	@Override
@@ -797,4 +811,21 @@ public class YinXiangMainActivity extends FragmentActivity {
 		return reValue;
 	}
 
+	
+	private void regWifiBroadcastRec() {
+		wifiFilter = new IntentFilter();
+		if (null == networkConnectChange) {
+			networkConnectChange = new NetworkConnectChangedReceiver();
+		}
+		wifiFilter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
+		wifiFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
+		wifiFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+		registerReceiver(networkConnectChange, wifiFilter);
+	}
+
+	private void unregisterWifiBroad() {
+		if (networkConnectChange != null) {
+			unregisterReceiver(networkConnectChange);
+		}
+	}
 }
