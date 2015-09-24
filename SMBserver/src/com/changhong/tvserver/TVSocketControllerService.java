@@ -465,7 +465,7 @@ public class TVSocketControllerService extends Service {
 						} else if (msg1.startsWith("getAlarmMsg:")) {
 							Log.i("mmmm", TAG + ":" + msg1);
 							handleAlarm(msg1);
-						}else if (msg1.startsWith("autoctrl:")) {
+						} else if (msg1.startsWith("autoctrl:")) {
 							Log.i("mmmm", TAG + ":" + msg1);
 							handleAutoCtrl(msg1);
 						}
@@ -812,12 +812,13 @@ public class TVSocketControllerService extends Service {
 	private void handleAutoCtrl(String str) {
 		if (str == null || str.equals(""))
 			return;
-		
-		//获取命令		
-		String  command= str.substring("autoctrl:".length()+1);
-		//设置自动控制标记
-		ClientOnLineMonitorService.setAutoControlFlag(command.equals("auto_on")?true:false);
-		
+
+		// 获取命令
+		String command = str.substring("autoctrl:".length() + 1);
+		// 设置自动控制标记
+		ClientOnLineMonitorService
+				.setAutoControlFlag(command.equals("auto_on") ? true : false);
+
 	}
 
 	/*
@@ -1005,18 +1006,18 @@ public class TVSocketControllerService extends Service {
 			Cursor cursor = contentResolver.query(selectUri, null, null, null,
 					null);
 			if (cursor != null) {
-				cursor.moveToFirst();
-			}
-			while (cursor != null && cursor.moveToNext()) {
-				String FMname = cursor.getString(cursor.getColumnIndex("name"));
-				String state = cursor.getString(cursor.getColumnIndex("state"));
-				JSONObject single = new JSONObject();
-				single.put("FMname", FMname);
-				single.put("state", state);
-				all.put(single);
-			}
-			if (cursor != null)
+				while (cursor.moveToNext()) {
+					String FMname = cursor.getString(cursor
+							.getColumnIndex("name"));
+					String state = cursor.getString(cursor
+							.getColumnIndex("state"));
+					JSONObject single = new JSONObject();
+					single.put("FMname", FMname);
+					single.put("state", state);
+					all.put(single);
+				}
 				cursor.close();
+			}
 
 			/**
 			 * 输入FM列表到文�?
