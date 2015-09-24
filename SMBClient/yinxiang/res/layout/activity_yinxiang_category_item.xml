@@ -43,6 +43,7 @@
             android:contentDescription="Image"
             android:scaleType="centerCrop" />
 
+    
     <!--3-->
     <ImageView
             android:id="@+id/package_picture_3"
