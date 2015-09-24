@@ -46,7 +46,7 @@
             android:layout_margin="8dip"
             android:layout_weight="1"
             android:adjustViewBounds="true"
-            android:src="@drawable/edit_copy1"
+            android:src="@drawable/copytoyinxiang"
             android:scaleType="fitCenter" />  
 
 </LinearLayout>
