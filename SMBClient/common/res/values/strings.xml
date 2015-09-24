@@ -10,5 +10,5 @@
     <string name="menu_tv">数字电视</string>
     <string name="menu_items">侧边栏菜单</string>
     <string name="menu_exit">侧边栏菜单退出</string>
-
+    <string name="wifi_disabled">网络已断开，请检查网络状况!</string>
 </resources>
