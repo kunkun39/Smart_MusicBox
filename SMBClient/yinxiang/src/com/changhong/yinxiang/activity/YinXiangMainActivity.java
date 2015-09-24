@@ -184,8 +184,7 @@ public class YinXiangMainActivity extends FragmentActivity {
 		/**
 		 * Ip部分
 		 */
-		adapter = new BoxSelectAdapter(YinXiangMainActivity.this,
-				ClientSendCommandService.serverIpList);
+		adapter = new BoxSelectAdapter(YinXiangMainActivity.this,ClientSendCommandService.serverIpList);
 		clients.setAdapter(adapter);
 		clients.setOnTouchListener(new View.OnTouchListener() {
 			@Override
