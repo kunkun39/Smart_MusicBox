@@ -123,12 +123,11 @@ public class FileEditManager {
 						if (fileUrl.toLowerCase().startsWith("http://")
 								|| fileUrl.toLowerCase().startsWith("https://")) {
 							try {
-								String fileName = mFileUtil
-										.getFileName(fileUrl);
-								downLoadResult = HttpDownloader.download(
-										fileUrl, "music", fileName);
-								mFileUtil
-										.checkMaxFileItemExceedAndProcess("music");
+								
+								mFileUtil	.checkMaxFileItemExceedAndProcess("music");
+								String fileName = mFileUtil.getFileName(fileUrl);
+								downLoadResult = HttpDownloader.download(fileUrl, "music", fileName);
+								
 
 								// 通讯结果回复给主线程
 								if (null != mParentHandler) {
