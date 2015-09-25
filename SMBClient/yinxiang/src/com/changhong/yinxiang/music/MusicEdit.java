@@ -67,7 +67,6 @@ public class MusicEdit {
 
 			fileEditDialog = new FileEditDialog(mContext);
 			fileEditDialog.setCanceledOnTouchOutside(true);
-
 			// 设置盒子端闹铃铃声
 			fileEditDialog.edit_clock
 					.setOnClickListener(new View.OnClickListener() {
@@ -221,16 +220,14 @@ public class MusicEdit {
 							// TODO 自动生成的方法存根
 							String newName = mEditText.getText().toString();
 							String newFilePath="";
-							if (null != newName && newName.length() > 0) {
+							if (StringUtils.hasLength(newName)) {
 								reNameDialog.dismiss();
 								// 获取焦点文件
 								String filePath = mEditMusic.getPath();
-
-								if (1 == curStorageDev) {
-								
+								newFilePath=mFileUtil.getNewFilePath(filePath, newName);
+								if (1 == curStorageDev) {							
 									// 本地重命名文件，成功，则，更新媒体库记录。
 									if (mFileUtil.reNameFile(	filePath, newName)) {		
-										newFilePath=mFileUtil.getNewFilePath(filePath, newName);
 										upDateMediaStoreFile(filePath,newFilePath);
 									} else {									
 										newName = "";
@@ -278,6 +275,11 @@ public class MusicEdit {
 	}
 	
 	
+	public String getFileUrlByName(String fileUrl,String newName){		  
+		return mFileUtil.getNewFilePath(fileUrl, newName);
+	}
+	
+	
 	/**
 	 * 特殊字符还原
 	 * @param url  url字符串
@@ -292,5 +294,7 @@ public class MusicEdit {
         return url;
     }
 
+	
+	
 	
 }

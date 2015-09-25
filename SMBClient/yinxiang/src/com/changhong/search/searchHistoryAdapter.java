@@ -75,7 +75,7 @@ public class searchHistoryAdapter extends BaseAdapter {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				CheckBox check = (CheckBox) v;
+				CheckBox check=(CheckBox) v;
 				String name=(String) check.getTag();
 				if (check.isChecked()) {
 					if (!selectHistorys.contains(name))
@@ -85,7 +85,8 @@ public class searchHistoryAdapter extends BaseAdapter {
 				}
 			}
 		});
-
+		
+		
 		return convertView;
 	}
 	

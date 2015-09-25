@@ -287,7 +287,7 @@ public class SearchActivity extends Activity {
 			}			
 		});		
 		
-		myHistory.setOnItemClickListener(new OnItemClickListener() {
+		myHistory.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,

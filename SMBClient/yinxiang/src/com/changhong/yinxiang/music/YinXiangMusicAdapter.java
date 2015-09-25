@@ -195,7 +195,7 @@ public class YinXiangMusicAdapter extends BaseAdapter {
 		wapper.musicIndex.setText(Integer.toString(position+1));
 		wapper.musicName.setText(displayName);
 		wapper.fullPath.setText(musicPath);
-		String musicImagePath = DiskCacheFileManager	.isSmallImageExist(musicPath);
+		String musicImagePath = DiskCacheFileManager.isSmallImageExist(musicPath);
 //		if (!musicImagePath.equals("")) {
 //			MyApplication.imageLoader.displayImage("file://" + musicImagePath,
 //					wapper.musicImage, MyApplication.viewOptions);

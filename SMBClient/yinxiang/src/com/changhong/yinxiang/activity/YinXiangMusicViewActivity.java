@@ -95,6 +95,8 @@ public class YinXiangMusicViewActivity extends Activity {
 	 */
 	MusicEdit mFileEdit = null;
 	YinXiangMusic mEditMusic = null;
+	
+	String  saveNewName=null;
 
 	// 设备类型
 	private RadioGroup radioGroup;
@@ -161,6 +163,7 @@ public class YinXiangMusicViewActivity extends Activity {
 		curStorage = STORAGE_MOBILE;
 		mFileEdit = new MusicEdit(this, mHandle);
 		mMusicEditServer = MusicEditServer.creatFileEditServer();
+
 
 	}
 
@@ -549,9 +552,22 @@ public class YinXiangMusicViewActivity extends Activity {
 					String result = (String) msg.getData().get("result");
 					String action = (String) msg.getData().get("action");
 
-					if (result.contains("success")) {
+					if (result.contains("success")) {						
+						//远程重命名成功，更新数据
+						if(	action.equals(MusicUtils.EDIT_RENAME) && StringUtils.hasLength(saveNewName) ){
+							String oldName=mEditMusic.getTitle();
+							String path=mEditMusic.getPath();
+							String fileUrl=mEditMusic.getFileUrl();
+							path=path.replace(oldName, saveNewName);
+							fileUrl=fileUrl.replace(oldName, saveNewName);
+							mEditMusic.setTitle(saveNewName);
+							mEditMusic.setPath(path);
+							mEditMusic.setFileUrl(fileUrl);
+							saveNewName=null;
+						}
 						musicAdapter.changeAdapterData(action, mEditMusic);
-						musicAdapter.notifyDataSetChanged();
+						musicAdapter.notifyDataSetChanged();	
+						
 						result = "远程操作成功";
 					} else if (result.contains("failed")) {
 						result = "远程操作失败";
@@ -569,6 +585,8 @@ public class YinXiangMusicViewActivity extends Activity {
 					if (null != mFileEdit) {
 						mFileEdit.closeProgressDialog();
 					}
+					
+					
 
 				}
 				break;
@@ -622,9 +640,9 @@ public class YinXiangMusicViewActivity extends Activity {
 				musicPath = mEditMusic.getPath();
 				String newName = (String) msg.getData().get("newName");
 				String newFilePath= (String) msg.getData().get("newFilePath");
-				if (STORAGE_YINXIANG == curStorage) {
-					
-					mEditMusic.setTitle(newName);
+				saveNewName=null;
+				if (STORAGE_YINXIANG == curStorage) {				
+					saveNewName=newName;
 					sendFileEditMsg2YinXiang(musicPath, MusicUtils.EDIT_RENAME,newName);
 					mMusicEditServer.communicationWithServer(mHandle,
 							MusicUtils.ACTION_SOCKET_COMMUNICATION,
@@ -730,6 +748,28 @@ public class YinXiangMusicViewActivity extends Activity {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+	}
+	
+	
+	
+	private class NewNameConfig{
+		 String  newName;
+		 String  newFilePath;
+		 String  newFileURL;
+		 
+		 public void init(){
+			 newName="";
+			 newFilePath="";
+		     newFileURL="";
+		 }
+		 
+		 public boolean isValid(){
+			 if(StringUtils.hasLength(newName) 
+					 &&StringUtils.hasLength(newName) 
+					 &&StringUtils.hasLength(newName) )
+				 return true;
+			 return false;
+		 }
 	}
 
 }

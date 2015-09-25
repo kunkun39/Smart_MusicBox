@@ -216,7 +216,9 @@ public class YinXiangFMFragment extends Fragment {
 			        holder.FMplay.setBackgroundResource(R.anim.playing_anim);
 			        mAnimation = (AnimationDrawable) holder.FMplay.getBackground();
 					mAnimation.start();	 
-	        }        
+	        }else{       
+	        	mLastPosition=-1;
+	        }
 	    }  
 		
 		
