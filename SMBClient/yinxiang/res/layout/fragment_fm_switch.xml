@@ -1,7 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="558dip"
+    android:layout_height="match_parent"
     android:orientation="vertical" >
 
         <!-- 频道列表显示部分 -->
@@ -9,8 +9,10 @@
         <GridView
             android:layout_marginTop="68dip"
             android:id="@+id/fmlist"
-            android:layout_width="301dip"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginLeft="30dip"
+            android:layout_marginRight="30dip"
             android:layout_centerHorizontal="true"
             android:numColumns="1"
             android:verticalSpacing="20dp"
