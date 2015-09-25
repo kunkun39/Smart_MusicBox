@@ -153,8 +153,8 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 		btn_right.setOnClickListener(this);
 		btn_center.setOnTouchListener(this);
 		btn_center.setOnClickListener(this);
-		btn_v2.setOnTouchListener(this);
-		btn_v2.setOnClickListener(new OnClickListener() {
+		btn_v1.setOnTouchListener(this);
+		btn_v1.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View arg0) {
@@ -165,8 +165,8 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 				}
 			}
 		});
-		btn_v1.setOnTouchListener(this);
-		btn_v1.setOnClickListener(new OnClickListener() {
+		btn_v2.setOnTouchListener(this);
+		btn_v2.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View arg0) {
