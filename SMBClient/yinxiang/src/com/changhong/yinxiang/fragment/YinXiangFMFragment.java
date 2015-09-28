@@ -1,5 +1,7 @@
 package com.changhong.yinxiang.fragment;
 
+import java.util.HashMap;
+
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -10,15 +12,11 @@ import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
 import android.view.*;
-import android.view.View.OnClickListener;
-import android.widget.AbsoluteLayout.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.changhong.common.service.ClientSendCommandService;
 import com.changhong.common.system.MyApplication;
@@ -39,6 +37,12 @@ public class YinXiangFMFragment extends Fragment {
 	/********************************************************** play按钮 ***********************************************************/
 	private AnimationDrawable mAnimation = null;
 	private  int  curPlayingIndex;
+	
+	private HashMap<Integer, View> viewMap=null;
+	private View mLastView = null;
+	private int mLastPosition=-1;
+	private ImageView  mPlayingImage=null;
+
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -58,6 +62,7 @@ public class YinXiangFMFragment extends Fragment {
 	}
 
 	private void initViewAndEvent(View v) {
+		viewMap=new HashMap<Integer, View>() ;
 		FMlist = (GridView) v.findViewById(R.id.fmlist);
 		//取消GridView中Item选中时默认的背景色
 		FMlist.setSelector(new ColorDrawable(Color.TRANSPARENT));
@@ -98,9 +103,7 @@ public class YinXiangFMFragment extends Fragment {
 	private class FMAdapter extends BaseAdapter {
 
 		private  Context  mContext;
-		private View mLastView = null;
-		private int mLastPosition=-1;
-		private ImageView  mPlayingImage=null;
+		
 		
       
 		public FMAdapter(Context context) {
@@ -129,14 +132,16 @@ public class YinXiangFMFragment extends Fragment {
 			 * VIEW HOLDER的配置
 			 */
 			final ViewHolder vh;
-			if (convertView == null) {
+			if(!viewMap.containsKey(position)){  
 			    LayoutInflater minflater=LayoutInflater.from(mContext);
 				convertView = minflater.inflate(R.layout.activity_fm_item, null);
 				vh = new ViewHolder();
 				vh.FMname = (TextView) convertView.findViewById(R.id.fmtxt);
 				vh.FMplay = (ImageView) convertView.findViewById(R.id.btn_fm);
 				convertView.setTag(vh);
+				viewMap.put(position, convertView);
 			} else {
+	            convertView = viewMap.get(position);  
 				vh = (ViewHolder) convertView.getTag();
 			}
 			
@@ -145,7 +150,7 @@ public class YinXiangFMFragment extends Fragment {
 
 				vh.FMname.setText(ClientSendCommandService.serverFMInfo	.get(position));
 				vh.id=position;
-                Log.e("YDINFOR:: ","  position="+position);
+                Log.e("YDINFOR:: ","  position="+position);             
 			}
 			return convertView;
 		}
@@ -204,6 +209,7 @@ public class YinXiangFMFragment extends Fragment {
 	        if(mLastView != null ) {  
 	        	holder = (ViewHolder) mLastView.getTag();  
 	        	mLastPosition=holder.id;
+	        	mLastView=null;
 				if (mAnimation.isRunning())mAnimation.stop();
 				holder.FMplay.setBackgroundResource(R.drawable.fmplay);	 
 				holder.FMname.setTextColor(mContext.getResources().getColor(R.color.white));

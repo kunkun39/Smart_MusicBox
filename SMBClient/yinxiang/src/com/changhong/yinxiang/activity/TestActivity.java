@@ -1,104 +1,160 @@
 package com.changhong.yinxiang.activity;
 
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URI;
-import java.net.URL;
-import java.util.Date;
 
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.net.ConnectivityManager;
-import android.net.Uri;
-import android.net.wifi.WifiManager;
-import android.support.v4.app.FragmentActivity;
-import android.text.TextUtils;
-import android.util.JsonReader;
-import android.view.MotionEvent;
+import java.util.HashMap;
 
 import com.changhong.common.service.ClientSendCommandService;
-import com.changhong.common.service.NetworkConnectChangedReceiver;
 import com.changhong.common.system.MyApplication;
-import com.changhong.common.utils.DateUtils;
-
+import com.changhong.yinxiang.R;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
-import android.app.AlertDialog.Builder;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.util.Log;
-import android.view.KeyEvent;
-import android.view.Menu;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Button;
-import android.widget.ListView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
+import android.widget.BaseAdapter;
+import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.changhong.common.utils.NetworkUtils;
-import com.changhong.common.widgets.BoxSelectAdapter;
-import com.changhong.search.searchHistoryAdapter;
-import com.changhong.yinxiang.R;
-import com.changhong.yinxiang.fragment.YinXiangCategoryFragment;
-import com.changhong.yinxiang.fragment.YinXiangFMFragment;
-import com.changhong.yinxiang.fragment.YinXiangNetMusicFragment;
-import com.changhong.yinxiang.fragment.YinXiangRemoteControlFragment;
-import com.changhong.yinxiang.fragment.YinXiangSettingFragment;
-import com.changhong.yinxiang.music.MusicEditServer;
-import com.changhong.yinxiang.service.AppLogService;
-import com.changhong.yinxiang.service.ClientGetCommandService;
-import com.changhong.yinxiang.service.ClientLocalThreadRunningService;
-import com.changhong.yinxiang.service.UpdateLogService;
-import com.changhong.yinxiang.service.UserUpdateService;
-import com.changhong.yinxiang.setting.AppHelpDialog;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
-import org.apache.http.util.EntityUtils;
-
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.IntentFilter;
+import android.graphics.Color;
+import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.ColorDrawable;
 
 public class TestActivity extends Activity {
+	
+	FMAdapter adapter;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.fragment_fm_switch);
+		setContentView(R.layout.test_main);
+ 
 
-
-		ListView myHistory=(ListView) findViewById(R.id.history_test_infor);
-	    myHistory.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+		GridView myList=(GridView) findViewById(R.id.testlist);
+		
+		myList.setSelector(new ColorDrawable(Color.TRANSPARENT));
+		adapter = new FMAdapter(this);
+		myList.setAdapter(adapter);
+		myList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
 				@Override
 				public void onItemClick(AdapterView<?> parent, View view,
 						int position, long id) {   
 					    Toast.makeText(TestActivity.this, "点击成功", Toast.LENGTH_LONG).show();
+					    adapter.changeImageMode(view,position);
 				}
 			});
-	    String historyData="后来"+";"+"执迷不悔";
-	    searchHistoryAdapter  historyAdapter=new searchHistoryAdapter(TestActivity.this, historyData);
-		myHistory.setAdapter(historyAdapter);
+	}
+	
+	
+	
+	/**
+	 * FM名称
+	 */
+	private class FMAdapter extends BaseAdapter {
 
+		private  Context  mContext;
+		private View mLastView = null;
+		private int mLastPosition=-1;
+		private ImageView  mPlayingImage=null;
+		
+      
+		public FMAdapter(Context context) {
+			this.mContext = context;
+			initData();
+		}
+		@Override
+		public int getCount() {
+			return ClientSendCommandService.serverFMInfo.size();
+		}
+
+		@Override
+		public Object getItem(int position) {
+			// TODO Auto-generated method stub
+			return ClientSendCommandService.serverFMInfo.get(position);
+		}
+
+		@Override
+		public long getItemId(int position) {
+			// TODO Auto-generated method stub
+			return position;
+		}
+
+		private HashMap<Integer, View> viewMap=new HashMap<Integer, View>() ;
+		@Override
+		public View getView( int position, View convertView,	ViewGroup parent) {
+			/**
+			 * VIEW HOLDER的配置
+			 */
+			final ViewHolder vh;
+			if(!viewMap.containsKey(position)){  
+			    LayoutInflater minflater=LayoutInflater.from(mContext);
+				convertView = minflater.inflate(R.layout.activity_fm_item, null);
+				vh = new ViewHolder();
+				vh.FMname = (TextView) convertView.findViewById(R.id.fmtxt);
+				vh.FMplay = (ImageView) convertView.findViewById(R.id.btn_fm);
+				convertView.setTag(vh);
+				viewMap.put(position, convertView);
+			} else {
+	            convertView = viewMap.get(position);  
+				vh = (ViewHolder) convertView.getTag();
+			}
+			
+			
+			if (ClientSendCommandService.serverFMInfo.size() > 0) {
+
+				vh.FMname.setText(ClientSendCommandService.serverFMInfo	.get(position));
+				vh.id=position;
+                Log.e("YDINFOR:: ","  position="+position);             
+			}
+			return convertView;
+		}
+		
+		private void initData(){
+			ClientSendCommandService.serverFMInfo.clear();
+			
+			for (int i = 0; i < 200; i++) {
+				ClientSendCommandService.serverFMInfo.add("测试电台"+i);
+			}
+			
+		}
+	
+		
+		private AnimationDrawable mAnimation = null;
+
+		public void changeImageMode(View view,int position) { 
+			
+			MyApplication.vibrator.vibrate(100);
+			
+			ViewHolder holder;
+	        if(mLastView != null ) {  
+	        	holder = (ViewHolder) mLastView.getTag();  
+	        	mLastPosition=holder.id;
+				if (mAnimation.isRunning())mAnimation.stop();
+				holder.FMplay.setBackgroundResource(R.drawable.fmplay);	 
+				holder.FMname.setTextColor(mContext.getResources().getColor(R.color.white));
+	        } 	        
+	        holder = (ViewHolder) view.getTag();  
+	        if(holder.id == position && mLastPosition !=position){
+		            mLastPosition = position;  
+			        mLastView = view;  
+					holder.FMname.setTextColor(mContext.getResources().getColor(R.color.tab_textColor_selected));
+			        holder.FMplay.setBackgroundResource(R.anim.playing_anim);
+			        mAnimation = (AnimationDrawable) holder.FMplay.getBackground();
+					mAnimation.start();	 
+	        }else{       
+	        	mLastPosition=-1;
+	        }
+	    }  
+		
+		
+
+		public final class ViewHolder {
+			public int id;
+			public TextView FMname;
+			public ImageView FMplay;
+		}
 	}
 }
