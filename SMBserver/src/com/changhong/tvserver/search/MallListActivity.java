@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -66,7 +67,10 @@ public class MallListActivity extends FragmentActivity{
 	/**
 	 *  Message handler
 	 */
-	static Handler handler = null;
+	public static Handler handler = null;
+	
+	public static Handler msgHandler = null;
+
 	
 	/**
 	 *  Complex Search Dialog
@@ -239,6 +243,26 @@ public class MallListActivity extends FragmentActivity{
 		mVideoView.setAdapter(mAdapter);			
 		paserIntent(getIntent());	
 		handler = new Handler(getMainLooper());
+		
+		handler= new Handler() {
+
+			@Override
+			public void handleMessage(Message msg) {
+				// TODO Auto-generated method stub
+				switch (msg.what) {
+				case 1:
+					String command=(String) msg.obj;
+					if(command != null && !command.isEmpty())	{
+					    	mVideoInfos.clear();
+						   mAdapter.notifyDataSetChanged();
+							requiestSearch(command);
+							mNameView.setText(command);
+					}
+					break;
+				}
+
+			}
+		};
 	}
 	
 	void initEvent()	{
@@ -321,7 +345,10 @@ public class MallListActivity extends FragmentActivity{
 				}
 			}
 		}
-	}	
+	}
+	
+
+	
 	
 /** ======================================================================================================
  * 	

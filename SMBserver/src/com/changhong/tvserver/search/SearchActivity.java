@@ -85,7 +85,7 @@ public class SearchActivity extends Activity {
 		s_KeyWords = intent.getStringExtra(keyWordsName);
 		if (!TextUtils.isEmpty(s_KeyWords)) {
 			searchKeyWords.setText(s_KeyWords);
-			// search(s_KeyWords);
+			 search(s_KeyWords);
 		}
 
 		searchResultList.setOnItemClickListener(new OnItemClickListener() {

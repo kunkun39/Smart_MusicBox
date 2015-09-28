@@ -29,10 +29,10 @@ public class Commonmethod {
             ComponentName cpn = list.get(0).topActivity;
             String topActivity=cpn.getClassName();
             if (className.equals(topActivity)) {
-                return false;
+                return true;
             }
         }
 
-        return true;
+        return false;
     }
 }

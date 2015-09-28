@@ -42,6 +42,7 @@ import com.changhong.tvserver.alarm.ClockCommonData;
 import com.changhong.tvserver.fedit.FileDowLoadTask;
 import com.changhong.tvserver.fedit.MusicEdit;
 import com.changhong.tvserver.search.Commonmethod;
+import com.changhong.tvserver.search.MallListActivity;
 import com.changhong.tvserver.search.SearchActivity;
 import com.changhong.tvserver.alarm.ClockCommonData;
 import com.changhong.tvserver.autoctrl.ClientOnLineMonitorService;
@@ -236,6 +237,8 @@ public class TVSocketControllerService extends Service {
 							// 启动虾米音乐
 							Log.e(TAG, "key:xiami");
 							// t.vkey_input(0x190, 1);
+							startXiaMiMusic();
+							
 						}
 						// 选择输入源部�?
 						else if (msg1.equals("source:av1")) {
@@ -831,6 +834,17 @@ public class TVSocketControllerService extends Service {
 		String[] keys = StringUtils.delimitedListToStringArray(str, "|");
 		ClockCommonData.getInstance().dealMsg(keys);
 	}
+	
+	
+	private void startXiaMiMusic(){
+		Intent intent = new Intent();
+		intent.setComponent(new ComponentName("com.xiami.tv",
+				"com.xiami.tv.activities.StartActivity"));
+//		intent.setAction("android.intent.action.VIEW");
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		startActivity(intent);
+	}
 
 	/**
 	 * 记录上次打开的应�?
@@ -969,27 +983,34 @@ public class TVSocketControllerService extends Service {
 				|| keys[1].contains("歌曲")) {
 			String musickey = searchContent.replace("音乐", "");
 			musickey = musickey.replace("歌曲", "");
-			boolean flag = Commonmethod.isActivityForeground(this,
-					"com.changhong.tvserver.search.SearchActivity");
-			if (flag) {
-				Intent intent = new Intent();
-				intent.putExtra(SearchActivity.keyWordsName, musickey);
-				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				intent.setClass(this, SearchActivity.class);
-				startActivity(intent);
-			} else {
+			if (Commonmethod.isActivityForeground(this,
+					"com.changhong.tvserver.search.SearchActivity")) {
 				Message msg = new Message();
 				msg.what = 1;
 				msg.obj = musickey;
 				SearchActivity.handler.sendMessage(msg);
+			} else {
+				Intent intent = new Intent();
+				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK |Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				intent.setClass(this, com.changhong.tvserver.search.SearchActivity.class);
+				intent.putExtra(SearchActivity.keyWordsName, musickey);
+
+				startActivity(intent);
 			}
-		} else {
-			Intent intent = new Intent();
-			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			intent.setClass(getApplicationContext(),
-					com.changhong.tvserver.search.MallListActivity.class);
-			intent.putExtra("command", "movie&tv:" + searchContent);
-			startActivity(intent);
+		} else {		
+			
+			if (Commonmethod.isActivityForeground(this,"com.changhong.tvserver.search.MallListActivity")) {
+				Message msg = new Message();
+				msg.what = 1;
+				msg.obj = searchContent;
+				MallListActivity.handler.sendMessage(msg);
+			} else {			
+				Intent intent = new Intent();
+				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK |Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				intent.setClass(this, com.changhong.tvserver.search.MallListActivity.class);
+				intent.putExtra("command", "movie&tv:" + searchContent);
+				startActivity(intent);
+			}
 		}
 	}
 
