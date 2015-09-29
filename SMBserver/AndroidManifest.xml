@@ -80,6 +80,11 @@
         <service android:name=".TVSocketControllerService"
                  android:enabled="true" android:exported="true" android:priority="1000">
         </service>
+        
+          <service android:name=".autoctrl.ClientOnLineMonitorService"
+                 android:enabled="true" android:exported="true" android:priority="1000">
+        </service>
+        
         <service android:name="com.search.aidl.VoiceSearchService">
             <intent-filter>
                 <action android:name="com.search.aidl.VoiceSearchService"/>
