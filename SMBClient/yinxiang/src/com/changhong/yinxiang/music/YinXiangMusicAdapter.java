@@ -1,6 +1,7 @@
 package com.changhong.yinxiang.music;
 
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -189,9 +190,8 @@ public class YinXiangMusicAdapter extends BaseAdapter {
 
 		final YinXiangMusic yinXiangMusic = (YinXiangMusic) musicsAct.get(position);
 
-		displayName = yinXiangMusic.getTitle();
 		musicPath = yinXiangMusic.getPath();
-
+		displayName = yinXiangMusic.getTitle();
 		wapper.musicIndex.setText(Integer.toString(position+1));
 		wapper.musicName.setText(displayName);
 		wapper.fullPath.setText(musicPath);
@@ -291,7 +291,6 @@ public class YinXiangMusicAdapter extends BaseAdapter {
     }
 	
 
-	
 	
 	
 	

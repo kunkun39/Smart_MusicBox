@@ -2,6 +2,7 @@ package com.changhong.yinxiang.activity;
 
 import java.util.ArrayList;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -28,7 +29,7 @@ import com.changhong.yinxiang.music.MusicUtils;
 import com.changhong.yinxiang.view.MyProgressDialog;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 
-public class AlarmMainActivity extends BaseActivity {
+public class AlarmMainActivity extends Activity {
 
 	private  Button add;
 	private  Button delete;
@@ -76,10 +77,11 @@ public class AlarmMainActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-
+		initView();
+		initData();
 	}
 
-	@Override
+	
 	protected void initView() {
 		// TODO Auto-generated method stub
 		// 启动TCP接收线程
@@ -96,7 +98,7 @@ public class AlarmMainActivity extends BaseActivity {
 		setClickable(false);
 	}
 
-	@Override
+	
 	protected void initData() {
 		// TODO Auto-generated method stub
 		add.setOnClickListener(new OnClickListener() {

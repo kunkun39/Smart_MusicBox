@@ -27,7 +27,7 @@ public class YinXaingVedioProvider implements AbstructProvider {
         List<YinXiangVedio> list = null;
         if (context != null) {
             StringBuffer select = new StringBuffer(" 1=1 ");
-            // 查询语句：检索出.mp3为后缀名，时长大于1分钟，文件大小大�?MB的媒体文�?
+            // 查询语句：检索出.mp3为后缀名，时长大于1分钟，文件大小大�?MB的媒体文�?
             select.append(" and " + MediaStore.Video.Media.DURATION + " > 0");
             Cursor cursor = context.getContentResolver().query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, null, select.toString(), null, null);
             if (cursor != null) {
@@ -53,6 +53,9 @@ public class YinXaingVedioProvider implements AbstructProvider {
                     long createTime = cursor
                             .getInt(cursor
                                     .getColumnIndexOrThrow(MediaStore.Video.Media.DATE_ADDED));
+               
+                    if(!isValidVedio(path))continue;
+                    
                     YinXiangVedio video = new YinXiangVedio(id, title, displayName, mimeType, path, duration, createTime);
                     list.add(video);
                 }
@@ -60,5 +63,17 @@ public class YinXaingVedioProvider implements AbstructProvider {
             }
         }
         return list;
+    }
+    
+    
+    private boolean isValidVedio(String filePath){
+    	
+    	 int startIndex=filePath.lastIndexOf(File.separator);
+ 	    int endIndex=filePath.lastIndexOf(".");	
+ 	    if(startIndex>0  && endIndex>(startIndex+1)){
+ 			 return true;
+ 		}	    	
+    	return false;
+    	
     }
 }

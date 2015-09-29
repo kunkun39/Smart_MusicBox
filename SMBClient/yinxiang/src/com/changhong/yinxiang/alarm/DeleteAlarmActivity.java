@@ -2,6 +2,7 @@ package com.changhong.yinxiang.alarm;
 
 import java.util.ArrayList;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -16,7 +17,7 @@ import com.changhong.yinxiang.R;
 import com.changhong.yinxiang.activity.AlarmMainActivity;
 import com.changhong.yinxiang.activity.BaseActivity;
 
-public class DeleteAlarmActivity extends BaseActivity {
+public class DeleteAlarmActivity extends Activity {
 
 	private CheckBox checkAll;
 	private Button confirm, cancel;
@@ -27,9 +28,11 @@ public class DeleteAlarmActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
+		initView();
+		initData();
 	}
 
-	@Override
+	
 	protected void initView() {
 		// TODO Auto-generated method stub
 		setContentView(R.layout.alarm_delete_main);
@@ -44,7 +47,7 @@ public class DeleteAlarmActivity extends BaseActivity {
 		}
 	}
 
-	@Override
+	
 	protected void initData() {
 		// TODO Auto-generated method stub
 

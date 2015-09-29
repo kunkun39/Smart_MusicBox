@@ -36,16 +36,16 @@ import com.changhong.yinxiang.R;
 import com.changhong.yinxiang.utils.MySharePreferences;
 import com.changhong.yinxiang.utils.MySharePreferencesData;
 
-public class SearchActivity extends Activity {
+public class SearchActivity extends BaseActivity {
 
 	
 	/************************************************** IP连接部分 *******************************************************/
 
-	public static TextView title = null;
-	private Button listClients;
-	private Button back;
-	private ListView clients = null;
-	private BoxSelectAdapter IpAdapter;
+//	public static TextView title = null;
+//	private Button listClients;
+//	private Button back;
+//	private ListView clients = null;
+//	private BoxSelectAdapter IpAdapter;
 	/**
 	 * 搜索类型定义
 	 */
@@ -100,13 +100,9 @@ public class SearchActivity extends Activity {
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
-		super.onCreate(savedInstanceState);
-		
 		initSearchHistory();
-		initView();
-		initData();
-
+		super.onCreate(savedInstanceState);
+	
 	}
 
 	
@@ -127,7 +123,7 @@ public class SearchActivity extends Activity {
 
 	}
 
-	private void initView() {
+	protected void initView() {
 		setContentView(R.layout.search_main);
 		
 		/**
@@ -150,59 +146,8 @@ public class SearchActivity extends Activity {
 	    search_tv = (ImageView) findViewById(R.id.vedio_type_tv);		
 	}
 
-	private void initData() {
-		
-		/**
-		 * IP连接部分
-		 */
-		IpAdapter = new BoxSelectAdapter(SearchActivity.this,
-				ClientSendCommandService.serverIpList);
-		clients.setAdapter(IpAdapter);
-		clients.setOnTouchListener(new View.OnTouchListener() {
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				clients.setVisibility(View.GONE);
-				return false;
-			}
-		});
-		clients.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-					long arg3) {
-				ClientSendCommandService.serverIP = ClientSendCommandService.serverIpList
-						.get(arg2);
-				ClientSendCommandService.titletxt = ClientSendCommandService
-						.getCurrentConnectBoxName();
-				title.setText(ClientSendCommandService.getCurrentConnectBoxName());
-				ClientSendCommandService.handler.sendEmptyMessage(2);
-				clients.setVisibility(View.GONE);
-			}
-		});
-		listClients.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				try {
-					MyApplication.vibrator.vibrate(100);
-					if (ClientSendCommandService.serverIpList.isEmpty()) {
-						Toast.makeText(SearchActivity.this,"未获取到服务器IP", Toast.LENGTH_LONG).show();
-					} else {
-						clients.setVisibility(View.VISIBLE);
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-		back.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				MyApplication.vibrator.vibrate(100);
-				finish();
-			}
-		});
-		
-		
-
+	protected void initData() {		
+        super.initData();
 		search_commit.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -384,20 +329,7 @@ public class SearchActivity extends Activity {
 		 setSearchHistory();
 	}
 
-	@Override
-	protected void onResume() {
-		super.onResume();
-		if (ClientSendCommandService.titletxt != null) {
-			title.setText(ClientSendCommandService.titletxt);
-		}
-	}
-	
 
-	@Override
-	protected void onPause() {
-		
-		super.onPause();
-	}
 
 	@Override
 	protected void onDestroy() {

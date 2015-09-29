@@ -7,15 +7,10 @@ import java.util.List;
 import java.util.Map;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import android.app.Activity;
-import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.MediaStore;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -41,15 +36,15 @@ import com.changhong.yinxiang.music.YinXiangMusic;
 import com.changhong.yinxiang.music.YinXiangMusicAdapter;
 import com.changhong.yinxiang.nanohttpd.HTTPDService;
 
-public class YinXiangMusicViewActivity extends Activity {
+public class YinXiangMusicViewActivity extends BaseActivity {
 
 	/************************************************** IP连接部分 *******************************************************/
 
-	public static TextView title = null;
-	private Button listClients;
-	private Button back;
-	private ListView clients = null;
-	private BoxSelectAdapter IpAdapter;
+//	public static TextView title = null;
+//	private Button listClients;
+//	private Button back;
+//	private ListView clients = null;
+//	private BoxSelectAdapter IpAdapter;
 
 	/************************************************** 音频部分 *******************************************************/
 	/**
@@ -129,14 +124,10 @@ public class YinXiangMusicViewActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		initView();
-		initEvent();
 	}
 
-	private void initView() {
+	protected void initView() {
 		setContentView(R.layout.activity_yinxiang_music_view);
-
 		/**
 		 * IP连接部分
 		 */
@@ -167,59 +158,8 @@ public class YinXiangMusicViewActivity extends Activity {
 
 	}
 
-	private void initEvent() {
-
-		/**
-		 * IP连接部分
-		 */
-		IpAdapter = new BoxSelectAdapter(YinXiangMusicViewActivity.this,
-				ClientSendCommandService.serverIpList);
-		clients.setAdapter(IpAdapter);
-		clients.setOnTouchListener(new View.OnTouchListener() {
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				clients.setVisibility(View.GONE);
-				return false;
-			}
-		});
-		clients.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-					long arg3) {
-				ClientSendCommandService.serverIP = ClientSendCommandService.serverIpList
-						.get(arg2);
-				ClientSendCommandService.titletxt = ClientSendCommandService
-						.getCurrentConnectBoxName();
-				title.setText(ClientSendCommandService
-						.getCurrentConnectBoxName());
-				ClientSendCommandService.handler.sendEmptyMessage(2);
-				clients.setVisibility(View.GONE);
-			}
-		});
-		listClients.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				try {
-					MyApplication.vibrator.vibrate(100);
-					if (ClientSendCommandService.serverIpList.isEmpty()) {
-						Toast.makeText(YinXiangMusicViewActivity.this,
-								"未获取到服务器IP", Toast.LENGTH_LONG).show();
-					} else {
-						clients.setVisibility(View.VISIBLE);
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-		back.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				MyApplication.vibrator.vibrate(100);
-				finish();
-			}
-		});
-
+	protected void initData() {
+        super.initData();		
 		/**
 		 * 音频发送部分
 		 */
@@ -721,9 +661,6 @@ public class YinXiangMusicViewActivity extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if (ClientSendCommandService.titletxt != null) {
-			title.setText(ClientSendCommandService.titletxt);
-		}
 		setMusicAdapter();
 	}
 

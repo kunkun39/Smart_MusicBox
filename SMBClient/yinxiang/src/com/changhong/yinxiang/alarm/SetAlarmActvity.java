@@ -10,6 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnMultiChoiceClickListener;
@@ -39,7 +40,7 @@ import com.changhong.yinxiang.activity.YinXiangMusicViewActivity;
 import com.changhong.yinxiang.music.MusicEditServer;
 import com.changhong.yinxiang.music.MusicUtils;
 
-public class SetAlarmActvity extends BaseActivity {
+public class SetAlarmActvity extends Activity {
 
 	private TimePicker timePicker;
 	private Button confirm, cancel;
@@ -122,10 +123,10 @@ public class SetAlarmActvity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-
+		initView();
+		initData();
 	}
 
-	@Override
 	protected void initView() {
 		// TODO Auto-generated method stub
 		setContentView(R.layout.alarm_setting);
@@ -158,7 +159,6 @@ public class SetAlarmActvity extends BaseActivity {
 		musics.setOnClickListener(myClickListener);
 	}
 
-	@Override
 	protected void initData() {
 		// TODO Auto-generated method stub
 		// 发送获取音乐列表请求，并启动接收线程
@@ -218,7 +218,7 @@ public class SetAlarmActvity extends BaseActivity {
 			}
 		}
 
-		if (alarm.musicBean != null) {
+		if (alarm.musicBean != null && !alarm.musicBean.isEmpty() ) {
 			String name = alarm.musicBean.get(0).getTitle();
 			curMusic.setText(name);
 		}
@@ -276,12 +276,12 @@ public class SetAlarmActvity extends BaseActivity {
 		alarm.setId(curentId);
 		alarm.setHour(timePicker.getCurrentHour());
 		alarm.setMinutes(timePicker.getCurrentMinute());
+		alarm.setLabel(tag.getText().toString());
 		alarm.setEnabled(true);
 
 		for (int i = 0; i < myWBList.length; i++) {
 			alarm.daysOfWeek.set(i, myWBList[i].getFlag());
 		}
-		alarm.setLabel(tag.getText().toString());
 
 		ArrayList<MusicBean> musics = new ArrayList<MusicBean>();
 
@@ -442,15 +442,25 @@ public class SetAlarmActvity extends BaseActivity {
 				continue;
 			}
 			if (currentState[i]) {
-				for (int j = 0; j < musicListInit.size(); j++) {
-					if (musicListAll.get(i).getTitle()
-							.equals(musicListInit.get(j).getTitle())) {
-						break;
-					} else if (j == (musicListInit.size() - 1)) {
+				
+				int musicListSize=musicListInit.size();
+				if(0== musicListSize){
 						MusicBean music = musicListAll.get(i);
 						music.setmId(alarm.id);
 						musicListInit.add(music);
-					}
+				}else {
+						for (int j = 0; j < musicListSize; j++) {
+							if (musicListAll.get(i).getTitle()
+									.equals(musicListInit.get(j).getTitle())) {
+								break;
+							} else if (j == (musicListSize - 1)) {
+								MusicBean music = musicListAll.get(i);
+								music.setmId(alarm.id);
+								musicListInit.add(music);
+								
+								
+							}
+						}
 				}
 
 			} else {

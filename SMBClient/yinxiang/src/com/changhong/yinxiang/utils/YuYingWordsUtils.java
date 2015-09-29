@@ -34,7 +34,7 @@ public class YuYingWordsUtils {
         TV_CONTROL_KEYWORDS.put("key:volumeup|key:volumeup", volumnUp);
 
         List<String> volumnDown = new ArrayList<String>();
-        volumnDown.add("声音小点");volumnDown.add("小点声");volumnDown.add("小声点");volumnDown.add("减声音");volumnDown.add("关点声音");volumnDown.add("观点声音");volumnUp.add("音量减");volumnUp.add("音量-");
+        volumnDown.add("声音小点");volumnDown.add("小点声");volumnDown.add("小声点");volumnDown.add("减声音");volumnDown.add("关点声音");volumnDown.add("观点声音");volumnDown.add("音量减");volumnDown.add("音量-");
         TV_CONTROL_KEYWORDS.put("key:volumedown|key:volumedown", volumnDown);
 
         List<String> tv = new ArrayList<String>();
@@ -126,6 +126,11 @@ public class YuYingWordsUtils {
         lightscontrol.add("灯光开");
         lightscontrol.add("灯光关");
         TV_CONTROL_KEYWORDS.put("key:lightscontrol", lightscontrol);
+        
+        //添加静音
+        List<String> mute = new ArrayList<String>();
+        mute.add("静音");
+        TV_CONTROL_KEYWORDS.put("key:mute", mute);
     }
 
     /**

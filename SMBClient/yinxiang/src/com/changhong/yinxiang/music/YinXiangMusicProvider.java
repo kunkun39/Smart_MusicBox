@@ -1,5 +1,6 @@
 package com.changhong.yinxiang.music;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -86,4 +87,17 @@ public class YinXiangMusicProvider implements AbstructProvider {
         }
         return vedioList;
     }
+    
+    
+
+	private String getShowName(String filePath){
+		
+		String fileName="";
+	    int startIndex=filePath.lastIndexOf(File.separator);
+	    int endIndex=filePath.lastIndexOf(".");	
+	    if(startIndex>0  && endIndex>(startIndex+1)){
+			fileName=filePath.substring(startIndex+1,endIndex);
+		}		
+		return fileName;
+	}
 }
