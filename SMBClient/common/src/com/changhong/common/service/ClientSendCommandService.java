@@ -15,7 +15,6 @@ import com.changhong.common.utils.MobilePerformanceUtils;
 import com.changhong.common.utils.NetworkUtils;
 import com.changhong.common.utils.StringUtils;
 import com.changhong.common.utils.WebUtils;
-import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -66,6 +65,14 @@ public class ClientSendCommandService extends Service implements ClientSocketInt
     public static String msgXpointYpoint = null;
 
     public static String titletxt = null;
+    
+    //自动控制状态
+    public static boolean isAutoCtrl = false;
+    public static String  curFMInfor = null;
+    
+   private boolean isFirst=true;
+
+
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -76,7 +83,7 @@ public class ClientSendCommandService extends Service implements ClientSocketInt
     public void onCreate() {
         super.onCreate();
 
-        new SendCommend().start();
+        new SendCommend().start();      
     }
 	
 	public static String getCurrentConnectBoxName() {
@@ -260,7 +267,7 @@ public class ClientSendCommandService extends Service implements ClientSocketInt
                     super.handleMessage(msg1);
                 }
             };
-
+            requestFMInfor();
             Looper.loop();
         }
     }
@@ -366,8 +373,15 @@ public class ClientSendCommandService extends Service implements ClientSocketInt
     			for (int i = 0; i < all.length(); i++) {
     				JSONObject single = all.getJSONObject(i);
     				String name = single.getString("FMname");
+    				String state= single.getString("state");
+    				if("autoCtrl".equals(name) ){
+        				isAutoCtrl=state.equals("on")?true:false;    				
+    				}else{
+        				serverFMInfo.add(name);
+        				//获取当前播放FM 的information
+        				if("1".equals(state))curFMInfor=name;
+    				}
     				
-    				serverFMInfo.add(name);
     			}
     			
     		} else {
@@ -375,6 +389,21 @@ public class ClientSendCommandService extends Service implements ClientSocketInt
     		}
     	} catch (Exception e) {
     		e.printStackTrace();
+    	}
+    }
+    
+    
+    private void requestFMInfor(){
+    	
+    	if(isFirst){
+		    	try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		    	handler.sendEmptyMessage(2);
+		    	isFirst=false;
     	}
     }
 }
