@@ -27,6 +27,8 @@ public class MySharePreferences {
 	public MySharePreferencesData InitGetMySharedPreferences() {
 		MySharePreferencesData mysharepreferencesdata = new MySharePreferencesData();
 		mysharepreferencesdata.clockRing = mSettings.getString("clockRing", null);
+		String autoCtrl = mSettings.getString("isAutoCtrl", "off");
+		mysharepreferencesdata.isAutoCtrl =autoCtrl.equals("on")?true:false;
 		return mysharepreferencesdata;
 	}
 	
@@ -34,7 +36,17 @@ public class MySharePreferences {
 	public void SaveMySharePreferences(MySharePreferencesData mysharepreferencesdata) {
 		
 		mEditor.putString("clockRing", mysharepreferencesdata.clockRing);
+		String autoCtrl =mysharepreferencesdata.isAutoCtrl?"on":"off";
+		mEditor.putString("isAutoCtrl", autoCtrl);
 		mEditor.commit();
 	}
 
+	
+public void SaveAutoCtrl(boolean isAutoCtrl) {
+		
+		String autoCtrl =isAutoCtrl?"on":"off";
+		mEditor.putString("isAutoCtrl", autoCtrl);
+		mEditor.commit();
+	}
+	
 }

@@ -78,6 +78,10 @@ public class SearchActivity extends Activity {
 		handler = new Handler(getMainLooper());
 		adapter = new SearchSummaryAdapter(SearchActivity.this);
 		searchResultList.setAdapter(adapter);
+		
+		//设置光标放在文本末尾
+		searchKeyWords.setSelection(searchKeyWords.getText().length());
+
 	}
 
 	private void initData() {

@@ -160,7 +160,11 @@ public class TVSocketControllerService extends Service {
 							t.vkey_input(109, 1);
 						} else if (msg1.equals("key:power")) {
 							Log.e(TAG, "key:power");
-							t.vkey_input(0x7f01, 1);
+//							t.vkey_input(0x7f01, 1);
+							t.vkey_input(116, 1);							
+						}else if (msg1.equals("key:mute")) {
+							Log.e(TAG, "key:mute");
+							t.vkey_input(113, 1);
 						} else if (msg1.equals("key:0")) {
 							Log.e(TAG, "key:0");
 							t.vkey_input(11, 1);
@@ -817,10 +821,10 @@ public class TVSocketControllerService extends Service {
 			return;
 
 		// 获取命令
-		String command = str.substring("autoctrl:".length() + 1);
+		String command = str.substring("autoctrl:".length());
 		// 设置自动控制标记
-		ClientOnLineMonitorService
-				.setAutoControlFlag(command.equals("auto_on") ? true : false);
+		ClientOnLineMonitorService.setAutoControlFlag(command.equals("auto_on") ? true : false);
+		initFM();
 
 	}
 
@@ -837,12 +841,17 @@ public class TVSocketControllerService extends Service {
 	
 	
 	private void startXiaMiMusic(){
+		
+		//发送广播停止当前服务.
+		Intent packageIntent =new Intent("com.changhong.action.start_package");
+		packageIntent.putExtra("extra", "musicpure");
+		sendBroadcast(packageIntent);
+		
+		//启动虾米音乐
 		Intent intent = new Intent();
 		intent.setComponent(new ComponentName("com.xiami.tv",
 				"com.xiami.tv.activities.StartActivity"));
-//		intent.setAction("android.intent.action.VIEW");
-		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK |Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		startActivity(intent);
 	}
 
@@ -1039,6 +1048,13 @@ public class TVSocketControllerService extends Service {
 				}
 				cursor.close();
 			}
+			
+			//增加控制状态到文件中。
+			JSONObject autoCtrlState = new JSONObject();
+			String autoCtrl=ClientOnLineMonitorService.isAutoControl()?"on":"off";
+			autoCtrlState.put("FMname", "autoCtrl");
+			autoCtrlState.put("state", autoCtrl);
+			all.put(autoCtrlState);
 
 			/**
 			 * 输入FM列表到文�?

@@ -14,10 +14,14 @@ import com.changhong.tvserver.touying.image.loader.exception.ThreadKillException
 import com.changhong.tvserver.touying.image.loader.task.ImageDownloadTask;
 import com.changhong.tvserver.utils.StringUtils;
 
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 
 public class FileUtil {
@@ -279,18 +283,60 @@ public class FileUtil {
 	}
 	
 	//同时更新媒体库多个文件，用于重命名更新
-	public void updateGallery(Context context,String oldFile, String newFile) {
-		MediaScannerConnection.scanFile(context, new String[] { oldFile, newFile},
-				null, new MediaScannerConnection.OnScanCompletedListener() {
-					@Override
-					public void onScanCompleted(String path, Uri uri) {
-						// TODO 自动生成的方法存根
-						Log.i("ExternalStorage", "Scanned " + path + ":");
-						Log.i("ExternalStorage", "-> uri=" + uri);
-					}
-				});
+	public boolean updateGallery(Context context,String oldFile, String newFile) {
+		// 参数检查
+		if (!StringUtils.hasLength(oldFile))
+			return false;
+		if (!StringUtils.hasLength(newFile))
+			return false;
+		//
+		// MediaScannerConnection.scanFile(context, new String[] { oldFile,
+		// newFile }, null,
+		// new MediaScannerConnection.OnScanCompletedListener() {
+		// @Override
+		// public void onScanCompleted(String path, Uri uri) {
+		// // TODO 自动生成的方法存根
+		// Log.i("ExternalStorage", "Scanned " + path + ":");
+		// Log.i("ExternalStorage", "-> uri=" + uri);
+		// }
+		// });
+		String title = getFileNameWithoutSubffix(newFile);
+		ContentValues cv = new ContentValues();
+		cv.put(MediaStore.Audio.Media.DATA, newFile);
+		cv.put(MediaStore.Audio.Media.TITLE, title);
+		ContentResolver resolver = context.getContentResolver();
+		Uri base = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+		long id = getRecordMediaIdInDb(resolver, oldFile);
+		if (id != -1) {
+			final String where = MediaStore.Audio.Media._ID + "=?";
+			final String[] args = new String[] { id + "" };
+			int result = resolver.update(base, cv, where, args);
+			if (result > 0)
+				return true;
+		}
+		return false;
 	}
 
+	
+	private long getRecordMediaIdInDb(ContentResolver resolver, String file) {
+		long ReValue = -1;
+		Cursor cursor = resolver.query(
+				MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null, null, null,
+				MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
+		for (int i = 0; i < cursor.getCount(); i++) {
+			cursor.moveToNext();
+			long id = cursor.getLong(cursor
+					.getColumnIndex(MediaStore.Audio.Media._ID)); // 音乐id
+			String url = cursor.getString(cursor
+					.getColumnIndex(MediaStore.Audio.Media.DATA)); // 文件路径
+			if (file.equals(url)) {
+				ReValue = id;
+				break;
+			}
+		}
+		return ReValue;
+	}
+	
 	public String getFileName(String filePath) {
 		String fileName = "";
 		int startIndex = filePath.lastIndexOf(File.separator);
@@ -300,6 +346,16 @@ public class FileUtil {
 		return fileName;
 	}
 	
+	
+	public String getFileNameWithoutSubffix(String filePath) {
+		String fileName = "";
+		int startIndex = filePath.lastIndexOf(File.separator);
+		int endIndex = filePath.lastIndexOf(".");
+		if (startIndex > 0 && endIndex > (startIndex + 1)) {
+			fileName = filePath.substring(startIndex + 1,endIndex);
+		}
+		return fileName;
+	}
 	
 	public String getMusicFileDir() {
 		return SDCARDPATH + MUSIC_PATH+File.separator;	

@@ -11,6 +11,10 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.util.ArrayList;
 import java.util.Calendar;
+
+import com.changhong.tvserver.utils.MySharePreferences;
+import com.changhong.tvserver.utils.MySharePreferencesData;
+
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
@@ -36,7 +40,7 @@ public class ClientOnLineMonitorService extends Service {
 	//心跳信息内容
     public static String CH_CLIENT_HEARTBEAT = "client | heartBeat";
 
-
+    private static  MySharePreferences mySharePreferences;
 	/**
 	 * 标志客户端心跳线程正在执行
 	 */
@@ -81,15 +85,20 @@ public class ClientOnLineMonitorService extends Service {
         	mClientHeartBeat=new  get_ClientHeartBeat();
         	mClientHeartBeat.start();
         }
-
+        
+        //获取auto状态。
+        mySharePreferences= new MySharePreferences(this);
+        MySharePreferencesData  shareData= mySharePreferences.InitGetMySharedPreferences();
+        isAutoControl=shareData.isAutoCtrl;
 	}
 
-	public Boolean isAutoControl() {
+	public static Boolean isAutoControl() {
 		return isAutoControl;
 	}
 
 	public static void setAutoControlFlag(Boolean autoControl) {
 		isAutoControl = autoControl;
+		mySharePreferences.SaveAutoCtrl(isAutoControl);
 	}
 
 	/************************************************* get client heartBeat *************************************************/
@@ -315,5 +324,4 @@ public class ClientOnLineMonitorService extends Service {
 		super.onDestroy();
 		
 	}
-
 }
