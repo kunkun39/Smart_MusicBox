@@ -1,32 +1,20 @@
-<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/main_bg">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
 
+        <!-- 频道列表显示部分 -->
 
-
-    <!--中间内容-->
-
-    <LinearLayout
+        <GridView
+            android:layout_marginTop="68dip"
+            android:id="@+id/testlist"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_width="fill_parent"
-            android:layout_marginTop="60dip"
-            android:layout_marginBottom="8dip"           
-            android:orientation="vertical">"
-      
-    
-    <ListView 
-         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/history_test_infor"/>
-    
-
-    
-    </LinearLayout>
-
-    
-   
-
+            android:layout_marginLeft="30dip"
+            android:layout_marginRight="30dip"
+            android:layout_centerHorizontal="true"
+            android:numColumns="1"
+            android:verticalSpacing="20dp"
+            />
 </RelativeLayout>
