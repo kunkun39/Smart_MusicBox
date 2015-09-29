@@ -137,12 +137,12 @@ public class YinXiangMainActivity extends FragmentActivity {
 		Intent service3 = new Intent(YinXiangMainActivity.this,
 				ClientLocalThreadRunningService.class);
 		startService(service3);
-		
+
 		/**
 		 * 启动通讯服务
 		 */
 		MusicEditServer.creatFileEditServer();
-		
+
 		/*
 		 * 启动WiFi监听的广播接收器
 		 */
@@ -162,11 +162,13 @@ public class YinXiangMainActivity extends FragmentActivity {
 		fragmentManager = getFragmentManager();
 
 		radioGroup = (RadioGroup) findViewById(R.id.yx_rgtab);
-		radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+		radioGroup
+				.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 					@Override
 					public void onCheckedChanged(RadioGroup group, int checkedId) {
 
-						FragmentTransaction transaction = fragmentManager.beginTransaction();
+						FragmentTransaction transaction = fragmentManager
+								.beginTransaction();
 						Fragment mFragment = getInstanceByIndex(checkedId);
 
 						// 增加fragment到backstack。
@@ -184,7 +186,8 @@ public class YinXiangMainActivity extends FragmentActivity {
 		/**
 		 * Ip部分
 		 */
-		adapter = new BoxSelectAdapter(YinXiangMainActivity.this,ClientSendCommandService.serverIpList);
+		adapter = new BoxSelectAdapter(YinXiangMainActivity.this,
+				ClientSendCommandService.serverIpList);
 		clients.setAdapter(adapter);
 		clients.setOnTouchListener(new View.OnTouchListener() {
 			@Override
@@ -199,8 +202,10 @@ public class YinXiangMainActivity extends FragmentActivity {
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
 				adapter.notifyDataSetChanged();
-				ClientSendCommandService.serverIP = ClientSendCommandService.serverIpList	.get(arg2);
-				ClientSendCommandService.titletxt = ClientSendCommandService.getCurrentConnectBoxName();
+				ClientSendCommandService.serverIP = ClientSendCommandService.serverIpList
+						.get(arg2);
+				ClientSendCommandService.titletxt = ClientSendCommandService
+						.getCurrentConnectBoxName();
 				title.setText(ClientSendCommandService.titletxt);
 				ClientSendCommandService.handler.sendEmptyMessage(2);
 				clients.setVisibility(View.GONE);
@@ -228,7 +233,7 @@ public class YinXiangMainActivity extends FragmentActivity {
 				MyApplication.vibrator.vibrate(100);
 				Dialog dialog = new AlertDialog.Builder(
 						YinXiangMainActivity.this)
-						.setTitle("是否确定关机？")
+						.setTitle("是否确定开机/关机？")
 						.setPositiveButton("是",
 								new DialogInterface.OnClickListener() {
 
@@ -278,8 +283,6 @@ public class YinXiangMainActivity extends FragmentActivity {
 		super.onResume();
 		if (ClientSendCommandService.titletxt != null) {
 			title.setText(ClientSendCommandService.titletxt);
-			// 增加获取FM频道列表
-			ClientSendCommandService.handler.sendEmptyMessage(2);
 		}
 	}
 
@@ -328,8 +331,7 @@ public class YinXiangMainActivity extends FragmentActivity {
 	}
 
 	private boolean isExitApp() {
-		AlertDialog.Builder builder = new Builder(
-				YinXiangMainActivity.this);
+		AlertDialog.Builder builder = new Builder(YinXiangMainActivity.this);
 		builder.setMessage("确认退出应用？");
 		builder.setTitle("提示");
 		builder.setPositiveButton("退出", new DialogInterface.OnClickListener() {
@@ -475,8 +477,7 @@ public class YinXiangMainActivity extends FragmentActivity {
 								// 弹框提示安装
 								Intent intent = new Intent(
 										"MAIN_UPDATE_INSTALL");
-								YinXiangMainActivity.this
-										.sendBroadcast(intent);
+								YinXiangMainActivity.this.sendBroadcast(intent);
 							}
 						}
 					}
@@ -618,8 +619,7 @@ public class YinXiangMainActivity extends FragmentActivity {
 			if (mIntent.getAction().equals("MAIN_UPDATE_DOWNLOAD")) {
 
 				// 如果用户不是连接的WIFI网络，直接返回不处理
-				if (!NetworkUtils
-						.isWifiConnected(YinXiangMainActivity.this)) {
+				if (!NetworkUtils.isWifiConnected(YinXiangMainActivity.this)) {
 					return;
 				}
 
@@ -762,7 +762,9 @@ public class YinXiangMainActivity extends FragmentActivity {
 
 	/**
 	 * 获取fragment实例对象。
-	 * @param index 索引值。
+	 * 
+	 * @param index
+	 *            索引值。
 	 * @return
 	 */
 	public Fragment getInstanceByIndex(int index) {
@@ -777,7 +779,7 @@ public class YinXiangMainActivity extends FragmentActivity {
 			break;
 		case 3: // 音乐速递
 			fragment = new YinXiangNetMusicFragment();
-			
+
 			break;
 		case 4: // 一键推送
 			fragment = new YinXiangCategoryFragment();
@@ -794,6 +796,7 @@ public class YinXiangMainActivity extends FragmentActivity {
 
 	/**
 	 * 根据index匹配fragment的索引。
+	 * 
 	 * @param index
 	 * @return
 	 */
@@ -802,15 +805,14 @@ public class YinXiangMainActivity extends FragmentActivity {
 		int childCount = radioGroup.getChildCount();
 		for (int i = 0; i < childCount; i++) {
 			RadioButton child = (RadioButton) radioGroup.getChildAt(i);
-			if (null != child && index == child.getId()){
-				reValue=i+1;
+			if (null != child && index == child.getId()) {
+				reValue = i + 1;
 				break;
 			}
 		}
 		return reValue;
 	}
 
-	
 	private void regWifiBroadcastRec() {
 		wifiFilter = new IntentFilter();
 		if (null == networkConnectChange) {

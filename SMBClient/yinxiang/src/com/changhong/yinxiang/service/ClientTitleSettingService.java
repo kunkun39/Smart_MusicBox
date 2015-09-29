@@ -33,14 +33,15 @@ public class ClientTitleSettingService {
         if (YinXiangMusicViewActivity.title != null) {
         	YinXiangMusicViewActivity.title.setText(ClientSendCommandService.titletxt);
         }
-        if (YinXiangSearchActivity.title != null) {
-        	YinXiangSearchActivity.title.setText(ClientSendCommandService.titletxt);
+        if (SearchActivity.title != null) {
+        	SearchActivity.title.setText(ClientSendCommandService.titletxt);
         }
         if (YinXiangSourceActivity.title != null) {
         	YinXiangSourceActivity.title.setText(ClientSendCommandService.titletxt);
         }
         if (YinXiangNetMusicActivity.title != null) {
         	YinXiangNetMusicActivity.title.setText(ClientSendCommandService.titletxt);
-        }
+        } 
+      
     }
 }

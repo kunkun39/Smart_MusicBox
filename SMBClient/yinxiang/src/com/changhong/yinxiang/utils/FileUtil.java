@@ -424,7 +424,7 @@ public class FileUtil {
 		return false;
 	}
 
-	public long getRecordMediaIdInDb(ContentResolver resolver, String file) {
+	private long getRecordMediaIdInDb(ContentResolver resolver, String file) {
 		long ReValue = -1;
 		Cursor cursor = resolver.query(
 				MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null, null, null,

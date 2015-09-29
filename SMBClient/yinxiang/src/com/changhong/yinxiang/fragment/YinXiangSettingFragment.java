@@ -175,6 +175,10 @@ public class YinXiangSettingFragment extends Fragment {
 	             ClientSendCommandService.handler.sendEmptyMessage(1);
 			}
 		});
+		
+		//设置自动控制
+		autoCtrlBtn.setChecked(ClientSendCommandService.isAutoCtrl);
+		
 	}
 
 	private void initData() {
