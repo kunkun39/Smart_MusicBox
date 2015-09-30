@@ -507,7 +507,7 @@ public class YinXiangMusicViewActivity extends BaseActivity {
 						}
 						musicAdapter.changeAdapterData(action, mEditMusic);
 						musicAdapter.notifyDataSetChanged();	
-						
+						remoteMusics="";
 						result = "远程操作成功";
 					} else if (result.contains("failed")) {
 						result = "远程操作失败";

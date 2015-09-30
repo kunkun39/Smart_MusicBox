@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.changhong.common.system.MyApplication;
 import com.changhong.common.utils.StringUtils;
@@ -73,7 +74,8 @@ public class MusicEdit {
 						@Override
 						public void onClick(View v) {
 							MyApplication.vibrator.vibrate(100);
-							parentHandler.sendEmptyMessage(2);
+//							parentHandler.sendEmptyMessage(2);
+							Toast.makeText(mContext, "功能建设中······", Toast.LENGTH_SHORT).show();
 						}
 					});
 
