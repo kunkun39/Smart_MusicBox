@@ -151,14 +151,6 @@ public class YinXiangFMFragment extends Fragment {
                 String FMname=ClientSendCommandService.serverFMInfo	.get(position);
 				vh.FMname.setText(FMname);
 				vh.id=position;
-				if(FMname.equals(ClientSendCommandService.curFMInfor)){
-					mLastPosition = position;  
-			        mLastView = convertView;  
-			        vh.FMname.setTextColor(mContext.getResources().getColor(R.color.tab_textColor_selected));
-			        vh.FMplay.setBackgroundResource(R.anim.playing_anim);
-			        mAnimation = (AnimationDrawable) vh.FMplay.getBackground();
-					mAnimation.start();	
-				}
 				
                 Log.e("YDINFOR:: ","  position="+position);             
 			}

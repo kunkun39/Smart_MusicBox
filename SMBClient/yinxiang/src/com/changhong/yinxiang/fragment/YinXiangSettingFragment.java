@@ -170,6 +170,7 @@ public class YinXiangSettingFragment extends Fragment {
 				MyApplication.vibrator.vibrate(100);
 				CheckBox check = (CheckBox) v;
 				String autoSet=check.isChecked()?"auto_on":"auto_off";
+				ClientSendCommandService.isAutoCtrl=check.isChecked();
 				//发送设置信息给TVserver
 				 ClientSendCommandService.msg = "autoctrl:"+autoSet;
 	             ClientSendCommandService.handler.sendEmptyMessage(1);

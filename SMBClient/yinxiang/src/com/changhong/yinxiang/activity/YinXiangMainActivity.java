@@ -233,7 +233,7 @@ public class YinXiangMainActivity extends FragmentActivity {
 				MyApplication.vibrator.vibrate(100);
 				Dialog dialog = new AlertDialog.Builder(
 						YinXiangMainActivity.this)
-						.setTitle("是否确定开机/关机？")
+						.setTitle("是否启动或关闭音响？")
 						.setPositiveButton("是",
 								new DialogInterface.OnClickListener() {
 
