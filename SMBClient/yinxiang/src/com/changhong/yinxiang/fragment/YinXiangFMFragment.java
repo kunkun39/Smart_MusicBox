@@ -148,9 +148,17 @@ public class YinXiangFMFragment extends Fragment {
 			
 			if (ClientSendCommandService.serverFMInfo.size() > 0) {
 				
-                String FMname=ClientSendCommandService.serverFMInfo	.get(position);
+                String FMname=ClientSendCommandService.serverFMInfo.get(position);
 				vh.FMname.setText(FMname);
 				vh.id=position;
+				 if(FMname.equals(ClientSendCommandService.curFMInfor)){
+			            mLastPosition = position;  
+				        mLastView = convertView;  
+				        vh.FMname.setTextColor(mContext.getResources().getColor(R.color.tab_textColor_selected));
+				        vh.FMplay.setBackgroundResource(R.anim.playing_anim);
+				        mAnimation = (AnimationDrawable) vh.FMplay.getBackground();
+						mAnimation.start();	 
+		        }
 				
                 Log.e("YDINFOR:: ","  position="+position);             
 			}
@@ -217,15 +225,13 @@ public class YinXiangFMFragment extends Fragment {
 				holder.FMname.setTextColor(mContext.getResources().getColor(R.color.white));
 	        } 	        
 	        holder = (ViewHolder) view.getTag();  
-	        if(holder.id == position && mLastPosition !=position){
+	        if(holder.id == position){
 		            mLastPosition = position;  
 			        mLastView = view;  
 					holder.FMname.setTextColor(mContext.getResources().getColor(R.color.tab_textColor_selected));
 			        holder.FMplay.setBackgroundResource(R.anim.playing_anim);
 			        mAnimation = (AnimationDrawable) holder.FMplay.getBackground();
 					mAnimation.start();	 
-	        }else{       
-	        	mLastPosition=-1;
 	        }
 	    }  
 		
