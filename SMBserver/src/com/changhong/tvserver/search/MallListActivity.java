@@ -103,6 +103,12 @@ public class MallListActivity extends FragmentActivity{
  */	
 	public void playVideo(VideoInfo video)
 	{
+		
+		//发送广播停止当前服务.
+	    Intent packageIntent =new Intent("com.changhong.action.start_package");
+		packageIntent.putExtra("extra", "ivideo");
+		sendBroadcast(packageIntent);
+		
 		Intent intent = new Intent();		
 		intent.setClassName("com.changhong.tvmall", "com.changhong.ivideo.activity.DetailActivity");
 		intent.putExtra("POSTER_TAG", video.getVideoId());

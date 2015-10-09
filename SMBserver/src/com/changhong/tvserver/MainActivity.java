@@ -91,6 +91,6 @@ public class MainActivity extends Activity {
 
     private String getBoxName() {
         SharedPreferences preferences = MainActivity.this.getSharedPreferences("changhong_box_name", Context.MODE_PRIVATE);
-        return preferences.getString("CH_BOX_NAME", "音    箱");
+        return preferences.getString("CH_BOX_NAME", "音    响");
     }
 }

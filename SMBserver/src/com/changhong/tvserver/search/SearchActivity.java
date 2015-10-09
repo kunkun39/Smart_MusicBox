@@ -65,6 +65,7 @@ public class SearchActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onCreate(arg0);
 		initView();
+		initData();
 		initEvent();
 
 	}
@@ -79,8 +80,7 @@ public class SearchActivity extends Activity {
 		adapter = new SearchSummaryAdapter(SearchActivity.this);
 		searchResultList.setAdapter(adapter);
 		
-		//设置光标放在文本末尾
-		searchKeyWords.setSelection(searchKeyWords.getText().length());
+		
 
 	}
 
@@ -89,6 +89,8 @@ public class SearchActivity extends Activity {
 		s_KeyWords = intent.getStringExtra(keyWordsName);
 		if (!TextUtils.isEmpty(s_KeyWords)) {
 			searchKeyWords.setText(s_KeyWords);
+			//设置光标放在文本末尾
+			searchKeyWords.setSelection(s_KeyWords.length());
 			 search(s_KeyWords);
 		}
 
@@ -115,6 +117,8 @@ public class SearchActivity extends Activity {
 				case 1:
 					String keys=(String) msg.obj;
 					searchKeyWords.setText(keys);
+					//设置光标放在文本末尾
+					searchKeyWords.setSelection(keys.length());
 					break;
 
 				}
@@ -170,8 +174,9 @@ public class SearchActivity extends Activity {
 		intent.setComponent(new ComponentName("com.changhong.playlist",
 				"com.changhong.playlist.Playlist"));
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		intent.putExtra("musicpath", msg);
+		intent.putExtra("musicTitle", "网络音乐");		
 		startActivity(intent);
 	}
 
@@ -253,7 +258,7 @@ public class SearchActivity extends Activity {
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-		initData();
+//		initData();
 	}
 
 }

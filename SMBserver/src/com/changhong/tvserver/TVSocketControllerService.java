@@ -106,6 +106,10 @@ public class TVSocketControllerService extends Service {
 
 	// YD add 20150726 接收ClientOnLineMonitorService发送过来的自动控制命令广播。
 	private AutoCtrlCommandReceiver autoCtrlReceiver = null;
+	private FMInforReceiver FmInforReceiver = null;
+	private static String ACTION_UPDATE_FMINFOR= "com.changhong.FmStatus";
+
+	
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -454,9 +458,17 @@ public class TVSocketControllerService extends Service {
 							Intent intent = new Intent("FinishActivity");
 							sendBroadcast(intent);
 						} else if (msg1.startsWith("fm:")) {
+							
+		                   Log.e("YDINFOR::", "++++++++++++++++++++++++++++++++start to FM++++++++++++++++++++++++++++++");
 							Intent intent = new Intent("com.changhong.fmname");
 							intent.putExtra("fmname", msg1.substring(3));
 							sendBroadcast(intent);
+							
+							//判断当前是否主页,不是，启动主页
+							if(!Commonmethod.isActivityForeground(TVSocketControllerService.this,"com.changhong.doplauncher.Launcher")){
+								t.vkey_input(102, 1);	
+							}
+			                   Log.e("YDINFOR::", "++++++++++++++++++++++++++++++++sendBroadcast(FM) end++++++++++++++++++++++++++++++");							
 						}
 
 						// 搜索音乐视频部分
@@ -497,6 +509,12 @@ public class TVSocketControllerService extends Service {
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(ClientOnLineMonitorService.ACTION_AUTOCTRL_COMMAND);
 		registerReceiver(autoCtrlReceiver, filter);
+		
+		
+		FmInforReceiver = new FMInforReceiver();
+		IntentFilter fmFilter = new IntentFilter();
+		fmFilter.addAction(ACTION_UPDATE_FMINFOR);
+		registerReceiver(FmInforReceiver, fmFilter);
 
 	}
 
@@ -843,9 +861,7 @@ public class TVSocketControllerService extends Service {
 	private void startXiaMiMusic(){
 		
 		//发送广播停止当前服务.
-		Intent packageIntent =new Intent("com.changhong.action.start_package");
-		packageIntent.putExtra("extra", "musicpure");
-		sendBroadcast(packageIntent);
+		stopBackGroundServer("musicpure");
 		
 		//启动虾米音乐
 		Intent intent = new Intent();
@@ -853,6 +869,14 @@ public class TVSocketControllerService extends Service {
 				"com.xiami.tv.activities.StartActivity"));
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK |Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		startActivity(intent);
+	}
+	
+	
+	private void stopBackGroundServer(String app){
+		//发送广播停止当前服务.
+	    Intent packageIntent =new Intent("com.changhong.action.start_package");
+		packageIntent.putExtra("extra", app);
+		sendBroadcast(packageIntent);
 	}
 
 	/**
@@ -958,6 +982,8 @@ public class TVSocketControllerService extends Service {
 					e.printStackTrace();
 				}
 				if (!vedios.isEmpty()) {
+					
+				   stopBackGroundServer("TCMediaPlayer");
 					Intent intent = new Intent(TVSocketControllerService.this,
 							TCMediaPlayer.class);
 					intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -973,8 +999,9 @@ public class TVSocketControllerService extends Service {
 		intent.setComponent(new ComponentName("com.changhong.playlist",
 				"com.changhong.playlist.Playlist"));
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		intent.putExtra("musicpath", msg);
+		intent.putExtra("musicTitle", "手机推送");		
 		startActivity(intent);
 	}
 
@@ -1000,10 +1027,9 @@ public class TVSocketControllerService extends Service {
 				SearchActivity.handler.sendMessage(msg);
 			} else {
 				Intent intent = new Intent();
-				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK |Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK |Intent.FLAG_ACTIVITY_CLEAR_TASK);
 				intent.setClass(this, com.changhong.tvserver.search.SearchActivity.class);
 				intent.putExtra(SearchActivity.keyWordsName, musickey);
-
 				startActivity(intent);
 			}
 		} else {		
@@ -1013,9 +1039,9 @@ public class TVSocketControllerService extends Service {
 				msg.what = 1;
 				msg.obj = searchContent;
 				MallListActivity.handler.sendMessage(msg);
-			} else {			
+			} else {					
 				Intent intent = new Intent();
-				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK |Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK |Intent.FLAG_ACTIVITY_CLEAR_TASK);
 				intent.setClass(this, com.changhong.tvserver.search.MallListActivity.class);
 				intent.putExtra("command", "movie&tv:" + searchContent);
 				startActivity(intent);
@@ -1101,6 +1127,19 @@ public class TVSocketControllerService extends Service {
 				msg1 = intent.getStringExtra("cmd");
 				Log.i(TAG, "autoCtrlCommand is " + msg1);
 				handler.sendEmptyMessage(1);
+			}
+		}
+
+	}
+	
+	
+	private class FMInforReceiver extends BroadcastReceiver {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			String action = intent.getAction();
+			if (action	.equals(ACTION_UPDATE_FMINFOR)) {
+				initFM();
 			}
 		}
 
