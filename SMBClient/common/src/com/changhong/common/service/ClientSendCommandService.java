@@ -375,6 +375,7 @@ public class ClientSendCommandService extends Service implements ClientSocketInt
     	
     	//parse the json data
     	serverFMInfo.clear();
+    	curFMIndex=-1;
     	try {
     		if (StringUtils.hasLength(sss)) {
     			JSONArray all = new JSONArray(sss);
