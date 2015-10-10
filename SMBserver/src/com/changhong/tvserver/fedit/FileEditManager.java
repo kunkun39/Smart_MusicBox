@@ -217,7 +217,7 @@ public class FileEditManager {
 					socketoutput.println(sendMsg);// 发送给服务器
 					socketoutput.flush();// 清空缓存
 					result = "OK";
-
+					Log.i("mmmm", "Socket" +clientIp);
 			}
 			
 		} catch (Exception e) {
