@@ -68,12 +68,12 @@ public class ClientSendCommandService extends Service implements ClientSocketInt
     
     //自动控制状态
     public static boolean isAutoCtrl = false;
-    public static String  curFMInfor = null;
+    public static int  curFMIndex = -1;
     
    private boolean isFirst=true;
 
-
-
+   //更新广播信息
+   public static final String  ACTION_FMINFOR_UPDATE="com.changhong.updateFM";
     @Override
     public IBinder onBind(Intent intent) {
         return null;
@@ -173,6 +173,14 @@ public class ClientSendCommandService extends Service implements ClientSocketInt
                                 e.printStackTrace();
                             } finally {
                             	searchFMFinished = true;
+                            	//发送广播
+                            	// 创建Intent对象
+                    			Intent intent = new Intent();
+                    			// 设置Intent的Action属性
+                    			intent.setAction(ACTION_FMINFOR_UPDATE);
+                    			// 发送广播
+                    			sendBroadcast(intent);
+                            	
                             }
                             /**
                              * when user reselected the ip, reload all app info
@@ -379,7 +387,9 @@ public class ClientSendCommandService extends Service implements ClientSocketInt
     				}else{
         				serverFMInfo.add(name);
         				//获取当前播放FM 的information
-        				if("1".equals(state))curFMInfor=name;
+        				if("1".equals(state)){
+        					curFMIndex=i;       				
+        				}
     				}
     				
     			}
