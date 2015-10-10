@@ -35,5 +35,3 @@
 -dontwarn com.baidu.voicerecognition.**
 -keep class org.apache.commons.httpclient.**{*;}
 -dontwarn org.apache.commons.httpclient.**
--keep class com.xiami.sdk.**{*;}
--dontwarn com.xiami.sdk.**
