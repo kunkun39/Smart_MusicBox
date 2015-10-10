@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -44,12 +45,32 @@ public class TestActivity extends Activity {
 						int position, long id) {   
 					    Toast.makeText(TestActivity.this, "点击成功", Toast.LENGTH_LONG).show();
 					    adapter.changeImageMode(view,position);
+					    
 				}
 			});
+		
+		myList.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view,
+					int position, long id) {
+//			    adapter.changeImageMode(view,position);
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		
+		myList.setSelection(20);
+
 	}
 	
 	
-	
+	private int mLastPosition=-1;
+
 	/**
 	 * FM名称
 	 */
@@ -57,9 +78,10 @@ public class TestActivity extends Activity {
 
 		private  Context  mContext;
 		private View mLastView = null;
-		private int mLastPosition=-1;
 		private ImageView  mPlayingImage=null;
-		
+		private boolean showBar=false;
+		private int mCurPosition=20;
+
       
 		public FMAdapter(Context context) {
 			this.mContext = context;
@@ -82,23 +104,62 @@ public class TestActivity extends Activity {
 			return position;
 		}
 
-		private HashMap<Integer, View> viewMap=new HashMap<Integer, View>() ;
+		
+		public void setindex(int pos) {
+			mCurPosition = pos;
+		}
+		
+		
+//		private HashMap<Integer, View> viewMap=new HashMap<Integer, View>() ;
 		@Override
+//		public View getView( int position, View convertView,	ViewGroup parent) {
+//			/**
+//			 * VIEW HOLDER的配置
+//			 */
+//			final ViewHolder vh;
+//			if(!viewMap.containsKey(position)){  
+//			    LayoutInflater minflater=LayoutInflater.from(mContext);
+//				convertView = minflater.inflate(R.layout.activity_fm_item, null);
+//				vh = new ViewHolder();
+//				vh.FMname = (TextView) convertView.findViewById(R.id.fmtxt);
+//				vh.FMplay = (ImageView) convertView.findViewById(R.id.btn_fm);
+//				convertView.setTag(vh);
+//				viewMap.put(position, convertView);
+//			} else {
+//	            convertView = viewMap.get(position);  
+//				vh = (ViewHolder) convertView.getTag();
+//			}
+//			
+//			
+//			if (ClientSendCommandService.serverFMInfo.size() > 0) {
+//
+//				vh.FMname.setText(ClientSendCommandService.serverFMInfo	.get(position));
+//				vh.id=position;
+//				
+//				
+//				
+//				
+//                Log.e("YDINFOR:: ","  position="+position);             
+//			}
+//			return convertView;
+//		}
+		
+		
 		public View getView( int position, View convertView,	ViewGroup parent) {
 			/**
 			 * VIEW HOLDER的配置
 			 */
 			final ViewHolder vh;
-			if(!viewMap.containsKey(position)){  
+			if(null == convertView){  
 			    LayoutInflater minflater=LayoutInflater.from(mContext);
 				convertView = minflater.inflate(R.layout.activity_fm_item, null);
 				vh = new ViewHolder();
 				vh.FMname = (TextView) convertView.findViewById(R.id.fmtxt);
-				vh.FMplay = (ImageView) convertView.findViewById(R.id.btn_fm);
+				vh.FMpause = (ImageView) convertView.findViewById(R.id.btn_fm);
+				vh.FMplay = (ImageView) convertView.findViewById(R.id.fmisplay);
+
 				convertView.setTag(vh);
-				viewMap.put(position, convertView);
 			} else {
-	            convertView = viewMap.get(position);  
 				vh = (ViewHolder) convertView.getTag();
 			}
 			
@@ -107,6 +168,15 @@ public class TestActivity extends Activity {
 
 				vh.FMname.setText(ClientSendCommandService.serverFMInfo	.get(position));
 				vh.id=position;
+					
+				if (position ==mCurPosition) {
+					vh.FMpause.setVisibility(View.INVISIBLE);
+					vh.FMplay.setVisibility(View.VISIBLE);
+				} else {
+					vh.FMpause.setVisibility(View.VISIBLE);
+					vh.FMplay.setVisibility(View.INVISIBLE);
+				}
+				
                 Log.e("YDINFOR:: ","  position="+position);             
 			}
 			return convertView;
@@ -128,25 +198,37 @@ public class TestActivity extends Activity {
 			
 			MyApplication.vibrator.vibrate(100);
 			
-			ViewHolder holder;
-	        if(mLastView != null ) {  
-	        	holder = (ViewHolder) mLastView.getTag();  
-	        	mLastPosition=holder.id;
-				if (mAnimation.isRunning())mAnimation.stop();
-				holder.FMplay.setBackgroundResource(R.drawable.fmplay);	 
-				holder.FMname.setTextColor(mContext.getResources().getColor(R.color.white));
-	        } 	        
-	        holder = (ViewHolder) view.getTag();  
-	        if(holder.id == position && mLastPosition !=position){
-		            mLastPosition = position;  
-			        mLastView = view;  
-					holder.FMname.setTextColor(mContext.getResources().getColor(R.color.tab_textColor_selected));
-			        holder.FMplay.setBackgroundResource(R.anim.playing_anim);
-			        mAnimation = (AnimationDrawable) holder.FMplay.getBackground();
-					mAnimation.start();	 
-	        }else{       
-	        	mLastPosition=-1;
-	        }
+//			ViewHolder holder;
+//	        if(mLastView != null ) {  
+//	        	holder = (ViewHolder) mLastView.getTag();  
+//	        	mLastPosition=holder.id;
+//				if (mAnimation.isRunning())mAnimation.stop();
+//				holder.FMplay.setBackgroundResource(R.drawable.fmplay);	 
+//				holder.FMname.setTextColor(mContext.getResources().getColor(R.color.white));
+//	        } 	        
+//	        holder = (ViewHolder) view.getTag();  
+//	        if(holder.id == position && mLastPosition !=position){
+//		            mLastPosition = position;  
+//			        mLastView = view;  
+//					holder.FMname.setTextColor(mContext.getResources().getColor(R.color.tab_textColor_selected));
+//			        holder.FMplay.setBackgroundResource(R.anim.playing_anim);
+//			        mAnimation = (AnimationDrawable) holder.FMplay.getBackground();
+//					mAnimation.start();	 
+//	        }else{       
+//	        	mLastPosition=-1;
+//	        }
+			
+			adapter.setindex(-1);
+			adapter.notifyDataSetChanged();
+			
+			if(mLastPosition != position){
+				adapter.setindex(position);
+				adapter.notifyDataSetChanged();
+				mLastPosition=position;
+			}else{
+				mLastPosition=-1;
+			}
+			
 	    }  
 		
 		
@@ -154,7 +236,9 @@ public class TestActivity extends Activity {
 		public final class ViewHolder {
 			public int id;
 			public TextView FMname;
+			public ImageView FMpause;
 			public ImageView FMplay;
+
 		}
 	}
 }

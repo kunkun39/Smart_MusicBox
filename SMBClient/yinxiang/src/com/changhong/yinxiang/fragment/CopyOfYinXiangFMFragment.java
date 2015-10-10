@@ -2,16 +2,11 @@ package com.changhong.yinxiang.fragment;
 
 import java.util.HashMap;
 
-import android.net.ConnectivityManager;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.app.Fragment;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.ColorDrawable;
@@ -24,11 +19,10 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.changhong.common.service.ClientSendCommandService;
-import com.changhong.common.service.NetworkConnectChangedReceiver;
 import com.changhong.common.system.MyApplication;
 import com.changhong.yinxiang.R;
 
-public class YinXiangFMFragment extends Fragment {
+public class CopyOfYinXiangFMFragment extends Fragment {
 
 	/**
 	 * message handler
@@ -41,14 +35,13 @@ public class YinXiangFMFragment extends Fragment {
 	private FMAdapter adapter = null;
 
 	/********************************************************** play按钮 ***********************************************************/
+	private AnimationDrawable mAnimation = null;
 	private int curPlayingIndex;
 
 	private HashMap<Integer, View> viewMap = null;
 	private View mLastView = null;
 	private int mLastPosition = -1;
 	private ImageView mPlayingImage = null;
-	private 	FMUpdateReceiver fmUpdateReceiver=null;
-
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -74,78 +67,52 @@ public class YinXiangFMFragment extends Fragment {
 		FMlist.setSelector(new ColorDrawable(Color.TRANSPARENT));
 		adapter = new FMAdapter(getActivity());
 		FMlist.setAdapter(adapter);
+		setListViewPos(ClientSendCommandService.curFMIndex);
 		FMlist.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				adapter.changeImageMode(position,true);
+				adapter.changeImageMode(view, position);
 			}
 		});
-		setListViewPos(ClientSendCommandService.curFMIndex);
-
 		
-//		mHandler = new Handler() {
-//			public void handleMessage(Message msg1) {
-//				if (ClientSendCommandService.searchFMFinished) {
-//					adapter.notifyDataSetChanged();
-//				} else {
-//					mHandler.sendMessageDelayed(new Message(), 1000);
-//				}
-//			}
-//		};
-//		mHandler.sendEmptyMessage(1);
-		regFMInforBroadcastRec();
-
+		
+		mHandler = new Handler() {
+			public void handleMessage(Message msg1) {
+				if (ClientSendCommandService.searchFMFinished) {
+					adapter.notifyDataSetChanged();
+				} else {
+					mHandler.sendMessageDelayed(new Message(), 1000);
+				}
+			}
+		};
+		mHandler.sendEmptyMessage(1);
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
-	}
-	
-	
 
-	@Override
-	public void onPause() {
-		unregisterFMInfor();
-		super.onDestroy();
 	}
 
 	private void setListViewPos(int pos) {
 		
 		if(pos<0)return;
+//		
+//		if (android.os.Build.VERSION.SDK_INT >= 8) {
+//			FMlist.smoothScrollToPositionFromTop (pos,5);
+//		} else {
+//			FMlist.setSelection(pos);
+//		}
+		
+//		
+		FMlist.smoothScrollToPositionFromTop (pos,0);
 		FMlist.setSelection(pos);
-	}
-	
-	private void regFMInforBroadcastRec() {
-		if(null == fmUpdateReceiver){
-			fmUpdateReceiver=new FMUpdateReceiver();
-		}
-		IntentFilter filter = new IntentFilter();
-		filter.addAction(ClientSendCommandService.ACTION_FMINFOR_UPDATE);
-		getActivity().registerReceiver(fmUpdateReceiver, filter);
-	}
 
-	private void unregisterFMInfor() {
-		if (fmUpdateReceiver != null) {
-			getActivity().unregisterReceiver(fmUpdateReceiver);
-		}
-	}
-	
-	
-	private class FMUpdateReceiver extends BroadcastReceiver {
-
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			String action = intent.getAction();
-			if (action	.equals(ClientSendCommandService.ACTION_FMINFOR_UPDATE)) {
-				adapter.changeImageMode(ClientSendCommandService.curFMIndex,false);
-				FMlist.setSelection(ClientSendCommandService.curFMIndex);
-			}
-		}
 
 	}
+	
 	
 
 	/**
@@ -154,11 +121,9 @@ public class YinXiangFMFragment extends Fragment {
 	private class FMAdapter extends BaseAdapter {
 
 		private Context mContext;
-		private int mCurPosition=-1;
 
 		public FMAdapter(Context context) {
 			this.mContext = context;
-			mCurPosition=ClientSendCommandService.curFMIndex;
 		}
 
 		@Override
@@ -177,10 +142,6 @@ public class YinXiangFMFragment extends Fragment {
 			// TODO Auto-generated method stub
 			return position;
 		}
-		
-		public void setindex(int pos) {
-			mCurPosition = pos;
-		}
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
@@ -188,34 +149,37 @@ public class YinXiangFMFragment extends Fragment {
 			 * VIEW HOLDER的配置
 			 */
 			final ViewHolder vh;
-			if(null == convertView){  
-			    LayoutInflater minflater=LayoutInflater.from(mContext);
-				convertView = minflater.inflate(R.layout.activity_fm_item, null);
+			if (!viewMap.containsKey(position)) {
+				LayoutInflater minflater = LayoutInflater.from(mContext);
+				convertView = minflater
+						.inflate(R.layout.activity_fm_item, null);
 				vh = new ViewHolder();
 				vh.FMname = (TextView) convertView.findViewById(R.id.fmtxt);
-				vh.FMpause = (ImageView) convertView.findViewById(R.id.btn_fm);
-				vh.FMplay = (ImageView) convertView.findViewById(R.id.fmisplay);
-
+				vh.FMplay = (ImageView) convertView.findViewById(R.id.btn_fm);
 				convertView.setTag(vh);
+				viewMap.put(position, convertView);
 			} else {
+				convertView = viewMap.get(position);
 				vh = (ViewHolder) convertView.getTag();
 			}
-			
-			
+
 			if (ClientSendCommandService.serverFMInfo.size() > 0) {
 
-				vh.FMname.setText(ClientSendCommandService.serverFMInfo	.get(position));
-				vh.id=position;
-					
-				if (position ==mCurPosition) {
-					vh.FMpause.setVisibility(View.INVISIBLE);
-					vh.FMplay.setVisibility(View.VISIBLE);
-				} else {
-					vh.FMpause.setVisibility(View.VISIBLE);
-					vh.FMplay.setVisibility(View.INVISIBLE);
+				String FMname = ClientSendCommandService.serverFMInfo	.get(position);
+				vh.FMname.setText(FMname);
+				vh.id = position;
+				if (position==ClientSendCommandService.curFMIndex) {
+					if(null == mAnimation){
+						mLastPosition = position;
+						mLastView = convertView;
+						vh.FMname.setTextColor(mContext.getResources().getColor(R.color.tab_textColor_selected));
+						vh.FMplay.setBackgroundResource(R.anim.playing_anim);
+						mAnimation = (AnimationDrawable) vh.FMplay.getBackground();
+						mAnimation.start();
+					}
 				}
-				
-                Log.e("YDINFOR:: ","  position="+position);             
+
+				Log.e("YDINFOR:: ", "  position=" + position);
 			}
 			return convertView;
 		}
@@ -264,54 +228,46 @@ public class YinXiangFMFragment extends Fragment {
 		// return convertView;
 		// }
 
-		public void changeImageMode( int position,boolean isSendCommand) {
+		@Override
+		public void notifyDataSetChanged() {
 
-			if(isSendCommand){
-				MyApplication.vibrator.vibrate(100);
-				String serverFMInfor = ClientSendCommandService.serverFMInfo
-						.get(position);
-				ClientSendCommandService.msg = "fm:" + serverFMInfor;
-				ClientSendCommandService.handler.sendEmptyMessage(1);
+			super.notifyDataSetChanged();
+		}
+
+		public void changeImageMode(View view, int position) {
+
+			MyApplication.vibrator.vibrate(100);
+			String serverFMInfor = ClientSendCommandService.serverFMInfo
+					.get(position);
+			ClientSendCommandService.msg = "fm:" + serverFMInfor;
+			ClientSendCommandService.handler.sendEmptyMessage(1);
+			ViewHolder holder;
+			if (mLastView != null) {
+				holder = (ViewHolder) mLastView.getTag();
+				mLastPosition = holder.id;
+				mLastView = null;
+				if (mAnimation.isRunning())
+					mAnimation.stop();
+				holder.FMplay.setBackgroundResource(R.drawable.fmplay);
+				holder.FMname.setTextColor(mContext.getResources().getColor(R.color.white));
 			}
-//			if (mLastView != null) {
-//				holder = (ViewHolder) mLastView.getTag();
-//				mLastPosition = holder.id;
-//				mLastView = null;
-//				if (mAnimation.isRunning())
-//					mAnimation.stop();
-//				holder.FMplay.setBackgroundResource(R.drawable.fmplay);
-//				holder.FMname.setTextColor(mContext.getResources().getColor(R.color.white));
-//			}
-//			holder = (ViewHolder) view.getTag();
-//			if (holder.id == position && position != mLastPosition) {
-//				mLastPosition = position;
-//				mLastView = view;
-//				holder.FMname.setTextColor(mContext.getResources().getColor(
-//						R.color.tab_textColor_selected));
-//				holder.FMplay.setBackgroundResource(R.anim.playing_anim);
-//				mAnimation = (AnimationDrawable) holder.FMplay.getBackground();
-//				mAnimation.start();
-//			} else  if(position == mLastPosition){
-//				mLastPosition = -1;
-//			}
-			
-			adapter.setindex(-1);
-			adapter.notifyDataSetChanged();
-			
-			if(mLastPosition != position){
-				adapter.setindex(position);
-				adapter.notifyDataSetChanged();
-				mLastPosition=position;
-			}else{
-				mLastPosition=-1;
+			holder = (ViewHolder) view.getTag();
+			if (holder.id == position && position != mLastPosition) {
+				mLastPosition = position;
+				mLastView = view;
+				holder.FMname.setTextColor(mContext.getResources().getColor(
+						R.color.tab_textColor_selected));
+				holder.FMplay.setBackgroundResource(R.anim.playing_anim);
+				mAnimation = (AnimationDrawable) holder.FMplay.getBackground();
+				mAnimation.start();
+			} else  if(position == mLastPosition){
+				mLastPosition = -1;
 			}
-			
 		}
 
 		public final class ViewHolder {
 			public int id;
 			public TextView FMname;
-			public ImageView FMpause;
 			public ImageView FMplay;
 		}
 	}

@@ -148,6 +148,7 @@ public class SearchActivity extends BaseActivity {
 		clearHistory=(Button) findViewById(R.id.clear_search_history);	
 	    search_movie = (ImageView) findViewById(R.id.vedio_type_movie);
 	    search_tv = (ImageView) findViewById(R.id.vedio_type_tv);		
+	    locType = music;
 	}
 
 	protected void initData() {		
@@ -160,14 +161,9 @@ public class SearchActivity extends BaseActivity {
 				// 发送命令到机顶盒执行搜索功能
 				String key = search_keywords.getText().toString();
 				if (!TextUtils.isEmpty(key)) {
-					searchKey(key);						
+					searchKey(key);	
 					//保存新增的搜索记录
-					if(locType.equals(music) &&  !musicRecords.contains(key)){
-						musicRecords=key+";"+musicRecords;
-					}else{
-						if(!vedioRecords.contains(key))
-						vedioRecords=key+";"+vedioRecords;
-					}
+					updateSearchHistory(key);
 					
 				} else {
 					Toast.makeText(SearchActivity.this,R.string.error_empty_keyword,
@@ -181,7 +177,7 @@ public class SearchActivity extends BaseActivity {
 			public void onClick(View v) {
 				MyApplication.vibrator.vibrate(100);
 				// 发送命令到机顶盒执行搜索功能
-				locType = type_str[2];
+				locType = type_str[1];
 				search_movie.setBackgroundColor(SearchActivity.this.getResources().getColor(R.color.tab_textColor_selected));
 				search_tv.setBackgroundColor(0);
 
@@ -193,7 +189,7 @@ public class SearchActivity extends BaseActivity {
 			public void onClick(View v) {
 				MyApplication.vibrator.vibrate(100);
 				// 发送命令到机顶盒执行搜索功能
-				locType = type_str[1];
+				locType = type_str[2];
 				search_tv.setBackgroundColor(SearchActivity.this.getResources().getColor(R.color.tab_textColor_selected));
 				search_movie.setBackgroundColor(0);
 			}
@@ -269,6 +265,8 @@ public class SearchActivity extends BaseActivity {
 				Log.i("mmmm","mAlbumName[position]"+ mAlbumName[position]);
 				searchKey(mAlbumName[position]);
 			    search_keywords.setText(mAlbumName[position]);
+				updateSearchHistory(mAlbumName[position]);
+
 
 			}
 		});
@@ -293,18 +291,56 @@ public class SearchActivity extends BaseActivity {
 	}
 	
 	
+	private void updateSearchHistory(String key){
+		String newRecords=null;
+		//保存新增的搜索记录
+		if(locType.equals(music)){						
+			if(musicRecords.contains(key))musicRecords=musicRecords.replace(key+";", "");		
+			newRecords=musicRecords=key+";"+musicRecords;
+		}else{					
+			if(vedioRecords.contains(key))vedioRecords=vedioRecords.replace(key+";", "");		
+			newRecords=vedioRecords=key+";"+vedioRecords;
+		}		
+		 searchHistoryAdapter historyAdapter=(searchHistoryAdapter) myHistory.getAdapter();
+		 if(null==historyAdapter){
+			    setSearchHistory();
+		 }else{
+		         historyAdapter.setHistoryList(newRecords);
+				 historyAdapter.notifyDataSetChanged();
+		 }
+	}
+	
+	
    /**
     * 保存搜索记录到MySharePreferences中
     */
 	private void saveSearchHistory() {
-		MySharePreferencesData shareData=new MySharePreferencesData();  
-		 shareData.searchHistory="music:"+musicRecords+"vedio:"+vedioRecords;	
+		 MySharePreferencesData shareData=new MySharePreferencesData();  
+		 shareData.searchHistory=formateHistoryRecords();	
 		mSharePreferences.SaveMySharePreferences(shareData);	
 		Log.e(TAG, "saveSearchHistory  is  "+shareData.searchHistory);
 	}
+	
+	private String formateHistoryRecords(){
+		 String[] musicTokens=musicRecords.split(";");
+		 String[] vedioTokens=vedioRecords.split(";");
+		 musicRecords="";
+		 vedioRecords="";
+		 for (int i = 0; i < 3; i++) {
+			 if(i<musicTokens.length && StringUtils.hasLength(musicTokens[i]))musicRecords+=musicTokens[i]+";";
+			 if(i<vedioTokens.length  && StringUtils.hasLength(vedioTokens[i]))vedioRecords+=vedioTokens[i]+";";
+		}	
+		return  "music:"+musicRecords+"vedio:"+vedioRecords;	
+	}
+	
 		
 	
 	private void searchKey(String key) {
+		
+		if(locType.equals(tv)){
+			key="电视剧"+key;
+		}
+		
 		StringBuffer sb = new StringBuffer();
 		sb.append("search:");
 		sb.append("|");
