@@ -38,7 +38,8 @@ import com.changhong.yinxiang.utils.MySharePreferencesData;
 
 public class SearchActivity extends BaseActivity {
 
-	
+	private static final String TAG = "SearchActivity::";
+
 	/************************************************** IP连接部分 *******************************************************/
 
 //	public static TextView title = null;
@@ -117,6 +118,9 @@ public class SearchActivity extends BaseActivity {
 				int index=shareData.searchHistory.indexOf("vedio:");
 				musicRecords=shareData.searchHistory.substring("music:".length(),index);
 				vedioRecords=shareData.searchHistory.substring(index+"vedio:".length());
+				
+				Log.e(TAG, "SearchHistory  is  "+shareData.searchHistory);
+
 			}
 			if(!StringUtils.hasLength(musicRecords))musicRecords="";
 			if(!StringUtils.hasLength(vedioRecords))vedioRecords="";
@@ -296,6 +300,7 @@ public class SearchActivity extends BaseActivity {
 		MySharePreferencesData shareData=new MySharePreferencesData();  
 		 shareData.searchHistory="music:"+musicRecords+"vedio:"+vedioRecords;	
 		mSharePreferences.SaveMySharePreferences(shareData);	
+		Log.e(TAG, "saveSearchHistory  is  "+shareData.searchHistory);
 	}
 		
 	
