@@ -26,7 +26,7 @@
                 android:layout_width="0dip"
                 android:layout_height="match_parent"
                 android:layout_weight="1"                
-                android:src="@drawable/mobile"
+                android:src="@drawable/tv"
                 android:layout_gravity="center_vertical"/>
           <ImageView 
                 android:id="@+id/filecopy_progress"
@@ -41,7 +41,7 @@
                 android:layout_width="0dip"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:src="@drawable/tv"
+                android:src="@drawable/mobile"
                 android:layout_gravity="center_vertical"
                 />
     </LinearLayout>
