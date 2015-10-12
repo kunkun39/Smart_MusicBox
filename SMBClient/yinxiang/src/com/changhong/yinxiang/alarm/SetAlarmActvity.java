@@ -18,6 +18,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -261,6 +262,8 @@ public class SetAlarmActvity extends Activity {
 	// 进入添加流程
 	private void addAlarm() {
 		int length = 0;
+		
+		//计算当前闹铃的ID值是多少
 		int id = 0;
 		if (AlarmMainActivity.mAlarmList != null&&AlarmMainActivity.mAlarmList.size()>0) {
 			length = AlarmMainActivity.mAlarmList.size();
@@ -337,6 +340,7 @@ public class SetAlarmActvity extends Activity {
 
 			// 发送播放地址
 			ClientSendCommandService.msg = sendObj.toString();
+			Log.i("mmmm", "sendObj"+sendObj.toString());
 			ClientSendCommandService.handler.sendEmptyMessage(4);
 
 		} catch (Exception e) {
@@ -437,6 +441,11 @@ public class SetAlarmActvity extends Activity {
 	}
 
 	private void setAlarmMusics() {
+		//增加判断音乐是否有效功能
+		for(int k=0;k<musicListInit.size();k++){
+			
+		}
+		
 		for (int i = 0; i < currentState.length; i++) {
 			if (updateContent[i] != 1) {
 				continue;
@@ -484,9 +493,18 @@ public class SetAlarmActvity extends Activity {
 		}
 	}
 
+	
+	
 	// 回传数据给闹铃主界面，并且发送给音响。
-
 	private void dealResultData() {
+		
+		//判断音乐列表是否为空
+		ArrayList<MusicBean> musics = alarm.getMusicBean();
+		if(null==musics||musics.size()==0){
+			Toast.makeText(this, "音乐列表不能为空，请添加对应的音乐文件", Toast.LENGTH_SHORT).show();
+			return;
+		}
+		
 		String content = null;
 		Intent intent = new Intent();
 		String str = ResolveAlarmInfor.alarmToStr(alarm);
