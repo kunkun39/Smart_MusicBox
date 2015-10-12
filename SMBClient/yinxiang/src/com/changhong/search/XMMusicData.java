@@ -1,12 +1,11 @@
 package com.changhong.search;
 
-import java.util.List; 
+import java.util.List;
 
 import android.content.Context;
 import android.os.Handler;
 import android.util.Pair;
 
-import com.changhong.yinxiang.activity.SearchActivity;
 import com.xiami.sdk.XiamiSDK;
 import com.xiami.sdk.entities.OnlineAlbum;
 import com.xiami.sdk.entities.QueryInfo;
