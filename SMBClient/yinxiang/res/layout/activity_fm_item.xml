@@ -1,26 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent"
+            android:layout_height="60dip"
             android:background="@drawable/fmback">
             <TextView 
                     android:layout_width="180dip"
-                    android:layout_height="fill_parent"
-                    android:textColor="@android:color/white"
+                    android:layout_height="fill_parent"                   
+                    android:layout_alignParentLeft="true"
+			        android:layout_centerVertical="true"      
                     android:layout_marginLeft="60dip"
+                    android:textColor="@android:color/white"
                     android:text="CCTV"
                     android:id="@+id/fmtxt" 
                     android:textSize="20sp"
-                    android:focusable="false"
-                    android:gravity="left|center_vertical"
-                />
+                    android:focusable="false"/>
             <ImageView 
                 android:id="@+id/btn_fm"
                 android:layout_width="21dip"
                 android:layout_height="21dip"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="30dip"               
                 android:background="@drawable/fmplay"
-                android:layout_marginLeft="10dip"
-                android:layout_gravity="center_vertical"
+			    android:layout_centerVertical="true"      
                 />
- </LinearLayout>
+            
+                <ImageView
+			        android:id="@+id/fmisplay"
+			        android:layout_width="21dip"
+			        android:layout_height="21dip"
+			        android:layout_centerVertical="true"      
+			        android:layout_alignParentRight="true"
+			        android:layout_marginRight="30dip"  
+			        android:contentDescription="@null"
+			        android:scaleType="fitXY"
+			        android:background="@anim/playing_anim"
+			        android:visibility="invisible" />
+            
+ </RelativeLayout>
