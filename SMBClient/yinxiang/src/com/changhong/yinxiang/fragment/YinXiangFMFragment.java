@@ -130,6 +130,7 @@ public class YinXiangFMFragment extends Fragment {
 	private void unregisterFMInfor() {
 		if (fmUpdateReceiver != null) {
 			getActivity().unregisterReceiver(fmUpdateReceiver);
+			fmUpdateReceiver=null;
 		}
 	}
 	
