@@ -1,5 +1,6 @@
 package com.changhong.yinxiang.alarm;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -62,6 +63,8 @@ public class SetAlarmActvity extends Activity {
 	private int curentId;// 设置该alarm的ID。
 	private int resultCode = 0;// 0为更改，1位新增
 
+	private boolean musicIsEmpty = true;
+
 	private SendTCPData sendTCP = null;
 
 	// 进入设置界面后，先设置状态。
@@ -107,7 +110,7 @@ public class SetAlarmActvity extends Activity {
 					break;
 				}
 				dealResultData();
-				finish();
+
 				break;
 			case R.id.cancel:
 				finish();
@@ -219,7 +222,7 @@ public class SetAlarmActvity extends Activity {
 			}
 		}
 
-		if (alarm.musicBean != null && !alarm.musicBean.isEmpty() ) {
+		if (alarm.musicBean != null && !alarm.musicBean.isEmpty()) {
 			String name = alarm.musicBean.get(0).getTitle();
 			curMusic.setText(name);
 		}
@@ -262,10 +265,11 @@ public class SetAlarmActvity extends Activity {
 	// 进入添加流程
 	private void addAlarm() {
 		int length = 0;
-		
-		//计算当前闹铃的ID值是多少
+
+		// 计算当前闹铃的ID值是多少
 		int id = 0;
-		if (AlarmMainActivity.mAlarmList != null&&AlarmMainActivity.mAlarmList.size()>0) {
+		if (AlarmMainActivity.mAlarmList != null
+				&& AlarmMainActivity.mAlarmList.size() > 0) {
 			length = AlarmMainActivity.mAlarmList.size();
 			for (int i = 0; i < length; i++) {
 				int cache = AlarmMainActivity.mAlarmList.get(i).getId();
@@ -291,7 +295,7 @@ public class SetAlarmActvity extends Activity {
 		if (currentState != null && currentState.length > 0) {
 			for (int j = 0; j < currentState.length; j++) {
 				if (currentState[j]) {
-					MusicBean cacheMusic =musicListAll.get(j);
+					MusicBean cacheMusic = musicListAll.get(j);
 					cacheMusic.setmId(curentId);
 					musics.add(cacheMusic);
 				}
@@ -340,7 +344,7 @@ public class SetAlarmActvity extends Activity {
 
 			// 发送播放地址
 			ClientSendCommandService.msg = sendObj.toString();
-			Log.i("mmmm", "sendObj"+sendObj.toString());
+			Log.i("mmmm", "sendObj" + sendObj.toString());
 			ClientSendCommandService.handler.sendEmptyMessage(4);
 
 		} catch (Exception e) {
@@ -391,6 +395,7 @@ public class SetAlarmActvity extends Activity {
 
 	// 显示音乐列表
 	private void showMusics() {
+		musicIsEmpty = false;
 		if (musicListAll.size() > 0) {
 			String names[] = new String[musicListAll.size()];
 			for (int i = 0; i < musicListAll.size(); i++) {
@@ -434,40 +439,66 @@ public class SetAlarmActvity extends Activity {
 										int which) {
 									// TODO Auto-generated method stub
 									// 设置复选框监听器
-									setAlarmMusics();
+									setAlarmMusics(dialog);
 								}
-							}).setNegativeButton("取消", null).show();
+							})
+					.setNegativeButton("取消",
+							new DialogInterface.OnClickListener() {
+
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+									// TODO Auto-generated method stub
+									cancelDismiss(dialog, true);
+								}
+							}).show();
 		}
 	}
 
-	private void setAlarmMusics() {
-		//增加判断音乐是否有效功能
-		for(int k=0;k<musicListInit.size();k++){
-			boolean flag=false;//代表该首音乐是否是有效音乐，true代表音乐文件存在，false代表音乐文件不存在
-			MusicBean music=musicListInit.get(k);
-			String name=music.getTitle();
-			for(int a=0;a<musicListAll.size();a++){
-				if(name.equals(musicListAll.get(a).getTitle())){
-					flag=true;
-				}
-			}
-			if(!flag){
-				musicListInit.remove(music);
+	private void setAlarmMusics(DialogInterface dialog) {
+
+		boolean emptyFlag = false;
+		// 判断音乐列表是否为空
+		for (int b = 0; b < currentState.length; b++) {
+			if (currentState[b]) {
+				emptyFlag = true;
 			}
 		}
-		
-		for (int i = 0; i < currentState.length; i++) {
-			if (updateContent[i] != 1) {
-				continue;
+		if (!emptyFlag) {
+			musicIsEmpty = true;
+			Toast.makeText(this, "音乐列表不能为空，请添加对应的音乐文件", Toast.LENGTH_SHORT)
+					.show();
+			curMusic.setText("");
+			cancelDismiss(dialog, false);
+		} else {
+
+			// 增加判断音乐文件是否有效功能
+			for (int k = 0; k < musicListInit.size(); k++) {
+				boolean flag = false;// 代表该首音乐是否是有效音乐，true代表音乐文件存在，false代表音乐文件不存在
+				MusicBean music = musicListInit.get(k);
+				String name = music.getTitle();
+				for (int a = 0; a < musicListAll.size(); a++) {
+					if (name.equals(musicListAll.get(a).getTitle())) {
+						flag = true;
+					}
+				}
+				if (!flag) {
+					musicListInit.remove(music);
+				}
 			}
-			if (currentState[i]) {
-				
-				int musicListSize=musicListInit.size();
-				if(0== musicListSize){
+
+			for (int i = 0; i < currentState.length; i++) {
+				if (updateContent[i] != 1) {
+					continue;
+				}
+				if (currentState[i]) {
+
+					int musicListSize = musicListInit.size();
+					if (0 == musicListSize) {
 						MusicBean music = musicListAll.get(i);
 						music.setmId(alarm.id);
 						musicListInit.add(music);
-				}else {
+					} else {
 						for (int j = 0; j < musicListSize; j++) {
 							if (musicListAll.get(i).getTitle()
 									.equals(musicListInit.get(j).getTitle())) {
@@ -476,70 +507,89 @@ public class SetAlarmActvity extends Activity {
 								MusicBean music = musicListAll.get(i);
 								music.setmId(alarm.id);
 								musicListInit.add(music);
-								
-								
+
 							}
 						}
-				}
+					}
 
-			} else {
-				for (int j = 0; j < musicListInit.size(); j++) {
-					if (musicListAll.get(i).getTitle()
-							.equals(musicListInit.get(j).getTitle())) {
-						musicListInit.remove(j);
+				} else {
+					for (int j = 0; j < musicListInit.size(); j++) {
+						if (musicListAll.get(i).getTitle()
+								.equals(musicListInit.get(j).getTitle())) {
+							musicListInit.remove(j);
+						}
 					}
 				}
 			}
-		}
-		if (alarm != null) {
-			alarm.setMusicBean(musicListInit);
-		}
-		//设置音乐名字，用设置的音乐列表中的第一首歌曲作为名字
-		if(musicListInit!=null&&musicListInit.size()>0){
-			String name =musicListInit.get(0).getTitle();
-			curMusic.setText(name);
-		}else {
-			curMusic.setText("");
+
+			if (alarm != null) {
+				alarm.setMusicBean(musicListInit);
+			}
+			// 设置音乐名字，用设置的音乐列表中的第一首歌曲作为名字
+			if (musicListInit != null && musicListInit.size() > 0) {
+				String name = musicListInit.get(0).getTitle();
+				curMusic.setText(name);
+			} else {
+				curMusic.setText("");
+			}
+			cancelDismiss(dialog, true);
 		}
 	}
 
-	
-	
 	// 回传数据给闹铃主界面，并且发送给音响。
 	private void dealResultData() {
-		
-		//判断音乐列表是否为空
-		ArrayList<MusicBean> musics = alarm.getMusicBean();
-		if(null==musics||musics.size()==0){
-			Toast.makeText(this, "音乐列表不能为空，请添加对应的音乐文件", Toast.LENGTH_SHORT).show();
-			return;
-		}
-		
-		String content = null;
-		Intent intent = new Intent();
-		String str = ResolveAlarmInfor.alarmToStr(alarm);
-		intent.putExtra("alarm", str);
-		SetAlarmActvity.this.setResult(resultCode, intent);
-		String ip = ClientSendCommandService.serverIP;
-		// 考虑是否用TCP发送数据回音响端???
-		switch (state) {
-		case update:
-			ClientSendCommandService.msg = Alarm.update + curentId + "|" + str;
-			// content = Alarm.update + curentId + "|" + str;
-			break;
-		case add:
 
-			ClientSendCommandService.msg = Alarm.insert + str;
-			// ClientSendCommandService.handler.sendEmptyMessage(1);
-			// content = Alarm.update + curentId + "|" + str;
-			break;
-		default:
-			break;
+		if (!musicIsEmpty) {
+			String content = null;
+			Intent intent = new Intent();
+			String str = ResolveAlarmInfor.alarmToStr(alarm);
+			intent.putExtra("alarm", str);
+			SetAlarmActvity.this.setResult(resultCode, intent);
+			String ip = ClientSendCommandService.serverIP;
+			// 考虑是否用TCP发送数据回音响端???
+			switch (state) {
+			case update:
+				ClientSendCommandService.msg = Alarm.update + curentId + "|"
+						+ str;
+				// content = Alarm.update + curentId + "|" + str;
+				break;
+			case add:
+
+				ClientSendCommandService.msg = Alarm.insert + str;
+				// ClientSendCommandService.handler.sendEmptyMessage(1);
+				// content = Alarm.update + curentId + "|" + str;
+				break;
+			default:
+				break;
+			}
+			// if (content != null && ip != null) {
+			// sendTCP.addData(content, ip);
+			// }
+			ClientSendCommandService.handler.sendEmptyMessage(1);
+		}else{
+			Toast.makeText(this, "音乐列表不能为空，请添加对应的音乐文件,此次操作无效!", Toast.LENGTH_SHORT)
+			.show();
 		}
-		// if (content != null && ip != null) {
-		// sendTCP.addData(content, ip);
-		// }
-		ClientSendCommandService.handler.sendEmptyMessage(1);
+		finish();
+
+	}
+
+	// 设置点击dialog按钮后是否关闭该对话框，false不关闭，true关闭
+	private void cancelDismiss(DialogInterface dialog, boolean flag) {
+		Field field = null;
+		try {
+			field = dialog.getClass().getSuperclass()
+					.getDeclaredField("mShowing");
+			if (field != null) {
+				field.setAccessible(true);
+				field.set(dialog, flag);
+				dialog.dismiss();
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 
 	@Override
