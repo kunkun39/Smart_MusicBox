@@ -172,11 +172,8 @@ public class FileEditManager {
 					case Configure.ACTION_SOCKET_COMMUNICATION:
 
 						System.out	.println("++++++++++++++++++++++start  postMassageBySocket+++++++++++++++++++++++");
-
-						String sendmsg = (String) mParams
-								.get(Configure.MSG_SEND);
-						String clientIp = (String) mParams
-								.get(Configure.IP_ADD);
+						String sendmsg = (String) mParams.get(Configure.MSG_SEND);
+						String clientIp = (String) mParams	.get(Configure.IP_ADD);
 						postMassageBySocket(clientIp, sendmsg);
 						System.out	.println("++++++++++++++++++++++end  postMassageBySocket+++++++++++++++++++++++");
 

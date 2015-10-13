@@ -11,12 +11,18 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.util.ArrayList;
 import java.util.Calendar;
-
+import java.util.HashMap;
+import java.util.Map;
+import com.changhong.tvserver.fedit.Configure;
+import com.changhong.tvserver.fedit.FileEditManager;
 import com.changhong.tvserver.utils.MySharePreferences;
 import com.changhong.tvserver.utils.MySharePreferencesData;
 
 import android.app.Service;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.IBinder;
 import android.text.format.DateFormat;
 import android.util.Log;
@@ -36,6 +42,8 @@ public class ClientOnLineMonitorService extends Service {
 	ArrayList<String> clientOnLineList = new ArrayList<String>();
 
 	public static String ACTION_AUTOCTRL_COMMAND = "com.changhong.autoctrl";
+	public static String ACTION_UPDATE_AUTOCTRL= "com.changhong.updateAutoCtrl";
+
 	
 	//心跳信息内容
     public static String CH_CLIENT_HEARTBEAT = "client | heartBeat";
@@ -45,6 +53,10 @@ public class ClientOnLineMonitorService extends Service {
 	 * 标志客户端心跳线程正在执行
 	 */
 	private boolean isRun = true;
+	
+	FileEditManager mFileEditManager;
+	private ChangeAutoCtrlReceiver changeCtrlReceiver = null;
+
 
 	/**
 	 * 延迟时间参照
@@ -64,11 +76,11 @@ public class ClientOnLineMonitorService extends Service {
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		initSmartCtrlService();
 	}
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		initSmartCtrlService();
 	    flags = START_STICKY;  
 		return super.onStartCommand(intent, flags, startId);
 	}
@@ -89,17 +101,69 @@ public class ClientOnLineMonitorService extends Service {
         //获取auto状态。
         mySharePreferences= new MySharePreferences(this);
         MySharePreferencesData  shareData= mySharePreferences.InitGetMySharedPreferences();
-        isAutoControl=shareData.isAutoCtrl;
+        setAutoControlFlag(shareData.isAutoCtrl);
+        
+        changeCtrlReceiver = new ChangeAutoCtrlReceiver();
+		IntentFilter filter = new IntentFilter();
+		filter.addAction(ClientOnLineMonitorService.ACTION_UPDATE_AUTOCTRL);
+		registerReceiver(changeCtrlReceiver, filter);
+        
+        
+        
 	}
 
-	public static Boolean isAutoControl() {
-		return isAutoControl;
+	public  Boolean isAutoControl() {
+		boolean copyIsAutoControl;
+		synchronized (isAutoControl) {
+			copyIsAutoControl=isAutoControl;
+		}
+		return copyIsAutoControl;
 	}
 
-	public static void setAutoControlFlag(Boolean autoControl) {
-		isAutoControl = autoControl;
-		mySharePreferences.SaveAutoCtrl(isAutoControl);
+	public  void setAutoControlFlag(Boolean autoControl) {
+		synchronized (isAutoControl) {
+		       isAutoControl = autoControl;
+		       Log.e(TAG, "setAutoControlFlag ="+autoControl);
+		}
+		mySharePreferences.SaveAutoCtrl(autoControl);
 	}
+	
+	
+	public void sendAutoCtrlFlagToClient(String clientIp){
+		
+		String autoCtrl=isAutoControl()?"auto_on":"auto_off";
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put(Configure.MSG_SEND, "autoCtrl:"+autoCtrl);
+		params.put(Configure.IP_ADD, clientIp);
+		FileEditManager.getInstance().communicationWithClient(null,	Configure.ACTION_SOCKET_COMMUNICATION, params);			
+		Log.e(TAG, "sendAutoCtrlFlagToClient::  autoCtrl is  "+autoCtrl);
+		
+	}
+	
+
+	private class ChangeAutoCtrlReceiver extends BroadcastReceiver {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			
+			String action = intent.getAction();
+			
+			if (action	.equals(ClientOnLineMonitorService.ACTION_UPDATE_AUTOCTRL)) {
+				
+						String cmd = intent.getStringExtra("cmd");
+						String parameter= intent.getStringExtra("parameter");
+
+						if(cmd.equals("requestAutoCtrlFlag")){							
+							   sendAutoCtrlFlagToClient(parameter);						   
+						}else if(cmd.equals("setAutoCtrl")){
+							// 设置自动控制标记
+							setAutoControlFlag(parameter.equals("auto_on") ? true : false);
+						}					
+			}
+		}
+
+	}
+	
 
 	/************************************************* get client heartBeat *************************************************/
 
@@ -131,7 +195,7 @@ public class ClientOnLineMonitorService extends Service {
 						try {
 							
 							if(debug)
-							 Log.e(TAG, "**************************************start to receive*******************************************************");
+							 Log.e(TAG, "**************************************isAutoControl =true  and   start to receive *******************************************************");
 							/**
 							 * 接收client发送过来的 心跳包信息
 							 */
@@ -139,18 +203,21 @@ public class ClientOnLineMonitorService extends Service {
 							dgPacket = new DatagramPacket(by, by.length);
 							dgSocket.receive(dgPacket);
 							
-							if(debug)
-								 Log.e(TAG, "************************************** receive  finished*******************************************************");
-							
+						
 							/**
 							 * 处理Socket
 							 */
 							String clientAddress = dgPacket.getAddress().getHostAddress();
 							String content = new String(by, 0,	dgPacket.getLength());
 							
+								
 							//检测数据的有效性
 							if (checkValidOfData(clientAddress,content)) {
-							
+								
+								if(debug)
+									 Log.e(TAG, "************************************** receive   clientAddress="+clientAddress+"finished*******************************************************");
+								
+						
 								//判断当前通讯的client是否 第一个进入局域网在线客户端。
 								if (firstOnLineClient(clientAddress)) {
 									if(debug)
@@ -178,7 +245,7 @@ public class ClientOnLineMonitorService extends Service {
 						
 					}									
 					//线程休眠1秒
-					Thread.sleep(30000);
+					Thread.sleep(10000);
 					
 				}
 			} catch (Exception e) {
@@ -238,7 +305,12 @@ public class ClientOnLineMonitorService extends Service {
 			// 定时10秒清空用户列表
 			clientOnLineList.clear();
 			mTime=curTime;
+		}else{
+			if(debug)
+				 Log.e(TAG, "**************************************isStopTVService     and    clientOnLineList.size()="+clientOnLineList.size()+"*******************************************************");
+
 		}
+		 
 		return rValue;
 	}
 	
@@ -249,7 +321,7 @@ public class ClientOnLineMonitorService extends Service {
 	private void autoStopTVService() {
          
 		if(isRunning){
-			String msg = "key:power";
+			String msg = "key:autoctrl_off";
 			// 创建Intent对象
 			Intent intent = new Intent();
 			// 设置Intent的Action属性
@@ -284,7 +356,7 @@ public class ClientOnLineMonitorService extends Service {
 		// 检查当前时间是否在触发时间区条件内。
 		if (hour >=  10 && hour < 22) {
 			// 发送开机命令广播
-			String msg = "key:power";
+			String msg = "key:autoctrl_on";
 			// 创建Intent对象
 			Intent intent = new Intent();
 			// 设置Intent的Action属性
@@ -320,8 +392,14 @@ public class ClientOnLineMonitorService extends Service {
 	
 	@Override
 	public void onDestroy() {
-		isRun = false;
+		
 		super.onDestroy();
+		
+		isRun = false;		
+       if(null != changeCtrlReceiver){
+    	   unregisterReceiver(changeCtrlReceiver);
+    	   changeCtrlReceiver=null;
+       }
 		
 	}
 }

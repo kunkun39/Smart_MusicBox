@@ -106,10 +106,9 @@ public class TVSocketControllerService extends Service {
 
 	// YD add 20150726 接收ClientOnLineMonitorService发送过来的自动控制命令广播。
 	private AutoCtrlCommandReceiver autoCtrlReceiver = null;
-	private FMInforReceiver FmInforReceiver = null;
+	private UpdateInforReceiver updateInforReceiver = null;
 	private static String ACTION_UPDATE_FMINFOR= "com.changhong.FmStatus";
 
-	
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -245,8 +244,14 @@ public class TVSocketControllerService extends Service {
 							// 启动虾米音乐
 							Log.e(TAG, "key:xiami");
 							// t.vkey_input(0x190, 1);
-							startXiaMiMusic();
-							
+							startXiaMiMusic();				
+
+						}else if(msg1.equals("key:autoctrl_on")){
+							  t.vkey_input(116, 1);							
+							  t.vkey_input(0x190, 1);
+
+						}else if(msg1.equals("key:autoctrl_off")){
+							  t.vkey_input(116, 1);							
 						}
 						// 选择输入源部�?
 						else if (msg1.equals("source:av1")) {
@@ -484,7 +489,7 @@ public class TVSocketControllerService extends Service {
 						} else if (msg1.startsWith("getAlarmMsg:")) {
 							Log.i("mmmm", TAG + ":" + msg1);
 							handleAlarm(msg1);
-						} else if (msg1.startsWith("autoctrl:")) {
+						} else if (msg1.contains("autoctrl")) {
 							Log.i("mmmm", TAG + ":" + msg1);
 							handleAutoCtrl(msg1);
 						}
@@ -511,10 +516,10 @@ public class TVSocketControllerService extends Service {
 		registerReceiver(autoCtrlReceiver, filter);
 		
 		
-		FmInforReceiver = new FMInforReceiver();
+		updateInforReceiver = new UpdateInforReceiver();
 		IntentFilter fmFilter = new IntentFilter();
 		fmFilter.addAction(ACTION_UPDATE_FMINFOR);
-		registerReceiver(FmInforReceiver, fmFilter);
+		registerReceiver(updateInforReceiver, fmFilter);
 
 	}
 
@@ -526,6 +531,7 @@ public class TVSocketControllerService extends Service {
 	 * DatagramSocket:一开始就创建�? DatagramPacket:接收一个创建一�? 这样免得发生阻塞
 	 */
 	private class send_heart_thread extends Thread {
+		
 		public void run() {
 			DatagramSocket dgSocket = null;
 			try {
@@ -601,7 +607,7 @@ public class TVSocketControllerService extends Service {
 									}
 								} catch (Exception e) {
 									e.printStackTrace();
-								}
+								}																							
 							}
 
 							/**
@@ -834,16 +840,57 @@ public class TVSocketControllerService extends Service {
 	/**
 	 * 
 	 */
-	private void handleAutoCtrl(String str) {
-		if (str == null || str.equals(""))
+	private void handleAutoCtrl(String msg) {
+		List<String> files = new ArrayList<String>();
+		files.clear();
+		String clientIP = "";
+		if (msg == null || msg.equals(""))
 			return;
 
-		// 获取命令
-		String command = str.substring("autoctrl:".length());
-		// 设置自动控制标记
-		ClientOnLineMonitorService.setAutoControlFlag(command.equals("auto_on") ? true : false);
-		initFM();
+		// 请求音响端音乐文件信息
 
+		JsonReader reader = new JsonReader(new StringReader(msg));
+		try {
+			reader.beginObject();
+			while (reader.hasNext()) {
+				String name = reader.nextName();
+				Log.e(TAG, "nextname:" + name);
+				if (name.equals("autoctrl:")) {
+					reader.beginArray();
+					while (reader.hasNext()) {
+						String fileInfor = reader.nextString();
+						files.add(fileInfor);
+					}
+					reader.endArray();
+				}  else {
+					reader.skipValue();
+				}
+			}
+			reader.endObject();
+			reader.close();
+		} catch (IOException e) {
+			Log.e(TAG, e.toString());
+			e.printStackTrace();
+		}
+
+		if (!files.isEmpty()) {
+
+			String command = files.get(0);
+			String parameter = files.get(1);
+			
+			// 创建Intent对象
+			Intent intent = new Intent();
+			// 设置Intent的Action属性
+			intent.setAction(ClientOnLineMonitorService.ACTION_UPDATE_AUTOCTRL);
+			// 如果只传一个bundle的信息，可以不包bundle，直接放在intent里
+			intent.putExtra("cmd", command);
+			intent.putExtra("parameter", parameter);
+			// 发送广播给ClientOnLineMonitorService
+			sendBroadcast(intent);
+		
+		} else {
+			Log.e(TAG, "no picture url");
+		}
 	}
 
 	/*
@@ -1075,12 +1122,12 @@ public class TVSocketControllerService extends Service {
 				cursor.close();
 			}
 			
-			//增加控制状态到文件中。
-			JSONObject autoCtrlState = new JSONObject();
-			String autoCtrl=ClientOnLineMonitorService.isAutoControl()?"on":"off";
-			autoCtrlState.put("FMname", "autoCtrl");
-			autoCtrlState.put("state", autoCtrl);
-			all.put(autoCtrlState);
+//			//增加控制状态到文件中。
+//			JSONObject autoCtrlState = new JSONObject();
+//			String autoCtrl=ClientOnLineMonitorService.isAutoControl()?"on":"off";
+//			autoCtrlState.put("FMname", "autoCtrl");
+//			autoCtrlState.put("state", autoCtrl);
+//			all.put(autoCtrlState);
 
 			/**
 			 * 输入FM列表到文�?
@@ -1122,8 +1169,7 @@ public class TVSocketControllerService extends Service {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			String action = intent.getAction();
-			if (action
-					.equals(ClientOnLineMonitorService.ACTION_AUTOCTRL_COMMAND)) {
+			if (action	.equals(ClientOnLineMonitorService.ACTION_AUTOCTRL_COMMAND)) {
 				msg1 = intent.getStringExtra("cmd");
 				Log.i(TAG, "autoCtrlCommand is " + msg1);
 				handler.sendEmptyMessage(1);
@@ -1133,7 +1179,7 @@ public class TVSocketControllerService extends Service {
 	}
 	
 	
-	private class FMInforReceiver extends BroadcastReceiver {
+	private class UpdateInforReceiver extends BroadcastReceiver {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -1141,9 +1187,9 @@ public class TVSocketControllerService extends Service {
 			if (action	.equals(ACTION_UPDATE_FMINFOR)) {
 				initFM();
 			}
-		}
-
+		} 
 	}
+	
 
 	/***************************************************** YD add 20150726 end ********************************************************/
 
@@ -1151,7 +1197,10 @@ public class TVSocketControllerService extends Service {
 	public void onDestroy() {
 
 		// 取消自动控制广播
-		unregisterReceiver(autoCtrlReceiver);
+		if(null != autoCtrlReceiver){
+				unregisterReceiver(autoCtrlReceiver);
+				autoCtrlReceiver=null;
+		}
 		super.onDestroy();
 
 	}

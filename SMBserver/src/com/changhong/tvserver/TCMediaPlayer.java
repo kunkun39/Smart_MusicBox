@@ -2,6 +2,8 @@ package com.changhong.tvserver;
 
 import java.io.IOException;
 
+import com.changhong.tvserver.fedit.Configure;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
@@ -233,7 +235,8 @@ public class TCMediaPlayer extends Activity implements OnPreparedListener,
 
 
     public class EventHandler extends Handler {
-        public EventHandler(Looper looper) {
+
+		public EventHandler(Looper looper) {
             super(looper);
         }
 
@@ -258,7 +261,9 @@ public class TCMediaPlayer extends Activity implements OnPreparedListener,
                      * 设置播放url
                      */
                     Log.v(TAG, TVSocketControllerService.vedios.get(index));
-					player.playUrl(TVSocketControllerService.vedios.get(index));
+            		String encodedUrl = Uri.encode(TVSocketControllerService.vedios.get(index), Configure.ALLOWED_URI_CHARS);
+//					player.playUrl(TVSocketControllerService.vedios.get(index));
+            		player.playUrl(encodedUrl);
 					/**
                      * 设置监听
                      */
@@ -302,8 +307,11 @@ public class TCMediaPlayer extends Activity implements OnPreparedListener,
                 		/**
                          * 设置播放url
                          */
-                        Log.v(TAG, TVSocketControllerService.vedios.get(index));
-    					player.playUrl(TVSocketControllerService.vedios.get(index));
+                        Log.v(TAG, TVSocketControllerService.vedios.get(index));            		
+                        encodedUrl = Uri.encode(TVSocketControllerService.vedios.get(index), Configure.ALLOWED_URI_CHARS);
+//    					player.playUrl(TVSocketControllerService.vedios.get(index));
+    					player.playUrl(encodedUrl);
+
                 	}else{
                 		finish();
                 	}

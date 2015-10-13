@@ -38,5 +38,8 @@ public class Configure {
 	//执行结果定义
 	public final static String  ACTION_SUCCESS= "success";
 	public final static String  ACTION_FAILED= "failed";
+	
+	public static final String ALLOWED_URI_CHARS = "@#&=*+-_.,:!?()/~'%";
+
 
 }
