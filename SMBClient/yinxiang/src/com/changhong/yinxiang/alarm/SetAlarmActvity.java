@@ -443,7 +443,17 @@ public class SetAlarmActvity extends Activity {
 	private void setAlarmMusics() {
 		//增加判断音乐是否有效功能
 		for(int k=0;k<musicListInit.size();k++){
-			
+			boolean flag=false;//代表该首音乐是否是有效音乐，true代表音乐文件存在，false代表音乐文件不存在
+			MusicBean music=musicListInit.get(k);
+			String name=music.getTitle();
+			for(int a=0;a<musicListAll.size();a++){
+				if(name.equals(musicListAll.get(a).getTitle())){
+					flag=true;
+				}
+			}
+			if(!flag){
+				musicListInit.remove(music);
+			}
 		}
 		
 		for (int i = 0; i < currentState.length; i++) {
