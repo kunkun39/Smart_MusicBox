@@ -15,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.changhong.common.service.ClientSendCommandService;
 import com.changhong.common.utils.NetworkUtils;
@@ -31,17 +32,17 @@ import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 
 public class AlarmMainActivity extends Activity {
 
-	private  Button add;
-	private  Button delete;
+	private Button add;
+	private Button delete;
 	private ListView alarmInfor;
 	private static AlarmAdapter adapter;
 	public static ArrayList<Alarm> mAlarmList = null;
 	private MusicEditServer mMusicEditServer = null;
 	private static String action = "alarmInfor";
-	private  MyProgressDialog myProgressDialog = null;// 远程数据获取进度条
+	private MyProgressDialog myProgressDialog = null;// 远程数据获取进度条
 
-	public static  final int SEND_GET_REQUEST=1001;
-	
+	public static final int SEND_GET_REQUEST = 1001;
+
 	public Handler handler = new Handler() {
 
 		@Override
@@ -61,9 +62,9 @@ public class AlarmMainActivity extends Activity {
 					cancelMyDialog();
 				}
 				break;
-				
+
 			case SEND_GET_REQUEST:
-				
+
 				break;
 
 			}
@@ -81,7 +82,6 @@ public class AlarmMainActivity extends Activity {
 		initData();
 	}
 
-	
 	protected void initView() {
 		// TODO Auto-generated method stub
 		// 启动TCP接收线程
@@ -98,7 +98,6 @@ public class AlarmMainActivity extends Activity {
 		setClickable(false);
 	}
 
-	
 	protected void initData() {
 		// TODO Auto-generated method stub
 		add.setOnClickListener(new OnClickListener() {
@@ -117,7 +116,7 @@ public class AlarmMainActivity extends Activity {
 				// TODO Auto-generated method stub
 				Intent intent = new Intent(AlarmMainActivity.this,
 						DeleteAlarmActivity.class);
-				startActivityForResult(intent,2);
+				startActivityForResult(intent, 2);
 			}
 		});
 
@@ -133,11 +132,15 @@ public class AlarmMainActivity extends Activity {
 		// startActivityForResult(intent, 0);
 		// }
 		// });
-		
-		
-		
+
 		getAlarmMsg();
-		showMyDialog();
+		if (null == ClientSendCommandService.serverIP) {
+			Toast.makeText(AlarmMainActivity.this, "局域网内未发现设备，请检查设备是否开启！",
+					Toast.LENGTH_SHORT).show();
+			adapter.clearData();
+		} else {
+			showMyDialog();
+		}
 	}
 
 	private void showMyDialog() {
@@ -149,13 +152,13 @@ public class AlarmMainActivity extends Activity {
 		}
 	}
 
-	private  void cancelMyDialog() {
+	private void cancelMyDialog() {
 		if (myProgressDialog != null && myProgressDialog.isShowing()) {
 			myProgressDialog.dismiss();
 		}
 	}
 
-	public  void setClickable(boolean flag) {
+	public void setClickable(boolean flag) {
 		add.setEnabled(flag);
 		delete.setEnabled(flag);
 	}
@@ -208,9 +211,9 @@ public class AlarmMainActivity extends Activity {
 		// TODO Auto-generated method stub
 		switch (keyCode) {
 		case KeyEvent.KEYCODE_BACK:
-//			if (myProgressDialog != null && myProgressDialog.isShowing()) {
-//				myProgressDialog.dismiss();
-//			}
+			// if (myProgressDialog != null && myProgressDialog.isShowing()) {
+			// myProgressDialog.dismiss();
+			// }
 			break;
 		case KeyEvent.KEYCODE_MENU:
 			return true;
@@ -221,7 +224,11 @@ public class AlarmMainActivity extends Activity {
 	@Override
 	protected void onResume() {
 		// TODO Auto-generated method stub
-		adapter.setData(mAlarmList);
+		if (NetworkUtils.isWifiConnected(this)) {
+			adapter.setData(mAlarmList);
+		} else {
+			adapter.clearData();
+		}
 		super.onResume();
 	}
 

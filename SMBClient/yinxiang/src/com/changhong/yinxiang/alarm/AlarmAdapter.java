@@ -30,20 +30,28 @@ public class AlarmAdapter extends BaseAdapter {
 		this.context = con;
 		this.inflater = (LayoutInflater) con
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		if(null==mAlarmList){
-			mAlarmList=new ArrayList<Alarm>();
+		if (null == mAlarmList) {
+			mAlarmList = new ArrayList<Alarm>();
 		}
 
 	}
 
 	// 初始化设置数据
 	public void setData(ArrayList<Alarm> list) {
-		if(null==mAlarmList){
-			mAlarmList=new ArrayList<Alarm>();
+		if (null == mAlarmList) {
+			mAlarmList = new ArrayList<Alarm>();
 		}
-//		mAlarmList.clear();
+		// mAlarmList.clear();
 		this.mAlarmList = list;
 		notifyDataSetChanged();
+	}
+
+	// 清除所有数据
+	public void clearData() {
+		if (null != mAlarmList) {
+			mAlarmList.clear();
+			notifyDataSetChanged();
+		}
 	}
 
 	// 删除闹铃
@@ -65,15 +73,15 @@ public class AlarmAdapter extends BaseAdapter {
 		}
 		notifyDataSetChanged();
 	}
-	
-	//更改闹铃
-	
-	public void update(Alarm alarm){
+
+	// 更改闹铃
+
+	public void update(Alarm alarm) {
 		if (mAlarmList != null && mAlarmList.size() > 0) {
-			for(int i=0;i<mAlarmList.size();i++){
-				if(mAlarmList.get(i).getId()==alarm.getId()){
-				mAlarmList.set(i, alarm);
-				notifyDataSetChanged();
+			for (int i = 0; i < mAlarmList.size(); i++) {
+				if (mAlarmList.get(i).getId() == alarm.getId()) {
+					mAlarmList.set(i, alarm);
+					notifyDataSetChanged();
 				}
 			}
 		}
@@ -82,7 +90,7 @@ public class AlarmAdapter extends BaseAdapter {
 	@Override
 	public int getCount() {
 		// TODO Auto-generated method stub
-		return mAlarmList!=null ? mAlarmList.size():0;
+		return mAlarmList != null ? mAlarmList.size() : 0;
 	}
 
 	@Override
@@ -112,8 +120,9 @@ public class AlarmAdapter extends BaseAdapter {
 					.findViewById(R.id.alarm_weeks);
 			dataHolder.alarmEnable = (Switch) convertView
 					.findViewById(R.id.enable);
-			dataHolder.update=(LinearLayout)convertView.findViewById(R.id.update_alarm);
-			
+			dataHolder.update = (LinearLayout) convertView
+					.findViewById(R.id.update_alarm);
+
 			convertView.setTag(dataHolder);
 		} else {
 			dataHolder = (DataHolder) convertView.getTag();
@@ -141,40 +150,44 @@ public class AlarmAdapter extends BaseAdapter {
 		} else {
 			dataHolder.alarmWeeks.setVisibility(View.GONE);
 		}
-		
-		//设置启用按钮的状态
-		if(alarm.enabled){
+
+		// 设置启用按钮的状态
+		if (alarm.enabled) {
 			dataHolder.alarmEnable.setChecked(true);
-		}else{
+		} else {
 			dataHolder.alarmEnable.setChecked(false);
 		}
-		
-		//设置闹铃启用按钮的监听器
-		dataHolder.alarmEnable.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-			
-			@Override
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				// TODO Auto-generated method stub
-				if(isChecked){
-					alarm.setEnabled(true);
-				}else{
-					alarm.setEnabled(false);
-				}
-				String sendContent=ResolveAlarmInfor.alarmToStr(alarm);
-				ClientSendCommandService.msg = Alarm.update +alarm.id+ "|"+sendContent;
-				ClientSendCommandService.handler.sendEmptyMessage(1);
-			}
-		});
-		
-		//改变闹铃信息
+
+		// 设置闹铃启用按钮的监听器
+		dataHolder.alarmEnable
+				.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+					@Override
+					public void onCheckedChanged(CompoundButton buttonView,
+							boolean isChecked) {
+						// TODO Auto-generated method stub
+						if (isChecked) {
+							alarm.setEnabled(true);
+						} else {
+							alarm.setEnabled(false);
+						}
+						String sendContent = ResolveAlarmInfor
+								.alarmToStr(alarm);
+						ClientSendCommandService.msg = Alarm.update + alarm.id
+								+ "|" + sendContent;
+						ClientSendCommandService.handler.sendEmptyMessage(1);
+					}
+				});
+
+		// 改变闹铃信息
 		dataHolder.update.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Intent intent=new Intent(context,SetAlarmActvity.class);
+				Intent intent = new Intent(context, SetAlarmActvity.class);
 				intent.putExtra("select", position);
-				((Activity)context).startActivityForResult(intent, 0);
+				((Activity) context).startActivityForResult(intent, 0);
 			}
 		});
 		return convertView;
@@ -192,11 +205,10 @@ public class AlarmAdapter extends BaseAdapter {
 		public TextView alarmLabel;
 		// 启用按钮
 		public Switch alarmEnable;
-		
+
 		//
 		public LinearLayout update;
 
 	}
-	
 
 }
