@@ -1,5 +1,11 @@
 package com.changhong.yinxiang.fragment;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -16,18 +22,27 @@ import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.changhong.common.service.ClientSendCommandService;
 import com.changhong.common.system.MyApplication;
+import com.changhong.common.utils.NetworkUtils;
+import com.changhong.common.utils.StringUtils;
 import com.changhong.yinxiang.R;
 import com.changhong.yinxiang.activity.AlarmMainActivity;
+import com.changhong.yinxiang.music.MusicEditServer;
+import com.changhong.yinxiang.music.MusicUtils;
 import com.changhong.yinxiang.service.UserUpdateService;
 import com.changhong.yinxiang.setting.AppHelpDialog;
+import com.changhong.yinxiang.view.MyProgressDialog;
 
 
 public class YinXiangSettingFragment extends Fragment {
 
 	private static final String LOG_TAG = "SettingActivity";
+	
+	public static final int ACTION_AUTOCTRL_REQUEST_STATUS = 700;
+	public static final int ACTION_AUTOCTRL_SEND_COMMAND= 800;
+	public static final int ACTION_AUTOCTRL_UPDATE_STATUS = 900;
+	public static final int ACTION_AUTOCTRL_ERROR = 1000;
 
 	/**
 	 * 返回到主菜单按钮
@@ -48,6 +63,10 @@ public class YinXiangSettingFragment extends Fragment {
 	 */
 	private AppHelpDialog appHelpDialog;
 
+	MusicEditServer mSystemFileServer = null;
+
+	//远程处理进度条
+	MyProgressDialog MProgressDialog =null;
 	/**
 	 * 消息处理
 	 */
@@ -56,6 +75,8 @@ public class YinXiangSettingFragment extends Fragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);	
+		//获取系统信息
+	
 	}
 	
 	
@@ -95,6 +116,7 @@ public class YinXiangSettingFragment extends Fragment {
 	}
 
 	private void initialEvents() {
+		
 		handler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
@@ -127,13 +149,36 @@ public class YinXiangSettingFragment extends Fragment {
 					Toast.makeText(getActivity(), "网络连接异常，请稍后重试",
 							Toast.LENGTH_SHORT).show();
 					break;
+					
+				case ACTION_AUTOCTRL_REQUEST_STATUS:
+					sendAutoCtrlMsg2YinXiang("requestAutoCtrlFlag","");
+					mSystemFileServer.communicationWithServer(handler, MusicUtils.ACTION_SOCKET_COMMUNICATION, "getAutoCtrl");
+					break;	
+				case ACTION_AUTOCTRL_SEND_COMMAND:
+					String autoSet=ClientSendCommandService.isAutoCtrl?"auto_on":"auto_off";
+					sendAutoCtrlMsg2YinXiang("setAutoCtrl",autoSet);
+					break;
+				case ACTION_AUTOCTRL_UPDATE_STATUS:
+					
+					if(null != MProgressDialog && MProgressDialog.isShowing())	MProgressDialog.cancel();
+					String autoCtrl=(String) msg.obj;
+					
+					if(null != autoCtrl){
+					     boolean isAutoCtrl=(autoCtrl.contains("auto_on"))?true:false;
+					     ClientSendCommandService.isAutoCtrl=isAutoCtrl;
+				    	autoCtrlBtn.setChecked(isAutoCtrl);	
+					}
+					break;	
+				case ACTION_AUTOCTRL_ERROR:		
+					if(null != MProgressDialog && MProgressDialog.isShowing())	MProgressDialog.cancel();
+
+                    break;
 				default:
 					break;
 				}
 				super.handleMessage(msg);
 			}
 		};
-
 
 //		settingReturn.setOnClickListener(new OnClickListener() {
 //			@Override
@@ -169,17 +214,13 @@ public class YinXiangSettingFragment extends Fragment {
 				// TODO Auto-generated method stub
 				MyApplication.vibrator.vibrate(100);
 				CheckBox check = (CheckBox) v;
-				String autoSet=check.isChecked()?"auto_on":"auto_off";
 				ClientSendCommandService.isAutoCtrl=check.isChecked();
-				//发送设置信息给TVserver
-				 ClientSendCommandService.msg = "autoctrl:"+autoSet;
-	             ClientSendCommandService.handler.sendEmptyMessage(1);
+				Message msg=new Message();
+				msg.arg1=ACTION_AUTOCTRL_SEND_COMMAND;
+	             handler.sendMessage(msg);	             
 			}
-		});
-		
-		//设置自动控制
-		autoCtrlBtn.setChecked(ClientSendCommandService.isAutoCtrl);
-		
+		});	
+		requestAutoCtrlFlag();
 	}
 
 	private void initData() {
@@ -193,6 +234,8 @@ public class YinXiangSettingFragment extends Fragment {
 		homefilter.addAction("SETTING_UPDATE_DOWNLOAD");
 		homefilter.addAction("SETTING_UPDATE_INSTALL");
 		getActivity().registerReceiver(updateService.updateReceiver, homefilter);
+		
+		
 	}
 
 	private String getCurrentSystemVersion() {
@@ -219,6 +262,82 @@ public class YinXiangSettingFragment extends Fragment {
 		updateService.initUpdateThread();
 	}
 
+	
+	
+	
+	
+	
+	
+	private void sendAutoCtrlMsg2YinXiang(String command, String param) {
+
+		if (!NetworkUtils.isWifiConnected(getActivity())) {
+			Toast.makeText(getActivity(), "请链接无线网络", Toast.LENGTH_SHORT).show();
+			return;
+		}
+
+		if (!StringUtils.hasLength(ClientSendCommandService.serverIP)) {
+			Toast.makeText(getActivity(), "手机未连接机顶盒，请检查网络", Toast.LENGTH_SHORT).show();
+			return;
+		}
+
+		// 显示操作等待进度提示
+		if (command.equals("requestAutoCtrlFlag")) {
+			if(null == MProgressDialog){
+			    MProgressDialog=new MyProgressDialog(getActivity());
+			}		
+			MProgressDialog.show("系统信息获取中，请稍后");
+		}
+
+		try {
+			
+			// 获取IP和外部存储路径
+			String ipAddress = NetworkUtils.getLocalHostIp();
+		
+			// 封装文件为json格式
+			JSONObject sendObj = new JSONObject();
+			JSONArray array = new JSONArray();
+
+			// music urls
+			// 文件编辑类型： copy、clock
+			array.put(0, command);
+			// 第二个参数：如reName：则发送新的文件名。否则，赋值文件httpAddress
+			if (StringUtils.hasLength(param)) {
+				array.put(1, param);
+			} else {
+				array.put(1, ipAddress);
+			}
+
+			sendObj.put("autoctrl:", array);
+			// 发送播放地址
+			ClientSendCommandService.msg = sendObj.toString();
+			ClientSendCommandService.handler.sendEmptyMessage(4);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			Toast.makeText(getActivity(), "音乐文件获取失败", Toast.LENGTH_SHORT).show();
+			if(null != MProgressDialog)	MProgressDialog.cancel();
+		}
+	}
+
+	
+	private void requestAutoCtrlFlag(){
+		sendAutoCtrlMsg2YinXiang("requestAutoCtrlFlag","");
+		if(null == mSystemFileServer){
+			    mSystemFileServer=MusicEditServer.creatFileEditServer();
+		}
+		mSystemFileServer.communicationWithServer(handler, MusicUtils.ACTION_SOCKET_COMMUNICATION, "requestAutoCtrlFlag");
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	/**
 	 * *************************************************系统方法重载******************
 	 * ********************************
@@ -245,6 +364,8 @@ public class YinXiangSettingFragment extends Fragment {
 //		return super.onKeyDown(keyCode, event);
 //	}
 
+	
+	
 
 
 }

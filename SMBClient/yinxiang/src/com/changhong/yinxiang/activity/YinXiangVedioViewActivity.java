@@ -108,11 +108,12 @@ public class YinXiangVedioViewActivity extends BaseActivity {
                                 for (String selectVedioPath : YinXiangVedioAdapter.selectVedioPaths) {
                                     String tempPath = "";
                                     if (selectVedioPath.startsWith(HTTPDService.defaultHttpServerPath)) {
-                                        tempPath = selectVedioPath.replace(HTTPDService.defaultHttpServerPath, "").replace(" ", "%20");
+                                        tempPath =convertFileUrlToHttpURL( selectVedioPath.replace(HTTPDService.defaultHttpServerPath, ""));
+                                    
                                     } else {
                                         for (String otherHttpServerPath : HTTPDService.otherHttpServerPaths) {
                                             if (selectVedioPath.startsWith(otherHttpServerPath)) {
-                                                tempPath = selectVedioPath.replace(otherHttpServerPath, "").replace(" ", "%20");
+                                                tempPath =convertFileUrlToHttpURL( selectVedioPath.replace(HTTPDService.defaultHttpServerPath, ""));
                                             }
                                         }
                                     }
@@ -158,6 +159,24 @@ public class YinXiangVedioViewActivity extends BaseActivity {
         });
     }
 
+    /**
+	 * 特殊字符转换
+	 * 
+	 * @param url
+	 *            url字符串
+	 * @return
+	 */
+	public String convertFileUrlToHttpURL(String url) {
+		if (null != url && url.length() > 0) {
+			return url.replace("%", "%25").replace(" ", "%20")
+					.replace("+", "%2B").replace("#", "%23")
+					.replace("&", "%26").replace("=", "%3D")
+					.replace("?", "%3F").replace("^", "%5E");
+		}
+		return url;
+	}
+    
+    
     /**********************************************系统发发重载*********************************************************/
 
    

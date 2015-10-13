@@ -19,6 +19,7 @@ import android.util.Log;
 
 import com.changhong.yinxiang.activity.AlarmMainActivity;
 import com.changhong.yinxiang.activity.YinXiangMusicViewActivity;
+import com.changhong.yinxiang.fragment.YinXiangSettingFragment;
 import com.changhong.yinxiang.nanohttpd.HttpDownloader;
 
 
@@ -188,6 +189,10 @@ public class MusicEditServer {
 				if(editType.equals("requestMusicList")){
 					 newMsg.what = YinXiangMusicViewActivity.SHOW_AUDIOEQUIPMENT_MUSICLIST;
 					 newMsg.obj = getRespondMsg(content);							 
+				}else if(editType.equals("requestAutoCtrlFlag")){
+					 newMsg.what = YinXiangSettingFragment.ACTION_AUTOCTRL_UPDATE_STATUS;
+					 newMsg.arg1= YinXiangSettingFragment.ACTION_AUTOCTRL_UPDATE_STATUS;
+					 newMsg.obj = content;							 
 				}else{
 				     newMsg.what = YinXiangMusicViewActivity.SHOW_ACTION_RESULT;
 				     Bundle bundle=new Bundle();
