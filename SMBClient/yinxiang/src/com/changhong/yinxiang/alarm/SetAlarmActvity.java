@@ -183,11 +183,17 @@ public class SetAlarmActvity extends Activity {
 		if (position < 0) {
 			state = State.add;
 			resultCode = 1;
+			
+			musicIsEmpty=true;
+			
 			intAddAlarm();
 
 		} else {
 			state = State.update;
 			resultCode = 0;
+			
+			musicIsEmpty=false;
+			
 			initUpdateAlarm(position);
 		}
 
@@ -248,6 +254,7 @@ public class SetAlarmActvity extends Activity {
 
 	// 修改数据完成
 	private void updateAlarm() {
+		
 		if (null != alarm) {
 			alarm.hour = timePicker.getCurrentHour();
 			alarm.minutes = timePicker.getCurrentMinute();
@@ -265,7 +272,7 @@ public class SetAlarmActvity extends Activity {
 	// 进入添加流程
 	private void addAlarm() {
 		int length = 0;
-
+		
 		// 计算当前闹铃的ID值是多少
 		int id = 0;
 		if (AlarmMainActivity.mAlarmList != null
