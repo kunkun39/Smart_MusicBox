@@ -197,9 +197,9 @@ public class YinXiangMusicViewActivity extends BaseActivity {
 							JSONArray array = new JSONArray();
 
 							for (YinXiangMusic selectMusic : YinXiangMusicAdapter.selectMusics) {
-								String tempPath = selectMusic.getPath();
-								String title = selectMusic.getTitle();
-								String artist = selectMusic.getArtist();
+								String tempPath = selectMusic.getPath().trim();
+								String title = selectMusic.getTitle().trim();
+								String artist = selectMusic.getArtist().trim();
 								int duration = selectMusic.getDuration();
 								JSONObject music = new JSONObject();
 
@@ -210,8 +210,7 @@ public class YinXiangMusicViewActivity extends BaseActivity {
 													HTTPDService.defaultHttpServerPath,
 													"").replace(" ", "%20");
 										} else {	for (String otherHttpServerPath : HTTPDService.otherHttpServerPaths) {
-												if (tempPath
-														.startsWith(otherHttpServerPath)) {
+												if (tempPath.startsWith(otherHttpServerPath)) {
 													tempPath = tempPath.replace(
 															otherHttpServerPath, "")
 															.replace(" ", "%20");
@@ -283,22 +282,6 @@ public class YinXiangMusicViewActivity extends BaseActivity {
 					public void onCheckedChanged(RadioGroup group, int checkedId) {
 						// 设备变化
 						curStorage = matchFragmentIndex(checkedId);
-						// //当前设备为音响，请求音响音乐文件。
-						// if(STORAGE_YINXIANG == curStorage &&
-						// remoteMusics.length()<10){
-						// MProgressDialog=new
-						// ProgressDialog(YinXiangMusicViewActivity.this);
-						// MProgressDialog.setMessage("正在获取音乐文件······");
-						// MProgressDialog.show();
-						// mHandle.sendEmptyMessage(REQUEST_AUDIOEQUIPMENT_MUSIC);
-						// return;
-						// }
-						// String tempStr=(STORAGE_YINXIANG == curStorage
-						// )?remoteMusics:null;
-						// musicAdapter= new
-						// YinXiangMusicAdapter(YinXiangMusicViewActivity.this,
-						// mHandle, keyStr, tempStr);
-						// musicListView.setAdapter(musicAdapter);
 						setMusicAdapter();
 
 					}
@@ -411,8 +394,7 @@ public class YinXiangMusicViewActivity extends BaseActivity {
 
 		String mHttpAddress = "";
 
-		String httpAddress = "http://" + ipAddress + ":"
-				+ HTTPDService.HTTP_PORT;
+		String httpAddress = "http://" + ipAddress + ":"+ HTTPDService.HTTP_PORT;
 
 		String newMusicPath = null;
 		if (filePath.startsWith(HTTPDService.defaultHttpServerPath)) {
@@ -439,22 +421,18 @@ public class YinXiangMusicViewActivity extends BaseActivity {
 				/**
 				 * 创建新的文件
 				 */
-				if (!filePath.equals("")) {
-					File illegalFile = new File(filePath);
-					String fullpath = illegalFile.getAbsolutePath();
-					String filename = illegalFile.getName();
-					String filepath = fullpath.replace(File.separator
-							+ filename, "");
-					String[] tokens = StringUtils.delimitedListToStringArray(
-							filename, ".");
-					String filenameSuffix = tokens[tokens.length - 1];
-					String newFile = filepath + File.separator
-							+ StringUtils.getRandomString(15) + "."
-							+ filenameSuffix;
-					Runtime.getRuntime().exec("mv " + fullpath + " " + newFile);
-					mHttpAddress = httpAddress + newFile;
-
-				}
+//				if (!filePath.equals("")) {
+//					File illegalFile = new File(filePath);
+//					String fullpath = illegalFile.getAbsolutePath();
+//					String filename = illegalFile.getName();
+//					String filepath = fullpath.replace(File.separator+ filename, "");
+//					String[] tokens = StringUtils.delimitedListToStringArray(	filename, ".");
+//					String filenameSuffix = tokens[tokens.length - 1];
+//					String newFile = filepath + File.separator	+ StringUtils.getRandomString(15) + "."+ filenameSuffix;
+//					Runtime.getRuntime().exec("mv " + fullpath + " " + newFile);
+//					mHttpAddress = httpAddress + newFile;
+//
+//				}
 			} catch (Exception e1) {
 				e.printStackTrace();
 				Toast.makeText(this, "对不起，音乐文件获取有误，不能正常操作！", Toast.LENGTH_SHORT)
