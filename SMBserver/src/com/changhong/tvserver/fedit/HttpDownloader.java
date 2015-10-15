@@ -20,7 +20,8 @@ public class HttpDownloader {
 
 	private static final int MUTI_THREAD_SIZE_POINT = 1024 * 1024 * 20; // 20M
 
-	public static final String ALLOWED_URI_CHARS = "@#&=*+-_.,:!?()/~'%";
+	public static final String ALLOWED_URI_CHARS = "@#&=*+-_.,:!?()/~'%^";
+	
 
 	/**
 	 * 根据URL创建http链接。
@@ -75,6 +76,8 @@ public class HttpDownloader {
 					}				
 					Log.e("YDINFOR:: ","file length is "+fileLength);
 				}
+			}else{
+				 result = Configure.FILE_TOOBIG; 
 			}
 		} catch (IOException e) {
 			

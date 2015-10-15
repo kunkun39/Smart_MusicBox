@@ -22,6 +22,7 @@ public class Configure {
 	public final static String  EDIT_TYPE= "editType";
 	public final static String  FILE_EXIST= "fileExist";
 	public final static String  MSG_RESPOND= "respond";
+	public final static String  FILE_TOOBIG= "fileTooBig";
 
 	
 	
