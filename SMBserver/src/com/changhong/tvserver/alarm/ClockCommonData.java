@@ -196,6 +196,7 @@ public class ClockCommonData {
 	private void updateAlarm(String keys[]) {
 		if (4 == keys.length) {
 			int id = Integer.parseInt(keys[2]);
+			musicProvider.delete(MusicBean.Columns.MUSIC_URL, MusicBean.Columns.MID + "=" + id, null);
 			String content = keys[3];
 			Alarm alarm = ResolveAlarmInfor.jsonToAlarm(content);
 			
@@ -213,13 +214,17 @@ public class ClockCommonData {
 
 			for (int i = 2; i < keys.length; i++) {
 				int id = Integer.parseInt(keys[i]);
-				Uri uri=Uri.parse(Alarm.Columns.CONTENT_STRING+"/"+id);
-				alarmProvider.delete(uri,
-						null, null);
-				musicProvider.delete(MusicBean.Columns.MUSIC_URL, MusicBean.Columns.MID + "=" + id, null);
-
+				deleteTheAlarm(id);
 			}
 		}
+	}
+	
+	private void deleteTheAlarm(int id){
+		Uri uri=Uri.parse(Alarm.Columns.CONTENT_STRING+"/"+id);
+		alarmProvider.delete(uri,
+				null, null);
+		musicProvider.delete(MusicBean.Columns.MUSIC_URL, MusicBean.Columns.MID + "=" + id, null);
+
 	}
 
 	private void insertAlarm(String keys[]) {
