@@ -22,7 +22,7 @@ public class Configure {
 	public final static String  EDIT_TYPE= "editType";
 	public final static String  FILE_EXIST= "fileExist";
 	public final static String  MSG_RESPOND= "respond";
-	public final static String  FILE_TOOBIG= "fileTooBig";
+	public final static String  FILE_LARGE= "largeFile";
 
 	
 	
@@ -41,6 +41,7 @@ public class Configure {
 	public final static String  ACTION_FAILED= "failed";
 	
 	public static final String ALLOWED_URI_CHARS = "@#&=*+-_.,:!?()/~'%";
+	public static final int COMMUNICATION_ERROR = 1000;
 
 
 }

@@ -6,6 +6,8 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Map;
 
+import com.changhong.tvserver.touying.music.MusicInfor;
+
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
@@ -164,6 +166,8 @@ public class FileEditManager {
 								Log.e(TAG, "finish download file " + fileUrl);
 							} catch (Exception e) {
 								e.printStackTrace();
+								mParentHandler.sendEmptyMessage(Configure.COMMUNICATION_ERROR);
+
 							}
 						}
 						break;
@@ -244,6 +248,10 @@ public class FileEditManager {
 	public void updateMediaStoreAudio(Context context, String oldFile,
 			String newFile) {
 		mFileUtil.updateGallery(context, oldFile, newFile);
+	}
+	
+	public void updateMediaStoreAudio(Context context, MusicInfor music) {
+		mFileUtil.updateGallery(context, music);
 	}
 
 	// 销毁线程池,该方法保证在所有任务都完成的情况下才销毁所有线程，否则等待任务完成才销毁

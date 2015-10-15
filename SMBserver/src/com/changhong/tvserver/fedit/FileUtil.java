@@ -12,6 +12,7 @@ import java.util.Comparator;
 
 import com.changhong.tvserver.touying.image.loader.exception.ThreadKillException;
 import com.changhong.tvserver.touying.image.loader.task.ImageDownloadTask;
+import com.changhong.tvserver.touying.music.MusicInfor;
 import com.changhong.tvserver.utils.StringUtils;
 
 import android.content.ContentResolver;
@@ -315,6 +316,28 @@ public class FileUtil {
 				return true;
 		}
 		return false;
+	}
+	
+	
+	
+	public boolean updateGallery(Context context,MusicInfor music) {
+		// 参数检查
+		if (null == music)return false;
+
+		String title = music.getTitle();
+		String path=music.getPath();
+		String artist=music.getArtist();
+		int   duration =music.getDuration();
+
+		ContentValues cv = new ContentValues();
+		cv.put(MediaStore.Audio.Media.DATA, path);
+		cv.put(MediaStore.Audio.Media.TITLE, title);
+		cv.put(MediaStore.Audio.Media.ARTIST, artist);
+		cv.put(MediaStore.Audio.Media.DURATION, duration);
+		ContentResolver resolver = context.getContentResolver();
+		Uri base = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;		
+		resolver.insert(base, cv);
+		return true;
 	}
 
 	

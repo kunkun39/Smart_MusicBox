@@ -4,13 +4,20 @@ package com.changhong.tvserver.fedit;
  * 文件下载时，屏幕右下角显示提示信息。
  */
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import com.changhong.tvserver.R;
+import com.changhong.tvserver.touying.music.MusicInfor;
 import com.changhong.tvserver.utils.MyFloatView;
 import com.changhong.tvserver.utils.MySharePreferences;
 import com.changhong.tvserver.utils.MySharePreferencesData;
+import com.changhong.tvserver.utils.StringUtils;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -22,6 +29,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -31,15 +39,18 @@ import android.widget.TextView;
 
 public class FileDowLoadTask {
 
+	private static final String TAG = "FileDowLoadTask";
+
 	private  Handler handler;
 
 	// 定义View控件
 	private LinearLayout download_main=null;
 	private TextView downLoadTitle = null;
 	private TextView downLoadResult = null;
-	private ImageView downLoadProgress = null;
-	
+	private ImageView downLoadProgress = null;	
 	private static FileDowLoadTask downLoad=null;
+	List<MusicInfor> musicList = new ArrayList<MusicInfor>();
+
 
 	// 执行文件下载
 	final int ACTION_FILE_DOWNLOAD = 1;
@@ -68,7 +79,7 @@ public class FileDowLoadTask {
 	private  FileDowLoadTask(Context context) {
 
 	  this.mContext=context;
-	  
+	  musicList.clear();
 	  //创建浮动窗口
 	    creatFloatView();		
 		mFileEditController=FileEditManager.getInstance();
@@ -107,17 +118,23 @@ public class FileDowLoadTask {
 					if(null != eidtType && eidtType.equals("clock")){
 						SaveClockRing(fileUrl);
 					}
-					
+				    MusicInfor music=getMusicByFilePath(fileUrl);
+
 					//更新默认媒体数据库音乐文件索引
-					if(msgRepond.contains("成功") || msgRepond.contains("存在"))
-					mFileEditController.updateMediaStoreAudio(mContext,fileUrl);
+					if(msgRepond.contains("成功") || msgRepond.contains("存在")){
+					       mFileEditController.updateMediaStoreAudio(mContext,music);
+					}
 					// 文件现在成功提示
-					showResult(msgRepond);				
+					showResult(msgRepond);	
+				    musicList.remove(music);
+
 					break;
 				case ACTION_EXIT:
+				case Configure.COMMUNICATION_ERROR:
 					// 退出文件下载
 					downLoadProgress.clearAnimation();
 					MyFloatView.removeView(mFloatView);
+					removeMusicByFilePath(fileUrl);
 					break;
 				default:
 					break;
@@ -204,7 +221,7 @@ public class FileDowLoadTask {
 	 * @param fileType 编辑文件类型：音乐、闹铃、视频、文本。
 	 * @param fileUrl 下载文件URL
 	 */
-	public void startDownLoad(String fileType, String fileUrl){
+	public void startDownLoad(String fileType,String musicMsg, String fileUrl){
 		
 		showFloatView();			
 		Message msg = new Message();
@@ -214,7 +231,40 @@ public class FileDowLoadTask {
         bundle.putString(Configure.EDIT_TYPE, fileType);
         bundle.putString(Configure.FILE_URL, fileUrl);
         msg.setData(bundle);
-        handler.sendMessage(msg);
+        handler.sendMessage(msg);       
+        paseJsonData(musicMsg);
+	}
+	
+	
+	
+	private void paseJsonData(String jsonStr) {
+
+		Log.i(TAG,"getRemoteList  getjsonStr >>"+jsonStr);
+		
+		try {
+            if (null!=jsonStr&&jsonStr.length()>0) {
+            	
+            	JSONObject musicObj = new JSONObject(jsonStr);
+            	String title = musicObj.getString("title");
+            	String artist = musicObj.getString("artist");
+            	String tempPath = musicObj.getString("tempPath");
+            	int duration = musicObj.getInt("duration");
+            	
+            	MusicInfor music=new MusicInfor();
+            	music.setTitle(title);
+            	music.setArtist(artist);
+            	music.setPath(tempPath);
+            	music.setDuration(duration);
+            	if(!musicList.contains(music)){
+            		musicList.add(music);
+            	}       	
+            	
+            } else {
+                Log.e(TAG, "paseJsonData and  jsonStr=null");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 	}
 	
 	
@@ -270,7 +320,36 @@ public class FileDowLoadTask {
 	}
 
 
+	private MusicInfor getMusicByFilePath(String path){
+		
+		   MusicInfor  matchMusic=null;
+		   if(null ==musicList || !StringUtils.hasLength(path))return null;
+		   
+		   int size=musicList.size();
+		   for (int i = 0; i < size; i++) {
+			   MusicInfor music=musicList.get(i);
+			   if(path.equals(music.getPath())){
+				   matchMusic=music;
+				   break;
+			   }
+		  }		   
+		   return matchMusic;
+		   
+	}
 	
+	
+	private void removeMusicByFilePath(String path){
+		 if(null ==musicList || !StringUtils.hasLength(path))return;
+		   
+		   int size=musicList.size();
+		   for (int i = 0; i < size; i++) {
+			   MusicInfor music=musicList.get(i);
+			   if(path.equals(music.getPath())){
+				   musicList.remove(i);
+				   return;
+			   }
+		  }		
+	}
 	
 	/**
 	 * 下载资源释放

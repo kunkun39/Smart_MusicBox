@@ -97,4 +97,8 @@ public class MusicInfor implements Serializable {
     public void setCreateTime(long createTime) {
         this.createTime = createTime;
     }
+    
+    public void init(){
+    	
+    }
 }

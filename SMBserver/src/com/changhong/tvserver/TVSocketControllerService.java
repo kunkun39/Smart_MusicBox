@@ -821,7 +821,7 @@ public class TVSocketControllerService extends Service {
 			if (editType.equals("copyToYinXiang")
 					|| editType.equals("clockRing")) {
 
-				FileDowLoadTask.creatFileDownLoad(this).startDownLoad(editType,
+				FileDowLoadTask.creatFileDownLoad(this).startDownLoad(editType,parameter1,
 						parameter2);
 
 			} else {

@@ -77,7 +77,7 @@ public class HttpDownloader {
 					Log.e("YDINFOR:: ","file length is "+fileLength);
 				}
 			}else{
-				 result = Configure.FILE_TOOBIG; 
+				 result = Configure.FILE_LARGE; 
 			}
 		} catch (IOException e) {
 			
