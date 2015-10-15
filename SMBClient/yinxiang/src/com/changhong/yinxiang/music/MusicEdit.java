@@ -270,6 +270,15 @@ public class MusicEdit {
 		}
 	   mFileUtil.updateGallery(mContext, fileUrl);      
 	}
+	
+	/**
+	 * MediaStoreFile 中增加一个音乐文件记录
+	 * @param music
+	 */
+	public void upDateMediaStoreFile(YinXiangMusic music) {
+	   mFileUtil.updateGallery(mContext, music);      
+	}
+	
 
 	public void upDateMediaStoreFile(String oldFile, String newFile) {
 	   mFileUtil.updateGallery(mContext, oldFile,newFile);

@@ -19,6 +19,7 @@ public class MusicUtils {
 	public final static String  FILE_EDIT= "fileEdit";
 	public final static String  EDIT_TYPE= "editType";
 	public final static String  FILE_EXIST= "fileExist";
+	public final static String  FILE_LARGE= "largeFile";
 
   	public final static String  EDIT_CLOCK= "clockRing";
   	public final static String  EDIT_RENAME= "reName";
@@ -32,5 +33,7 @@ public class MusicUtils {
 	/***********************************************通信方式定义********************************************************/
 	public final static int ACTION_HTTP_DOWNLOAD= 1001;
 	public final static int ACTION_SOCKET_COMMUNICATION= 1002;
+
+	public static final int COMMUNICATION_ERROR = 1000;
 
 }

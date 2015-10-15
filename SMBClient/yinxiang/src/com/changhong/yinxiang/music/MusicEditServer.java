@@ -16,7 +16,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
-
 import com.changhong.yinxiang.activity.AlarmMainActivity;
 import com.changhong.yinxiang.activity.YinXiangMusicViewActivity;
 import com.changhong.yinxiang.fragment.YinXiangSettingFragment;
@@ -125,15 +124,17 @@ public class MusicEditServer {
 										     bundle.putString("result", "文件拷贝成功：音响==>>手机");
 										} else if (downLoadResult.equals(MusicUtils.FILE_EXIST)) {
 										     bundle.putString("result", "文件已存在");
+										} else if (downLoadResult.equals(MusicUtils.FILE_LARGE)) {
+										     bundle.putString("result", "文件超大");
 										}else{
 											bundle.putString("result", "文件拷贝失败：音响==>>手机");
 										}
 										respondMsg.setData(bundle);
-
 										mParentHandler.sendMessage(respondMsg);
 										Log.e(Tag, "finish download file " + fileUrl);
 									} catch (Exception e) {
-										e.printStackTrace();
+										e.printStackTrace();										
+										mParentHandler.sendEmptyMessage(MusicUtils.COMMUNICATION_ERROR);
 									}
 								}	
 						break;

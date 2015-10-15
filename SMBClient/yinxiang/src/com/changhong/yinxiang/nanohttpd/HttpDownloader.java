@@ -75,6 +75,8 @@ public class HttpDownloader {
 					}
 					fileUtils.checkMaxFileItemExceedAndProcess(fileType);
 				}
+			}else{
+				result = MusicUtils.FILE_LARGE;
 			}
 		} catch (IOException e) {
 			result = MusicUtils.ACTION_FAILED;

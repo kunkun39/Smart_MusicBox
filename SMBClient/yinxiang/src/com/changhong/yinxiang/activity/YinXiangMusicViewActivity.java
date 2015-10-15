@@ -108,9 +108,6 @@ public class YinXiangMusicViewActivity extends BaseActivity {
 	public static final int FILE_EDIT_COPY = 3;
 	public static final int FILE_EDIT_RENAME = 4;
 	public static final int FILE_EDIT_REMOVE = 5;
-	
-	public static final int COMMUNICATION_ERROR = 1000;
-
 	// 请求音响设备的音乐文件
 	public static final int REQUEST_AUDIOEQUIPMENT_MUSIC = 6;
 	public static final int SHOW_AUDIOEQUIPMENT_MUSICLIST = 7;
@@ -356,10 +353,20 @@ public class YinXiangMusicViewActivity extends BaseActivity {
 			JSONObject sendObj = new JSONObject();
 			JSONArray array = new JSONArray();
 
+			
+			JSONObject music=new JSONObject();
+			
+			if(null !=mEditMusic){
+				
+				music.put("tempPath",  mEditMusic.getPath());
+				music.put("title", mEditMusic.getTitle());
+				music.put("artist", mEditMusic.getArtist());
+				music.put("duration", mEditMusic.getDuration());
+			}			
 			// music urls
 			// 文件编辑类型： copy、clock
 			array.put(0, editType);
-			array.put(1, musicPath);
+			array.put(1, music.toString());
 
 			// 第二个参数：如reName：则发送新的文件名。否则，赋值文件httpAddress
 			if (StringUtils.hasLength(param)) {
@@ -491,8 +498,8 @@ public class YinXiangMusicViewActivity extends BaseActivity {
 						result = "远程操作失败";
 					} else if (result.contains("文件拷贝成功")) {
 						// 拷贝成功，更新媒体库记录
-						String fileUrl=mEditMusic.getFileUrl();
-						mFileEdit.upDateMediaStoreFile(fileUrl);
+//						String fileUrl=mEditMusic.getFileUrl();
+						mFileEdit.upDateMediaStoreFile(mEditMusic);
 					}
 
 					Toast.makeText(YinXiangMusicViewActivity.this, result,
@@ -603,7 +610,7 @@ public class YinXiangMusicViewActivity extends BaseActivity {
 					Toast.makeText(YinXiangMusicViewActivity.this, result,Toast.LENGTH_SHORT).show();
 				}
 				break;
-			case COMMUNICATION_ERROR:
+			case MusicUtils.COMMUNICATION_ERROR:
 				// 关闭进度条
 				if (null != mFileEdit) {
 					mFileEdit.closeProgressDialog();

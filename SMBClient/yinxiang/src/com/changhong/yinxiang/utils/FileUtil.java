@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 
 import com.changhong.common.utils.StringUtils;
+import com.changhong.yinxiang.music.YinXiangMusic;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -423,6 +424,33 @@ public class FileUtil {
 		}
 		return false;
 	}
+	
+	
+	public boolean updateGallery(Context context,YinXiangMusic music) {
+		// 参数检查
+		if (null == music)return false;
+
+		String title = music.getTitle();
+		String path=music.getPath();
+		String artist=music.getArtist();
+		int   duration =music.getDuration();
+
+		if (path.toLowerCase().startsWith("http://") || path.toLowerCase().startsWith("https://")) {
+			String fileUrl=convertHttpURLToFileUrl(path);
+			path=convertHttpUrlToLocalFilePath(fileUrl);
+		}
+		
+		ContentValues cv = new ContentValues();
+		cv.put(MediaStore.Audio.Media.DATA, path);
+		cv.put(MediaStore.Audio.Media.TITLE, title);
+		cv.put(MediaStore.Audio.Media.ARTIST, artist);
+		cv.put(MediaStore.Audio.Media.DURATION, duration);
+		ContentResolver resolver = context.getContentResolver();
+		Uri base = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;		
+		resolver.insert(base, cv);
+		return true;
+	}
+	
 
 	private long getRecordMediaIdInDb(ContentResolver resolver, String file) {
 		long ReValue = -1;
@@ -455,4 +483,11 @@ public class FileUtil {
 	public String getLocalFileDir() {
 		return SDCARDPATH + MUSIC_PATH + File.separator;
 	}
+	
+	public  String convertHttpURLToFileUrl(String url) {
+        if (null !=url && url.length()>0) {
+            return url.replace("%25", "%").replace("%20"," ").replace("%2B","+").replace( "%23","#").replace( "%26","&").replace("%3D","=").replace("%3F","?").replace("%5E","^");
+        }
+        return url;
+    }
 }
