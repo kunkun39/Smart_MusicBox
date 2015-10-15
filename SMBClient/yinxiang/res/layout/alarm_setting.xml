@@ -139,6 +139,12 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal" >
+        <Button
+            android:id="@+id/confirm"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="确定"
+            android:layout_weight="1" />
 
         <Button
             android:id="@+id/cancel"
@@ -147,12 +153,7 @@
             android:text="取消"
             android:layout_weight="1" />
 
-        <Button
-            android:id="@+id/confirm"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:text="确定"
-            android:layout_weight="1" />
+        
     </LinearLayout>
     
     
