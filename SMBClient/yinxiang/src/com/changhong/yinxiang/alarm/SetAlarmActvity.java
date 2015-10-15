@@ -491,6 +491,7 @@ public class SetAlarmActvity extends Activity {
 				}
 				if (!flag) {
 					musicListInit.remove(music);
+					k=k-1;
 				}
 			}
 

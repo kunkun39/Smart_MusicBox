@@ -165,12 +165,14 @@ public class AlarmMainActivity extends Activity {
 
 	private void getAlarmMsg() {
 
-		// 触发音响端数据发送
-		String ipString = NetworkUtils.getLocalHostIp();
-		ClientSendCommandService.msg = Alarm.get + ipString;
-		ClientSendCommandService.handler.sendEmptyMessage(1);
+		if (ClientSendCommandService.handler != null) {
+			// 触发音响端数据发送
+			String ipString = NetworkUtils.getLocalHostIp();
+			ClientSendCommandService.msg = Alarm.get + ipString;
+			ClientSendCommandService.handler.sendEmptyMessage(1);
 
-		Log.i("mmmm", "getAlarmMsg:" + ipString);
+			Log.i("mmmm", "getAlarmMsg:" + ipString);
+		}
 	}
 
 	private void startSetAlarm() {
