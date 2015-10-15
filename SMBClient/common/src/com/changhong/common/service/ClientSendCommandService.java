@@ -383,16 +383,11 @@ public class ClientSendCommandService extends Service implements ClientSocketInt
     				JSONObject single = all.getJSONObject(i);
     				String name = single.getString("FMname");
     				String state= single.getString("state");
-    				if("autoCtrl".equals(name) ){
-        				isAutoCtrl=state.equals("on")?true:false;    				
-    				}else{
-        				serverFMInfo.add(name);
-        				//获取当前播放FM 的information
-        				if("1".equals(state)){
-        					curFMIndex=i;       				
-        				}
-    				}
-    				
+    				serverFMInfo.add(name);
+    				//获取当前播放FM 的information
+    				if("1".equals(state)){
+    					curFMIndex=i;       				
+    				}    				
     			}
     			
     		} else {
