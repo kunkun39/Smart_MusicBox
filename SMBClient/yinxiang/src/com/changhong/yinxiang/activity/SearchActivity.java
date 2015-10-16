@@ -84,7 +84,7 @@ public class SearchActivity extends BaseActivity {
 			// TODO Auto-generated method stub
 			switch(msg.what){
 			case 1:
-				mAlbumName = XMMusicData.getInstance(SearchActivity.this).getAlbumName();
+				mAlbumName = (String[]) msg.obj;
 				Log.i("mmmm", "mAlbumName"+mAlbumName.toString());
 				if (mAlbumName != null && mAlbumName.length > 0) {
 					setRecommendAlbum();
@@ -246,7 +246,7 @@ public class SearchActivity extends BaseActivity {
 		
 		setSearchHistory();		
        ((RadioButton) search_type.getChildAt(0)).setChecked(true);
-	   XMMusicData.getInstance(SearchActivity.this).iniData(handler);
+	   XMMusicData.getInstance(SearchActivity.this).getAlbumName(handler);
 	}
 
 
