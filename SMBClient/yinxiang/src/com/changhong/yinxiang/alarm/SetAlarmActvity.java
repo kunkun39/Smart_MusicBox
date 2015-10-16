@@ -60,7 +60,7 @@ public class SetAlarmActvity extends Activity {
 	private boolean currentState[];
 	private int updateContent[];// 记录操作过的数据。0未操作，非0操作过。
 
-	private int curentId;// 设置该alarm的ID。
+	private int curentId=1;// 设置该alarm的ID。
 	private int resultCode = 0;// 0为更改，1位新增
 
 	private boolean musicIsEmpty = true;
@@ -183,17 +183,17 @@ public class SetAlarmActvity extends Activity {
 		if (position < 0) {
 			state = State.add;
 			resultCode = 1;
-			
-			musicIsEmpty=true;
-			
+
+			musicIsEmpty = true;
+
 			intAddAlarm();
 
 		} else {
 			state = State.update;
 			resultCode = 0;
-			
-			musicIsEmpty=false;
-			
+
+			musicIsEmpty = false;
+
 			initUpdateAlarm(position);
 		}
 
@@ -254,7 +254,7 @@ public class SetAlarmActvity extends Activity {
 
 	// 修改数据完成
 	private void updateAlarm() {
-		
+
 		if (null != alarm) {
 			alarm.hour = timePicker.getCurrentHour();
 			alarm.minutes = timePicker.getCurrentMinute();
@@ -272,21 +272,26 @@ public class SetAlarmActvity extends Activity {
 	// 进入添加流程
 	private void addAlarm() {
 		int length = 0;
-		
+
 		// 计算当前闹铃的ID值是多少
-		int id = 0;
+		
 		if (AlarmMainActivity.mAlarmList != null
 				&& AlarmMainActivity.mAlarmList.size() > 0) {
 			length = AlarmMainActivity.mAlarmList.size();
-			for (int i = 0; i < length; i++) {
-				int cache = AlarmMainActivity.mAlarmList.get(i).getId();
-				id = cache > id ? cache : id;
+			for (int a = 1; a < length + 1; a++) {
+				boolean idflag=true;
+				for (int i = 0; i < length; i++) {
+					int cache = AlarmMainActivity.mAlarmList.get(i).getId();
+					if(a==cache){
+						idflag=false;
+					}
+				}
+				if(idflag){
+					curentId=a;
+					break;
+				}
 			}
-
-			id = AlarmMainActivity.mAlarmList.get(length - 1).getId();
 		}
-		curentId = id + 1;
-
 		alarm.setId(curentId);
 		alarm.setHour(timePicker.getCurrentHour());
 		alarm.setMinutes(timePicker.getCurrentMinute());
@@ -491,7 +496,7 @@ public class SetAlarmActvity extends Activity {
 				}
 				if (!flag) {
 					musicListInit.remove(music);
-					k=k-1;
+					k = k - 1;
 				}
 			}
 
@@ -574,9 +579,9 @@ public class SetAlarmActvity extends Activity {
 			// sendTCP.addData(content, ip);
 			// }
 			ClientSendCommandService.handler.sendEmptyMessage(1);
-		}else{
-			Toast.makeText(this, "音乐列表不能为空，请添加对应的音乐文件,此次操作无效!", Toast.LENGTH_SHORT)
-			.show();
+		} else {
+			Toast.makeText(this, "音乐列表不能为空，请添加对应的音乐文件,此次操作无效!",
+					Toast.LENGTH_SHORT).show();
 		}
 		finish();
 
