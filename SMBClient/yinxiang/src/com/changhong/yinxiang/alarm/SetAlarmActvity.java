@@ -470,6 +470,7 @@ public class SetAlarmActvity extends Activity {
 	private void setAlarmMusics(DialogInterface dialog) {
 
 		boolean emptyFlag = false;
+		musicIsEmpty=false;
 		// 判断音乐列表是否为空
 		for (int b = 0; b < currentState.length; b++) {
 			if (currentState[b]) {
