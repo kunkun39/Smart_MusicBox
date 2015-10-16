@@ -162,6 +162,8 @@ public class FileEditManager {
 									respondMsg.setData(bundle);
 									respondMsg.what = 2;
 									mParentHandler.sendMessage(respondMsg);
+								}else{
+									Log.e(TAG, "mParentHandler is  null ！");
 								}
 								Log.e(TAG, "finish download file " + fileUrl);
 							} catch (Exception e) {
