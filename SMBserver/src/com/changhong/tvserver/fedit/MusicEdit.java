@@ -13,6 +13,7 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.util.Log;
 
 import com.changhong.nanohttpd.NanoHTTPDService;
 import com.changhong.tvserver.touying.music.MusicInfor;
@@ -22,6 +23,7 @@ import com.changhong.tvserver.utils.StringUtils;
 
 public class MusicEdit {
 
+	private static final String TAG = "MusicEdit::";
 	List<MusicInfor> musicList=null;
 	FileUtil mFileUtil ;
 	FileEditManager mFileEditManager;
@@ -34,19 +36,23 @@ public class MusicEdit {
 	}
 	
 
-	public void doFileEdit(Context context, String clientIp, String editType,String fileUrl,String param) {
+	public void doFileEdit(Context context, String clientIp, String editType,String param) {
 		
 		String doResult = "";
-		if (!matchEditTypeAndMsg(editType,fileUrl,param))return;
+		String fileUrl="";
+		if (!matchEditTypeAndMsg(editType,param))return;
 
-		if (editType.equals(Configure.EDIT_RENAME)) {
-			doResult = mFileUtil.reNameFile(fileUrl, param);
+		 MusicInfor  music=getMusicInfor(param);
+		
+		if (editType.equals(Configure.EDIT_RENAME) && null !=music) {
+			fileUrl=music.getPath();
+			String newTitle=music.getTitle();
+			doResult = mFileUtil.reNameFile(fileUrl, newTitle);
 			//更新新文件
-			String newFile=mFileUtil.getNewFilePath(fileUrl, param);
+			String newFile=mFileUtil.getNewFilePath(fileUrl, newTitle);
             mFileEditManager.updateMediaStoreAudio(context,fileUrl,newFile);
-            
-  
-		} else if (editType.equals(Configure.EDIT_REMOVE)) {
+		} else if (editType.equals(Configure.EDIT_REMOVE) && null !=music) {
+			 fileUrl=music.getPath();
 			doResult = mFileUtil.removeFileFromSDCard(fileUrl);
 			 //更新文件
             mFileEditManager.updateMediaStoreAudio(context, fileUrl);
@@ -133,19 +139,16 @@ public class MusicEdit {
 	 * @param fileUrl 文件路径
 	 * @return
 	 */
-	private boolean matchEditTypeAndMsg(String editType,String fileUrl, String param){
+	private boolean matchEditTypeAndMsg(String editType, String param){
 		
 		boolean reValue=false;		
-	    if (editType.equals(Configure.EDIT_REMOVE) && StringUtils.hasLength(fileUrl)) {
+	    if (editType.equals(Configure.EDIT_REMOVE) && StringUtils.hasLength(param)) {
 			     reValue=true;
-		}else if (editType.equals(Configure.EDIT_RENAME) && StringUtils.hasLength(fileUrl)) {
-			if(StringUtils.hasLength(param)){
-				reValue=true;
-			}
+		}else if (editType.equals(Configure.EDIT_RENAME) && StringUtils.hasLength(param)) {
+			reValue=true;
 		} else if(editType.equals(Configure.EDIT_REQUEST_MUSICS) ){
 			reValue=true;
-
-		}	
+		}
 		return reValue;
 	}
 	
@@ -214,6 +217,36 @@ public class MusicEdit {
 			scanIntent.setData(Uri.fromFile(new File(newFile)));
 			context.sendBroadcast(scanIntent);
 		}		
+	}
+	
+	
+	private MusicInfor getMusicInfor(String jsonStr) {
+
+		Log.i(TAG,"getRemoteList  getjsonStr >>"+jsonStr);
+		MusicInfor music =null;
+		try {
+            if (null!=jsonStr&&jsonStr.length()>0) {
+            	
+            	JSONObject musicObj = new JSONObject(jsonStr);
+            	String title = musicObj.getString("title");
+            	String artist = musicObj.getString("artist");
+            	String tempPath = musicObj.getString("tempPath");
+            	int duration = musicObj.getInt("duration");
+            	
+            	music=new MusicInfor();
+            	music.setTitle(title);
+            	music.setArtist(artist);
+            	music.setPath(tempPath);
+            	music.setDuration(duration);   	
+            	
+            } else {
+                Log.e(TAG, "paseJsonData and  jsonStr=null");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+		
+		return music;
 	}
 
 }

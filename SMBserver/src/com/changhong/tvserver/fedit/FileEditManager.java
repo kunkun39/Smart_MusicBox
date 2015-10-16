@@ -253,6 +253,10 @@ public class FileEditManager {
 	public void updateMediaStoreAudio(Context context, MusicInfor music) {
 		mFileUtil.updateGallery(context, music);
 	}
+	
+	public String  convertHttpURLToLocalFile(String fileUrl) {
+		return mFileUtil	.convertHttpURLToLocalFile(fileUrl);
+	}
 
 	// 销毁线程池,该方法保证在所有任务都完成的情况下才销毁所有线程，否则等待任务完成才销毁
 	public void destroy() {

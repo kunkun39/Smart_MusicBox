@@ -818,8 +818,7 @@ public class TVSocketControllerService extends Service {
 			String parameter1 = files.get(1);
 			String parameter2 = files.get(2);
 
-			if (editType.equals("copyToYinXiang")
-					|| editType.equals("clockRing")) {
+			if (editType.equals("copyToYinXiang")	|| editType.equals("clockRing")) {
 
 				FileDowLoadTask.creatFileDownLoad(this).startDownLoad(editType,parameter1,
 						parameter2);
@@ -829,8 +828,7 @@ public class TVSocketControllerService extends Service {
 				if (null == mMusicEdit) {
 					mMusicEdit = new MusicEdit();
 				}
-				mMusicEdit.doFileEdit(this, clientIP, editType, parameter1,
-						parameter2);
+				mMusicEdit.doFileEdit(this, clientIP, editType, parameter1);
 			}
 		} else {
 			Log.e(TAG, "no picture url");

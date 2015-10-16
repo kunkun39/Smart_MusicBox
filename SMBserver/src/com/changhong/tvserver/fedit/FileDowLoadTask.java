@@ -121,8 +121,10 @@ public class FileDowLoadTask {
 				    MusicInfor music=getMusicByFilePath(fileUrl);
 
 					//更新默认媒体数据库音乐文件索引
-					if(msgRepond.contains("成功") || msgRepond.contains("存在")){
+					if(msgRepond.contains("成功")){
 					       mFileEditController.updateMediaStoreAudio(mContext,music);
+					}else if(msgRepond.contains("存在")){
+					       mFileEditController.updateMediaStoreAudio(mContext,fileUrl);
 					}
 					// 文件现在成功提示
 					showResult(msgRepond);	
@@ -248,8 +250,7 @@ public class FileDowLoadTask {
             	String title = musicObj.getString("title");
             	String artist = musicObj.getString("artist");
             	String tempPath = musicObj.getString("tempPath");
-            	int duration = musicObj.getInt("duration");
-            	
+            	int duration = musicObj.getInt("duration");            	
             	MusicInfor music=new MusicInfor();
             	music.setTitle(title);
             	music.setArtist(artist);
@@ -328,8 +329,10 @@ public class FileDowLoadTask {
 		   int size=musicList.size();
 		   for (int i = 0; i < size; i++) {
 			   MusicInfor music=musicList.get(i);
-			   if(path.equals(music.getPath())){
+			   String localPath=mFileEditController.convertHttpURLToLocalFile(music.getPath());
+			   if(path.equals(localPath)){
 				   matchMusic=music;
+				   matchMusic.setPath(localPath);
 				   break;
 			   }
 		  }		   
