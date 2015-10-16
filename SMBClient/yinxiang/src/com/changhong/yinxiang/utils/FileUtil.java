@@ -435,19 +435,20 @@ public class FileUtil {
 		String artist=music.getArtist();
 		int   duration =music.getDuration();
 
-		if (path.toLowerCase().startsWith("http://") || path.toLowerCase().startsWith("https://")) {
-			String fileUrl=convertHttpURLToFileUrl(path);
-			path=convertHttpUrlToLocalFilePath(fileUrl);
-		}
-		
+//		if (path.toLowerCase().startsWith("http://") || path.toLowerCase().startsWith("https://")) {
+//			String fileUrl=convertHttpURLToFileUrl(path);
+//			path=convertHttpUrlToLocalFilePath(fileUrl);
+//		}
+//		
 		ContentValues cv = new ContentValues();
 		cv.put(MediaStore.Audio.Media.DATA, path);
 		cv.put(MediaStore.Audio.Media.TITLE, title);
 		cv.put(MediaStore.Audio.Media.ARTIST, artist);
 		cv.put(MediaStore.Audio.Media.DURATION, duration);
-		ContentResolver resolver = context.getContentResolver();
+		ContentResolver resolver = context.getContentResolver();		
 		Uri base = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;		
 		resolver.insert(base, cv);
+		
 		return true;
 	}
 	

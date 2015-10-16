@@ -276,6 +276,15 @@ public class MusicEdit {
 	 * @param music
 	 */
 	public void upDateMediaStoreFile(YinXiangMusic music) {
+		
+		if(null == music)return;
+		
+		String fileUrl=music.getFileUrl();
+		if (fileUrl.toLowerCase().startsWith("http://") || fileUrl.toLowerCase().startsWith("https://")) {
+			fileUrl=convertHttpURLToFileUrl(fileUrl);
+			fileUrl=mFileUtil.convertHttpUrlToLocalFilePath(fileUrl);
+			music.setPath(fileUrl);
+		}	
 	   mFileUtil.updateGallery(mContext, music);      
 	}
 	

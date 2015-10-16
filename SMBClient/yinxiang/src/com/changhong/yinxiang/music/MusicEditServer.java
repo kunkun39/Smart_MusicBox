@@ -127,7 +127,7 @@ public class MusicEditServer {
 										} else if (downLoadResult.equals(MusicUtils.FILE_LARGE)) {
 										     bundle.putString("result", "文件超大");
 										}else{
-											bundle.putString("result", "文件拷贝失败：音响==>>手机");
+											bundle.putString("result", "下载失败：文件不存在或网络异常");
 										}
 										respondMsg.setData(bundle);
 										mParentHandler.sendMessage(respondMsg);

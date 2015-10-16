@@ -20,6 +20,7 @@ public class MusicUtils {
 	public final static String  EDIT_TYPE= "editType";
 	public final static String  FILE_EXIST= "fileExist";
 	public final static String  FILE_LARGE= "largeFile";
+	public final static String  FILE_NOTFOUND= "fileNotFound";
 
   	public final static String  EDIT_CLOCK= "clockRing";
   	public final static String  EDIT_RENAME= "reName";

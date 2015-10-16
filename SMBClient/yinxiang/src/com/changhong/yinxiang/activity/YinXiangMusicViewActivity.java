@@ -358,10 +358,13 @@ public class YinXiangMusicViewActivity extends BaseActivity {
 			
 			if(null !=mEditMusic){
 				
+				String title=mEditMusic.getTitle();
+				if(!title.equals(param) && StringUtils.hasLength(param) )title=param;
 				music.put("tempPath",  mEditMusic.getPath());
-				music.put("title", mEditMusic.getTitle());
+				music.put("title", title);
 				music.put("artist", mEditMusic.getArtist());
 				music.put("duration", mEditMusic.getDuration());
+				
 			}			
 			// music urls
 			// 文件编辑类型： copy、clock
@@ -500,6 +503,9 @@ public class YinXiangMusicViewActivity extends BaseActivity {
 						// 拷贝成功，更新媒体库记录
 //						String fileUrl=mEditMusic.getFileUrl();
 						mFileEdit.upDateMediaStoreFile(mEditMusic);
+					}else if(result.contains("文件已存在")){
+						String fileUrl=mEditMusic.getFileUrl();
+						mFileEdit.upDateMediaStoreFile(fileUrl);
 					}
 
 					Toast.makeText(YinXiangMusicViewActivity.this, result,

@@ -135,8 +135,9 @@ public class YinXiangMusicAdapter extends BaseAdapter {
                     String path = musicObj.getString("path");
                     String artist = musicObj.getString("artist");
                     String fileUrl = musicObj.getString("httpUrl");;
+                    int  duration = musicObj.getInt("duration");;
 
-                    YinXiangMusic music = new YinXiangMusic(id, title, path, i, artist,i, 0, 4);                    
+                    YinXiangMusic music = new YinXiangMusic(id, title, path, i, artist,i, duration, 4);                    
                     //增加文件远程访问定位符
                     fileUrl=convertHttpURLToFileUrl(fileUrl);
                     music.setFileUrl(fileUrl);

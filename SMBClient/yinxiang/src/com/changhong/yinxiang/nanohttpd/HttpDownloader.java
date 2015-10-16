@@ -83,7 +83,7 @@ public class HttpDownloader {
 			e.printStackTrace();
 			Log.e("YDINFOR::", "-----------------------HttpURLConnection  end1212----------------------");
 
-		} finally {
+		}finally {
 			try {
 
 				if (inputStream != null) {

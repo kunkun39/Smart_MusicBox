@@ -337,12 +337,12 @@ public class SetAlarmActvity extends Activity {
 			// 封装文件为json格式
 			JSONObject sendObj = new JSONObject();
 			JSONArray array = new JSONArray();
-
+           		
 			// music urls
 			// 文件编辑类型： copy、clock
 			array.put(0, editType);
-			array.put(1, musicPath);
-
+			array.put(1, "{}");
+		
 			// 第二个参数：如reName：则发送新的文件名。否则，赋值文件httpAddress
 			if (StringUtils.hasLength(param)) {
 				array.put(2, param);
