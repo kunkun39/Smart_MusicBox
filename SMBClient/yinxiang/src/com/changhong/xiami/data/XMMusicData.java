@@ -97,6 +97,27 @@ public class XMMusicData {
 			}
 		}).start();
 	}
+	
+	/*
+	 * 
+	 * 获取今日推荐歌曲列表
+	 */
+	public List<OnlineSong> getRecommendSong(int pageSize,int pageIndex){
+		Pair<QueryInfo, List<OnlineSong>> results=mXiamiSDK.getRecommendSongsSync(pageSize, pageIndex);
+		List<OnlineSong> songs=results.second;
+		return songs;
+	}
+	
+	/*
+	 * 
+	 * 获取新碟首发专辑
+	 */
+	public List<OnlineAlbum> getNewAlbums(LanguageType lang,int pageSize,int pageIndex){
+		Pair<QueryInfo, List<OnlineAlbum>> results=mXiamiSDK.getNewAlbumsSync(lang, pageSize, pageIndex);
+		List<OnlineAlbum> albums=results.second;
+		return albums;
+	}
+	
 	/*
 	 * 初始化排行榜类型
 	 */
@@ -132,15 +153,7 @@ public class XMMusicData {
 		 return results;
 	}
 	
-	/*
-	 * 
-	 * 获取新碟首发专辑
-	 */
-	public List<OnlineAlbum> getNewAlbums(LanguageType lang,int pageSize,int pageIndex){
-		Pair<QueryInfo, List<OnlineAlbum>> results=mXiamiSDK.getNewAlbumsSync(lang, pageSize, pageIndex);
-		List<OnlineAlbum> albums=results.second;
-		return albums;
-	}
+
 	
 	/*
 	 * 根据场景推荐歌曲
@@ -160,13 +173,5 @@ public class XMMusicData {
 		List<OnlineCollect> collect=results.second;
 		return collect;
 	}
-	/*
-	 * 
-	 * 获取今日推荐歌曲列表
-	 */
-	public List<OnlineSong> getRecommendSong(int pageSize,int pageIndex){
-		Pair<QueryInfo, List<OnlineSong>> results=mXiamiSDK.getRecommendSongsSync(pageSize, pageIndex);
-		List<OnlineSong> songs=results.second;
-		return songs;
-	}
+	
 }
