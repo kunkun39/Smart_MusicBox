@@ -31,7 +31,7 @@ public class FileDownLoadDialog extends Dialog {
         window.setAttributes(wlp);
         window.setGravity(Gravity.BOTTOM);
         setCanceledOnTouchOutside(false);// 设置点击屏幕Dialog不消失  
-        setCancelable(false);// 设置是否可以通过点击Back键取消  
+        setCancelable(true);// 设置是否可以通过点击Back键取消  
         setContentView(R.layout.dialog_file_copying);
 
         //功能按钮定义
@@ -43,9 +43,10 @@ public class FileDownLoadDialog extends Dialog {
     }
 
     public void close(){
-    	if(null != anim && anim.isRunning()){
-    		anim.stop();
-    	}
+//    	if(null != anim && anim.isRunning()){
+//    		anim.stop();
+//    	}
+    	this.dismiss();
     }
     
     public void show(String type) {
@@ -54,16 +55,16 @@ public class FileDownLoadDialog extends Dialog {
            	copy_from.setBackgroundResource(R.drawable.tv);
            	copy_to.setBackgroundResource(R.drawable.mobile);
            }
-    	    //将动画资源文件设置为ImageView的背景  
-         progress.setImageResource(R.anim.copying_anim); 
- 		 //获取ImageView背景,此时已被编译成AnimationDrawable 
-         anim = (AnimationDrawable) progress.getDrawable(); 
-         
-         //判断动画是否运行
-         if(!anim.isRunning()){
-     		  //开始执行动画  
-                anim.start();   
-         }  
+//    	    //将动画资源文件设置为ImageView的背景  
+//         progress.setImageResource(R.anim.copying_anim); 
+// 		 //获取ImageView背景,此时已被编译成AnimationDrawable 
+//         anim = (AnimationDrawable) progress.getDrawable(); 
+//         
+//         //判断动画是否运行
+//         if(!anim.isRunning()){
+//     		  //开始执行动画  
+//                anim.start();   
+//         }  
         super.show();
     }
 }

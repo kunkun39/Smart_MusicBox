@@ -4,6 +4,7 @@ import com.changhong.yinxiang.R;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender.SendIntentException;
 import android.view.Gravity;
@@ -44,4 +45,5 @@ public class MyProgressDialog extends Dialog {
     	notice.setText(msg);
     	this.show();
     }
+    
 }
