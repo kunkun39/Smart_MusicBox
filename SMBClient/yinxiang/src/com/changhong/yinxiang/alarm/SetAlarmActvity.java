@@ -288,7 +288,7 @@ public class SetAlarmActvity extends Activity {
 		if (AlarmMainActivity.mAlarmList != null
 				&& AlarmMainActivity.mAlarmList.size() > 0) {
 			length = AlarmMainActivity.mAlarmList.size();
-			for (int a = 1; a < length + 1; a++) {
+			for (int a = 1; a < length + 2; a++) {
 				boolean idflag=true;
 				for (int i = 0; i < length; i++) {
 					int cache = AlarmMainActivity.mAlarmList.get(i).getId();
