@@ -200,10 +200,11 @@ public class ClockCommonData {
 			String content = keys[3];
 			Alarm alarm = ResolveAlarmInfor.jsonToAlarm(content);
 			
-			Uri uri=Uri.parse(Alarm.Columns.CONTENT_STRING+"/"+alarm.id);
-			ContentValues alarmValues = formAlarm(alarm);
-			 alarmProvider.update(uri, alarmValues,
-			 Alarm.Columns._ID+"=" +id, null);
+//			Uri uri=Uri.parse(Alarm.Columns.CONTENT_STRING+"/"+alarm.id);
+//			ContentValues alarmValues = formAlarm(alarm);
+//			 alarmProvider.update(uri, alarmValues,
+//			 Alarm.Columns._ID+"=" +id, null);
+			Alarms.setAlarm(MyApplication.getContext(), alarm);
 
 			formMusicValues("update", alarm);
 		}
@@ -220,9 +221,10 @@ public class ClockCommonData {
 	}
 	
 	private void deleteTheAlarm(int id){
-		Uri uri=Uri.parse(Alarm.Columns.CONTENT_STRING+"/"+id);
-		alarmProvider.delete(uri,
-				null, null);
+//		Uri uri=Uri.parse(Alarm.Columns.CONTENT_STRING+"/"+id);
+//		alarmProvider.delete(uri,
+//				null, null);
+		Alarms.deleteAlarm(MyApplication.getContext(), id);
 		musicProvider.delete(MusicBean.Columns.MUSIC_URL, MusicBean.Columns.MID + "=" + id, null);
 
 	}
@@ -231,9 +233,9 @@ public class ClockCommonData {
 		if (3 == keys.length) {
 			String content = keys[2];
 			Alarm alarm = ResolveAlarmInfor.jsonToAlarm(content);
-//			Uri uri=Uri.parse(Alarm.Columns.CONTENT_STRING+"/"+alarm.id);
-			ContentValues values = formAlarm(alarm);
-			alarmProvider.insert(Alarm.Columns.CONTENT_URI, values);
+//			ContentValues values = formAlarm(alarm);
+//			alarmProvider.insert(Alarm.Columns.CONTENT_URI, values);
+			Alarms.addAlarm(MyApplication.getContext(), alarm);
 			formMusicValues("insert", alarm);
 		}
 	}

@@ -330,7 +330,7 @@ public final class Alarm implements Parcelable {
      * 0x20: Saturday
      * 0x40: Sunday
      */
-    static final class DaysOfWeek {
+    public static final class DaysOfWeek {
 
         private static int[] DAY_MAP = new int[] {
             Calendar.MONDAY,
@@ -388,7 +388,7 @@ public final class Alarm implements Parcelable {
             return ret.toString();
         }
 
-        private boolean isSet(int day) {
+       public boolean isSet(int day) {
             return ((mDays & (1 << day)) > 0);
         }
 
