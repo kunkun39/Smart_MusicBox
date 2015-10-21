@@ -50,8 +50,8 @@ public final class Alarm {
     public int        hour;
     public int        minutes;
     public DaysOfWeek daysOfWeek; 
-    public long       time;
-    public boolean    vibrate;
+    public long       time; //设置闹铃的当前时间
+    public boolean    vibrate; 
     public String     label;
     public Uri        alert;//用户设置的闹铃的地址
     public boolean    silent;

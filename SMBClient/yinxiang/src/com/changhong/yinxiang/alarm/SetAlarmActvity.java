@@ -2,7 +2,6 @@ package com.changhong.yinxiang.alarm;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
@@ -28,6 +27,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.TimePicker.OnTimeChangedListener;
 import android.widget.Toast;
 
 import com.changhong.common.service.ClientSendCommandService;
@@ -37,7 +37,6 @@ import com.changhong.common.utils.StringUtils;
 import com.changhong.common.widgets.WeekButton;
 import com.changhong.yinxiang.R;
 import com.changhong.yinxiang.activity.AlarmMainActivity;
-import com.changhong.yinxiang.activity.BaseActivity;
 import com.changhong.yinxiang.activity.YinXiangMusicViewActivity;
 import com.changhong.yinxiang.music.MusicEditServer;
 import com.changhong.yinxiang.music.MusicUtils;
@@ -133,6 +132,7 @@ public class SetAlarmActvity extends Activity {
 
 	protected void initView() {
 		// TODO Auto-generated method stub
+		setTheme(android.R.style.Theme_DeviceDefault_Light_NoActionBar_Fullscreen);
 		setContentView(R.layout.alarm_setting);
 		timePicker = (TimePicker) findViewById(R.id.timePicker);
 		timePicker.setIs24HourView(true);
@@ -197,6 +197,15 @@ public class SetAlarmActvity extends Activity {
 			initUpdateAlarm(position);
 		}
 
+		timePicker.setOnTimeChangedListener(new OnTimeChangedListener() {
+			
+			@Override
+			public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
+				// TODO Auto-generated method stub
+				timePicker.setCurrentHour(hourOfDay);
+				timePicker.setCurrentMinute(minute);
+			}
+		});
 	}
 
 	private WeekButton[] getMyWBList() {
@@ -256,6 +265,7 @@ public class SetAlarmActvity extends Activity {
 	private void updateAlarm() {
 
 		if (null != alarm) {
+			timePicker.clearFocus();
 			alarm.hour = timePicker.getCurrentHour();
 			alarm.minutes = timePicker.getCurrentMinute();
 			curentId = alarm.getId();
