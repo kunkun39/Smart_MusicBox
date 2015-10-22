@@ -47,15 +47,15 @@ public class YinXiangFMFragment extends Fragment {
 	private View mLastView = null;
 	private int mLastPosition = -1;
 	private ImageView mPlayingImage = null;
-	private 	FMUpdateReceiver fmUpdateReceiver=null;
-
+	private FMUpdateReceiver fmUpdateReceiver = null;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		// 请求Fm列表信息
-		ClientSendCommandService.handler.sendEmptyMessage(2);
-
+		if (ClientSendCommandService.handler != null) {
+			ClientSendCommandService.handler.sendEmptyMessage(2);
+		}
 	}
 
 	@Override
@@ -79,22 +79,21 @@ public class YinXiangFMFragment extends Fragment {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				adapter.changeImageMode(position,true);
+				adapter.changeImageMode(position, true);
 			}
 		});
 		setListViewPos(ClientSendCommandService.curFMIndex);
 
-		
-//		mHandler = new Handler() {
-//			public void handleMessage(Message msg1) {
-//				if (ClientSendCommandService.searchFMFinished) {
-//					adapter.notifyDataSetChanged();
-//				} else {
-//					mHandler.sendMessageDelayed(new Message(), 1000);
-//				}
-//			}
-//		};
-//		mHandler.sendEmptyMessage(1);
+		// mHandler = new Handler() {
+		// public void handleMessage(Message msg1) {
+		// if (ClientSendCommandService.searchFMFinished) {
+		// adapter.notifyDataSetChanged();
+		// } else {
+		// mHandler.sendMessageDelayed(new Message(), 1000);
+		// }
+		// }
+		// };
+		// mHandler.sendEmptyMessage(1);
 		regFMInforBroadcastRec();
 
 	}
@@ -103,8 +102,6 @@ public class YinXiangFMFragment extends Fragment {
 	public void onResume() {
 		super.onResume();
 	}
-	
-	
 
 	@Override
 	public void onPause() {
@@ -113,14 +110,15 @@ public class YinXiangFMFragment extends Fragment {
 	}
 
 	private void setListViewPos(int pos) {
-		
-		if(pos<0)return;
+
+		if (pos < 0)
+			return;
 		FMlist.setSelection(pos);
 	}
-	
+
 	private void regFMInforBroadcastRec() {
-		if(null == fmUpdateReceiver){
-			fmUpdateReceiver=new FMUpdateReceiver();
+		if (null == fmUpdateReceiver) {
+			fmUpdateReceiver = new FMUpdateReceiver();
 		}
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(ClientSendCommandService.ACTION_FMINFOR_UPDATE);
@@ -130,24 +128,23 @@ public class YinXiangFMFragment extends Fragment {
 	private void unregisterFMInfor() {
 		if (fmUpdateReceiver != null) {
 			getActivity().unregisterReceiver(fmUpdateReceiver);
-			fmUpdateReceiver=null;
+			fmUpdateReceiver = null;
 		}
 	}
-	
-	
+
 	private class FMUpdateReceiver extends BroadcastReceiver {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			String action = intent.getAction();
-			if (action	.equals(ClientSendCommandService.ACTION_FMINFOR_UPDATE)) {
-				adapter.changeImageMode(ClientSendCommandService.curFMIndex,false);
+			if (action.equals(ClientSendCommandService.ACTION_FMINFOR_UPDATE)) {
+				adapter.changeImageMode(ClientSendCommandService.curFMIndex,
+						false);
 				FMlist.setSelection(ClientSendCommandService.curFMIndex);
 			}
 		}
 
 	}
-	
 
 	/**
 	 * FM名称
@@ -155,11 +152,11 @@ public class YinXiangFMFragment extends Fragment {
 	private class FMAdapter extends BaseAdapter {
 
 		private Context mContext;
-		private int mCurPosition=-1;
+		private int mCurPosition = -1;
 
 		public FMAdapter(Context context) {
 			this.mContext = context;
-			mCurPosition=ClientSendCommandService.curFMIndex;
+			mCurPosition = ClientSendCommandService.curFMIndex;
 		}
 
 		@Override
@@ -178,7 +175,7 @@ public class YinXiangFMFragment extends Fragment {
 			// TODO Auto-generated method stub
 			return position;
 		}
-		
+
 		public void setindex(int pos) {
 			mCurPosition = pos;
 		}
@@ -189,9 +186,10 @@ public class YinXiangFMFragment extends Fragment {
 			 * VIEW HOLDER的配置
 			 */
 			final ViewHolder vh;
-			if(null == convertView){  
-			    LayoutInflater minflater=LayoutInflater.from(mContext);
-				convertView = minflater.inflate(R.layout.activity_fm_item, null);
+			if (null == convertView) {
+				LayoutInflater minflater = LayoutInflater.from(mContext);
+				convertView = minflater
+						.inflate(R.layout.activity_fm_item, null);
 				vh = new ViewHolder();
 				vh.FMname = (TextView) convertView.findViewById(R.id.fmtxt);
 				vh.FMpause = (ImageView) convertView.findViewById(R.id.btn_fm);
@@ -201,22 +199,22 @@ public class YinXiangFMFragment extends Fragment {
 			} else {
 				vh = (ViewHolder) convertView.getTag();
 			}
-			
-			
+
 			if (ClientSendCommandService.serverFMInfo.size() > 0) {
 
-				vh.FMname.setText(ClientSendCommandService.serverFMInfo	.get(position));
-				vh.id=position;
-					
-				if (position ==mCurPosition) {
+				vh.FMname.setText(ClientSendCommandService.serverFMInfo
+						.get(position));
+				vh.id = position;
+
+				if (position == mCurPosition) {
 					vh.FMpause.setVisibility(View.INVISIBLE);
 					vh.FMplay.setVisibility(View.VISIBLE);
 				} else {
 					vh.FMpause.setVisibility(View.VISIBLE);
 					vh.FMplay.setVisibility(View.INVISIBLE);
 				}
-				
-                Log.e("YDINFOR:: ","  position="+position);             
+
+				Log.e("YDINFOR:: ", "  position=" + position);
 			}
 			return convertView;
 		}
@@ -265,48 +263,48 @@ public class YinXiangFMFragment extends Fragment {
 		// return convertView;
 		// }
 
-		public void changeImageMode( int position,boolean isSendCommand) {
+		public void changeImageMode(int position, boolean isSendCommand) {
 
-			if(isSendCommand){
+			if (isSendCommand) {
 				MyApplication.vibrator.vibrate(100);
 				String serverFMInfor = ClientSendCommandService.serverFMInfo
 						.get(position);
 				ClientSendCommandService.msg = "fm:" + serverFMInfor;
 				ClientSendCommandService.handler.sendEmptyMessage(1);
 			}
-//			if (mLastView != null) {
-//				holder = (ViewHolder) mLastView.getTag();
-//				mLastPosition = holder.id;
-//				mLastView = null;
-//				if (mAnimation.isRunning())
-//					mAnimation.stop();
-//				holder.FMplay.setBackgroundResource(R.drawable.fmplay);
-//				holder.FMname.setTextColor(mContext.getResources().getColor(R.color.white));
-//			}
-//			holder = (ViewHolder) view.getTag();
-//			if (holder.id == position && position != mLastPosition) {
-//				mLastPosition = position;
-//				mLastView = view;
-//				holder.FMname.setTextColor(mContext.getResources().getColor(
-//						R.color.tab_textColor_selected));
-//				holder.FMplay.setBackgroundResource(R.anim.playing_anim);
-//				mAnimation = (AnimationDrawable) holder.FMplay.getBackground();
-//				mAnimation.start();
-//			} else  if(position == mLastPosition){
-//				mLastPosition = -1;
-//			}
-			
+			// if (mLastView != null) {
+			// holder = (ViewHolder) mLastView.getTag();
+			// mLastPosition = holder.id;
+			// mLastView = null;
+			// if (mAnimation.isRunning())
+			// mAnimation.stop();
+			// holder.FMplay.setBackgroundResource(R.drawable.fmplay);
+			// holder.FMname.setTextColor(mContext.getResources().getColor(R.color.white));
+			// }
+			// holder = (ViewHolder) view.getTag();
+			// if (holder.id == position && position != mLastPosition) {
+			// mLastPosition = position;
+			// mLastView = view;
+			// holder.FMname.setTextColor(mContext.getResources().getColor(
+			// R.color.tab_textColor_selected));
+			// holder.FMplay.setBackgroundResource(R.anim.playing_anim);
+			// mAnimation = (AnimationDrawable) holder.FMplay.getBackground();
+			// mAnimation.start();
+			// } else if(position == mLastPosition){
+			// mLastPosition = -1;
+			// }
+
 			adapter.setindex(-1);
 			adapter.notifyDataSetChanged();
-			
-			if(mLastPosition != position){
+
+			if (mLastPosition != position) {
 				adapter.setindex(position);
 				adapter.notifyDataSetChanged();
-				mLastPosition=position;
-			}else{
-				mLastPosition=-1;
+				mLastPosition = position;
+			} else {
+				mLastPosition = -1;
 			}
-			
+
 		}
 
 		public final class ViewHolder {
