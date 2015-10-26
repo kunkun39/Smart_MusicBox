@@ -1,14 +1,25 @@
 package com.changhong.xiami.data;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Pair;
 
 import com.xiami.sdk.XiamiSDK;
+import com.xiami.sdk.entities.ArtistBook;
+import com.xiami.sdk.entities.ArtistRegion;
 import com.xiami.sdk.entities.LanguageType;
 import com.xiami.sdk.entities.OnlineAlbum;
 import com.xiami.sdk.entities.OnlineArtist;
@@ -22,7 +33,7 @@ public class XMMusicData {
 	/**
 	 * XiamiSDK
 	 */
-	private static XiamiSDK mXiamiSDK = null;
+	public static XiamiSDK mXiamiSDK = null;
 	public static final String KEY = "825bdc1bf1ff6bc01cd6619403f1a072";
 	public static final String SECRET = "7ede04a287d0f92c366880ba515293fd";
 	
@@ -154,6 +165,50 @@ public class XMMusicData {
 	}
 	
 
+	/**
+	 * 获取艺人大全
+	 * @param region  区域
+	 * @param pageSize
+	 * @param pageIndex
+	 * @return
+	 */
+	public List<OnlineArtist> fetchArtistListSync(ArtistRegion region, int pageSize, int pageIndex) {
+		 List<OnlineArtist> results=null;
+		 ArtistBook artistBook=mXiamiSDK.fetchArtistBookSync(region, pageSize, pageIndex);
+		 if(null != artistBook) results=artistBook.getArtists();
+		return results;
+	}
+	
+	/**
+	 * 获取艺人详细信息
+	 * @param artistId 艺人Id号
+	 * @return
+	 */
+	public OnlineArtist 	fetchArtistDetailSync(long artistId) {
+		   
+		OnlineArtist result=mXiamiSDK.fetchArtistDetailSync(artistId);
+		return result;
+	}
+	
+	
+	public List<OnlineSong> fetchSongsByArtistIdSync(long artistId) {
+		   
+		List<OnlineSong> results=mXiamiSDK.fetchSongsByArtistIdSync(artistId);
+		return results;
+	}
+
+	
+	/**
+	 * 获取艺人图片
+	 * @param artist
+	 * @param size
+	 * @return
+	 */
+	public Bitmap getArtistImage(String imgUrl) {
+		 Bitmap  mBitmap= getBitmapFromUrl(imgUrl);
+		return mBitmap;
+	}
+	
 	
 	/*
 	 * 根据场景推荐歌曲
@@ -174,4 +229,54 @@ public class XMMusicData {
 		return collect;
 	}
 	
+	
+	
+	  /**
+     * 到Url去下载回传Bitmap
+     * @param imgUrl
+     * @return
+     */
+    public Bitmap getBitmapFromUrl(String imgUrl) {
+                URL url;
+                Bitmap bitmap = null;
+                BufferedInputStream bis=null;
+                try {
+                        url = new URL(imgUrl);
+                        InputStream is = url.openConnection().getInputStream();
+                        bis = new BufferedInputStream(is);
+                        bitmap = BitmapFactory.decodeStream(bis);
+                        bitmap=compressBmpFromBmp(bitmap);
+                } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                } catch (IOException e) {
+                        e.printStackTrace();
+                }finally{
+                	
+                    try {
+                    	
+                    	if(null != bis){
+                    		bis.close();
+                            bis=null;
+                    	}
+
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+                }
+                return bitmap;
+        }
+    
+    private Bitmap compressBmpFromBmp(Bitmap image) {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		
+		
+		image.compress(Bitmap.CompressFormat.PNG, 50, baos);
+		int length=baos.toByteArray().length;
+		ByteArrayInputStream isBm = new ByteArrayInputStream(baos.toByteArray());
+		Bitmap bitmap = BitmapFactory.decodeStream(isBm, null, null);
+		return bitmap;
+	}
+
+
 }

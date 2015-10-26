@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 import com.changhong.common.service.ClientSendCommandService;
 import com.changhong.common.system.MyApplication;
 import com.changhong.common.widgets.BoxSelectAdapter;
+import com.changhong.xiami.activity.ArtistListActivity;
 import com.changhong.yinxiang.R;
 
 public class YinXiangNetMusicFragment extends Fragment{
@@ -71,6 +73,8 @@ public class YinXiangNetMusicFragment extends Fragment{
         			Log.e(TAG, "startActivity com.tencent.qqmusic  err ! ");
         			Toast.makeText(getActivity(), "启动QQ音乐失败，请确定您是否已安装QQ音乐！", Toast.LENGTH_LONG).show();
         		}
+        		 
+        		
         	}
         });
         wyButton.setOnClickListener(new OnClickListener() {
@@ -108,11 +112,21 @@ public class YinXiangNetMusicFragment extends Fragment{
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
 			MyApplication.vibrator.vibrate(100);
-			 ClientSendCommandService.msg = "key:xiami";
-             ClientSendCommandService.handler.sendEmptyMessage(1);
+			
+//			 ClientSendCommandService.msg = "key:xiami";
+//             ClientSendCommandService.handler.sendEmptyMessage(1);
+			
+             startXiaMiMusic();
 		}
 	});
     }
   
+    
+    
+   private void startXiaMiMusic(){		
+		//启动虾米音乐
+		Intent intent = new Intent(getActivity(),ArtistListActivity.class);
+		startActivity(intent);
+	}
 
 }

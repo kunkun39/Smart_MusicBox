@@ -50,8 +50,7 @@ public abstract class BaseActivity extends Activity{
 		/**
 		 * IP连接部分
 		 */
-		IpAdapter = new BoxSelectAdapter(BaseActivity.this,
-				ClientSendCommandService.serverIpList);
+		IpAdapter = new BoxSelectAdapter(BaseActivity.this,ClientSendCommandService.serverIpList);
 		clients.setAdapter(IpAdapter);
 		clients.setOnTouchListener(new View.OnTouchListener() {
 			@Override
@@ -134,9 +133,6 @@ public abstract class BaseActivity extends Activity{
 //		unregisterWifiBroad();
 		super.onPause();
 	}
-	
-	
-	
 	protected abstract void initView();
 
 	
