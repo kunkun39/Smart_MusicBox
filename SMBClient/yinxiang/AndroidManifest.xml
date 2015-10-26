@@ -93,7 +93,13 @@
                 android:screenOrientation="portrait" />
         <activity
                 android:name="com.changhong.yinxiang.activity.YinXiangFMActivity"
+                android:screenOrientation="portrait" />       
+        <activity
+                android:name="com.changhong.xiami.activity.ArtistListActivity"
                 android:screenOrientation="portrait" />
+        <activity android:name="com.changhong.xiami.activity.ArtistDetailActivity"/>
+        
+        
 		<activity android:name="com.changhong.yinxiang.activity.AlarmMainActivity"/>
 		<activity android:name="com.changhong.yinxiang.alarm.SetAlarmActvity"
 		    />
