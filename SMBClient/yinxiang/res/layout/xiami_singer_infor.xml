@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/main_bg">
+
+    <!-- ip setting -->
+   <include layout="@layout/ip_setting"/>  
+   
+   <LinearLayout  android:layout_height="match_parent"
+            android:layout_width="match_parent"
+             android:layout_marginTop="@dimen/ip_banner_height"
+            android:orientation="vertical">
+    
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0dip"
+        android:layout_weight="1">
+       
+        <ImageView
+            android:id="@+id/singer_logo"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:scaleType="fitXY"/>"
+        
+        
+   <RelativeLayout   android:layout_width="match_parent"
+    android:layout_height="50dip"
+    android:layout_marginBottom="2dip"
+    android:layout_gravity="bottom"
+    
+    android:background="@drawable/musictab_bg">
+    
+      <TextView android:id="@+id/singer_countlikes"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentLeft="true"
+                android:gravity="center_vertical"
+                android:layout_marginLeft="30dip"
+                android:text="1000万" />
+      
+      <TextView android:id="@+id/singer_name"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"              
+                android:gravity="center_vertical"
+                android:layout_marginRight="30dip"
+                android:text="艺人" />    
+     </RelativeLayout>
+       
+    </FrameLayout>
+    
+     <ListView
+            android:id="@+id/song_list"
+              android:layout_width="fill_parent"
+             android:layout_height="0dip"
+             android:layout_marginTop="10dip"
+            android:layout_weight="1"
+            android:divider="@null" />
+    
+</LinearLayout>
+</RelativeLayout>

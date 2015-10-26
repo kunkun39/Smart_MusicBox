@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/main_bg">
+
+    <!-- ip setting -->
+   <include layout="@layout/ip_setting"/>  
+"
+
+    <!-- 主页面 -->                
+   <TextView android:id="@+id/singer_title"
+                android:layout_width="match_parent"
+                android:layout_height="50dip"
+                android:gravity="center_vertical"
+                android:layout_marginLeft="30dip"
+                android:layout_marginTop="@dimen/ip_banner_height"
+                android:text="艺人" />
+    
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@id/singer_title">
+
+        <ListView
+            android:id="@+id/singer_list"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center"
+            android:divider="@null" />
+
+        <com.changhong.xiami.artist.SideBar
+            android:id="@+id/singer_sidebar"
+            android:layout_width="30.0dip"
+            android:layout_height="fill_parent"
+            android:layout_gravity="right|center" />
+    </FrameLayout>
+    
+
+</RelativeLayout>
