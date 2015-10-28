@@ -56,5 +56,6 @@ public interface ClientSocketInterface {
 	//YD add for client heartBeat
     public static final int CLIENT_IP_POST_PORT = 9008;
 
-
+    //CYM add for TCP
+    public static final int TCP_ALARM_PORT=9010;
 }

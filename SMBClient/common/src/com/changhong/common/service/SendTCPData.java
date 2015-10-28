@@ -6,24 +6,24 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.LinkedList;
+import java.util.NoSuchElementException;
 
 import android.util.Log;
 
-public class SendTCPData implements Runnable {
+public class SendTCPData implements Runnable, ClientSocketInterface {
 	private static boolean isSendPlaying = false;
 	private LinkedList<String> sendDataList = null;
 	private LinkedList<String> remoteIPList = null;
 	private static SendTCPData sendRun = null;
-	private String desIP;
+	private String desIP = "0";
 	private Socket socket = null;
-	private final int TCPPort = 9010;
 
 	// 构造方法
 	private SendTCPData() {
 		// sendDataList = Collections.synchronizedList(new
 		// LinkedList<byte[]>());
 		sendDataList = new LinkedList<String>();
-		remoteIPList=new LinkedList<String>();
+		remoteIPList = new LinkedList<String>();
 	}
 
 	// 获取实例
@@ -35,11 +35,9 @@ public class SendTCPData implements Runnable {
 	}
 
 	// 添加数据进入sendDataList队列
-	public void addData(String data,String ip) {
-		synchronized (sendDataList) {
-			sendDataList.addLast(data);
-			remoteIPList.addLast(ip);
-		}
+	public void addData(String data, String ip) {
+		sendDataList.addLast(data);
+		remoteIPList.addLast(ip);
 	}
 
 	// 获取SOCKET
@@ -60,9 +58,19 @@ public class SendTCPData implements Runnable {
 		android.os.Process
 				.setThreadPriority(android.os.Process.THREAD_PRIORITY_DEFAULT);
 		String str = null;
-		synchronized (sendDataList) {
-			if (!sendDataList.isEmpty()) {
-				str = sendDataList.removeFirst();
+		if (!sendDataList.isEmpty()) {
+			str = sendDataList.removeFirst();
+		}
+		return str;
+	}
+
+	private String getFirstIP() {
+		String str = null;
+		if (!remoteIPList.isEmpty()) {
+			try {
+				str = remoteIPList.removeFirst();
+			} catch (NoSuchElementException e) {
+				e.printStackTrace();
 			}
 		}
 		return str;
@@ -76,30 +84,30 @@ public class SendTCPData implements Runnable {
 		this.desIP = desIP;
 	}
 
-
 	@Override
 	public void run() {
 		if (!isSendPlaying) {
 			return;
 		}
-		if (socket == null || socket.isClosed()) {
-			try {
-				socket = new Socket(desIP, TCPPort);
-			} catch (UnknownHostException e) {
-				// TODO Auto-generated catch block
-				// 连接失败的时候重发
-				
-				Log.i("mm", "new Socket");
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			if (null == socket) {
-				return;
-			}
-		}
-		String cache;
+		// if (socket == null || socket.isClosed()) {
+		// try {
+		// socket = new Socket(desIP, TCPPort);
+		// } catch (UnknownHostException e) {
+		// // TODO Auto-generated catch block
+		// // 连接失败的时候重发
+		//
+		// Log.i("mm", "new Socket failed");
+		// e.printStackTrace();
+		// } catch (IOException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
+		// if (null == socket) {
+		// return;
+		// }
+		// }
+		String cache=null;
+		String curIP=null;
 		PrintWriter socketoutput = null;
 		// 替换处
 		while (isSendPlaying) {
@@ -110,12 +118,12 @@ public class SendTCPData implements Runnable {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-			//如果目标IP更改则重新new socket
-			String curIP=remoteIPList.removeFirst();
-			if(!desIP.equals(curIP)){
+			// 如果目标IP更改则重新new socket
+			curIP = getFirstIP();
+			if (curIP!=null&&!desIP.equals(curIP)) {
 				try {
-					desIP=curIP;
-					socket=new Socket(desIP, TCPPort);
+					desIP = curIP;
+					socket = new Socket(desIP, TCP_ALARM_PORT);
 				} catch (UnknownHostException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -124,13 +132,13 @@ public class SendTCPData implements Runnable {
 					e.printStackTrace();
 				}
 			}
-			
-			
-			if (cache != null) {
+
+			if (cache != null&&curIP!=null) {
 				// 将控制包更新进状态map
 				try {
 					if (null == socketoutput) {
-						socketoutput = new PrintWriter(socket.getOutputStream(), true);
+						socketoutput = new PrintWriter(
+								socket.getOutputStream(), true);
 					}
 					socketoutput.println(cache);// 发送给服务器
 					socketoutput.flush();// 清空缓存
@@ -148,6 +156,8 @@ public class SendTCPData implements Runnable {
 					e.printStackTrace();
 				}
 			}
+			cache=null;
+			curIP=null;
 		}
 
 		try {
@@ -157,7 +167,7 @@ public class SendTCPData implements Runnable {
 			e.printStackTrace();
 		}
 		try {
-			if (!socket.isClosed()) {
+			if (socket!=null&&!socket.isClosed()) {
 				socket.close();
 			}
 		} catch (IOException e) {
@@ -165,9 +175,9 @@ public class SendTCPData implements Runnable {
 			e.printStackTrace();
 		}
 		sendDataList.clear();
+		remoteIPList.clear();
 		// socket断开后重新发送广播,重新连接
-		
-		
+
 	}
 
 	// 启动TCP接收线程
