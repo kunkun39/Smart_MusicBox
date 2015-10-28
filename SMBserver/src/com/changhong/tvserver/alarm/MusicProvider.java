@@ -48,9 +48,11 @@ public class MusicProvider extends ContentProvider {
 	@Override
 	public Uri insert(Uri arg0, ContentValues arg1) {
 		// TODO Auto-generated method stub
-		contentResolver.insert(arg0, arg1);
+		Uri uriReturn;
+		uriReturn=contentResolver.insert(arg0, arg1);
 		contentResolver.notifyChange(arg0, null);
-		return arg0;
+		
+		return uriReturn;
 	}
 
 	@Override
@@ -75,7 +77,7 @@ public class MusicProvider extends ContentProvider {
 		// TODO Auto-generated method stub
 		int count = 0;
 
-		contentResolver.update(arg0, arg1, arg2, arg3);
+		count=contentResolver.update(arg0, arg1, arg2, arg3);
 		contentResolver.notifyChange(arg0, null);
 		return count;
 	}

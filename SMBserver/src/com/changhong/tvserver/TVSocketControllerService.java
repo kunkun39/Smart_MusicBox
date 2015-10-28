@@ -1,5 +1,6 @@
 package com.changhong.tvserver;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -10,6 +11,8 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.net.SocketException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -38,14 +41,14 @@ import android.os.Message;
 import android.os.SystemClock;
 import android.util.JsonReader;
 import android.util.Log;
+
 import com.changhong.tvserver.alarm.ClockCommonData;
+import com.changhong.tvserver.autoctrl.ClientOnLineMonitorService;
 import com.changhong.tvserver.fedit.FileDowLoadTask;
 import com.changhong.tvserver.fedit.MusicEdit;
 import com.changhong.tvserver.search.Commonmethod;
 import com.changhong.tvserver.search.MallListActivity;
 import com.changhong.tvserver.search.SearchActivity;
-import com.changhong.tvserver.alarm.ClockCommonData;
-import com.changhong.tvserver.autoctrl.ClientOnLineMonitorService;
 import com.changhong.tvserver.touying.image.ImageShowPlayingActivity;
 import com.changhong.tvserver.touying.music.MusicViewPlayingActivity;
 import com.changhong.tvserver.touying.video.VideoViewPlayingActivity;
@@ -107,8 +110,13 @@ public class TVSocketControllerService extends Service {
 	// YD add 20150726 接收ClientOnLineMonitorService发送过来的自动控制命令广播。
 	private AutoCtrlCommandReceiver autoCtrlReceiver = null;
 	private UpdateInforReceiver updateInforReceiver = null;
-	private static String ACTION_UPDATE_FMINFOR= "com.changhong.FmStatus";
+	private static String ACTION_UPDATE_FMINFOR = "com.changhong.FmStatus";
 
+	/*
+	 * TCP server
+	 */
+	private ServerSocket mServerSocket;
+	public static final int TCP_ALARM_SERVER_PORT = 9010;
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -163,9 +171,9 @@ public class TVSocketControllerService extends Service {
 							t.vkey_input(109, 1);
 						} else if (msg1.equals("key:power")) {
 							Log.e(TAG, "key:power");
-//							t.vkey_input(0x7f01, 1);
-							t.vkey_input(116, 1);							
-						}else if (msg1.equals("key:mute")) {
+							// t.vkey_input(0x7f01, 1);
+							t.vkey_input(116, 1);
+						} else if (msg1.equals("key:mute")) {
 							Log.e(TAG, "key:mute");
 							t.vkey_input(113, 1);
 						} else if (msg1.equals("key:0")) {
@@ -244,14 +252,14 @@ public class TVSocketControllerService extends Service {
 							// 启动虾米音乐
 							Log.e(TAG, "key:xiami");
 							// t.vkey_input(0x190, 1);
-							startXiaMiMusic();				
+							startXiaMiMusic();
 
-						}else if(msg1.equals("key:autoctrl_on")){
-							  t.vkey_input(116, 1);							
-							  t.vkey_input(0x190, 1);
+						} else if (msg1.equals("key:autoctrl_on")) {
+							t.vkey_input(116, 1);
+							t.vkey_input(0x190, 1);
 
-						}else if(msg1.equals("key:autoctrl_off")){
-							  t.vkey_input(116, 1);							
+						} else if (msg1.equals("key:autoctrl_off")) {
+							t.vkey_input(116, 1);
 						}
 						// 选择输入源部�?
 						else if (msg1.equals("source:av1")) {
@@ -463,17 +471,21 @@ public class TVSocketControllerService extends Service {
 							Intent intent = new Intent("FinishActivity");
 							sendBroadcast(intent);
 						} else if (msg1.startsWith("fm:")) {
-							
-		                   Log.e("YDINFOR::", "++++++++++++++++++++++++++++++++start to FM++++++++++++++++++++++++++++++");
+
+							Log.e("YDINFOR::",
+									"++++++++++++++++++++++++++++++++start to FM++++++++++++++++++++++++++++++");
 							Intent intent = new Intent("com.changhong.fmname");
 							intent.putExtra("fmname", msg1.substring(3));
 							sendBroadcast(intent);
-							
-							//判断当前是否主页,不是，启动主页
-							if(!Commonmethod.isActivityForeground(TVSocketControllerService.this,"com.changhong.doplauncher.Launcher")){
-								t.vkey_input(102, 1);	
+
+							// 判断当前是否主页,不是，启动主页
+							if (!Commonmethod.isActivityForeground(
+									TVSocketControllerService.this,
+									"com.changhong.doplauncher.Launcher")) {
+								t.vkey_input(102, 1);
 							}
-			                   Log.e("YDINFOR::", "++++++++++++++++++++++++++++++++sendBroadcast(FM) end++++++++++++++++++++++++++++++");							
+							Log.e("YDINFOR::",
+									"++++++++++++++++++++++++++++++++sendBroadcast(FM) end++++++++++++++++++++++++++++++");
 						}
 
 						// 搜索音乐视频部分
@@ -508,14 +520,14 @@ public class TVSocketControllerService extends Service {
 
 		new send_heart_thread().start();
 		new get_command().start();
+		new TCPReceive().start();
 
 		// YD add 20150726 注册自动控制监控发送的广播
 		autoCtrlReceiver = new AutoCtrlCommandReceiver();
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(ClientOnLineMonitorService.ACTION_AUTOCTRL_COMMAND);
 		registerReceiver(autoCtrlReceiver, filter);
-		
-		
+
 		updateInforReceiver = new UpdateInforReceiver();
 		IntentFilter fmFilter = new IntentFilter();
 		fmFilter.addAction(ACTION_UPDATE_FMINFOR);
@@ -531,7 +543,7 @@ public class TVSocketControllerService extends Service {
 	 * DatagramSocket:一开始就创建�? DatagramPacket:接收一个创建一�? 这样免得发生阻塞
 	 */
 	private class send_heart_thread extends Thread {
-		
+
 		public void run() {
 			DatagramSocket dgSocket = null;
 			try {
@@ -607,7 +619,7 @@ public class TVSocketControllerService extends Service {
 									}
 								} catch (Exception e) {
 									e.printStackTrace();
-								}																							
+								}
 							}
 
 							/**
@@ -818,10 +830,11 @@ public class TVSocketControllerService extends Service {
 			String parameter1 = files.get(1);
 			String parameter2 = files.get(2);
 
-			if (editType.equals("copyToYinXiang")	|| editType.equals("clockRing")) {
+			if (editType.equals("copyToYinXiang")
+					|| editType.equals("clockRing")) {
 
-				FileDowLoadTask.creatFileDownLoad(this).startDownLoad(editType,parameter1,
-						parameter2);
+				FileDowLoadTask.creatFileDownLoad(this).startDownLoad(editType,
+						parameter1, parameter2);
 
 			} else {
 
@@ -860,7 +873,7 @@ public class TVSocketControllerService extends Service {
 						files.add(fileInfor);
 					}
 					reader.endArray();
-				}  else {
+				} else {
 					reader.skipValue();
 				}
 			}
@@ -875,7 +888,7 @@ public class TVSocketControllerService extends Service {
 
 			String command = files.get(0);
 			String parameter = files.get(1);
-			
+
 			// 创建Intent对象
 			Intent intent = new Intent();
 			// 设置Intent的Action属性
@@ -885,7 +898,7 @@ public class TVSocketControllerService extends Service {
 			intent.putExtra("parameter", parameter);
 			// 发送广播给ClientOnLineMonitorService
 			sendBroadcast(intent);
-		
+
 		} else {
 			Log.e(TAG, "no picture url");
 		}
@@ -901,25 +914,24 @@ public class TVSocketControllerService extends Service {
 		String[] keys = StringUtils.delimitedListToStringArray(str, "|");
 		ClockCommonData.getInstance().dealMsg(keys);
 	}
-	
-	
-	private void startXiaMiMusic(){
-		
-		//发送广播停止当前服务.
+
+	private void startXiaMiMusic() {
+
+		// 发送广播停止当前服务.
 		stopBackGroundServer("musicpure");
-		
-		//启动虾米音乐
+
+		// 启动虾米音乐
 		Intent intent = new Intent();
 		intent.setComponent(new ComponentName("com.xiami.tv",
 				"com.xiami.tv.activities.StartActivity"));
-		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK |Intent.FLAG_ACTIVITY_CLEAR_TASK);
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+				| Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		startActivity(intent);
 	}
-	
-	
-	private void stopBackGroundServer(String app){
-		//发送广播停止当前服务.
-	    Intent packageIntent =new Intent("com.changhong.action.start_package");
+
+	private void stopBackGroundServer(String app) {
+		// 发送广播停止当前服务.
+		Intent packageIntent = new Intent("com.changhong.action.start_package");
 		packageIntent.putExtra("extra", app);
 		sendBroadcast(packageIntent);
 	}
@@ -1027,8 +1039,8 @@ public class TVSocketControllerService extends Service {
 					e.printStackTrace();
 				}
 				if (!vedios.isEmpty()) {
-					
-				   stopBackGroundServer("TCMediaPlayer");
+
+					stopBackGroundServer("TCMediaPlayer");
 					Intent intent = new Intent(TVSocketControllerService.this,
 							TCMediaPlayer.class);
 					intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -1046,7 +1058,7 @@ public class TVSocketControllerService extends Service {
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		intent.putExtra("musicpath", msg);
-		intent.putExtra("musicTitle", "手机推送");		
+		intent.putExtra("musicTitle", "手机推送");
 		startActivity(intent);
 	}
 
@@ -1072,22 +1084,27 @@ public class TVSocketControllerService extends Service {
 				SearchActivity.handler.sendMessage(msg);
 			} else {
 				Intent intent = new Intent();
-				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK |Intent.FLAG_ACTIVITY_CLEAR_TASK);
-				intent.setClass(this, com.changhong.tvserver.search.SearchActivity.class);
+				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+						| Intent.FLAG_ACTIVITY_CLEAR_TASK);
+				intent.setClass(this,
+						com.changhong.tvserver.search.SearchActivity.class);
 				intent.putExtra(SearchActivity.keyWordsName, musickey);
 				startActivity(intent);
 			}
-		} else {		
-			
-			if (Commonmethod.isActivityForeground(this,"com.changhong.tvserver.search.MallListActivity")) {
+		} else {
+
+			if (Commonmethod.isActivityForeground(this,
+					"com.changhong.tvserver.search.MallListActivity")) {
 				Message msg = new Message();
 				msg.what = 1;
 				msg.obj = searchContent;
 				MallListActivity.handler.sendMessage(msg);
-			} else {					
+			} else {
 				Intent intent = new Intent();
-				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK |Intent.FLAG_ACTIVITY_CLEAR_TASK);
-				intent.setClass(this, com.changhong.tvserver.search.MallListActivity.class);
+				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+						| Intent.FLAG_ACTIVITY_CLEAR_TASK);
+				intent.setClass(this,
+						com.changhong.tvserver.search.MallListActivity.class);
 				intent.putExtra("command", "movie&tv:" + searchContent);
 				startActivity(intent);
 			}
@@ -1119,13 +1136,14 @@ public class TVSocketControllerService extends Service {
 				}
 				cursor.close();
 			}
-			
-//			//增加控制状态到文件中。
-//			JSONObject autoCtrlState = new JSONObject();
-//			String autoCtrl=ClientOnLineMonitorService.isAutoControl()?"on":"off";
-//			autoCtrlState.put("FMname", "autoCtrl");
-//			autoCtrlState.put("state", autoCtrl);
-//			all.put(autoCtrlState);
+
+			// //增加控制状态到文件中。
+			// JSONObject autoCtrlState = new JSONObject();
+			// String
+			// autoCtrl=ClientOnLineMonitorService.isAutoControl()?"on":"off";
+			// autoCtrlState.put("FMname", "autoCtrl");
+			// autoCtrlState.put("state", autoCtrl);
+			// all.put(autoCtrlState);
 
 			/**
 			 * 输入FM列表到文�?
@@ -1167,7 +1185,8 @@ public class TVSocketControllerService extends Service {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			String action = intent.getAction();
-			if (action	.equals(ClientOnLineMonitorService.ACTION_AUTOCTRL_COMMAND)) {
+			if (action
+					.equals(ClientOnLineMonitorService.ACTION_AUTOCTRL_COMMAND)) {
 				msg1 = intent.getStringExtra("cmd");
 				Log.i(TAG, "autoCtrlCommand is " + msg1);
 				handler.sendEmptyMessage(1);
@@ -1175,19 +1194,75 @@ public class TVSocketControllerService extends Service {
 		}
 
 	}
-	
-	
+
 	private class UpdateInforReceiver extends BroadcastReceiver {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			String action = intent.getAction();
-			if (action	.equals(ACTION_UPDATE_FMINFOR)) {
+			if (action.equals(ACTION_UPDATE_FMINFOR)) {
 				initFM();
 			}
-		} 
+		}
 	}
-	
+
+	/*
+	 * TCP receiver
+	 */
+
+	private class TCPReceive extends Thread {
+		BufferedReader in = null;
+		String content = "";
+		Socket socketclient = null;
+		String line = "";
+
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+			try {
+
+				if (null == mServerSocket) {
+					mServerSocket = new ServerSocket(TCP_ALARM_SERVER_PORT);
+				}
+
+				// while (true) {
+				Log.i("mmmm", "tcp start");
+				// 获取音响端发送的socket的对象
+				socketclient = mServerSocket.accept();
+				in = new BufferedReader(new InputStreamReader(
+						socketclient.getInputStream()));
+				// 接收从音响送来的数据
+				line = "";
+				while ((line = in.readLine()) != null) {
+					content += line;
+				}
+				Log.i("mmmm:tcp", content);
+				// 发送信息给主线程，返回响应结果
+				msg1 = content;
+				handler.sendEmptyMessage(1);
+				// }
+			} catch (IOException e) {
+				// TODO 自动生成的 catch 块
+				e.printStackTrace();
+
+			} finally {
+
+				try {
+					if (null != in) {
+						in.close();
+						in = null;
+					}
+					if (null != socketclient) {
+						socketclient.close();
+						socketclient = null;
+					}
+				} catch (IOException e) {
+					// TODO 自动生成的 catch 块
+					e.printStackTrace();
+				}
+			}
+		}
+	}
 
 	/***************************************************** YD add 20150726 end ********************************************************/
 
@@ -1195,9 +1270,9 @@ public class TVSocketControllerService extends Service {
 	public void onDestroy() {
 
 		// 取消自动控制广播
-		if(null != autoCtrlReceiver){
-				unregisterReceiver(autoCtrlReceiver);
-				autoCtrlReceiver=null;
+		if (null != autoCtrlReceiver) {
+			unregisterReceiver(autoCtrlReceiver);
+			autoCtrlReceiver = null;
 		}
 		super.onDestroy();
 
