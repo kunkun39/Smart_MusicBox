@@ -129,6 +129,21 @@ public class XMMusicData {
 		return albums;
 	}
 	
+	
+	/*
+	 * 
+	 * 获取本周热门专辑
+	 */
+	public List<OnlineAlbum> getWeekHotAlbumsSync(int pageSize,int pageIndex){
+		Pair<QueryInfo, List<OnlineAlbum>> results=mXiamiSDK.getWeekHotAlbumsSync(pageSize, pageIndex);
+		List<OnlineAlbum> albums=results.second;
+		return albums;
+	}
+	
+	
+	
+	
+	
 	/*
 	 * 初始化排行榜类型
 	 */

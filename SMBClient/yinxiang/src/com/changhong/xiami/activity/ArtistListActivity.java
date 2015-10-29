@@ -21,8 +21,8 @@ import com.changhong.xiami.artist.PinyinComparator;
 import com.changhong.xiami.artist.SideBar;
 import com.changhong.xiami.artist.SideBar.OnTouchingLetterChangedListener;
 import com.changhong.xiami.artist.SortAdapter;
-import com.changhong.xiami.artist.SortModel;
 import com.changhong.xiami.data.XMMusicData;
+import com.changhong.xiami.data.XiamiDataModel;
 import com.changhong.yinxiang.R;
 import com.changhong.yinxiang.activity.BaseActivity;
 import com.changhong.yinxiang.utils.Configure;
@@ -48,7 +48,7 @@ public class ArtistListActivity extends BaseActivity {
 	 * 汉字转换成拼音的类
 	 */
 	private CharacterParser characterParser;
-	private List<SortModel> SourceDataList = null;
+	private List<XiamiDataModel> SourceDataList = null;
 
 	/**
 	 * 根据拼音来排列ListView里面的数据类
@@ -96,7 +96,7 @@ public class ArtistListActivity extends BaseActivity {
 					public void onItemClick(AdapterView<?> parent,
 							View view, int position, long id) {
 						
-						SortModel model = (SortModel) adapter.getItem(position);			
+						XiamiDataModel model = (XiamiDataModel) adapter.getItem(position);			
 						long artistID=model.getId();
 						if(artistID>0){
 								Intent intent=new Intent(ArtistListActivity.this, ArtistDetailActivity.class);
@@ -208,16 +208,16 @@ public class ArtistListActivity extends BaseActivity {
 	 *            数据
 	 * @return SortModel列表
 	 */
-	private List<SortModel> filledData(List<OnlineArtist> artists) {
+	private List<XiamiDataModel> filledData(List<OnlineArtist> artists) {
 
-		List<SortModel> sortList = new ArrayList<SortModel>();
+		List<XiamiDataModel> sortList = new ArrayList<XiamiDataModel>();
 
 		int size = artists.size();
 		for (int i = 0; i < size; i++) {
 
 			OnlineArtist artist = artists.get(i);
 			String singer = artist.getName();
-			SortModel sortModel = new SortModel();
+			XiamiDataModel sortModel = new XiamiDataModel();
 			sortModel.setId(artist.getId());
 			sortModel.setName(singer);
 			sortModel.setImgUrl(artist.getImageUrl(Configure.IMAGE_SIZE1));

@@ -3,6 +3,7 @@ package com.changhong.xiami.artist;
 import java.util.LinkedList;
 import java.util.List;
 import com.baidu.android.common.logging.Log;
+import com.changhong.xiami.data.XiamiDataModel;
 import com.changhong.yinxiang.R;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -16,7 +17,7 @@ import android.widget.TextView;
 
 public class SortAdapter extends BaseAdapter implements SectionIndexer {
 
-	List<SortModel> mSingerList = new LinkedList<SortModel>();
+	List<XiamiDataModel> mSingerList = new LinkedList<XiamiDataModel>();
 	private Context mContext;
 
 	public SortAdapter(Context mContext) {
@@ -28,7 +29,7 @@ public class SortAdapter extends BaseAdapter implements SectionIndexer {
 	 * 
 	 * @param list
 	 */
-	public void updateListView(List<SortModel> list) {
+	public void updateListView(List<XiamiDataModel> list) {
 		SingerListClear();
 		mSingerList.addAll(list);
 		Log.e("YDINFOR::", "start to update   sortAdapter......... ");
@@ -63,7 +64,7 @@ public class SortAdapter extends BaseAdapter implements SectionIndexer {
    @Override
 	public View getView(final int position, View view, ViewGroup arg2) {
 		ViewHolder viewHolder = null;
-		final SortModel mContent = mSingerList.get(position);
+		final XiamiDataModel mContent = mSingerList.get(position);
 		if (view == null) {
 			viewHolder = new ViewHolder();
 			view = LayoutInflater.from(mContext).inflate(R.layout.sort_item,

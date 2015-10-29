@@ -1,14 +1,19 @@
-package com.changhong.xiami.artist;
+package com.changhong.xiami.data;
 
 import android.graphics.Bitmap;
 
-public class SortModel {
+public class XiamiDataModel {
 
-	private long id;   //歌手id
-	private String name;   //显示的数据
-	private String imgUrl; //歌手图片URL
-	private Bitmap image=null; //歌手图片	
+	private long id;   //数据id
+	private String name;   //名称
+	private String imgUrl; //图片URL
+	private Bitmap image=null; //图片	
+	
+	//用于歌手按字符排序
 	private String sortLetters;  //显示数据拼音的首字母
+	
+	private String content;  //详情描述
+
 	
 	public String getName() {
 		return name;
@@ -41,5 +46,11 @@ public class SortModel {
 	}
 	public void setId(long id) {
 		this.id = id;
+	}
+	public String getContent() {
+		return content;
+	}
+	public void setContent(String content) {
+		this.content = content;
 	}
 }
