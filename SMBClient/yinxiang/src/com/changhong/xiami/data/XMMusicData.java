@@ -75,8 +75,11 @@ public class XMMusicData {
 	public static XMMusicData getInstance(Context con) {
 		if (null == xMMusicData) {
 			xMMusicData = new XMMusicData();
-			mXiamiSDK = new XiamiSDK(con, KEY, SECRET);
+			
 			initRankSong();
+		}
+		if(null==mXiamiSDK){
+			mXiamiSDK = new XiamiSDK(con, KEY, SECRET);
 		}
 		return xMMusicData;
 	}

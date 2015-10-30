@@ -1,5 +1,10 @@
 package com.changhong.xiami.activity;
 
+/*
+ * 显示对应专辑ID的歌曲列表
+ * 传入参数的名字为 albumID
+ * BY CYM
+ */
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,16 +19,18 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.baidu.android.common.logging.Log;
+import com.changhong.common.widgets.BoxSelectAdapter;
 import com.changhong.xiami.data.MusicsListAdapter;
 import com.changhong.xiami.data.XMMusicData;
 import com.changhong.yinxiang.R;
+import com.changhong.yinxiang.activity.BaseActivity;
 import com.xiami.sdk.entities.LanguageType;
 import com.xiami.sdk.entities.OnlineAlbum;
 import com.xiami.sdk.entities.OnlineSong;
 
-public class XiamiMusicListActivity extends Activity {
+public class XiamiMusicListActivity extends BaseActivity {
 
-	private Button back;
 	private TextView albumName;
 	private ListView musicsList;
 	private MusicsListAdapter adapter;
@@ -33,6 +40,8 @@ public class XiamiMusicListActivity extends Activity {
 	private long albumID=0;
 	
 	private int albumIndex = 0;
+	
+
 
 	private Handler mhandler = new Handler() {
 
@@ -60,23 +69,30 @@ public class XiamiMusicListActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-
-		initView();
-		initData();
+		
 		
 	}
 
-	private void initView() {
+	protected void initView() {
 		setContentView(R.layout.xiami_music_list);
+		
+		/**
+		 * IP连接部分
+		 */
+		title = (TextView) findViewById(R.id.title);
 		back = (Button) findViewById(R.id.btn_back);
+		clients = (ListView) findViewById(R.id.clients);
+		listClients = (Button) findViewById(R.id.btn_list);
+		
+		
 		albumName = (TextView) findViewById(R.id.ablum_name);
 		musicsList = (ListView) findViewById(R.id.musics_list);
 		adapter = new MusicsListAdapter(XiamiMusicListActivity.this);
 		musicsList.setAdapter(adapter);
 	}
 
-	private void initData() {
-
+	protected void initData() {
+		super.initData();
 		// 启动activity的时候传进参数名为"musicsAlbum"的专辑。
 		Intent intent = getIntent();
 		albumID = intent.getIntExtra("albumID", 0);
@@ -106,7 +122,6 @@ public class XiamiMusicListActivity extends Activity {
 						LanguageType.huayu, 10, 1);
 				album = albumList.get(albumIndex);
 				albumID=album.getAlbumId();
-				
 				//根据ID获取专辑相信信息，带歌曲列表
 				album = XMMusicData.getInstance(XiamiMusicListActivity.this)
 						.getDetailAlbum(albumID);

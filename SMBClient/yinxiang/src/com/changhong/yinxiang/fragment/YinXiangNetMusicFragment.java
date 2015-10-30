@@ -24,6 +24,7 @@ import com.changhong.common.service.ClientSendCommandService;
 import com.changhong.common.system.MyApplication;
 import com.changhong.common.widgets.BoxSelectAdapter;
 import com.changhong.xiami.activity.ArtistListActivity;
+import com.changhong.xiami.activity.XiamiMusicListActivity;
 import com.changhong.yinxiang.R;
 
 public class YinXiangNetMusicFragment extends Fragment{
@@ -66,14 +67,17 @@ public class YinXiangNetMusicFragment extends Fragment{
         		// TODO Auto-generated method stub
         		MyApplication.vibrator.vibrate(100);
         		//QQ音乐入口
-        		Intent mIntent = getActivity().getPackageManager().getLaunchIntentForPackage("com.tencent.qqmusic");
-        		try {
-        			startActivity(mIntent);
-        		} catch (Exception e) {
-        			Log.e(TAG, "startActivity com.tencent.qqmusic  err ! ");
-        			Toast.makeText(getActivity(), "启动QQ音乐失败，请确定您是否已安装QQ音乐！", Toast.LENGTH_LONG).show();
-        		}
+//        		Intent mIntent = getActivity().getPackageManager().getLaunchIntentForPackage("com.tencent.qqmusic");
+//        		try {
+//        			startActivity(mIntent);
+//        		} catch (Exception e) {
+//        			Log.e(TAG, "startActivity com.tencent.qqmusic  err ! ");
+//        			Toast.makeText(getActivity(), "启动QQ音乐失败，请确定您是否已安装QQ音乐！", Toast.LENGTH_LONG).show();
+//        		}
         		 
+        		//测试代码
+        		Intent intent=new Intent(getActivity(),XiamiMusicListActivity.class);
+        		startActivity(intent);
         		
         	}
         });
