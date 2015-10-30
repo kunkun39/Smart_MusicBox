@@ -573,23 +573,22 @@ public class SetAlarmActvity extends Activity {
 			// 考虑是否用TCP发送数据回音响端???
 			switch (state) {
 			case update:
-				ClientSendCommandService.msg = Alarm.update + curentId + "|"
-						+ str;
-				// content = Alarm.update + curentId + "|" + str;
+//				ClientSendCommandService.msg = Alarm.update + curentId + "|"
+//						+ str;
+				 content = Alarm.update + curentId + "|" + str;
 				break;
 			case add:
 
-				ClientSendCommandService.msg = Alarm.insert + str;
-				// ClientSendCommandService.handler.sendEmptyMessage(1);
-				// content = Alarm.update + curentId + "|" + str;
+//				ClientSendCommandService.msg = Alarm.insert + str;
+				 content = Alarm.update + curentId + "|" + str;
 				break;
 			default:
 				break;
 			}
-			// if (content != null && ip != null) {
-			// sendTCP.addData(content, ip);
-			// }
-			ClientSendCommandService.handler.sendEmptyMessage(1);
+			 if (content != null && ip != null) {
+			 sendTCP.addData(content, ip);
+			 }
+//			ClientSendCommandService.handler.sendEmptyMessage(1);
 		} else {
 			Toast.makeText(this, "音乐列表不能为空，请添加对应的音乐文件,此次操作无效!",
 					Toast.LENGTH_SHORT).show();

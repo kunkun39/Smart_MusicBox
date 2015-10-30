@@ -36,7 +36,7 @@ public class MusicsListAdapter extends BaseAdapter {
 	@Override
 	public int getCount() {
 		// TODO Auto-generated method stub
-		return myList.size();
+		return myList != null ? myList.size() : 0;
 	}
 
 	@Override
@@ -71,7 +71,7 @@ public class MusicsListAdapter extends BaseAdapter {
 			holder = (DataHolder) convertView.getTag();
 		}
 		OnlineSong song=myList.get(position);
-		holder.index.setText(position);
+		holder.index.setText(String.valueOf(position + 1));
 		holder.title.setText(song.getSongName());
 		holder.artist.setText(song.getArtistName());
 

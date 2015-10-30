@@ -103,7 +103,10 @@
 		<activity android:name="com.changhong.yinxiang.activity.AlarmMainActivity"/>
 		<activity android:name="com.changhong.yinxiang.alarm.SetAlarmActvity"
 		    />
+		
 		<activity android:name="com.changhong.yinxiang.alarm.DeleteAlarmActivity"/>
+        <activity android:name="com.changhong.xiami.activity.XiamiMusicListActivity"/>
+        
         <service android:name="com.changhong.yinxiang.nanohttpd.HTTPDService" />
 
         <service android:name=".service.ClientGetCommandService" android:enabled="true" android:exported="true" android:priority="1000"/>

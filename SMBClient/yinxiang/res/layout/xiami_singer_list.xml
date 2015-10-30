@@ -7,7 +7,7 @@
 
     <!-- ip setting -->
    <include layout="@layout/ip_setting"/>  
-"
+
 
     <!-- 主页面 -->                
    <TextView android:id="@+id/singer_title"

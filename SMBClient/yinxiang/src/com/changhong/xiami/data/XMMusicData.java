@@ -128,6 +128,14 @@ public class XMMusicData {
 		List<OnlineAlbum> albums=results.second;
 		return albums;
 	}
+	/*
+	 * 获取专辑列表详情
+	 */
+	public OnlineAlbum getDetailAlbum(long id){
+		OnlineAlbum album;
+		album=mXiamiSDK.getAlbumsDetailSync(id);
+		return album;
+	}
 	
 	
 	/*
