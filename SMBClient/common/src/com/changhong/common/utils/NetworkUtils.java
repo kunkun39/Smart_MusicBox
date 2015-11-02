@@ -103,6 +103,27 @@ public class NetworkUtils {
         return NetworkStatus.NET_NULL;
     }
     
+    
+    /**
+     * 获取当前WIFI信息
+     * @param context
+     * @return
+     */
+    public static WifiInfo getCurWifiInfor(Context context){
+    	  WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+          WifiInfo currentConnectWifi = wifiManager.getConnectionInfo();
+          return currentConnectWifi;
+    }
+    
+    
+    
+    
+    public static String getGPSInfor(Context context){
+    	String repgs="116.396574,39.992706";
+    	
+    	return repgs;
+    }
+    
     /**
      * 验证ip是否合法
      */
