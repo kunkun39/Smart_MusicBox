@@ -1,5 +1,9 @@
 package com.changhong.xiami.data;
 
+import java.util.List;
+
+import com.xiami.sdk.entities.OnlineSong;
+
 import android.graphics.Bitmap;
 
 public class XiamiDataModel {
@@ -10,10 +14,9 @@ public class XiamiDataModel {
 	private Bitmap image=null; //图片	
 	
 	//用于歌手按字符排序
-	private String sortLetters;  //显示数据拼音的首字母
-	
+	private String sortLetters;  //显示数据拼音的首字母	
 	private String content;  //详情描述
-
+	private Object   otherObj;
 	
 	public String getName() {
 		return name;
@@ -49,6 +52,12 @@ public class XiamiDataModel {
 	}
 	public String getContent() {
 		return content;
+	}
+	public Object getOtherObj() {
+		return otherObj;
+	}
+	public void setOtherObj(Object otherObj) {
+		this.otherObj = otherObj;
 	}
 	public void setContent(String content) {
 		this.content = content;

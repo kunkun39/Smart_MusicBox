@@ -7,7 +7,6 @@ package com.changhong.xiami.activity;
  */
 import java.util.ArrayList;
 import java.util.List;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,10 +17,10 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import com.baidu.android.common.logging.Log;
 import com.changhong.common.widgets.BoxSelectAdapter;
 import com.changhong.xiami.data.MusicsListAdapter;
+import com.changhong.xiami.data.SceneInfor;
 import com.changhong.xiami.data.XMMusicData;
 import com.changhong.yinxiang.R;
 import com.changhong.yinxiang.activity.BaseActivity;
@@ -36,12 +35,13 @@ public class XiamiMusicListActivity extends BaseActivity {
 	private MusicsListAdapter adapter;
 	private List<OnlineSong> songsList;
 	private OnlineAlbum album;
-	
-	private long albumID=0;
-	
+	private long albumID=0;	
 	private int albumIndex = 0;
-	
+    private final int MUSIC_TYPE_ALBUM=1;
+    private final int MUSIC_TYPE_SCENE=2;
+    private final int MUSIC_ALBUM_UPDATE=3;
 
+    private int curMusicType=1;
 
 	private Handler mhandler = new Handler() {
 
@@ -49,7 +49,7 @@ public class XiamiMusicListActivity extends BaseActivity {
 		public void handleMessage(Message msg) {
 			// TODO Auto-generated method stub
 			switch (msg.what) {
-			case 1:
+			case MUSIC_ALBUM_UPDATE:  //专辑音乐
 				if (album != null) {
 					String title = album.getAlbumName();
 					songsList = album.getSongs();
@@ -57,8 +57,18 @@ public class XiamiMusicListActivity extends BaseActivity {
 					albumName.setText(title);
 				}
 				break;
-			case 2:
-				
+			case MUSIC_TYPE_ALBUM: //专辑音乐类型
+				albumID=getIntent().getIntExtra("albumID", 0);
+				getAlbumList();			
+				break;
+			case MUSIC_TYPE_SCENE: //场景音乐
+				SceneInfor curScene=(SceneInfor) getIntent().getSerializableExtra("sceneInfor");
+				if(null != curScene){
+						String title = curScene.getSceneName();
+						songsList=curScene.getSongsList();
+						adapter.setData(songsList);
+						albumName.setText(title);
+				}
 				break;
 			}
 		}
@@ -93,23 +103,21 @@ public class XiamiMusicListActivity extends BaseActivity {
 
 	protected void initData() {
 		super.initData();
-		// 启动activity的时候传进参数名为"musicsAlbum"的专辑。
-		Intent intent = getIntent();
-		albumID = intent.getIntExtra("albumID", 0);
-
+		// 启动activity的时候传进参数名为"musicsAlbum"的专辑。		
+		curMusicType=getIntent().getIntExtra("musicType", 1);	
+       
 		back.setOnClickListener(new OnClickListener() {
-
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				finish();
 			}
-		});
-		
-		getAlbumList();
+		});			
+	   mhandler.sendEmptyMessage(curMusicType);
 	}
 
 	private void getAlbumList() {
+		
 		new Thread(new Runnable() {
 
 			@Override

@@ -40,6 +40,7 @@ public class YinXiangNetMusicActivity extends Activity {
     private Button back = null;
     private Button qqButton = null;
     private Button wyButton = null;
+    
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

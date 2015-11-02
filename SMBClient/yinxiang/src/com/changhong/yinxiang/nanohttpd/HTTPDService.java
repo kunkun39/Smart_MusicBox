@@ -18,7 +18,8 @@ import java.util.List;
  */
 public class HTTPDService extends Service {
 
-    public final static int HTTP_PORT = 8888;
+//    public final static int HTTP_PORT = 8888;
+    public final static int HTTP_PORT = 8899;
 
     /**
      * 默认的手机存储目录

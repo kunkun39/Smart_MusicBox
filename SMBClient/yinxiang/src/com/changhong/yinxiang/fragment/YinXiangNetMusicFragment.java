@@ -23,8 +23,11 @@ import android.widget.Toast;
 import com.changhong.common.service.ClientSendCommandService;
 import com.changhong.common.system.MyApplication;
 import com.changhong.common.widgets.BoxSelectAdapter;
+import com.changhong.xiami.activity.AlbumListActivity;
 import com.changhong.xiami.activity.ArtistListActivity;
+import com.changhong.xiami.activity.SceneActivity;
 import com.changhong.xiami.activity.XiamiMusicListActivity;
+
 import com.changhong.yinxiang.R;
 
 public class YinXiangNetMusicFragment extends Fragment{
@@ -129,7 +132,7 @@ public class YinXiangNetMusicFragment extends Fragment{
     
    private void startXiaMiMusic(){		
 		//启动虾米音乐
-		Intent intent = new Intent(getActivity(),ArtistListActivity.class);
+		Intent intent = new Intent(getActivity(),SceneActivity.class);
 		startActivity(intent);
 	}
 

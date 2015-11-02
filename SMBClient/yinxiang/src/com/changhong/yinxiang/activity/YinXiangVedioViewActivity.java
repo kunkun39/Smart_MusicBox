@@ -8,7 +8,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.*;
 
-import com.alibaba.fastjson.JSONObject;
 import com.changhong.common.service.ClientSendCommandService;
 import com.changhong.common.system.MyApplication;
 import com.changhong.common.utils.NetworkUtils;
@@ -18,6 +17,7 @@ import com.changhong.yinxiang.R;
 import com.changhong.yinxiang.nanohttpd.HTTPDService;
 import com.changhong.yinxiang.vedio.YinXiangVedioAdapter;
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileWriter;

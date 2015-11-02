@@ -15,6 +15,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.util.Pair;
 
 import com.xiami.sdk.XiamiSDK;
@@ -27,6 +28,7 @@ import com.xiami.sdk.entities.OnlineCollect;
 import com.xiami.sdk.entities.OnlineSong;
 import com.xiami.sdk.entities.QueryInfo;
 import com.xiami.sdk.entities.RankType;
+import com.xiami.sdk.entities.SceneSongs;
 
 public class XMMusicData {
 
@@ -147,11 +149,21 @@ public class XMMusicData {
 	 */
 	public List<OnlineAlbum> getWeekHotAlbumsSync(int pageSize,int pageIndex){
 		Pair<QueryInfo, List<OnlineAlbum>> results=mXiamiSDK.getWeekHotAlbumsSync(pageSize, pageIndex);
-		List<OnlineAlbum> albums=results.second;
-		return albums;
+		if(null != results)return results.second;
+		return null;
 	}
 	
 	
+	
+	/*
+	 * 
+	 * 获取专辑详情
+	 */
+	public OnlineAlbum getAlbumsDetailSync(long albumid){
+		OnlineAlbum result=mXiamiSDK.getAlbumsDetailSync(albumid);
+		if(null != result)return result;
+		return null;
+	}
 	
 	
 	
@@ -159,17 +171,17 @@ public class XMMusicData {
 	 * 初始化排行榜类型
 	 */
 	public static void initRankSong(){
-		 	RANK_LIST_TITLE.add("虾米音乐榜（全部）");   RANK_LIST_TYPE.add(RankType.music_all);
-	        RANK_LIST_TITLE.add("虾米音乐榜（欧美）");   RANK_LIST_TYPE.add(RankType.music_oumei);
-	        RANK_LIST_TITLE.add("虾米音乐榜（华语）");   RANK_LIST_TYPE.add(RankType.music_huayu);
-	        RANK_LIST_TITLE.add("虾米新歌榜（全部）");   RANK_LIST_TYPE.add(RankType.newmusic_all);
-	        RANK_LIST_TITLE.add("虾米新歌榜（欧美）");   RANK_LIST_TYPE.add(RankType.newmusic_oumei);
-	        RANK_LIST_TITLE.add("虾米新歌榜（华语）");   RANK_LIST_TYPE.add(RankType.newmusic_huayu);
-	        RANK_LIST_TITLE.add("Hito中文排行榜");   RANK_LIST_TYPE.add(RankType.hito);
-	        RANK_LIST_TITLE.add("香港劲歌金榜");   RANK_LIST_TYPE.add(RankType.jingge);
-	        RANK_LIST_TITLE.add("英国UK单曲榜");   RANK_LIST_TYPE.add(RankType.uk);
-	        RANK_LIST_TITLE.add("虾米原创榜");   RANK_LIST_TYPE.add(RankType.music_original);
-	        RANK_LIST_TITLE.add("虾米Demo榜");   RANK_LIST_TYPE.add(RankType.music_demo);
+//		 	RANK_LIST_TITLE.add("虾米音乐榜（全部）");   RANK_LIST_TYPE.add(RankType.music_all);
+//	        RANK_LIST_TITLE.add("虾米音乐榜（欧美）");   RANK_LIST_TYPE.add(RankType.music_oumei);
+//	        RANK_LIST_TITLE.add("虾米音乐榜（华语）");   RANK_LIST_TYPE.add(RankType.music_huayu);
+//	        RANK_LIST_TITLE.add("虾米新歌榜（全部）");   RANK_LIST_TYPE.add(RankType.newmusic_all);
+//	        RANK_LIST_TITLE.add("虾米新歌榜（欧美）");   RANK_LIST_TYPE.add(RankType.newmusic_oumei);
+//	        RANK_LIST_TITLE.add("虾米新歌榜（华语）");   RANK_LIST_TYPE.add(RankType.newmusic_huayu);
+//	        RANK_LIST_TITLE.add("Hito中文排行榜");   RANK_LIST_TYPE.add(RankType.hito);
+//	        RANK_LIST_TITLE.add("香港劲歌金榜");   RANK_LIST_TYPE.add(RankType.jingge);
+//	        RANK_LIST_TITLE.add("英国UK单曲榜");   RANK_LIST_TYPE.add(RankType.uk);
+//	        RANK_LIST_TITLE.add("虾米原创榜");   RANK_LIST_TYPE.add(RankType.music_original);
+//	        RANK_LIST_TITLE.add("虾米Demo榜");   RANK_LIST_TYPE.add(RankType.music_demo);
 	}
 	
 	/*
@@ -235,6 +247,15 @@ public class XMMusicData {
 		return mBitmap;
 	}
 	
+	
+	
+	public List<SceneSongs>  getRecommendSceneSongs(String gps, String ssid, String bssid){
+		
+		Log.e("YDINFOR", "++++++++++++++++getRecommendSceneSongs()+++++++++++++++++++++++++++++");
+//		mXiamiSDK.enableLog(true);
+		List<SceneSongs> results=mXiamiSDK.getRecommendSceneSongs(gps,ssid,bssid);
+		return results;
+	}
 	
 	/*
 	 * 根据场景推荐歌曲
@@ -305,4 +326,6 @@ public class XMMusicData {
 	}
 
 
+    
+    
 }
