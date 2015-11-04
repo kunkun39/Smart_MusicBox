@@ -71,7 +71,13 @@ public class ClientSendCommandService extends Service implements ClientSocketInt
     public static int  curFMIndex = -1;
     
    private boolean isFirst=true;
-
+   /**
+    * TCP RUNNABLE
+    */
+   private String  tcpCommond;
+   private static SendTCPData sendTCP=null;
+   
+   
    //更新广播信息
    public static final String  ACTION_FMINFOR_UPDATE="com.changhong.updateFM";
     @Override
@@ -268,6 +274,17 @@ public class ClientSendCommandService extends Service implements ClientSocketInt
                                 searchApplicationFinished = true;
                             }
                             break;
+                        case 7:
+                        	//发送TCP命令
+                        	tcpCommond=(String)msg1.obj;
+                        	if(serverIP!=null&&tcpCommond!=null){
+                        	if(null==sendTCP){
+                        		sendTCP=SendTCPData.getInstace();
+                        		sendTCP.startPlaying();
+                        	}
+                        	sendTCP.addData(tcpCommond, serverIP);
+                        	}
+                        	break;
                         default: {
                             break;
                         }
@@ -410,6 +427,17 @@ public class ClientSendCommandService extends Service implements ClientSocketInt
 				}
 		    	handler.sendEmptyMessage(2);
 		    	isFirst=false;
+    	}
+    }
+    
+    /*
+     * 
+     * stop tcp runnable
+     */
+    public static void stopTCP(){
+    	if(sendTCP!=null){
+    		sendTCP.stopPlaying();
+    		sendTCP=null;
     	}
     }
 }

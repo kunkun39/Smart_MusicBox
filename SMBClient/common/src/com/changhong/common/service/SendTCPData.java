@@ -36,8 +36,12 @@ public class SendTCPData implements Runnable, ClientSocketInterface {
 
 	// 添加数据进入sendDataList队列
 	public void addData(String data, String ip) {
-		sendDataList.addLast(data);
-		remoteIPList.addLast(ip);
+		synchronized (sendDataList) {
+
+			remoteIPList.addLast(ip);
+			sendDataList.addLast(data);
+
+		}
 	}
 
 	// 获取SOCKET
@@ -58,8 +62,10 @@ public class SendTCPData implements Runnable, ClientSocketInterface {
 		android.os.Process
 				.setThreadPriority(android.os.Process.THREAD_PRIORITY_DEFAULT);
 		String str = null;
-		if (!sendDataList.isEmpty()) {
-			str = sendDataList.removeFirst();
+		synchronized (sendDataList) {
+			if (!sendDataList.isEmpty()) {
+				str = sendDataList.removeFirst();
+			}
 		}
 		return str;
 	}
@@ -106,12 +112,12 @@ public class SendTCPData implements Runnable, ClientSocketInterface {
 		// return;
 		// }
 		// }
-		String cache=null;
-		String curIP=null;
+		String cache = null;
+		String curIP = null;
 		PrintWriter socketoutput = null;
 		// 替换处
 		while (isSendPlaying) {
-			cache = getFirstData();
+			
 			try {
 				Thread.currentThread().sleep(100);
 			} catch (InterruptedException e1) {
@@ -120,9 +126,13 @@ public class SendTCPData implements Runnable, ClientSocketInterface {
 			}
 			// 如果目标IP更改则重新new socket
 			curIP = getFirstIP();
-			if (curIP!=null&&!desIP.equals(curIP)) {
+			cache = getFirstData();
+			if (curIP != null && !desIP.equals(curIP)) {
 				try {
 					desIP = curIP;
+					if (socket != null && !socket.isClosed()) {
+						socket.close();
+					}
 					socket = new Socket(desIP, TCP_ALARM_PORT);
 				} catch (UnknownHostException e) {
 					// TODO Auto-generated catch block
@@ -133,8 +143,9 @@ public class SendTCPData implements Runnable, ClientSocketInterface {
 				}
 			}
 
-			if (cache != null&&curIP!=null) {
+			if (curIP != null && cache!=null) {
 				// 将控制包更新进状态map
+				cache+=TCP_END;
 				try {
 					if (null == socketoutput) {
 						socketoutput = new PrintWriter(
@@ -142,6 +153,7 @@ public class SendTCPData implements Runnable, ClientSocketInterface {
 					}
 					socketoutput.println(cache);// 发送给服务器
 					socketoutput.flush();// 清空缓存
+					Log.i("mmmm", "TCP_cache:" + cache + "|curIP" + curIP);
 				} catch (SocketException e) {
 					// TODO Auto-generated catch block
 					stopPlaying();
@@ -156,8 +168,7 @@ public class SendTCPData implements Runnable, ClientSocketInterface {
 					e.printStackTrace();
 				}
 			}
-			cache=null;
-			curIP=null;
+
 		}
 
 		try {
@@ -167,7 +178,7 @@ public class SendTCPData implements Runnable, ClientSocketInterface {
 			e.printStackTrace();
 		}
 		try {
-			if (socket!=null&&!socket.isClosed()) {
+			if (socket != null && !socket.isClosed()) {
 				socket.close();
 			}
 		} catch (IOException e) {
@@ -191,6 +202,6 @@ public class SendTCPData implements Runnable, ClientSocketInterface {
 
 	public void stopPlaying() {
 		isSendPlaying = false;
-
+		sendRun=null;
 	}
 }

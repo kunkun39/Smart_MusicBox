@@ -58,4 +58,5 @@ public interface ClientSocketInterface {
 
     //CYM add for TCP
     public static final int TCP_ALARM_PORT=9010;
+    public static final String TCP_END="==END==";
 }
