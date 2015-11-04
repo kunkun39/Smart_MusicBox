@@ -47,7 +47,6 @@ public class XiamiMusicListActivity extends BaseActivity {
 	// 显示今日歌曲列表
 	private final int MUSIC_TODAY_MUSICS = 4;
 
-	private int curMusicType = 1;
 
 	private Handler mhandler = new Handler() {
 
@@ -108,7 +107,7 @@ public class XiamiMusicListActivity extends BaseActivity {
 	protected void initData() {
 		super.initData();
 		// 启动activity的时候传进参数名为"musicType"的专辑。
-		curMusicType = getIntent().getIntExtra("musicType", 1);
+		int curMusicType = getIntent().getIntExtra("musicType", 1);
 		dealMusicType(curMusicType);
 		back.setOnClickListener(new OnClickListener() {
 			@Override
@@ -124,7 +123,7 @@ public class XiamiMusicListActivity extends BaseActivity {
 			albumID = getIntent().getIntExtra("albumID", 0);
 			getAlbumList();
 		} else {
-			mhandler.sendEmptyMessage(curMusicType);
+			mhandler.sendEmptyMessage(type);
 		}
 	}
 
