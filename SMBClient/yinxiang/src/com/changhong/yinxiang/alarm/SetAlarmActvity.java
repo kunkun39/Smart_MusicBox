@@ -65,6 +65,7 @@ public class SetAlarmActvity extends Activity {
 	private boolean musicIsEmpty = true;
 
 	private SendTCPData sendTCP = null;
+	private String serverIP;
 
 	// 进入设置界面后，先设置状态。
 	private enum State {
@@ -171,12 +172,8 @@ public class SetAlarmActvity extends Activity {
 				MusicUtils.ACTION_SOCKET_COMMUNICATION,
 				MusicUtils.EDIT_REQUEST_MUSICS);
 
-		String serverIP = ClientSendCommandService.serverIP;
-		if (serverIP != null) {
-			sendTCP = SendTCPData.getInstace();
-			sendTCP.setDesIP(serverIP);
-			sendTCP.startPlaying();
-		}
+		
+		
 
 		Intent intent = getIntent();
 		int position = intent.getIntExtra("select", -1);
@@ -283,24 +280,37 @@ public class SetAlarmActvity extends Activity {
 	private void addAlarm() {
 		int length = 0;
 
-		// 计算当前闹铃的ID值是多少
+//		// 计算当前闹铃的ID值是多少,从1开始，看那个数字没有使用就用那个
+//		if (AlarmMainActivity.mAlarmList != null
+//				&& AlarmMainActivity.mAlarmList.size() > 0) {
+//			length = AlarmMainActivity.mAlarmList.size();
+//			for (int a = 1; a < length + 2; a++) {
+//				boolean idflag=true;
+//				for (int i = 0; i < length; i++) {
+//					int cache = AlarmMainActivity.mAlarmList.get(i).getId();
+//					if(a==cache){
+//						idflag=false;
+//					}
+//				}
+//				if(idflag){
+//					curentId=a;
+//					break;
+//				}
+//			}
+//		}
 		
+		//计算当前闹铃的ID，看最大ID是多少，则当前ID为最大ID加1(因为音响端的策略是如此，若不这样处理，在添加后立即修改，发过去的ID不能与添加的ID匹配)
 		if (AlarmMainActivity.mAlarmList != null
 				&& AlarmMainActivity.mAlarmList.size() > 0) {
 			length = AlarmMainActivity.mAlarmList.size();
-			for (int a = 1; a < length + 2; a++) {
-				boolean idflag=true;
-				for (int i = 0; i < length; i++) {
-					int cache = AlarmMainActivity.mAlarmList.get(i).getId();
-					if(a==cache){
-						idflag=false;
-					}
-				}
-				if(idflag){
-					curentId=a;
-					break;
+			int aID=0;
+			for(int a=0;a<length;a++){
+				aID=AlarmMainActivity.mAlarmList.get(a).getId();
+				if(curentId<aID){
+					curentId=aID;
 				}
 			}
+			curentId+=1;
 		}
 		alarm.setId(curentId);
 		alarm.setHour(timePicker.getCurrentHour());
@@ -569,7 +579,6 @@ public class SetAlarmActvity extends Activity {
 			String str = ResolveAlarmInfor.alarmToStr(alarm);
 			intent.putExtra("alarm", str);
 			SetAlarmActvity.this.setResult(resultCode, intent);
-			String ip = ClientSendCommandService.serverIP;
 			// 考虑是否用TCP发送数据回音响端???
 			switch (state) {
 			case update:
@@ -580,15 +589,15 @@ public class SetAlarmActvity extends Activity {
 			case add:
 
 //				ClientSendCommandService.msg = Alarm.insert + str;
-				 content = Alarm.update + curentId + "|" + str;
+				 content = Alarm.insert  + str;
 				break;
 			default:
 				break;
 			}
-			 if (content != null && ip != null) {
-			 sendTCP.addData(content, ip);
-			 }
-//			ClientSendCommandService.handler.sendEmptyMessage(1);
+			Message msg=ClientSendCommandService.handler.obtainMessage();
+			msg.what=7;
+			msg.obj=content;
+			ClientSendCommandService.handler.sendMessage(msg);
 		} else {
 			Toast.makeText(this, "音乐列表不能为空，请添加对应的音乐文件,此次操作无效!",
 					Toast.LENGTH_SHORT).show();
@@ -624,10 +633,14 @@ public class SetAlarmActvity extends Activity {
 	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
-		if (sendTCP != null) {
-			sendTCP.stopPlaying();
-		}
 		super.onDestroy();
 	}
 
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+	}
+
+	
 }

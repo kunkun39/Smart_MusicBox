@@ -11,8 +11,6 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -28,7 +26,6 @@ import com.changhong.yinxiang.alarm.SetAlarmActvity;
 import com.changhong.yinxiang.music.MusicEditServer;
 import com.changhong.yinxiang.music.MusicUtils;
 import com.changhong.yinxiang.view.MyProgressDialog;
-import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 
 public class AlarmMainActivity extends Activity {
 
@@ -42,6 +39,7 @@ public class AlarmMainActivity extends Activity {
 	private MyProgressDialog myProgressDialog = null;// 远程数据获取进度条
 
 	public static final int SEND_GET_REQUEST = 1001;
+	public static final int SEND_TCP_COMMOND = 1002;
 
 	public Handler handler = new Handler() {
 
@@ -66,7 +64,6 @@ public class AlarmMainActivity extends Activity {
 			case SEND_GET_REQUEST:
 
 				break;
-
 			}
 			super.handleMessage(msg);
 
@@ -231,6 +228,7 @@ public class AlarmMainActivity extends Activity {
 		} else {
 			adapter.clearData();
 		}
+
 		super.onResume();
 	}
 
@@ -239,6 +237,7 @@ public class AlarmMainActivity extends Activity {
 		// TODO Auto-generated method stub
 		mMusicEditServer.close();
 
+		ClientSendCommandService.stopTCP();
 		super.onDestroy();
 	}
 

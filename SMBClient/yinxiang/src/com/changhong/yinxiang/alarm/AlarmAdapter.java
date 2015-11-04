@@ -6,6 +6,8 @@ import java.util.List;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -19,6 +21,7 @@ import android.widget.TextView;
 
 import com.changhong.common.service.ClientSendCommandService;
 import com.changhong.yinxiang.R;
+import com.changhong.yinxiang.activity.AlarmMainActivity;
 
 public class AlarmAdapter extends BaseAdapter {
 
@@ -171,11 +174,15 @@ public class AlarmAdapter extends BaseAdapter {
 						} else {
 							alarm.setEnabled(false);
 						}
-						String sendContent = ResolveAlarmInfor
+						String content = ResolveAlarmInfor
 								.alarmToStr(alarm);
-						ClientSendCommandService.msg = Alarm.update + alarm.id
-								+ "|" + sendContent;
-						ClientSendCommandService.handler.sendEmptyMessage(1);
+						String sendContent = Alarm.update + alarm.id
+								+ "|" + content;
+						
+						Message msg=ClientSendCommandService.handler.obtainMessage();
+						msg.what=7;
+						msg.obj=sendContent;
+						ClientSendCommandService.handler.sendMessage(msg);
 					}
 				});
 
