@@ -26,8 +26,8 @@ import com.changhong.common.widgets.BoxSelectAdapter;
 import com.changhong.xiami.activity.AlbumListActivity;
 import com.changhong.xiami.activity.ArtistListActivity;
 import com.changhong.xiami.activity.SceneActivity;
+import com.changhong.xiami.activity.XiamiMainActivity;
 import com.changhong.xiami.activity.XiamiMusicListActivity;
-
 import com.changhong.yinxiang.R;
 
 public class YinXiangNetMusicFragment extends Fragment{
@@ -79,7 +79,7 @@ public class YinXiangNetMusicFragment extends Fragment{
 //        		}
         		 
         		//测试代码
-        		Intent intent=new Intent(getActivity(),XiamiMusicListActivity.class);
+        		Intent intent=new Intent(getActivity(),XiamiMainActivity.class);
         		startActivity(intent);
         		
         	}

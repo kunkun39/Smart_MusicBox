@@ -99,6 +99,7 @@
                 android:screenOrientation="portrait" />
         <activity android:name="com.changhong.xiami.activity.ArtistDetailActivity"/>
         
+        <activity android:name="com.changhong.xiami.activity.XiamiMainActivity"/>
         
 		<activity android:name="com.changhong.yinxiang.activity.AlarmMainActivity"/>
 		<activity android:name="com.changhong.yinxiang.alarm.SetAlarmActvity"

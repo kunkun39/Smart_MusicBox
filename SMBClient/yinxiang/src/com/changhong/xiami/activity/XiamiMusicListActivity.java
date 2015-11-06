@@ -109,6 +109,7 @@ public class XiamiMusicListActivity extends BaseActivity {
 		// 启动activity的时候传进参数名为"musicType"的专辑。
 		int curMusicType = getIntent().getIntExtra("musicType", 1);
 		dealMusicType(curMusicType);
+		
 		back.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -120,7 +121,6 @@ public class XiamiMusicListActivity extends BaseActivity {
 
 	private void dealMusicType(int type) {
 		if (1 == type) {
-			albumID = getIntent().getIntExtra("albumID", 0);
 			getAlbumList();
 		} else {
 			mhandler.sendEmptyMessage(type);
@@ -128,7 +128,7 @@ public class XiamiMusicListActivity extends BaseActivity {
 	}
 
 	private void getAlbumList() {
-
+		albumID = getIntent().getIntExtra("albumID", 0);
 		new Thread(new Runnable() {
 
 			@Override
