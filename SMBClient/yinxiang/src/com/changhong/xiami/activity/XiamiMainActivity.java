@@ -1,5 +1,7 @@
 package com.changhong.xiami.activity;
 
+import java.util.List;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,8 +15,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.changhong.common.widgets.HorizontalListView;
+import com.changhong.xiami.data.XMMusicData;
 import com.changhong.yinxiang.R;
 import com.changhong.yinxiang.activity.BaseActivity;
+import com.xiami.sdk.entities.OnlineSong;
 
 public class XiamiMainActivity extends BaseActivity {
 
@@ -27,6 +31,8 @@ public class XiamiMainActivity extends BaseActivity {
 	// 今日歌曲栏
 	private HorizontalListView horListView;
 	private ImageButton xiamiMainSearch, randomMusic;
+	
+	private List<OnlineSong> todayRecomList;
 
 	// 新碟首发
 	private ImageView albumMsg1, playAlbum1,albumMsg2, playAlbum2,albumMsg3, playAlbum3;
@@ -39,6 +45,7 @@ public class XiamiMainActivity extends BaseActivity {
 	private ImageView concertAlbum, concertScene, concertArtist,
 			concertCollection;
 
+	private XMMusicData XMData;
 	
 	private Handler handler=new Handler(){
 
@@ -175,12 +182,29 @@ public class XiamiMainActivity extends BaseActivity {
 		concertArtist.setOnClickListener(myClick);
 		concertCollection.setOnClickListener(myClick);
 		
-		
-		
+		XMData=XMMusicData.getInstance(XiamiMainActivity.this);
+		getXMData();
 		
 		
 	}
+	/*
+	 * 
+	 * 获取基础数据信息
+	 */
 
+	private void getXMData(){
+		new Thread(new getXMDataRunnable()).start();
+	} 
+	
+	private class getXMDataRunnable implements Runnable{
+
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+//			XMData.
+		}
+		
+	}
 	/*
 	 * 
 	 * 显示今日推荐歌曲信息
