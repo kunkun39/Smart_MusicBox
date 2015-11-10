@@ -18,5 +18,6 @@
      <color name="text_default">#AA1D1915</color>
      
      <color name="list_bg">#99ffffff</color>
-     
+     <color name="xiami_second_background">#9923E1C2</color>
+
 </resources>

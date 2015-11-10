@@ -109,7 +109,7 @@
 		<activity android:name="com.changhong.yinxiang.activity.AlarmMainActivity"/>
 		<activity android:name="com.changhong.yinxiang.alarm.SetAlarmActvity"
 		    />
-		
+		<activity android:name="com.com.changhong.xiami.activity.XiamiMainActivity"></activity>
 		<activity android:name="com.changhong.yinxiang.alarm.DeleteAlarmActivity"/>
         
         <service android:name="com.changhong.yinxiang.nanohttpd.HTTPDService" />

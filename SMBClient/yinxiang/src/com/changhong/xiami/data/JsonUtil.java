@@ -96,7 +96,7 @@ public class JsonUtil {
 					sceneSongs.setIcon(itemObj.get("icon").getAsString());
 					JsonElement songList= itemObj.get("songs");					
 					//封装歌曲列表
-					List<OnlineSong>songs= getSongList(songList);					
+					List<OnlineSong> songs= getSongList(songList);					
 					dataList.add(sceneSongs);
 				}
 		}

@@ -36,7 +36,7 @@ public class XiamiMainActivity extends BaseActivity {
 
 	// 今日歌曲栏
 	private HorizontalListView horListView;
-	private ImageButton xiamiMainSearch, randomMusic;
+	private ImageView xiamiMainSearch, randomMusic;
 	
 	private ArrayList<OnlineSong> todayRecomList=null;
 	private TodaySRecommendAdapter TRAdapter=null;
@@ -89,6 +89,9 @@ public class XiamiMainActivity extends BaseActivity {
 			// TODO Auto-generated method stub
 			switch(v.getId()){
 			case R.id.xiami_recommend_today_more:
+				Intent todayIntent=new Intent(XiamiMainActivity.this,XiamiMusicListActivity.class);
+				todayIntent.putExtra("musicType", 4);
+				startActivity(todayIntent);
 				break;
 			case R.id.xiami_recommend_album_more:
 				break;
@@ -154,8 +157,8 @@ public class XiamiMainActivity extends BaseActivity {
 		moreConcert = (Button) findViewById(R.id.xiami_concert_more);
 
 		horListView = (HorizontalListView) findViewById(R.id.xiami_recommend_today);
-		xiamiMainSearch = (ImageButton) findViewById(R.id.xiami_search);
-		randomMusic = (ImageButton) findViewById(R.id.xiami_random_songs);
+		xiamiMainSearch = (ImageView) findViewById(R.id.xiami_search);
+		randomMusic = (ImageView) findViewById(R.id.xiami_random_songs);
 
 		albumMsg1 = (ImageView) findViewById(R.id.xiami_new_album1);
 		playAlbum1 = (ImageView) findViewById(R.id.xiami_new_album1_play);
