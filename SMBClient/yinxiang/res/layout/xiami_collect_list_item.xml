@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/list_bg"
+    android:layout_marginBottom="20dip"
+    android:orientation="vertical"
+    android:padding="10dip" >
+
+    <!-- 标题 -->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dip"
+        android:layout_weight="1"  >
+
+        <TextView
+            android:id="@+id/collect_title"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="10dip"
+            android:ellipsize="end"
+            android:maxLength="10"
+            android:text="标题"
+            android:textColor="@color/text_title"
+            android:textSize="@dimen/text_title" />
+
+        <ImageView
+            android:layout_width="20dip"
+            android:layout_height="20dip"
+            android:layout_alignParentRight="true"
+            android:gravity="center_vertical"
+            android:layout_marginRight="10dip"
+            android:scaleType="fitCenter"
+            android:src="@drawable/select_right" />
+    </RelativeLayout>
+
+    <!-- 主要内容 center -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dip"
+        android:layout_weight="4"
+        android:orientation="horizontal" >
+
+        <FrameLayout
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:layout_weight="1" >
+
+            <ImageView
+                android:id="@+id/collect_logo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY"
+                android:src="@drawable/collect_default" />
+            <ImageView
+                android:id="@+id/collect_play"
+                android:layout_width="30dip"
+                android:layout_height="30dip"
+                android:layout_gravity="bottom|right"
+                android:layout_margin="5dip"
+                android:scaleType="fitCenter"
+                android:src="@drawable/play" />
+        </FrameLayout>
+
+        <RelativeLayout
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:layout_weight="2" 
+            android:layout_marginLeft="10dip"
+             android:layout_marginRight="10dip">
+
+            <TextView
+                android:id="@+id/collect_detail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+               android:textColor="@color/text_default"              
+                android:ellipsize="end"
+                android:gravity="left"
+                android:maxLines="3" />
+
+            <ImageView
+                android:id="@+id/collect_earphone"
+                android:layout_width="20dip"
+                android:layout_height="20dip"
+                android:layout_alignLeft="@id/collect_detail"
+                android:layout_alignParentBottom="true"
+                android:scaleType="fitCenter"
+                android:src="@drawable/earphone" />
+
+            <TextView
+                android:id="@+id/collect_likecount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/collect_earphone"
+                android:layout_alignBottom="@id/collect_earphone" 
+                android:layout_marginLeft="5dip"
+                android:textColor="@color/text_default"
+                />
+         
+            <TextView
+                android:id="@+id/collect_artist"
+                android:layout_width="50dip"
+                android:layout_height="wrap_content"        
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"                    
+                android:text="用户"
+                android:textColor="@color/text_default"               
+                android:maxLines="1"
+                android:ellipsize="end"/>
+            
+            <ImageView
+                android:id="@+id/collect_artistimg"
+                android:layout_width="20dip"
+                android:layout_height="20dip"            
+                 android:layout_toLeftOf="@id/collect_artist"
+                android:layout_alignBottom="@id/collect_artist"
+                android:layout_marginRight="5dip"                
+                android:scaleType="fitCenter"
+                android:src="@drawable/singer_default" />
+        </RelativeLayout>
+    </LinearLayout>
+</LinearLayout>
