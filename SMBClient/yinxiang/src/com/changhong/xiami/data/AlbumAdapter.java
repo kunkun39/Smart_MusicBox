@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.changhong.yinxiang.R;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -24,7 +25,8 @@ public class AlbumAdapter extends BaseAdapter{
 	private Context mContext;
 	private int mScreenWidth;
 	private int mScreenHeight;
-	
+	private  ImageLoader imageLoader;
+
 	public AlbumAdapter(Context mContext) {
 		this.mContext = mContext;
 		
@@ -32,6 +34,8 @@ public class AlbumAdapter extends BaseAdapter{
 		Display d = wm.getDefaultDisplay();
 		mScreenWidth = d.getWidth();
 		mScreenHeight = d.getHeight()-65;
+		imageLoader=ImageLoader.getInstance();
+
 	}
 	
 	/**
@@ -76,10 +80,10 @@ public class AlbumAdapter extends BaseAdapter{
 			viewHolder = (ViewHolder) view.getTag();
 		}
 		
-		viewHolder.albumName.setText(this.mAlbumList.get(position).getName());	
-		viewHolder.albumContent.setText(this.mAlbumList.get(position).getContent());	
-		Bitmap logo=this.mAlbumList.get(position).getImage();
-		if(null != logo)viewHolder.albumLogo.setImageBitmap(logo);	
+		viewHolder.albumName.setText(this.mAlbumList.get(position).getTitle());	
+		viewHolder.albumContent.setText(this.mAlbumList.get(position).getDescription());	
+		String logo=mAlbumList.get(position).getLogoUrl();
+		imageLoader.displayImage(logo, viewHolder.albumLogo);
 
 		return view;
 

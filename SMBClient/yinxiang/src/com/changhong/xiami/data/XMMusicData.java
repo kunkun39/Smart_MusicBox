@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import android.content.Context;
@@ -276,6 +277,39 @@ public class XMMusicData {
 		return collect;
 	}
 	
+   /**	
+    * 获取精选集详情
+    * @param collectID
+    * @return
+    */
+	public OnlineCollect getCollectDetailSync(long collectID){
+		OnlineCollect  results=mXiamiSDK.getCollectDetailSync(collectID);
+		return results;
+	}
+	
+	/**
+	 * 自解析JSON接口
+	 * @param methodCode
+	 * @param params
+	 * @return
+	 */
+	public String xiamiRequest(String methodCode,  HashMap<java.lang.String,java.lang.Object> params) throws java.security.NoSuchAlgorithmException,
+    java.io.IOException,
+    com.xiami.core.exceptions.AuthExpiredException,
+    com.xiami.core.exceptions.ResponseErrorException{
+		
+		Log.e("YDINFOR", "++++++++++++++++xiamiRequest()+++++++++++++++++++++++++++++");
+		mXiamiSDK.enableLog(true);
+		String  results=mXiamiSDK.xiamiSDKRequest(methodCode,params);
+		return results;
+	}
+	
+	
+	 public Bitmap readAPIC(String imgUrl) {
+		    Log.e("YDINFOR", "++++++++++++++++readAPIC()+++++++++++++++++++++++++++++");
+			mXiamiSDK.enableLog(true);
+		    return mXiamiSDK.readAPIC(imgUrl, new BitmapFactory.Options());		   
+	 }
 	
 	
 	  /**
@@ -316,8 +350,6 @@ public class XMMusicData {
     
     private Bitmap compressBmpFromBmp(Bitmap image) {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		
-		
 		image.compress(Bitmap.CompressFormat.PNG, 50, baos);
 		int length=baos.toByteArray().length;
 		ByteArrayInputStream isBm = new ByteArrayInputStream(baos.toByteArray());

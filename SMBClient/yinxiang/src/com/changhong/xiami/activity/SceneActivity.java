@@ -1,8 +1,9 @@
 package com.changhong.xiami.activity;
 
 /**
- * 专辑大全
+ * 场景展示
  */
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.wifi.WifiInfo;
@@ -10,8 +11,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
-import android.widget.AbsListView;
-import android.widget.AbsListView.OnScrollListener;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -21,31 +21,33 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.changhong.common.utils.NetworkUtils;
-import com.changhong.xiami.artist.CharacterParser;
-import com.changhong.xiami.artist.PinyinComparator;
-import com.changhong.xiami.artist.SideBar;
-import com.changhong.xiami.artist.SideBar.OnTouchingLetterChangedListener;
-import com.changhong.xiami.artist.SortAdapter;
-import com.changhong.xiami.data.AlbumAdapter;
+import com.changhong.xiami.data.RequestDataTask;
+import com.changhong.xiami.data.JsonUtil;
 import com.changhong.xiami.data.SceneAdapter;
 import com.changhong.xiami.data.SceneInfor;
+import com.changhong.xiami.data.SimpleParser;
 import com.changhong.xiami.data.XMMusicData;
+import com.changhong.xiami.data.XiamiApiResponse;
 import com.changhong.xiami.data.XiamiDataModel;
 import com.changhong.yinxiang.R;
 import com.changhong.yinxiang.activity.BaseActivity;
-import com.changhong.yinxiang.utils.Configure;
-import com.xiami.sdk.entities.ArtistRegion;
-import com.xiami.sdk.entities.OnlineAlbum;
-import com.xiami.sdk.entities.OnlineArtist;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
+import com.xiami.music.api.utils.RequestMethods;
+import com.xiami.sdk.entities.OnlineCollect;
 import com.xiami.sdk.entities.OnlineSong;
 import com.xiami.sdk.entities.SceneSongs;
+import com.xiami.sdk.entities.TokenInfo;
 
-import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class SceneActivity extends BaseActivity {
 
@@ -53,11 +55,9 @@ public class SceneActivity extends BaseActivity {
 	private GridView mSceneList;
 	private SceneAdapter adapter;
 	private Handler mHandler;
-
-	private int curPageSize = 0;
-	private final int MAX_PAGE_SIZE = 100;
-
+	private JsonUtil mJsonUtil=null; 
 	private List<XiamiDataModel> SourceDataList = null;
+	String[]  sceneTitle={"开车","跑步","聚会","睡眠","学习","工作"};
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -69,7 +69,7 @@ public class SceneActivity extends BaseActivity {
 		setContentView(R.layout.xiami_album_list);
 
 		mXMMusicData = XMMusicData.getInstance(this);
-
+		mJsonUtil=JsonUtil.getInstance();
 		/**
 		 * IP连接部分
 		 */
@@ -81,7 +81,10 @@ public class SceneActivity extends BaseActivity {
 		mSceneList = (GridView) findViewById(R.id.album_list);
 		adapter = new SceneAdapter(this);
 		mSceneList.setAdapter(adapter);
-
+		
+		//修改layout
+		mSceneList.setVerticalSpacing(20);
+		mSceneList.setHorizontalSpacing(20);
 	}
 
 	@Override
@@ -89,29 +92,27 @@ public class SceneActivity extends BaseActivity {
 		super.initData();
 		// 长按进入歌手详情
 		mSceneList.setOnItemClickListener(new OnItemClickListener() {
-					@Override
-					public void onItemClick(AdapterView<?> parent,
-							View view, int position, long id) {
-						
-						XiamiDataModel model = (XiamiDataModel) adapter.getItem(position);	
-						SceneSongs  scene=(SceneSongs) model.getOtherObj();
-						if(null !=scene){
-							    SceneInfor mSceneInfor=new SceneInfor();
-							    mSceneInfor.setSceneName(scene.getTitle());
-							    mSceneInfor.setSongsList(scene.getSongs());
-								Intent intent=new Intent(SceneActivity.this, XiamiMusicListActivity.class);
-								intent.putExtra("sceneInfor", mSceneInfor);
-								intent.putExtra("musicType", 2);
-								startActivity(intent);
-						}
-					}
-				});
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
 
-		
+				XiamiDataModel model = (XiamiDataModel) adapter.getItem(position);
+				if (null != model) {
+					SceneInfor mSceneInfor = new SceneInfor();
+					mSceneInfor.setSceneName(model.getTitle());
+					mSceneInfor.setSceneID((int)model.getId());
+					mSceneInfor.setMusicType(model.getType());
+					Intent intent = new Intent(SceneActivity.this,	XiamiMusicListActivity.class);
+					intent.putExtra("sceneInfor", mSceneInfor);
+					intent.putExtra("musicType", 2);
+					startActivity(intent);
+				}
+			}
+		});
+
 		mHandler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
-				
 			}
 		};
 	}
@@ -120,30 +121,16 @@ public class SceneActivity extends BaseActivity {
 	protected void onStart() {
 		super.onStart();
 
-		// 获取推荐歌曲
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				WifiInfo curWifiInfor=NetworkUtils.getCurWifiInfor(SceneActivity.this);			
-				String gps=NetworkUtils.getGPSInfor(SceneActivity.this);
-				final List<SceneSongs> results = mXMMusicData.getRecommendSceneSongs(gps,curWifiInfor.getSSID(),curWifiInfor.getBSSID());
-				
-				SourceDataList = filledData(results);					
-				mSceneList.post(new Runnable() {
-					@Override
-					public void run() {
-						if(null !=SourceDataList){
-						       adapter.updateListView(SourceDataList);
-						}else{
-                            Toast.makeText(SceneActivity.this,"没有搜索到专辑信息", Toast.LENGTH_SHORT).show();
-						}
-					}
-				});		
-			}
-		}).start();
+//		WifiInfo curWifiInfor = NetworkUtils.getCurWifiInfor(SceneActivity.this);
+//		String gps = NetworkUtils.getGPSInfor(SceneActivity.this);
+		HashMap<String, Object> params = new HashMap<String, Object>();
+//		params.put("gps", gps);
+//		params.put("ssid", curWifiInfor.getSSID());
+//		params.put("bssid", curWifiInfor.getBSSID());
+		FindSceneTask findSongByIdTask = new FindSceneTask(getApplicationContext());
+		findSongByIdTask.execute(params);
+
 	}
-
-
 
 	/**
 	 * 为ListView填充数据
@@ -152,66 +139,79 @@ public class SceneActivity extends BaseActivity {
 	 *            数据
 	 * @return SortModel列表
 	 */
-	private List<XiamiDataModel> filledData(List<SceneSongs> scenes) {
+	private List<XiamiDataModel> filledData(List<SceneInfor> list) {
 
-		if(null == scenes)return null;
+		List<XiamiDataModel> dataList = new ArrayList<XiamiDataModel>();
 		
-		List<XiamiDataModel> sceneList = new ArrayList<XiamiDataModel>();
-
-		int size = scenes.size();
-		for (int i = 0; i < size; i++) {
-
-			SceneSongs scene = (SceneSongs) scenes.get(i);
-		    String imgUrl=scene.getIcon();
-			String name = scene.getTitle();
-			XiamiDataModel sceneModel = new XiamiDataModel();
-			sceneModel.setName(name);
-			sceneModel.setImgUrl(imgUrl);			
-			Bitmap image = mXMMusicData.getBitmapFromUrl(imgUrl);
-			sceneModel.setImage(image);
-			sceneModel.setOtherObj(scene);	
+		if (list != null) {		
 			
-			sceneList.add(sceneModel);
+				int size = list.size();
+				for (int i = 0; i < size; i++) {
+					SceneInfor sceneSongs = list.get(i);
+					XiamiDataModel sceneModel = new XiamiDataModel();
+					sceneModel.setId(sceneSongs.getSceneID());
+					sceneModel.setTitle(sceneSongs.getSceneName());
+					sceneModel.setType(sceneSongs.getMusicType());
+					sceneModel.setLogoUrl(sceneSongs.getSceneLogo());
+					dataList.add(sceneModel);
+			}
 		}
-		return sceneList;
-
+		return dataList;
 	}
-	
-	
-	
-	
+
 	/**
 	 * 位图资源释放
 	 */
-	private void  BitmapRecycle(){
-		int size=SourceDataList.size();
+	private void BitmapRecycle() {
+		int size = SourceDataList.size();
 		for (int i = 0; i < size; i++) {
-			Bitmap bit = SourceDataList.get(i).getImage();
-			if(bit != null && !bit.isRecycled()) {
-			    bit.recycle();
+			Bitmap bit = SourceDataList.get(i).getLogoImg();
+			if (bit != null && !bit.isRecycled()) {
+				bit.recycle();
 			}
-		}		
+		}
 	}
-	
-		
+
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
 		BitmapRecycle();
 
 	}
-	
-	
-	class MyOnlineAlbum extends OnlineAlbum{
-		
-		public  String getArtistLogo(){			
-			     return getArtistLogo();
+
+	class FindSceneTask extends RequestDataTask {
+
+		public FindSceneTask(Context context) {
+			super(mXMMusicData, context,"tag.genre-list", null);
 		}
-		
-		public  String getAlbumCategory(){			
-		     return this.getAlbumCategory();
-	}
-		
+
+		@Override
+		public void postInBackground(JsonElement response) {
+		}
+
+		@Override
+		protected void onPostExecute(JsonElement jsonData) {
+			super.onPostExecute(jsonData);
+			if (jsonData != null) {
+				
+				List<SceneInfor>onlineCollects= mJsonUtil.getGenreList(jsonData);
+				SourceDataList=filledData(onlineCollects);
+				mSceneList.post(new Runnable() {
+					@Override
+					public void run() {
+						if (null != SourceDataList) {
+							adapter.updateListView(SourceDataList);
+						} else {
+							Toast.makeText(SceneActivity.this, "没有搜索到专辑信息",
+									Toast.LENGTH_SHORT).show();
+						}
+					}
+				});
+			} else {
+				Toast.makeText(getApplicationContext(),
+						R.string.error_response, Toast.LENGTH_SHORT).show();
+			}
+		}
 	}
 
 }

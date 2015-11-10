@@ -53,7 +53,7 @@ public class SortAdapter extends BaseAdapter implements SectionIndexer {
 
 		int count = mSingerList.size();
 		for (int i = 0; i < count; i++) {
-			Bitmap bit = mSingerList.get(i).getImage();
+			Bitmap bit = mSingerList.get(i).getLogoImg();
 			if (bit != null && !bit.isRecycled()) {
 				bit.recycle();
 			}
@@ -93,9 +93,9 @@ public class SortAdapter extends BaseAdapter implements SectionIndexer {
 			viewHolder.tvLetter.setVisibility(View.GONE);
 		}
 
-		viewHolder.tvTitle.setText(this.mSingerList.get(position).getName());
+		viewHolder.tvTitle.setText(this.mSingerList.get(position).getTitle());
 
-		Bitmap img = this.mSingerList.get(position).getImage();
+		Bitmap img = this.mSingerList.get(position).getLogoImg();
 		if (null != img)
 			viewHolder.tvImg.setImageBitmap(img);
 

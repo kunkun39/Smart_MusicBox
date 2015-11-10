@@ -101,7 +101,7 @@ public class ArtistListActivity extends BaseActivity {
 						if(artistID>0){
 								Intent intent=new Intent(ArtistListActivity.this, ArtistDetailActivity.class);
 								intent.putExtra("artistID", artistID);
-								intent.putExtra("artistName", model.getName());		
+								intent.putExtra("artistName", model.getTitle());		
 								startActivity(intent);
 						}
 					}
@@ -219,10 +219,10 @@ public class ArtistListActivity extends BaseActivity {
 			String singer = artist.getName();
 			XiamiDataModel sortModel = new XiamiDataModel();
 			sortModel.setId(artist.getId());
-			sortModel.setName(singer);
-			sortModel.setImgUrl(artist.getImageUrl(Configure.IMAGE_SIZE1));
-			Bitmap image = mXMMusicData.getBitmapFromUrl(sortModel.getImgUrl());
-			sortModel.setImage(image);
+			sortModel.setTitle(singer);
+			sortModel.setArtistImgUrl(artist.getImageUrl(Configure.IMAGE_SIZE1));
+			Bitmap image = mXMMusicData.getBitmapFromUrl(sortModel.getLogoUrl());
+			sortModel.setLogoImg(image);
 			// 汉字转换成拼音
 			String pinyin = characterParser.getSelling(singer);
 			String sortString = pinyin.substring(0, 1).toUpperCase();
@@ -248,7 +248,7 @@ public class ArtistListActivity extends BaseActivity {
 	private void  BitmapRecycle(){
 		int size=SourceDataList.size();
 		for (int i = 0; i < size; i++) {
-			Bitmap bit = SourceDataList.get(i).getImage();
+			Bitmap bit = SourceDataList.get(i).getLogoImg();
 			if(bit != null && !bit.isRecycled()) {
 			    bit.recycle();
 			}

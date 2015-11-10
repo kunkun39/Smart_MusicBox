@@ -8,7 +8,13 @@ import com.xiami.sdk.entities.OnlineSong;
 
 public class SceneInfor implements  Serializable{
 	
+	private  int  sceneID;
+	private  int  musicType;
 	private  String  sceneName;
+	private  String  sceneLogo;
+
+	private List<OnlineSong> songsList;
+
 	public String getSceneName() {
 		return sceneName;
 	}
@@ -21,6 +27,23 @@ public class SceneInfor implements  Serializable{
 	public void setSongsList(List<OnlineSong> songsList) {
 		this.songsList = songsList;
 	}
-	private List<OnlineSong> songsList;
+	public int getSceneID() {
+		return sceneID;
+	}
+	public void setSceneID(int sceneID) {
+		this.sceneID = sceneID;
+	}
+	public int getMusicType() {
+		return musicType;
+	}
+	public void setMusicType(int musicType) {
+		this.musicType = musicType;
+	}
+	public String getSceneLogo() {
+		return sceneLogo;
+	}
+	public void setSceneLogo(String sceneLogo) {
+		this.sceneLogo = sceneLogo;
+	}
 	
 }

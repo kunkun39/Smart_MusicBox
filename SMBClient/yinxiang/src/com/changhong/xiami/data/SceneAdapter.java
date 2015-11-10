@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.changhong.yinxiang.R;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -27,14 +28,20 @@ public class SceneAdapter extends BaseAdapter{
 	private Context mContext;
 	private int mScreenWidth;
 	private int mScreenHeight;
-	
+	private ImageLoader imageLoader;
+	private int MAX_ITEM=6;
+	private int[] resID={R.drawable.scene1,R.drawable.scene2,R.drawable.scene3,
+			R.drawable.scene4,R.drawable.scene5,R.drawable.scene6};
+
 	public SceneAdapter(Context mContext) {
 		this.mContext = mContext;
 		
 		WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
 		Display d = wm.getDefaultDisplay();
-		mScreenWidth = d.getWidth();
-		mScreenHeight = d.getHeight()-65;
+		mScreenWidth = d.getWidth()-60;
+		mScreenHeight = d.getHeight()-220;
+		imageLoader=ImageLoader.getInstance();
+
 	}
 	
 	/**
@@ -49,7 +56,7 @@ public class SceneAdapter extends BaseAdapter{
 	}
 
 	public int getCount() {
-		return this.mSceneList.size();
+		return MAX_ITEM;
 	}
 
 	public Object getItem(int position) {
@@ -62,23 +69,19 @@ public class SceneAdapter extends BaseAdapter{
 
 	public View getView(final int position, View view, ViewGroup arg2) {
 		ViewHolder viewHolder = null;
-		final XiamiDataModel mContent = mSceneList.get(position);
 		if (view == null) {
 			viewHolder = new ViewHolder();
 			view = LayoutInflater.from(mContext).inflate(R.layout.xiami_album_list_item, null);	
-			AbsListView.LayoutParams param = new AbsListView.LayoutParams( android.view.ViewGroup.LayoutParams.FILL_PARENT,
-					mScreenHeight/3);
+			AbsListView.LayoutParams param = new AbsListView.LayoutParams( mScreenWidth/2,		mScreenHeight/3);
 			view.setLayoutParams(param);			
 			viewHolder.sceneName = (TextView) view.findViewById(R.id.ablum_name);
 			viewHolder.sceneLogo=(ImageView) view.findViewById(R.id.ablum_logo);
 			viewHolder.scenePlay=(ImageView) view.findViewById(R.id.ablum_play);	
-			FrameLayout.LayoutParams params=(LayoutParams) viewHolder.scenePlay.getLayoutParams();
-			params.gravity=Gravity.BOTTOM|Gravity.RIGHT;
-			viewHolder.scenePlay.setLayoutParams(params);
+		
 			
-		   params=(LayoutParams) viewHolder.sceneName.getLayoutParams();
-			params.gravity=Gravity.TOP|Gravity.LEFT;
-			viewHolder.sceneName.setLayoutParams(params);
+			TextView detail=(TextView) view.findViewById(R.id.ablum_content);
+			detail.setVisibility(View.GONE);
+			viewHolder.sceneName.setVisibility(View.GONE);
 			
 			view.setTag(viewHolder);
 			
@@ -86,9 +89,15 @@ public class SceneAdapter extends BaseAdapter{
 			viewHolder = (ViewHolder) view.getTag();
 		}
 		
-		viewHolder.sceneName.setText(this.mSceneList.get(position).getName());	
-		Bitmap logo=this.mSceneList.get(position).getImage();
-		if(null != logo)viewHolder.sceneLogo.setImageBitmap(logo);	
+//		if(position<mSceneList.size()){
+//		    String logo=mSceneList.get(position).getLogoUrl();
+//			ImageLoader.getInstance().displayImage(logo, viewHolder.sceneLogo);
+//		}else{
+//	     	viewHolder.sceneLogo.setImageResource(resID[position]);
+//		}
+//		
+     	viewHolder.sceneLogo.setImageResource(resID[position]);
+
 
 		return view;
 

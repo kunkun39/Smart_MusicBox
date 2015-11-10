@@ -168,11 +168,11 @@ public class AlbumListActivity extends BaseActivity {
 		   		    
 			XiamiDataModel albumModel = new XiamiDataModel();
 			albumModel.setId(albumID);
-			albumModel.setName(name);
-			albumModel.setImgUrl(imgUrl);			
-			albumModel.setContent(content);			
+			albumModel.setTitle(name);
+			albumModel.setLogoUrl(imgUrl);			
+			albumModel.setDescription(content);			
 			Bitmap image = mXMMusicData.getBitmapFromUrl(imgUrl);
-			albumModel.setImage(image);	
+			albumModel.setLogoImg(image);	
 			
 			albumList.add(albumModel);
 		}
@@ -189,7 +189,7 @@ public class AlbumListActivity extends BaseActivity {
 	private void  BitmapRecycle(){
 		int size=SourceDataList.size();
 		for (int i = 0; i < size; i++) {
-			Bitmap bit = SourceDataList.get(i).getImage();
+			Bitmap bit = SourceDataList.get(i).getLogoImg();
 			if(bit != null && !bit.isRecycled()) {
 			    bit.recycle();
 			}

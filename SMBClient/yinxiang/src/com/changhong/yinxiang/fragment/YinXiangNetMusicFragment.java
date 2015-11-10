@@ -25,6 +25,7 @@ import com.changhong.common.system.MyApplication;
 import com.changhong.common.widgets.BoxSelectAdapter;
 import com.changhong.xiami.activity.AlbumListActivity;
 import com.changhong.xiami.activity.ArtistListActivity;
+import com.changhong.xiami.activity.CollectActivity;
 import com.changhong.xiami.activity.SceneActivity;
 import com.changhong.xiami.activity.XiamiMainActivity;
 import com.changhong.xiami.activity.XiamiMusicListActivity;
