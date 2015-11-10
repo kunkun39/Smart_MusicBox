@@ -21,79 +21,57 @@ import java.util.List;
 
 public abstract class RequestDataTask extends AsyncTask<HashMap<String, Object>, Long, JsonElement> {
 
-	private XMMusicData mXMMusicData;
-    private JsonUtil requestManager;
+    private JsonUtil mJsonUtil;
     private Context context;
-    private String method,submethod;
+    private String method;
 
-    public RequestDataTask(XMMusicData xiamiMusicData, Context context,String method,String subMethod) {
-        this.mXMMusicData = xiamiMusicData;
+    public RequestDataTask(JsonUtil jsonUtil, Context context,String method) {
         this.context = context;
         this.method=method;
-        this.submethod=subMethod;
-        requestManager = JsonUtil.getInstance();
+        this.mJsonUtil = jsonUtil;
     }
 
     public abstract void postInBackground(JsonElement response);
     
-    
-    public List<HashMap<String, Object>>  getSubTaskParams(JsonElement response){
-    	 return null;
-    }
-
 
     @Override
     public JsonElement doInBackground(HashMap<String, Object>... params) {
-        
-            HashMap<String, Object> param = params[0];
-            JsonElement element=xiamiRequest(method,param);
-//            if(null !=element){
-//                postInBackground(element);          	
-//            }            
-            return element;
+        	
+       	 try {
+       		 
+                HashMap<String, Object> param = params[0];
+                String result = mJsonUtil.xiamiRequest(method, param);           
+                if (!TextUtils.isEmpty(result)) {
+                   
+                	//获取的响应为：json字符串
+                    XiamiApiResponse response = mJsonUtil.xiamiRespond(result);
+                    if (mJsonUtil.isResponseValid(response)) {              	
+                    	JsonElement JsonData=response.getData();
+                        return JsonData;
+                        
+                    } else return null;
+                } else {
+                    //查询失败
+                    Toast.makeText(context, R.string.error_response,Toast.LENGTH_SHORT).show();
+                    return null;
+                }
+            } catch (NoSuchAlgorithmException e) {
+                Toast.makeText(context, R.string.error_sign_algorithm,Toast.LENGTH_SHORT).show();
+
+                e.printStackTrace();
+                return null;
+            } catch (IOException e) {
+                Toast.makeText(context, R.string.error_io,Toast.LENGTH_SHORT).show();
+
+                e.printStackTrace();
+                return null;
+            } catch (AuthExpiredException e) {
+                Toast.makeText(context, R.string.error_auth_expired,Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
+                return null;
+            } catch (ResponseErrorException e) {
+                Toast.makeText(context, R.string.error_response,Toast.LENGTH_SHORT).show();
+                return null;
+            }    	               
     }
-    
-    
-    private  JsonElement xiamiRequest(String method,HashMap<String, Object> param){
-    	
-    	 try {
-    		 
-    		 
-             String result = mXMMusicData.xiamiRequest(method, param);
-             
-             if (!TextUtils.isEmpty(result)) {
-                 //获取的json字符串由第三方自主解析，demo使用Gson解析
-                 Gson gson = requestManager.getGson();
-                 XiamiApiResponse response = gson.fromJson(result, XiamiApiResponse.class);
-                 if (requestManager.isResponseValid(response)) {              	
-                 	JsonElement JsonData=response.getData();
-                     return JsonData;
-                     
-                 } else return null;
-             } else {
-                 //查询失败
-                 Toast.makeText(context, R.string.error_response,Toast.LENGTH_SHORT).show();
-                 return null;
-             }
-         } catch (NoSuchAlgorithmException e) {
-             Toast.makeText(context, R.string.error_sign_algorithm,Toast.LENGTH_SHORT).show();
-
-             e.printStackTrace();
-             return null;
-         } catch (IOException e) {
-             Toast.makeText(context, R.string.error_io,Toast.LENGTH_SHORT).show();
-
-             e.printStackTrace();
-             return null;
-         } catch (AuthExpiredException e) {
-             Toast.makeText(context, R.string.error_auth_expired,Toast.LENGTH_SHORT).show();
-             e.printStackTrace();
-             return null;
-         } catch (ResponseErrorException e) {
-             Toast.makeText(context, R.string.error_response,Toast.LENGTH_SHORT).show();
-             return null;
-         }    	
-    }
-    
-
 }

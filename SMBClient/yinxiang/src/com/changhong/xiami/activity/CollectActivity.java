@@ -37,8 +37,6 @@ import java.util.List;
 
 public class CollectActivity extends BaseActivity {
 
-	private XMMusicData mXMMusicData;
-	private JsonUtil mJsonUtil;
 	private GridView mCollectList;
 	private CollectAdapter adapter;
 	private Handler mHandler;
@@ -55,9 +53,6 @@ public class CollectActivity extends BaseActivity {
 	@Override
 	protected void initView() {
 		setContentView(R.layout.xiami_album_list);
-
-		mXMMusicData = XMMusicData.getInstance(this);
-
 		/**
 		 * IP连接部分
 		 */
@@ -78,7 +73,6 @@ public class CollectActivity extends BaseActivity {
 		super.initData();
 
 		SourceDataList = new ArrayList<XiamiDataModel>();
-		mJsonUtil=JsonUtil.getInstance();
 		// 长按进入歌手详情
 		mCollectList.setOnItemClickListener(new OnItemClickListener() {
 			@Override
@@ -244,8 +238,7 @@ public class CollectActivity extends BaseActivity {
 	class FindCollectTask extends RequestDataTask {
 
 		public FindCollectTask(Context context) {
-			super(mXMMusicData, context,	RequestMethods.METHOD_COLLECT_RECOMMEND,
-					RequestMethods.METHOD_COLLECT_DETAIL);
+			super(mJsonUtil, context,	RequestMethods.METHOD_COLLECT_RECOMMEND);
 		}
 
 		@Override

@@ -25,7 +25,6 @@ import com.changhong.xiami.data.RequestDataTask;
 import com.changhong.xiami.data.JsonUtil;
 import com.changhong.xiami.data.SceneAdapter;
 import com.changhong.xiami.data.SceneInfor;
-import com.changhong.xiami.data.SimpleParser;
 import com.changhong.xiami.data.XMMusicData;
 import com.changhong.xiami.data.XiamiApiResponse;
 import com.changhong.xiami.data.XiamiDataModel;
@@ -51,11 +50,9 @@ import java.util.Map;
 
 public class SceneActivity extends BaseActivity {
 
-	private XMMusicData mXMMusicData;
 	private GridView mSceneList;
 	private SceneAdapter adapter;
 	private Handler mHandler;
-	private JsonUtil mJsonUtil=null; 
 	private List<XiamiDataModel> SourceDataList = null;
 	String[]  sceneTitle={"开车","跑步","聚会","睡眠","学习","工作"};
 
@@ -68,8 +65,6 @@ public class SceneActivity extends BaseActivity {
 	protected void initView() {
 		setContentView(R.layout.xiami_album_list);
 
-		mXMMusicData = XMMusicData.getInstance(this);
-		mJsonUtil=JsonUtil.getInstance();
 		/**
 		 * IP连接部分
 		 */
@@ -182,7 +177,7 @@ public class SceneActivity extends BaseActivity {
 	class FindSceneTask extends RequestDataTask {
 
 		public FindSceneTask(Context context) {
-			super(mXMMusicData, context,"tag.genre-list", null);
+			super(mJsonUtil, context,"tag.genre-list");
 		}
 
 		@Override

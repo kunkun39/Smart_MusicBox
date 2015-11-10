@@ -4,6 +4,7 @@ import com.changhong.common.service.ClientSendCommandService;
 import com.changhong.common.service.NetworkConnectChangedReceiver;
 import com.changhong.common.system.MyApplication;
 import com.changhong.common.widgets.BoxSelectAdapter;
+import com.changhong.xiami.data.JsonUtil;
 
 import android.app.Activity;
 import android.content.IntentFilter;
@@ -36,6 +37,10 @@ public abstract class BaseActivity extends Activity{
 	protected ListView clients = null;
 	protected BoxSelectAdapter IpAdapter;
 	
+	//json数据解析
+	protected JsonUtil mJsonUtil;
+
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -47,6 +52,8 @@ public abstract class BaseActivity extends Activity{
 
 	
 	protected  void initData(){
+		
+		mJsonUtil=JsonUtil.getInstance(this);
 		/**
 		 * IP连接部分
 		 */

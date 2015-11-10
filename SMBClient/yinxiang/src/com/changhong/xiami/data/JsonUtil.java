@@ -1,5 +1,6 @@
 package com.changhong.xiami.data;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -7,10 +8,13 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.xiami.sdk.XiamiSDK;
+import com.xiami.sdk.entities.OnlineAlbum;
 import com.xiami.sdk.entities.OnlineCollect;
 import com.xiami.sdk.entities.OnlineSong;
 import com.xiami.sdk.entities.SceneSongs;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -18,22 +22,25 @@ public class JsonUtil {
 
     private static JsonUtil instance;
     private Gson mGson;
-
-    private JsonUtil() {
+    /**
+	 * XiamiSDK
+	 */
+	public static XiamiSDK mXiamiSDK = null;
+	public static final String KEY = "825bdc1bf1ff6bc01cd6619403f1a072";
+	public static final String SECRET = "7ede04a287d0f92c366880ba515293fd";
+    
+    
+    private JsonUtil(Context con) {
+		mXiamiSDK = new XiamiSDK(con, KEY, SECRET);
         mGson = new Gson();
     }
 
 
-    public static JsonUtil getInstance() {
+    public static JsonUtil getInstance(Context con) {
         if (instance == null) {
-            instance = new JsonUtil();
+            instance = new JsonUtil(con);
         }
         return instance;
-    }
-
-
-    public Gson getGson() {
-        return mGson;
     }
 
     public boolean isResponseValid(XiamiApiResponse response) {
@@ -140,6 +147,48 @@ public class JsonUtil {
     }
 
     
+   /**
+    * 解析专辑列表
+    * @param element
+    * @return
+    */
+    public List<OnlineAlbum> getAlbumList	(JsonElement element){
+    	
+        if(null == element)return null;
+
+		List<OnlineAlbum> dataList = new ArrayList<OnlineAlbum>();
+		
+			JsonObject obj = element.getAsJsonObject();
+			String total = obj.get("total").getAsString();
+			String more = obj.get("more").getAsString();
+			element = obj.get("albums");
+
+			if (element.isJsonArray()) {
+
+				JsonArray array = element.getAsJsonArray();
+				int size = array.size();
+				for (int i = 0; i < size; i++) {
+					JsonObject itemObj = array.get(i).getAsJsonObject();
+			
+					OnlineAlbum onlineAlbum = new OnlineAlbum();
+					onlineAlbum.setAlbumId(itemObj.get("album_id").getAsInt());
+					onlineAlbum.setAlbumName(itemObj.get("album_name").getAsString());
+					onlineAlbum.setArtistId(itemObj.get("artist_id").getAsInt());
+					onlineAlbum.setArtistName(itemObj.get("artist_name").getAsString());
+					onlineAlbum.setArtistLogo(itemObj.get("artist_logo").getAsString());	
+					onlineAlbum.setAlbumCategory(itemObj.get("album_category").getAsString());	
+					onlineAlbum.setCompany(itemObj.get("company").getAsString());	
+					onlineAlbum.setLanguage(itemObj.get("language").getAsString());	
+					onlineAlbum.setDescription(itemObj.get("description").getAsString());	
+					onlineAlbum.setCdCount(itemObj.get("cd_count").getAsString());				
+					onlineAlbum.setPublishTime(itemObj.get("gmt_publish").getAsInt());
+					onlineAlbum.setSongCount(itemObj.get("song_count").getAsInt());
+					onlineAlbum.setGrade(itemObj.get("grade").getAsFloat());
+					dataList.add(onlineAlbum);
+				}
+		}
+		return dataList;
+   }
     
     
     public List<OnlineSong> getSongList(JsonElement element){
@@ -175,49 +224,33 @@ public class JsonUtil {
     
     
     
-    
-  public <T> List<T> parseList(JsonElement element, IFJsonItemParser<T> parser){
-    	
-    	List<T> resultList=new ArrayList<T>();
-    	try {
-    		
-    		if(null !=element  && element.isJsonArray()){
-    			   JsonArray array=element.getAsJsonArray();
-    			   for (int i = 0; i < array.size(); i++) {  
-    				   resultList.add(parser.parse(array.get(i)));					
-				}
-    		}
-    		
-    	} catch (JsonParseException ex) {
-			// 异常处理代码
-			ex.printStackTrace();
-	    	return resultList;
 
-		} 	
-    	return resultList;
-    }
+
+	/**
+	 * 自解析JSON接口
+	 * @param methodCode
+	 * @param params
+	 * @return
+	 */
+	public String xiamiRequest(String methodCode,  HashMap<java.lang.String,java.lang.Object> params) throws java.security.NoSuchAlgorithmException,
+    java.io.IOException,
+    com.xiami.core.exceptions.AuthExpiredException,
+    com.xiami.core.exceptions.ResponseErrorException{
+		
+		Log.e("YDINFOR", "++++++++++++++++xiamiRequest()+++++++++++++++++++++++++++++");
+//		mXiamiSDK.enableLog(true);
+		String  results=mXiamiSDK.xiamiSDKRequest(methodCode,params);
+		return results;
+	}
     
 
-  
-  public  <T> T parseObj(JsonElement element, IFJsonItemParser<T> parser){
-  	
-  	T result=null;
-  	try {
-  		
-  		if(null !=element  && element.isJsonObject()){
-  			   JsonObject obj=element.getAsJsonObject();
-				 result=parser.parse(obj);	
-				 return  result;
-  		}
-  		
-  	} catch (JsonParseException ex) {
-			// 异常处理代码
-			ex.printStackTrace();
-	    	return null;
-		} 	
-  	return null;
-  }
-    
-
+	
+	
+	public XiamiApiResponse  xiamiRespond(String respond) {
+		
+		Log.e("YDINFOR", "++++++++++++++++xiamiRequest()+++++++++++++++++++++++++++++");
+        XiamiApiResponse response = mGson.fromJson(respond, XiamiApiResponse.class);
+		return response;
+	}
 
 }
