@@ -97,16 +97,20 @@
         <activity
                 android:name="com.changhong.xiami.activity.ArtistListActivity"
                 android:screenOrientation="portrait" />
-        <activity android:name="com.changhong.xiami.activity.ArtistDetailActivity"/>
+        <activity
+                android:name="com.changhong.xiami.activity.XiamiMusicListActivity"
+                android:screenOrientation="portrait" />
+        <activity  android:name="com.changhong.xiami.activity.SceneActivity" />
+        <activity  android:name="com.changhong.xiami.activity.CollectActivity" />
         
-        <activity android:name="com.changhong.xiami.activity.XiamiMainActivity"/>
+        <activity android:name="com.changhong.xiami.activity.ArtistDetailActivity"/>
+        <activity android:name="com.changhong.xiami.activity.AlbumListActivity"/>
         
 		<activity android:name="com.changhong.yinxiang.activity.AlarmMainActivity"/>
 		<activity android:name="com.changhong.yinxiang.alarm.SetAlarmActvity"
 		    />
 		
 		<activity android:name="com.changhong.yinxiang.alarm.DeleteAlarmActivity"/>
-        <activity android:name="com.changhong.xiami.activity.XiamiMusicListActivity"/>
         
         <service android:name="com.changhong.yinxiang.nanohttpd.HTTPDService" />
 
