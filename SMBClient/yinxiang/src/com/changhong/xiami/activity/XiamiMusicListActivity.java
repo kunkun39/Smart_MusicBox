@@ -87,7 +87,7 @@ public class XiamiMusicListActivity extends BaseActivity {
 				params.put("type", 1);
 				params.put("limit", 20);
 				params.put("page", 1);
-				FindSongTask findSongByIdTask = new FindSongTask(getApplicationContext(),"tag.song	");
+				FindSongTask findSongByIdTask = new FindSongTask(getApplicationContext(),"tag.song");
 				findSongByIdTask.execute(params);
 				break;
 			}

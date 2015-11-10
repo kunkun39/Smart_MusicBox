@@ -47,7 +47,7 @@ public class AlbumListActivity extends BaseActivity {
 	private Handler mHandler;
 
 	private int curPageSize = 0;
-	private final int MAX_PAGE_SIZE = 100;
+	private final int MAX_PAGE_SIZE = 20;
 
 	private List<XiamiDataModel> SourceDataList = null;
 
@@ -170,10 +170,7 @@ public class AlbumListActivity extends BaseActivity {
 			albumModel.setId(albumID);
 			albumModel.setTitle(name);
 			albumModel.setLogoUrl(imgUrl);			
-			albumModel.setDescription(content);			
-			Bitmap image = mXMMusicData.getBitmapFromUrl(imgUrl);
-			albumModel.setLogoImg(image);	
-			
+			albumModel.setDescription(content);						
 			albumList.add(albumModel);
 		}
 		return albumList;

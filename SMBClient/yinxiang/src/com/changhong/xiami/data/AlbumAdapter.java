@@ -80,8 +80,9 @@ public class AlbumAdapter extends BaseAdapter{
 			viewHolder = (ViewHolder) view.getTag();
 		}
 		
-		viewHolder.albumName.setText(this.mAlbumList.get(position).getTitle());	
-		viewHolder.albumContent.setText(this.mAlbumList.get(position).getDescription());	
+		String showDetail=mAlbumList.get(position).getTitle()+"\n"+mAlbumList.get(position).getDescription();
+//		viewHolder.albumName.setText(this.mAlbumList.get(position).getTitle());	
+		viewHolder.albumContent.setText(showDetail);	
 		String logo=mAlbumList.get(position).getLogoUrl();
 		imageLoader.displayImage(logo, viewHolder.albumLogo);
 

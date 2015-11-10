@@ -133,7 +133,7 @@ public class YinXiangNetMusicFragment extends Fragment{
     
    private void startXiaMiMusic(){		
 		//启动虾米音乐
-		Intent intent = new Intent(getActivity(),AlbumListActivity.class);
+		Intent intent = new Intent(getActivity(),SceneActivity.class);
 		startActivity(intent);
 	}
 
