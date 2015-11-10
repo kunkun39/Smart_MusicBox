@@ -48,35 +48,26 @@ public class XiamiMusicListActivity extends BaseActivity {
 	private MusicsListAdapter adapter;
 	private List<OnlineSong> songsList;
 	private OnlineAlbum album;
-	private long albumID = 0;
+	private long albumID=0;	
 	private int albumIndex = 0;
-  
-    private int curMusicType=1;
-	// 根据不同的音乐类型，进入不同的操作流程
-	private final int MUSIC_TYPE_ALBUM = 1;
-	// 显示场景歌曲
-	private final int MUSIC_TYPE_SCENE = 2;
-	// 显示专辑歌曲列表
-	private final int MUSIC_LIST_UPDATE = 6;
-	// 显示今日歌曲列表
-	private final int MUSIC_TODAY_MUSICS = 4;
-	
+    private final int MUSIC_TYPE_ALBUM=1;
+    private final int MUSIC_TYPE_SCENE=2;
     private final int MUSIC_TYPE_COLLECT=3;
 
-	
-    private  String curTitle;
+    private final int MUSIC_LIST_UPDATE=6;
 
+    private int curMusicType=1;
+    private  String curTitle;
 	private Handler mhandler = new Handler() {
 
 		@Override
 		public void handleMessage(Message msg) {
 			// TODO Auto-generated method stub
 			switch (msg.what) {
-			
 			case MUSIC_LIST_UPDATE:  //更新音乐列表
 				albumName.setText(curTitle);
 				adapter.setData(songsList);
-			
+				break;
 			case MUSIC_TYPE_ALBUM: //专辑音乐类型
 				albumID=getIntent().getIntExtra("albumID", 0);
 				getAlbumList();			
@@ -98,9 +89,6 @@ public class XiamiMusicListActivity extends BaseActivity {
 				params.put("page", 1);
 				FindSongTask findSongByIdTask = new FindSongTask(getApplicationContext(),"tag.song	");
 				findSongByIdTask.execute(params);
-		
-			case MUSIC_TODAY_MUSICS:
-
 				break;
 			}
 		}
@@ -111,12 +99,13 @@ public class XiamiMusicListActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-
+		
+		
 	}
 
 	protected void initView() {
 		setContentView(R.layout.xiami_music_list);
-
+		
 		/**
 		 * IP连接部分
 		 */
@@ -124,7 +113,8 @@ public class XiamiMusicListActivity extends BaseActivity {
 		back = (Button) findViewById(R.id.btn_back);
 		clients = (ListView) findViewById(R.id.clients);
 		listClients = (Button) findViewById(R.id.btn_list);
-
+		
+		
 		albumName = (TextView) findViewById(R.id.ablum_name);
 		musicsList = (ListView) findViewById(R.id.musics_list);
 		adapter = new MusicsListAdapter(XiamiMusicListActivity.this);
@@ -139,23 +129,19 @@ public class XiamiMusicListActivity extends BaseActivity {
 		
 		// 启动activity的时候传进参数名为"musicsAlbum"的专辑。		
 		curMusicType=getIntent().getIntExtra("musicType", 1);	
-     
-		
+       
 		back.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				finish();
 			}
-		});
-		
-		mhandler.sendEmptyMessage(curMusicType);
-
+		});			
+	   mhandler.sendEmptyMessage(curMusicType);
 	}
 
-	
 	private void getAlbumList() {
-		albumID = getIntent().getIntExtra("albumID", 0);
+		
 		new Thread(new Runnable() {
 
 			@Override
@@ -164,14 +150,11 @@ public class XiamiMusicListActivity extends BaseActivity {
 				
 				//测试代码
 				if(curMusicType == MUSIC_TYPE_ALBUM){
-			
-				// 测试代码
-				ArrayList<OnlineAlbum> albumList = (ArrayList<OnlineAlbum>) XMMusicData
-						.getInstance(XiamiMusicListActivity.this).getNewAlbums(
-								LanguageType.huayu, 10, 1);
+				ArrayList<OnlineAlbum> albumList = (ArrayList<OnlineAlbum>) mXMMusicData.getNewAlbums(
+						LanguageType.huayu, 10, 1);
 				album = albumList.get(albumIndex);
-				albumID = album.getAlbumId();
-				// 根据ID获取专辑相信信息，带歌曲列表
+				albumID=album.getAlbumId();
+				//根据ID获取专辑相信信息，带歌曲列表
 				album = XMMusicData.getInstance(XiamiMusicListActivity.this)	.getDetailAlbum(albumID);
 				songsList=album.getSongs();
 				curTitle=album.getAlbumName();
@@ -191,6 +174,7 @@ public class XiamiMusicListActivity extends BaseActivity {
 			}
 		}).start();
 
+		
 	}
 
 	@Override
