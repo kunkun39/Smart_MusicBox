@@ -1,9 +1,5 @@
 package com.changhong.xiami.data;
 
-import java.util.List;
-
-import com.xiami.sdk.entities.OnlineSong;
-
 import android.graphics.Bitmap;
 
 public class XiamiDataModel {

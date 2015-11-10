@@ -2,7 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical" 
+    android:paddingLeft="8dp"
+    android:paddingTop="5dp">
 
     <ImageView
         android:layout_width="100dp"
@@ -16,7 +18,7 @@
         android:layout_height="wrap_content" 
         android:id="@+id/today_recom_text"
         android:textColor="@color/black"
-        android:textSize="16sp"
+        android:textSize="12sp"
         android:singleLine="false"
         android:maxLines="3"
         />

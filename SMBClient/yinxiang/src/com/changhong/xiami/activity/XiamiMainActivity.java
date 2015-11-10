@@ -1,11 +1,13 @@
 package com.changhong.xiami.activity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -14,10 +16,14 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.changhong.common.system.MyApplication;
 import com.changhong.common.widgets.HorizontalListView;
+import com.changhong.xiami.data.TodaySRecommendAdapter;
 import com.changhong.xiami.data.XMMusicData;
 import com.changhong.yinxiang.R;
 import com.changhong.yinxiang.activity.BaseActivity;
+import com.xiami.sdk.entities.LanguageType;
+import com.xiami.sdk.entities.OnlineAlbum;
 import com.xiami.sdk.entities.OnlineSong;
 
 public class XiamiMainActivity extends BaseActivity {
@@ -32,13 +38,17 @@ public class XiamiMainActivity extends BaseActivity {
 	private HorizontalListView horListView;
 	private ImageButton xiamiMainSearch, randomMusic;
 	
-	private List<OnlineSong> todayRecomList;
+	private ArrayList<OnlineSong> todayRecomList=null;
+	private TodaySRecommendAdapter TRAdapter=null;
 
 	// 新碟首发
 	private ImageView albumMsg1, playAlbum1,albumMsg2, playAlbum2,albumMsg3, playAlbum3;
+	private TextView albumTitle1,albumTitle2,albumTitle3;
+	
+	private List<OnlineAlbum> newAlbums=null;
 
 	// 排行榜
-	private TextView rankHY, rankOM;
+	private ImageView rankHY, rankOM;
 	private ImageView playRankHY, playRankOM;
 
 	// 音乐会
@@ -47,13 +57,24 @@ public class XiamiMainActivity extends BaseActivity {
 
 	private XMMusicData XMData;
 	
+	/*
+	 * 
+	 * 申明handler的各种action
+	 * 
+	 */
+	private final static int SHOW_TODAY_RECOMMEND_MUSIC=1;
+	
+	
+	
 	private Handler handler=new Handler(){
 
 		@Override
 		public void handleMessage(Message msg) {
 			// TODO Auto-generated method stub
 			switch(msg.what){
-			case 1:
+			case SHOW_TODAY_RECOMMEND_MUSIC:
+				TRAdapter.setData(todayRecomList);
+				showTodaySongs();
 				break;
 				
 			}
@@ -85,9 +106,9 @@ public class XiamiMainActivity extends BaseActivity {
 				break;
 			case R.id.xiami_new_album1_play:
 				break;
-			case R.id.xiami_hyrank_text:
+			case R.id.xiami_hyrank_image:
 				break;
-			case R.id.xiami_omrank_text:
+			case R.id.xiami_omrank_image:
 				break;
 			case R.id.xiami_hyrank_play:
 				break;
@@ -138,13 +159,16 @@ public class XiamiMainActivity extends BaseActivity {
 
 		albumMsg1 = (ImageView) findViewById(R.id.xiami_new_album1);
 		playAlbum1 = (ImageView) findViewById(R.id.xiami_new_album1_play);
+		albumTitle1=(TextView)findViewById(R.id.xiami_new_album1_title);
 		albumMsg2 = (ImageView) findViewById(R.id.xiami_new_album2);
 		playAlbum2 = (ImageView) findViewById(R.id.xiami_new_album2_play);
+		albumTitle2=(TextView)findViewById(R.id.xiami_new_album2_title);
 		albumMsg3 = (ImageView) findViewById(R.id.xiami_new_album3);
 		playAlbum3 = (ImageView) findViewById(R.id.xiami_new_album3_play);
+		albumTitle3=(TextView)findViewById(R.id.xiami_new_album3_title);
 
-		rankHY = (TextView) findViewById(R.id.xiami_hyrank_text);
-		rankOM = (TextView) findViewById(R.id.xiami_omrank_text);
+		rankHY = (ImageView) findViewById(R.id.xiami_hyrank_image);
+		rankOM = (ImageView) findViewById(R.id.xiami_omrank_image);
 		playRankHY = (ImageView) findViewById(R.id.xiami_hyrank_play);
 		playRankOM = (ImageView) findViewById(R.id.xiami_omrank_play);
 
@@ -152,6 +176,10 @@ public class XiamiMainActivity extends BaseActivity {
 		concertScene = (ImageView) findViewById(R.id.xiami_concert_scene);
 		concertArtist = (ImageView) findViewById(R.id.xiami_concert_artist);
 		concertCollection = (ImageView) findViewById(R.id.xiami_concert_collection);
+		
+		
+		TRAdapter=new TodaySRecommendAdapter(XiamiMainActivity.this);
+		horListView.setAdapter(TRAdapter);
 	}
 
 	@Override
@@ -201,17 +229,29 @@ public class XiamiMainActivity extends BaseActivity {
 		@Override
 		public void run() {
 			// TODO Auto-generated method stub
-//			XMData.
+			todayRecomList=(ArrayList<OnlineSong>) XMData.getRecommendSong(10, 1);
+			newAlbums=XMData.getNewAlbums(LanguageType.huayu, 3, 1);
+			handler.sendEmptyMessage(SHOW_TODAY_RECOMMEND_MUSIC);
 		}
 		
 	}
 	/*
 	 * 
-	 * 显示今日推荐歌曲信息
+	 * 显示新碟首发
 	 */
 	private void showTodaySongs(){
+		OnlineAlbum album1,album2,album3;
+		album1=newAlbums.get(0);
+		album2=newAlbums.get(1);
+		album3=newAlbums.get(2);
 		
+		MyApplication.imageLoader.displayImage(album1.getImageUrl(300), albumMsg1);
+		MyApplication.imageLoader.displayImage(album2.getImageUrl(300), albumMsg2);
+		MyApplication.imageLoader.displayImage(album3.getImageUrl(300), albumMsg3);
 		
+		albumTitle1.setText(album1.getAlbumName()+"\n"+album1.getArtistName());
+		albumTitle2.setText(album2.getAlbumName()+"\n"+album2.getArtistName());
+		albumTitle3.setText(album3.getAlbumName()+"\n"+album3.getArtistName());
 	}
 	
 	/*============================================================================
