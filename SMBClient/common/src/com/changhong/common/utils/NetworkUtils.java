@@ -1,6 +1,8 @@
 package com.changhong.common.utils;
 
 import android.content.Context;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.ScanResult;
@@ -120,7 +122,11 @@ public class NetworkUtils {
     
     public static String getGPSInfor(Context context){
     	String repgs="116.396574,39.992706";
-    	
+    	LocationManager locMan = (LocationManager)context.getSystemService(Context.LOCATION_SERVICE);
+    	Location loc = locMan.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+    	if (loc != null) {
+    		repgs=  loc.getLatitude()+","+ loc.getLongitude();
+    	}
     	return repgs;
     }
     

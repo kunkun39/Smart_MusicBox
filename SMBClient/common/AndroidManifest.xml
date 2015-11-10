@@ -13,5 +13,5 @@
         android:name="com.changhong.common.system.MyApplication"
         android:label="common part" >
     </application>
-
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 </manifest>
