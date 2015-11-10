@@ -246,7 +246,7 @@ public class SearchActivity extends BaseActivity {
 		
 		setSearchHistory();		
        ((RadioButton) search_type.getChildAt(0)).setChecked(true);
-	   XMMusicData.getInstance(SearchActivity.this).getAlbumName(handler);
+//	   XMMusicData.getInstance(SearchActivity.this).getAlbumName(handler);
 	}
 
 
