@@ -131,9 +131,9 @@ public class XiamiMusicListActivity extends BaseActivity {
 
 		// 启动activity的时候传进参数名为"musicType"的专辑。
 		curMusicType = getIntent().getIntExtra("musicType", 1);
-		String name = getIntent().getStringExtra("title");
-		if (name != null) {
-			albumName.setText(name);
+		curTitle = getIntent().getStringExtra("title");
+		if (curTitle != null) {
+			albumName.setText(curTitle);
 		}
 		dealMusicType(curMusicType);
 
@@ -190,7 +190,7 @@ public class XiamiMusicListActivity extends BaseActivity {
 					songsList = mOnlineCollect.getSongs();
 					curTitle = mOnlineCollect.getCollectName();
 				} else if (curMusicType == MUSIC_TYPE_ALBUM) {
-
+					songsList=mXMMusicData.getRecommendSong(20, 1);
 				}
 				// 根据ID获取专辑相信信息，带歌曲列表
 				mhandler.sendEmptyMessage(MUSIC_LIST_UPDATE);
