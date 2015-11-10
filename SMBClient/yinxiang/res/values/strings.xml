@@ -24,5 +24,9 @@
     <string name="every_day" msgid="1058994798884544691">"每天"</string>
     <string name="never" msgid="54104287800571769">"一律不"</string>
     <string name="day_concat" msgid="971998564991636532">", "</string>
+    
+    <string name="error_sign_algorithm">签名算法异常</string>
+    <string name="error_auth_expired">授权过期</string>
+    <string name="error_io">网络读写错误</string>
 
 </resources>
