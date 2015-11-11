@@ -49,7 +49,7 @@ public class ArtistListActivity extends BaseActivity {
 	// 艺人类型
 	private RadioGroup radioGroup;
 	private int curPageSize = 0;
-	private final int MAX_PAGE_SIZE = 100;
+	private final int MAX_PAGE_SIZE = 50;
 	private int curArtistType;
    String[] artistCategory={"chinese_M","chinese_F","chinese_B","english_M","english_F","english_B","korea_M","korea_F","korea_B"," japanese_M"," japanese_F"," japanese_B"};
  
@@ -233,9 +233,8 @@ public class ArtistListActivity extends BaseActivity {
 //			
 //			}
 //		}).start();
-		
-		
-		requestArtistBook();
+				
+		requestArtistBook(artistCategory);
 		
 	}
 
@@ -280,12 +279,17 @@ public class ArtistListActivity extends BaseActivity {
 	
 	
 	
-	private void requestArtistBook() {
-		HashMap<String, Object> params = new HashMap<String, Object>();
-		params.put("type", "musician");
-		params.put("limit", MAX_PAGE_SIZE);
-		params.put("page", 1);
-		mXMMusicData.getJsonData(mHandler,RequestMethods.METHOD_ARTIST_WORDBOOK, params);
+	private void requestArtistBook(String[] categorys ) {
+		int size=categorys.length;
+		HashMap[]  paramList=new HashMap[size];
+		for (int i = 0; i < size; i++) {		
+			HashMap<String, Object> params = new HashMap<String, Object>();
+			params.put("type", categorys[i]);
+			params.put("limit", MAX_PAGE_SIZE);
+			params.put("page", 1);
+			paramList[i]=params;
+		}
+		mXMMusicData.getJsonData(mHandler,RequestMethods.METHOD_ARTIST_WORDBOOK, paramList);
 	}
 
 	/**

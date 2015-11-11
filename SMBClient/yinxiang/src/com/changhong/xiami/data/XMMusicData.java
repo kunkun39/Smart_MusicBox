@@ -68,8 +68,22 @@ public class XMMusicData {
 	 * 自解析JSON接口
 	 * 
 	 * @param methodCode
-	 * @param params
+	 * @param params  数组
 	 * @return
+	 */
+	public void getJsonData(Handler handler, String method,HashMap<String, Object>[] params) {
+
+		Log.e("YDINFOR",
+				"++++++++++++++++xiamiRequest()+++++++++++++++++++++++++++++");
+		RequestDataTask requestDataTask = new RequestDataTask(this, handler, method);
+		requestDataTask.execute(params);
+	}
+	
+	/**
+	 * 
+	 * @param handler
+	 * @param method
+	 * @param params
 	 */
 	public void getJsonData(Handler handler, String method,HashMap<String, Object> params) {
 

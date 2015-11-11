@@ -15,8 +15,7 @@ import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 
-public class RequestDataTask extends
-		AsyncTask<HashMap<String, Object>, Long, JsonElement> {
+public class RequestDataTask extends	AsyncTask<HashMap<String, Object>, Long, JsonElement> {
 
 	private XMMusicData mXMMusicData;
 	private String method;
@@ -30,10 +29,7 @@ public class RequestDataTask extends
 		this.parentHandler = parent;
 	}
 
-	//
-
-	@Override
-	protected void onPostExecute(JsonElement result) {
+	protected void postExecute(JsonElement result) {
 		if (null != parentHandler) {
 			Message msg = parentHandler.obtainMessage();
 			if (-1 == ErrorCode) {
@@ -59,12 +55,12 @@ public class RequestDataTask extends
 			for (int i = 0; i < params.length; i++) {			
 					HashMap<String, Object> param = params[i];
 					String result = mXMMusicData.xiamiRequest(method, param);
-					if (!TextUtils.isEmpty(result)) {
-		
+					if (!TextUtils.isEmpty(result)) {		
 						// 获取的响应为：json字符串
 						XiamiApiResponse response = mXMMusicData.getXiamiResponse(result);
 						if (mXMMusicData.isResponseValid(response)) {
 							JsonElement JsonData = response.getData();
+							postExecute(JsonData);
 							return JsonData;	
 						}
 					} else {
@@ -91,4 +87,6 @@ public class RequestDataTask extends
 			return null;
 		}
 	}
+	
+	
 }
