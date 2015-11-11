@@ -70,7 +70,7 @@ public class XMMusicData {
 	 * @param params
 	 * @return
 	 */
-	public void getJsonData(Handler handler, String method,HashMap<java.lang.String, java.lang.Object> params) {
+	public void getJsonData(Handler handler, String method,HashMap<String, Object> params) {
 
 		Log.e("YDINFOR",
 				"++++++++++++++++xiamiRequest()+++++++++++++++++++++++++++++");
@@ -308,30 +308,37 @@ public class XMMusicData {
 
 	public List<OnlineArtist> getArtistList(JsonElement element) {
 
-		if (null == element)return null;
+		if (null == element)
+			return null;
 
 		List<OnlineArtist> dataList = new ArrayList<OnlineArtist>();
-		JsonArray arraySong = element.getAsJsonArray();
-		int size = arraySong.size();
 
-		for (int i = 0; i < size; i++) {
+		JsonObject obj = element.getAsJsonObject();
+		String total = obj.get("total").getAsString();
+		String more = obj.get("more").getAsString();
+		element = obj.get("artists");
 
-			JsonObject songObj = arraySong.get(i).getAsJsonObject();
-			OnlineSong song = new OnlineSong();
-			song.setSongId(songObj.get("song_id").getAsLong());
-			song.setArtistId(songObj.get("artist_id").getAsLong());
-			song.setSongId(songObj.get("song_id").getAsLong());
-			song.setAlbumId(songObj.get("album_id").getAsLong());
-			song.setLength(songObj.get("length").getAsInt());
-			song.setMusicType(songObj.get("music_type").getAsInt());
-			song.setCdSerial(songObj.get("cd_serial").getAsInt());
-			song.setSongName(songObj.get("song_name").getAsString());
-			song.setArtistName(songObj.get("artist_name").getAsString());
-			song.setArtistLogo(songObj.get("artist_logo").getAsString());
-			song.setAlbumName(songObj.get("album_name").getAsString());
-			song.setLogo(songObj.get("album_logo").getAsString());
-			song.setSingers(songObj.get("singers").getAsString());
-//			dataList.add(song);
+		if (element.isJsonArray()) {
+
+			JsonArray array = element.getAsJsonArray();
+			int size = array.size();
+			for (int i = 0; i < size; i++) {
+				JsonObject itemObj = array.get(i).getAsJsonObject();
+
+				OnlineArtist onlineArtist = new OnlineArtist();
+				onlineArtist.setId(itemObj.get("artist_id").getAsInt());
+				onlineArtist.setName(itemObj.get("artist_name").getAsString());
+				onlineArtist.setLogo(itemObj.get("artist_logo").getAsString());				
+				onlineArtist.setCategory(itemObj.get("category").getAsInt());
+				onlineArtist.setEnglish_name(itemObj.get("english_name").getAsString());
+				onlineArtist.setGender(itemObj.get("gender").getAsString());
+				onlineArtist.setDescription(itemObj.get("description").getAsString());
+				onlineArtist.setArea(itemObj.get("area").getAsString());		
+				onlineArtist.setCountLikes(itemObj.get("count_likes").getAsInt());
+				onlineArtist.setRecommends(itemObj.get("recommends").getAsInt());
+				
+				dataList.add(onlineArtist);
+			}
 		}
 		return dataList;
 	}

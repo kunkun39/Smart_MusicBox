@@ -14,6 +14,8 @@ import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.changhong.xiami.artist.CharacterParser;
@@ -44,10 +46,13 @@ public class ArtistListActivity extends BaseActivity {
 	private TextView dialog;
 	private SortAdapter adapter;
 	private Handler mHandler;
-
+	// 艺人类型
+	private RadioGroup radioGroup;
 	private int curPageSize = 0;
 	private final int MAX_PAGE_SIZE = 100;
-
+	private int curArtistType;
+   String[] artistCategory={"chinese_M","chinese_F","chinese_B","english_M","english_F","english_B","korea_M","korea_F","korea_B"," japanese_M"," japanese_F"," japanese_B"};
+ 
 	/**
 	 * 汉字转换成拼音的类
 	 */
@@ -85,6 +90,7 @@ public class ArtistListActivity extends BaseActivity {
 
 		mArtistList = (ListView) findViewById(R.id.singer_list);
 		sideBar = (SideBar) findViewById(R.id.singer_sidebar);
+		radioGroup=(RadioGroup) findViewById(R.id.singer_category);
 		adapter = new SortAdapter(this);
 		mArtistList.setAdapter(adapter);
 
@@ -153,6 +159,21 @@ public class ArtistListActivity extends BaseActivity {
 
 			}
 		});
+		
+		radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+
+			@Override
+			public void onCheckedChanged(RadioGroup group, int checkedId) {
+				// 设备变化
+				curArtistType= matchArtistTypeIndex(checkedId);
+
+
+			}	
+		});
+
+     ((RadioButton) radioGroup.getChildAt(0)).setChecked(true);
+		
+		
 		mHandler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
@@ -214,11 +235,7 @@ public class ArtistListActivity extends BaseActivity {
 //		}).start();
 		
 		
-		HashMap<String, Object> params = new HashMap<String, Object>();
-		params.put("type", "chinese_M");
-		params.put("limit", MAX_PAGE_SIZE);
-		params.put("page", 1);
-		mXMMusicData.getJsonData(mHandler,RequestMethods.METHOD_ARTIST_WORDBOOK, params);
+		requestArtistBook();
 		
 	}
 
@@ -243,6 +260,7 @@ public class ArtistListActivity extends BaseActivity {
 			XiamiDataModel sortModel = new XiamiDataModel();
 			sortModel.setId(artist.getId());
 			sortModel.setTitle(singer);
+			sortModel.setLikeCount(artist.getCountLikes());
 			sortModel.setArtistImgUrl(artist.getImageUrl(Configure.IMAGE_SIZE1));
 			// 汉字转换成拼音
 			String pinyin = characterParser.getSelling(singer);
@@ -259,6 +277,36 @@ public class ArtistListActivity extends BaseActivity {
 		return sortList;
 
 	}
+	
+	
+	
+	private void requestArtistBook() {
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("type", "musician");
+		params.put("limit", MAX_PAGE_SIZE);
+		params.put("page", 1);
+		mXMMusicData.getJsonData(mHandler,RequestMethods.METHOD_ARTIST_WORDBOOK, params);
+	}
+
+	/**
+	 * 根据index匹配艺人类型的索引。
+	 * 
+	 * @param index
+	 * @return
+	 */
+	private int matchArtistTypeIndex(int index) {
+		int reValue = 1;
+		int childCount = radioGroup.getChildCount();
+		for (int i = 0; i < childCount; i++) {
+			RadioButton child = (RadioButton) radioGroup.getChildAt(i);
+			if (null != child && index == child.getId()) {
+				reValue = i + 1;
+				break;
+			}
+		}
+		return reValue;
+	}
+
 	
 	
 	

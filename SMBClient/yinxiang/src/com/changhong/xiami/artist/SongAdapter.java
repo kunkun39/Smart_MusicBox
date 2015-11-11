@@ -57,7 +57,7 @@ public class SongAdapter extends BaseAdapter{
 			
 			viewHolder.songTitle = (TextView) view.findViewById(R.id.item_name);
 			viewHolder.songFile = (TextView) view.findViewById(R.id.sort_catalog);
-			viewHolder.songId = (TextView) view.findViewById(R.id.item_id);
+//			viewHolder.songId = (TextView) view.findViewById(R.id.item_id);
 			viewHolder.songContent = (TextView) view.findViewById(R.id.item_content);
 			
 			

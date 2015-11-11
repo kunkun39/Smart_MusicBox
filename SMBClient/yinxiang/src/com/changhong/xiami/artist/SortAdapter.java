@@ -72,11 +72,12 @@ public class SortAdapter extends BaseAdapter implements SectionIndexer {
 			viewHolder = new ViewHolder();
 			view = LayoutInflater.from(mContext).inflate(R.layout.sort_item,
 					null);
-			viewHolder.tvTitle = (TextView) view.findViewById(R.id.item_name);
-			viewHolder.tvLetter = (TextView) view
-					.findViewById(R.id.sort_catalog);
-			viewHolder.tvImg = (ImageView) view.findViewById(R.id.item_logo);
-
+			viewHolder.title = (TextView) view.findViewById(R.id.item_name);
+			viewHolder.letter = (TextView) view	.findViewById(R.id.sort_catalog);
+			viewHolder.likeCount = (TextView) view.findViewById(R.id.item_content);
+			viewHolder.img = (ImageView) view.findViewById(R.id.item_logo);
+			viewHolder.divideLine= view.findViewById(R.id.sort_divideline);
+			
 			view.setTag(viewHolder);
 
 		} else {
@@ -88,28 +89,42 @@ public class SortAdapter extends BaseAdapter implements SectionIndexer {
 
 		// 如果当前位置等于该分类首字母的Char的位置 ，则认为是第一次出现
 		if (position == getPositionForSection(section)) {
+			
+			viewHolder.letter.setText(mContent.getSortLetters());
+			viewHolder.letter.setVisibility(View.VISIBLE);
+			viewHolder.divideLine.setVisibility(View.VISIBLE);
 
-			viewHolder.tvLetter.setVisibility(View.VISIBLE);
-			viewHolder.tvLetter.setText(mContent.getSortLetters());
 
 		} else {
-			viewHolder.tvLetter.setVisibility(View.GONE);
+			viewHolder.letter.setVisibility(View.GONE);
+			viewHolder.divideLine.setVisibility(View.GONE);
+
 		}
 
-		viewHolder.tvTitle.setText(this.mSingerList.get(position).getTitle());
+		XiamiDataModel model=mSingerList.get(position);
+		viewHolder.title.setText(this.mSingerList.get(position).getTitle());
+		
+		int likeCount=mSingerList.get(position).getLikeCount();
+		if(likeCount/10000 >0){
+		         viewHolder.likeCount.setText(likeCount/10000+" 万粉丝");
+		}else{
+	         viewHolder.likeCount.setText(likeCount+" 粉丝");
+	    }
 
 		String logo=mSingerList.get(position).getArtistImgUrl();
 		if(StringUtils.hasLength(logo)){
-			ImageLoader.getInstance().displayImage(logo, viewHolder.tvImg);
+			ImageLoader.getInstance().displayImage(logo, viewHolder.img);
 		}
 		return view;
 
 	}
 
 	final static class ViewHolder {
-		TextView tvLetter;
-		TextView tvTitle;
-		ImageView tvImg;
+		TextView letter;
+		TextView title;
+		TextView likeCount;	
+		ImageView img;
+		View divideLine;
 	}
 
 	/**

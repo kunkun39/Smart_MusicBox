@@ -54,24 +54,26 @@ public class RequestDataTask extends
 
 		try {
 			ErrorCode = -1;
-			HashMap<String, Object> param = params[0];
-			String result = mXMMusicData.xiamiRequest(method, param);
-			if (!TextUtils.isEmpty(result)) {
-
-				// 获取的响应为：json字符串
-				XiamiApiResponse response = mXMMusicData
-						.getXiamiResponse(result);
-				if (mXMMusicData.isResponseValid(response)) {
-					JsonElement JsonData = response.getData();
-					return JsonData;
-
-				} else
-					return null;
-			} else {
-				// 查询失败
-				ErrorCode = R.string.error_response;
-				return null;
+		
+			int count=params.length;			
+			for (int i = 0; i < params.length; i++) {			
+					HashMap<String, Object> param = params[i];
+					String result = mXMMusicData.xiamiRequest(method, param);
+					if (!TextUtils.isEmpty(result)) {
+		
+						// 获取的响应为：json字符串
+						XiamiApiResponse response = mXMMusicData.getXiamiResponse(result);
+						if (mXMMusicData.isResponseValid(response)) {
+							JsonElement JsonData = response.getData();
+							return JsonData;	
+						}
+					} else {
+						// 查询失败
+						ErrorCode = R.string.error_response;
+					}			
 			}
+			return null;
+
 		} catch (NoSuchAlgorithmException e) {
 			ErrorCode = R.string.error_sign_algorithm;
 			e.printStackTrace();
