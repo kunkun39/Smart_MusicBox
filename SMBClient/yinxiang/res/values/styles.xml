@@ -194,7 +194,7 @@
     </style>
     
     
-    <!-- 音响底部菜单风格 -->
+    <!-- 音响子菜单风格 -->
     <style name="yx_tab">  
     <item name="android:layout_height">wrap_content</item>  
     <item name="android:layout_width">match_parent</item>  
@@ -202,7 +202,7 @@
     <item name="android:gravity">center</item>  
     <item name="android:textSize">14sp</item>  
     <item name="android:paddingTop">5dip</item>  
-    <item name="android:paddingBottom">4dip</item>       
+    <item name="android:paddingBottom">0dip</item>       
     <item name="android:button">@null</item>  
    </style>  
    
