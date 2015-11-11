@@ -9,25 +9,83 @@
    <include layout="@layout/ip_setting"/>  
 
 
-    <!-- 主页面 -->                
+    <!-- 主页面 -->        
+    <!--       
    <TextView android:id="@+id/singer_title"
                 android:layout_width="match_parent"
                 android:layout_height="50dip"
                 android:gravity="center_vertical"
                 android:layout_marginLeft="30dip"
                 android:layout_marginTop="@dimen/ip_banner_height"
-                android:text="艺人" />
+                android:text="艺人" /> -->  
+    
+    <!-- 艺人区域选择 -->
+         <RadioGroup
+            android:id="@+id/singer_category"
+            android:layout_width="match_parent"
+            android:layout_height="50dip"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="@dimen/ip_banner_height"           
+            android:background="@color/list_bg"
+            android:orientation="horizontal" >
+
+            <RadioButton
+                style="@style/yx_tab"
+                android:layout_height="match_parent"            
+                android:drawableBottom="@drawable/musictab_selector"
+                android:text="全部" 
+                android:textSize="16sp"
+                android:textColor="@drawable/musictab_textcolor_selector"/>
+
+            <RadioButton
+                style="@style/yx_tab"
+                android:layout_height="match_parent"
+                android:drawableBottom="@drawable/musictab_selector"               
+                android:text="华语"
+                android:textSize="16sp"
+                android:textColor="@drawable/musictab_textcolor_selector"/>
+      
+            <RadioButton
+                style="@style/yx_tab"
+                android:layout_height="match_parent"             
+                android:drawableBottom="@drawable/musictab_selector"
+                android:text="欧美"
+                android:textSize="16sp"
+                android:textColor="@drawable/musictab_textcolor_selector"/>
+            <RadioButton
+                style="@style/yx_tab"
+                android:layout_height="match_parent"        
+                android:drawableBottom="@drawable/musictab_selector"
+                android:text="日本"
+                android:textSize="16sp"
+                android:textColor="@drawable/musictab_textcolor_selector"/>
+            <RadioButton
+                style="@style/yx_tab"
+                android:layout_height="match_parent"          
+                android:drawableBottom="@drawable/musictab_selector"
+                android:text="韩国"
+                android:textSize="16sp"
+                android:textColor="@drawable/musictab_textcolor_selector"/>
+            <RadioButton
+                style="@style/yx_tab"
+                android:layout_height="match_parent"    
+                android:drawableBottom="@drawable/musictab_selector"
+                android:text="其他"
+                android:textSize="16sp"
+                android:textColor="@drawable/musictab_textcolor_selector"/>   
+        </RadioGroup>
     
     <FrameLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_below="@id/singer_title">
+        android:layout_below="@id/singer_category">
 
         <ListView
             android:id="@+id/singer_list"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_gravity="center"
+            android:scrollbars="none"
             android:divider="@null" />
 
         <com.changhong.xiami.artist.SideBar
