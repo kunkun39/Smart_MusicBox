@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <resources>
+
     <color name="white">#ffffffff</color>
     <color name="black">#ff000000</color>
-    <color name="gray">#ffadadad</color>   
+    <color name="gray">#ffadadad</color>
     <color name="pic_selected">#ff00ffff</color>
     <color name="translucent_dark">#99000000</color>
     <color name="translucenter_dark">#bf000000</color>
@@ -13,11 +13,9 @@
     <color name="tab_textColor_selected">#ff1293e9</color>
     <color name="tab_textColor_default">#ff828282</color>
     <color name="imgbg_Color_default">#00000000</color>
-  
-     <color name="text_title">#FF1D1915</color>
-     <color name="text_default">#AA1D1915</color>
-     
-     <color name="list_bg">#99ffffff</color>
-     <color name="xiami_second_background">#9923E1C2</color>
+    <color name="text_title">#FF1D1915</color>
+    <color name="text_default">#AA1D1915</color>
+    <color name="list_bg">#99ffffff</color>
+    <color name="xiami_second_background">#9923E1C2</color>
 
 </resources>

@@ -4,14 +4,13 @@
     <string name="app_name">智能音响</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
-    
+
     <!-- SmartAcoustics -->
+
 
     <!-- External Storage State Messages -->
 
-
     <string name="dialog_baidu_voice_help">欢迎您使用智能音响语音指令。</string>
-
     <string name="help_details">帮助详情</string>
     <string name="rch_name">遥控器帮助</string>
     <string name="rch_content">"        "1、手指上下左右滑动，能得到上下左右按键一样的效果\n"        "2、电视键可以实现在任何界面下切换到全屏播放电视\n"        "3、频道键可以实现在手机上快速选择切换机顶盒上的节目\n"        "4、关机键可以使机顶盒处于低功耗模式，并且不影响数字电视节目分享到移动设备\n\n</string>
@@ -20,14 +19,11 @@
     <string name="system_score">系统评分</string>
     <string name="error_response">请求失败</string>
     <string name="error_empty_keyword">搜索内容不能为空</string>
-    
     <string name="every_day" msgid="1058994798884544691">"每天"</string>
     <string name="never" msgid="54104287800571769">"一律不"</string>
     <string name="day_concat" msgid="971998564991636532">", "</string>
-
     <string name="error_sign_algorithm">签名算法异常</string>
     <string name="error_auth_expired">授权过期</string>
     <string name="error_io">网络读写错误</string>
-
 
 </resources>

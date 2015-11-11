@@ -43,8 +43,9 @@ public class XiamiMusicListActivity extends BaseActivity {
 	private final int MUSIC_TYPE_ALBUM = 1;
 	private final int MUSIC_TYPE_SCENE = 2;
 	private final int MUSIC_TYPE_COLLECT = 3;
+    private final int MUSIC_TYPE_TODAY=4;
 
-	private final int MUSIC_LIST_UPDATE = 6;
+	private final int MUSIC_LIST_UPDATE = 99;
 
 	private int curMusicType = 1;
 	private String curTitle;
@@ -65,21 +66,21 @@ public class XiamiMusicListActivity extends BaseActivity {
 						Toast.LENGTH_SHORT).show();
 				break;
 
-			case MUSIC_LIST_UPDATE: // 更新音乐列表
+			case MUSIC_LIST_UPDATE: // 更新音乐列表99
 				albumName.setText(curTitle);
 				adapter.setData(songsList);
 				break;
-			case MUSIC_TYPE_ALBUM: // 专辑音乐类型
+			case MUSIC_TYPE_ALBUM: // 专辑音乐类型1
 				albumID = getIntent().getIntExtra("albumID", 0);
 				// getAlbumList();
 				break;
 
-			case MUSIC_TYPE_COLLECT: // 精选集音乐类型
+			case MUSIC_TYPE_COLLECT: // 精选集音乐类型3
 				albumID = getIntent().getIntExtra("list_id", 0);
 				// getAlbumList();
 				break;
 
-			case MUSIC_TYPE_SCENE: // 场景音乐
+			case MUSIC_TYPE_SCENE: // 场景音乐2
 				SceneInfor sceneInfor = (SceneInfor) getIntent()
 						.getSerializableExtra("sceneInfor");
 				albumID = sceneInfor.getSceneID();
@@ -92,6 +93,11 @@ public class XiamiMusicListActivity extends BaseActivity {
 				mXMMusicData.getJsonData(this, "tag.song", params);
 
 				break;
+
+			case MUSIC_TYPE_TODAY:// 今日推荐歌曲列表4
+				adapter.setData(songsList);
+				break;
+
 			}
 		}
 
@@ -134,6 +140,10 @@ public class XiamiMusicListActivity extends BaseActivity {
 			}
 		});
 		mhandler.sendEmptyMessage(curMusicType);
+	}
+	
+	private void getTodayRecom(){
+		
 	}
 
 	// private void getAlbumList() {
