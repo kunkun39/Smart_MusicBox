@@ -37,7 +37,7 @@ public class RequestDataTask extends
 		if (null != parentHandler) {
 			Message msg = parentHandler.obtainMessage();
 			if (-1 == ErrorCode) {
-				msg.what = Configure.XIAMI_RESPOND_SECCESS;
+				msg.what = Configure.getRequestType(method);
 				msg.obj = result;
 			} else {
 				msg.what = Configure.XIAMI_RESPOND_FAILED;

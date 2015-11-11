@@ -22,6 +22,9 @@ import com.changhong.xiami.data.TodaySRecommendAdapter;
 import com.changhong.xiami.data.XMMusicData;
 import com.changhong.yinxiang.R;
 import com.changhong.yinxiang.activity.BaseActivity;
+import com.changhong.yinxiang.utils.Configure;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.xiami.sdk.entities.LanguageType;
 import com.xiami.sdk.entities.OnlineAlbum;
 import com.xiami.sdk.entities.OnlineSong;
@@ -38,7 +41,7 @@ public class XiamiMainActivity extends BaseActivity {
 	private HorizontalListView horListView;
 	private ImageView xiamiMainSearch, randomMusic;
 	
-	private ArrayList<OnlineSong> todayRecomList=null;
+	private List<OnlineSong> todayRecomList=null;
 	private TodaySRecommendAdapter TRAdapter=null;
 
 	// 新碟首发
@@ -67,16 +70,22 @@ public class XiamiMainActivity extends BaseActivity {
 	
 	
 	private Handler handler=new Handler(){
-
+		JsonElement jsonData=null;
 		@Override
 		public void handleMessage(Message msg) {
 			// TODO Auto-generated method stub
+			jsonData=(JsonElement) msg.obj;
 			switch(msg.what){
-			case SHOW_TODAY_RECOMMEND_MUSIC:
+			case Configure.XIAMI_TODAY_RECOMSONGS:
+//				JsonObject 
+				todayRecomList=XMData.getSongList(jsonData);
 				TRAdapter.setData(todayRecomList);
-				showTodaySongs();
-				break;
 				
+				break;
+			case Configure.XIAMI_NEW_ALBUMS:
+				newAlbums=XMData.getAlbumList(jsonData);
+				showNewAlbums();
+				break;
 			}
 		}
 		
@@ -224,25 +233,16 @@ public class XiamiMainActivity extends BaseActivity {
 	 */
 
 	private void getXMData(){
-		new Thread(new getXMDataRunnable()).start();
+		
+		XMData.getTodayRecom(handler, 10);
+		XMData.getNewALbums(handler, 1, 3);
 	} 
 	
-	private class getXMDataRunnable implements Runnable{
-
-		@Override
-		public void run() {
-			// TODO Auto-generated method stub
-//			todayRecomList=(ArrayList<OnlineSong>) XMData.getRecommendSong(10, 1);
-//			newAlbums=XMData.getNewAlbums(LanguageType.huayu, 3, 1);
-			handler.sendEmptyMessage(SHOW_TODAY_RECOMMEND_MUSIC);
-		}
-		
-	}
 	/*
 	 * 
 	 * 显示新碟首发
 	 */
-	private void showTodaySongs(){
+	private void showNewAlbums(){
 		OnlineAlbum album1,album2,album3;
 		album1=newAlbums.get(0);
 		album2=newAlbums.get(1);

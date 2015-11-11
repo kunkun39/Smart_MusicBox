@@ -32,7 +32,7 @@ public class TodaySRecommendAdapter extends BaseAdapter {
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
-	public void setData(ArrayList<OnlineSong> list) {
+	public void setData(List<OnlineSong> list) {
 		if (list != null && list.size() > 0) {
 			this.myList = list;
 			notifyDataSetChanged();

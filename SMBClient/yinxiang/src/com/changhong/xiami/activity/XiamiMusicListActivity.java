@@ -95,7 +95,7 @@ public class XiamiMusicListActivity extends BaseActivity {
 				break;
 
 			case MUSIC_TYPE_TODAY:// 今日推荐歌曲列表4
-				adapter.setData(songsList);
+				getTodayRecom();
 				break;
 
 			}
@@ -143,7 +143,7 @@ public class XiamiMusicListActivity extends BaseActivity {
 	}
 	
 	private void getTodayRecom(){
-		
+		mXMMusicData.getTodayRecom(mhandler, 30);
 	}
 
 	// private void getAlbumList() {

@@ -23,6 +23,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.xiami.music.api.utils.RequestMethods;
 import com.xiami.sdk.XiamiSDK;
 import com.xiami.sdk.entities.ArtistBook;
 import com.xiami.sdk.entities.ArtistRegion;
@@ -165,7 +166,32 @@ public class XMMusicData {
 		return dataList;
 	}
 
+	/*
+	 * 
+	 * 获取今日推荐歌曲列表
+	 */
+	public void getTodayRecom(Handler handler,int limit){
+		
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("limit", limit);
+		RequestDataTask requestDataTask = new RequestDataTask(this, handler, RequestMethods.METHOD_RECOMMEND_DAILYLIST);
+		requestDataTask.execute(params);
+		
+	}
 	
+	public void getNewALbums(Handler handler,int page,int limit){
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("page", page);
+		params.put("limit", limit);
+		RequestDataTask requestDataTask = new RequestDataTask(this, handler, RequestMethods.METHOD_RANK_GETPROMOTIONALBUMS);
+		requestDataTask.execute(params);
+	}
+	
+	
+	
+	/*
+	 * =======================数据解析部分==============================================
+	 */
 	
 	/**
 	 * 获取精选辑列表
