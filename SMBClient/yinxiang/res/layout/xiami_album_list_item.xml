@@ -14,7 +14,6 @@
             android:id="@+id/ablum_logo"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/singer_default"
             android:scaleType="fitXY"/>"
         
         <ImageView
@@ -34,10 +33,9 @@
   <TextView
             android:id="@+id/ablum_name"
             android:layout_width="match_parent"
-            android:layout_height="30dip"
-            android:layout_gravity="bottom"
-            android:layout_marginBottom="1dip"
-             android:maxLines="1"
+             android:layout_height="40dip"
+             android:layout_gravity="center_vertical"
+             android:maxLength="12"             
             android:ellipsize="end" 
             android:textColor="@color/text_title"  />
   
@@ -46,7 +44,7 @@
             android:layout_width="fill_parent"
             android:layout_height="0dip"
             android:layout_weight="1"
-            android:maxLines="3"
+            android:maxLines="2"
             android:ellipsize="end" 
             android:gravity="center_vertical"
             android:textColor="@color/text_default" 
