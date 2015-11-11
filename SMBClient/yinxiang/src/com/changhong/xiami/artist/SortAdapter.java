@@ -3,8 +3,11 @@ package com.changhong.xiami.artist;
 import java.util.LinkedList;
 import java.util.List;
 import com.baidu.android.common.logging.Log;
+import com.changhong.common.utils.StringUtils;
 import com.changhong.xiami.data.XiamiDataModel;
 import com.changhong.yinxiang.R;
+import com.nostra13.universalimageloader.core.ImageLoader;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
@@ -95,10 +98,10 @@ public class SortAdapter extends BaseAdapter implements SectionIndexer {
 
 		viewHolder.tvTitle.setText(this.mSingerList.get(position).getTitle());
 
-		Bitmap img = this.mSingerList.get(position).getLogoImg();
-		if (null != img)
-			viewHolder.tvImg.setImageBitmap(img);
-
+		String logo=mSingerList.get(position).getArtistImgUrl();
+		if(StringUtils.hasLength(logo)){
+			ImageLoader.getInstance().displayImage(logo, viewHolder.tvImg);
+		}
 		return view;
 
 	}

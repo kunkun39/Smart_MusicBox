@@ -28,12 +28,15 @@ import com.changhong.xiami.data.XiamiDataModel;
 import com.changhong.yinxiang.R;
 import com.changhong.yinxiang.activity.BaseActivity;
 import com.changhong.yinxiang.utils.Configure;
+import com.google.gson.JsonElement;
+import com.xiami.music.api.utils.RequestMethods;
 import com.xiami.sdk.entities.ArtistRegion;
 import com.xiami.sdk.entities.OnlineArtist;
 import com.xiami.sdk.entities.OnlineSong;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 public class ArtistDetailActivity extends BaseActivity {
@@ -111,6 +114,15 @@ public class ArtistDetailActivity extends BaseActivity {
 					singer_countLikes.setText(countLikes+"");
 					singerLogo.setImageBitmap(singerImg);
 					break;
+					
+				case Configure.XIAMI_RESPOND_SECCESS:
+					JsonElement jsonData = (JsonElement) msg.obj;
+					handlXiamiResponse(jsonData);
+					break;
+				case Configure.XIAMI_RESPOND_FAILED:
+					int errorCode=msg.arg1;
+					Toast.makeText(ArtistDetailActivity.this, errorCode,	Toast.LENGTH_SHORT).show();
+					break;	
 				}
 			}
 		};
@@ -118,38 +130,37 @@ public class ArtistDetailActivity extends BaseActivity {
 
 	@Override
 	protected void onStart() {
-		super.onStart();
-
-		// 获取推荐歌曲
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				
-				OnlineArtist  mOnlineArtist= mXMMusicData.fetchArtistDetailSync(curArtistID);
-				String imgUrl=mOnlineArtist.getImageUrl(Configure.IMAGE_SIZE3);
-				singerImg=mXMMusicData.getArtistImage(imgUrl);				
-				final List<OnlineSong> songs   =   mXMMusicData.fetchSongsByArtistIdSync(curArtistID);
-				
-				//显示歌手背景
-				Message msg=new Message();
-				msg.what=REFRESH_SINGER;
-				msg.arg1=mOnlineArtist.getCountLikes();
-				mHandler.sendMessage(msg);
-				
-				mSongList.post(new Runnable() {
-					@Override
-					public void run() {
-						adapter.updateListView(songs);
-					}
-				});
-				
-				
-			}
-		}).start();
+		super.onStart();		
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("artist_id", curArtistID);
+		params.put("full_des", true);
+		mXMMusicData.getJsonData(mHandler,RequestMethods.METHOD_ARTIST_DETAIL, params);
 	}
 
 
 
+	
+	private void handlXiamiResponse(JsonElement jsonData) {
+		if(null ==jsonData)return;
+		
+		OnlineArtist  mOnlineArtist= mXMMusicData.getArtistDetail(jsonData);
+		String imgUrl=mOnlineArtist.getImageUrl(Configure.IMAGE_SIZE3);
+		final List<OnlineSong> songs   =   mXMMusicData.getSongList(jsonData);
+		
+		//显示歌手背景
+		Message msg=new Message();
+		msg.what=REFRESH_SINGER;
+		msg.arg1=mOnlineArtist.getCountLikes();
+		mHandler.sendMessage(msg);
+		
+		mSongList.post(new Runnable() {
+			@Override
+			public void run() {
+				adapter.updateListView(songs);
+			}
+		});
+		
+	}
 	
 	
 	
@@ -162,6 +173,10 @@ public class ArtistDetailActivity extends BaseActivity {
 			singerImg=null;
 		}	
 	}
+	
+	
+	
+	
 	
 		
 	@Override

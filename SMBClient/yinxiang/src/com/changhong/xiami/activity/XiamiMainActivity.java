@@ -232,8 +232,8 @@ public class XiamiMainActivity extends BaseActivity {
 		@Override
 		public void run() {
 			// TODO Auto-generated method stub
-			todayRecomList=(ArrayList<OnlineSong>) XMData.getRecommendSong(10, 1);
-			newAlbums=XMData.getNewAlbums(LanguageType.huayu, 3, 1);
+//			todayRecomList=(ArrayList<OnlineSong>) XMData.getRecommendSong(10, 1);
+//			newAlbums=XMData.getNewAlbums(LanguageType.huayu, 3, 1);
 			handler.sendEmptyMessage(SHOW_TODAY_RECOMMEND_MUSIC);
 		}
 		

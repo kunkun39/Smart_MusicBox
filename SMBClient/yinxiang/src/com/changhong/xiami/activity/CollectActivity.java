@@ -25,6 +25,7 @@ import com.changhong.xiami.data.XMMusicData;
 import com.changhong.xiami.data.XiamiDataModel;
 import com.changhong.yinxiang.R;
 import com.changhong.yinxiang.activity.BaseActivity;
+import com.changhong.yinxiang.utils.Configure;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -94,7 +95,16 @@ public class CollectActivity extends BaseActivity {
 		mHandler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
-
+				switch (msg.what) {
+				case Configure.XIAMI_RESPOND_SECCESS:
+					JsonElement jsonData = (JsonElement) msg.obj;
+					handlXiamiResponse(jsonData);
+					break;
+				case Configure.XIAMI_RESPOND_FAILED:
+					int errorCode=msg.arg1;
+					Toast.makeText(CollectActivity.this, errorCode,	Toast.LENGTH_SHORT).show();
+					break;					
+				}
 			}
 		};
 	}
@@ -103,35 +113,11 @@ public class CollectActivity extends BaseActivity {
 	protected void onStart() {
 		super.onStart();
 
-		// 获取推荐歌曲
-		// new Thread(new Runnable() {
-		// @Override
-		// public void run() {
-		//
-		// final List<OnlineCollect> results =
-		// mXMMusicData.getNewCollect(MAX_PAGE_SIZE,1);
-		//
-		// SourceDataList = filledData(results);
-		// mCollectList.post(new Runnable() {
-		// @Override
-		// public void run() {
-		// if(null !=SourceDataList){
-		// adapter.updateListView(SourceDataList);
-		// }else{
-		// Toast.makeText(CollectActivity.this,"没有搜索到专辑信息",
-		// Toast.LENGTH_SHORT).show();
-		// }
-		// }
-		// });
-		// }
-		// }).start();
-
 		HashMap<String, Object> params = new HashMap<String, Object>();
 		params.put("limit", MAX_PAGE_SIZE);
 		params.put("page", 1);
-		FindCollectTask findCollectByIdTask = new FindCollectTask(
-				getApplicationContext());
-		findCollectByIdTask.execute(params);
+		mXMMusicData.getJsonData(mHandler,RequestMethods.METHOD_COLLECT_RECOMMEND, params);
+
 
 	}
 
@@ -235,20 +221,11 @@ public class CollectActivity extends BaseActivity {
 
 	}
 
-	class FindCollectTask extends RequestDataTask {
 
-		public FindCollectTask(Context context) {
-			super(mJsonUtil, context,	RequestMethods.METHOD_COLLECT_RECOMMEND);
-		}
+	private void handlXiamiResponse(JsonElement jsonData) {
 
-		@Override
-		public void postInBackground(JsonElement response) {
-		}
-
-		@Override
-		protected void onPostExecute(JsonElement jsonData) {
-			super.onPostExecute(jsonData);
-			List<OnlineCollect>onlineCollects= mJsonUtil.getCollectRecommend(jsonData);
+		if (jsonData != null) {
+			List<OnlineCollect>onlineCollects= mXMMusicData.getCollectRecommend(jsonData);
 			SourceDataList=filledData(onlineCollects);
 			mCollectList.post(new Runnable() {
 				@Override
@@ -261,6 +238,10 @@ public class CollectActivity extends BaseActivity {
 					}
 				}
 			});
+		} else {
+			Toast.makeText(getApplicationContext(), R.string.error_response,
+					Toast.LENGTH_SHORT).show();
 		}
+
 	}
 }

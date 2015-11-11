@@ -26,10 +26,14 @@ import com.changhong.xiami.data.XiamiDataModel;
 import com.changhong.yinxiang.R;
 import com.changhong.yinxiang.activity.BaseActivity;
 import com.changhong.yinxiang.utils.Configure;
+import com.google.gson.JsonElement;
+import com.xiami.music.api.utils.RequestMethods;
 import com.xiami.sdk.entities.ArtistRegion;
+import com.xiami.sdk.entities.OnlineAlbum;
 import com.xiami.sdk.entities.OnlineArtist;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 public class ArtistListActivity extends BaseActivity {
@@ -158,45 +162,64 @@ public class ArtistListActivity extends BaseActivity {
 					sideBar.matchChoose(s);
 					sideBar.invalidate();
 					break;
+				case Configure.XIAMI_RESPOND_SECCESS:
+					JsonElement jsonData = (JsonElement) msg.obj;
+					handlXiamiResponse(jsonData);
+					break;
+				case Configure.XIAMI_RESPOND_FAILED:
+					int errorCode=msg.arg1;
+					Toast.makeText(ArtistListActivity.this, errorCode,	Toast.LENGTH_SHORT).show();
+					break;	
 				}
 			}
 		};
+		
+		
+	
 	}
 
 	@Override
 	protected void onStart() {
 		super.onStart();
 
-		// 获取推荐歌曲
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				final List<OnlineArtist> results = mXMMusicData	.fetchArtistListSync(ArtistRegion.chinese_M, MAX_PAGE_SIZE, 1);
-				SourceDataList = filledData(results);
-			
-				// 根据a-z进行排序源数据
-				Collections.sort(SourceDataList, pinyinComparator);
-			
-				//高亮显示第一个歌手Letter
-				Message msg=new Message();
-				msg.what=HIGH_LIGHTED_LETTER;
-				msg.obj=SourceDataList.get(0).getSortLetters();
-				mHandler.sendMessage(msg);
-				
-				mArtistList.post(new Runnable() {
-					@Override
-					public void run() {
-						if(null !=SourceDataList){
-						       adapter.updateListView(SourceDataList);
-						}else{
-                            Toast.makeText(ArtistListActivity.this,"没有搜索到艺人信息", Toast.LENGTH_SHORT).show();
-						}
-					}
-				});
-				
-			
-			}
-		}).start();
+//		// 获取推荐歌曲
+//		new Thread(new Runnable() {
+//			@Override
+//			public void run() {
+//				final List<OnlineArtist> results = mXMMusicData	.fetchArtistListSync(ArtistRegion.chinese_M, MAX_PAGE_SIZE, 1);
+//				SourceDataList = filledData(results);
+//			
+//				// 根据a-z进行排序源数据
+//				Collections.sort(SourceDataList, pinyinComparator);
+//			
+//				//高亮显示第一个歌手Letter
+//				Message msg=new Message();
+//				msg.what=HIGH_LIGHTED_LETTER;
+//				msg.obj=SourceDataList.get(0).getSortLetters();
+//				mHandler.sendMessage(msg);
+//				
+//				mArtistList.post(new Runnable() {
+//					@Override
+//					public void run() {
+//						if(null !=SourceDataList){
+//						       adapter.updateListView(SourceDataList);
+//						}else{
+//                            Toast.makeText(ArtistListActivity.this,"没有搜索到艺人信息", Toast.LENGTH_SHORT).show();
+//						}
+//					}
+//				});
+//				
+//			
+//			}
+//		}).start();
+		
+		
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("type", "chinese_M");
+		params.put("limit", MAX_PAGE_SIZE);
+		params.put("page", 1);
+		mXMMusicData.getJsonData(mHandler,RequestMethods.METHOD_ARTIST_WORDBOOK, params);
+		
 	}
 
 
@@ -221,8 +244,6 @@ public class ArtistListActivity extends BaseActivity {
 			sortModel.setId(artist.getId());
 			sortModel.setTitle(singer);
 			sortModel.setArtistImgUrl(artist.getImageUrl(Configure.IMAGE_SIZE1));
-			Bitmap image = mXMMusicData.getBitmapFromUrl(sortModel.getLogoUrl());
-			sortModel.setLogoImg(image);
 			// 汉字转换成拼音
 			String pinyin = characterParser.getSelling(singer);
 			String sortString = pinyin.substring(0, 1).toUpperCase();
@@ -254,6 +275,33 @@ public class ArtistListActivity extends BaseActivity {
 			}
 		}
 		
+	}
+	
+	
+	private void handlXiamiResponse(JsonElement jsonData) {
+		if(null ==jsonData)return;
+		
+		final List<OnlineArtist> results = mXMMusicData	.getArtistList(jsonData);
+		SourceDataList = filledData(results);	
+		// 根据a-z进行排序源数据
+		Collections.sort(SourceDataList, pinyinComparator);
+	
+		//高亮显示第一个歌手Letter
+		Message msg=new Message();
+		msg.what=HIGH_LIGHTED_LETTER;
+		msg.obj=SourceDataList.get(0).getSortLetters();
+		mHandler.sendMessage(msg);
+		
+		mArtistList.post(new Runnable() {
+			@Override
+			public void run() {
+				if(null !=SourceDataList){
+				       adapter.updateListView(SourceDataList);
+				}else{
+                    Toast.makeText(ArtistListActivity.this,"没有搜索到艺人信息", Toast.LENGTH_SHORT).show();
+				}
+			}
+		});
 	}
 	
 		

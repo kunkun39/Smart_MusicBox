@@ -30,6 +30,7 @@ import com.changhong.xiami.data.XiamiApiResponse;
 import com.changhong.xiami.data.XiamiDataModel;
 import com.changhong.yinxiang.R;
 import com.changhong.yinxiang.activity.BaseActivity;
+import com.changhong.yinxiang.utils.Configure;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -54,7 +55,7 @@ public class SceneActivity extends BaseActivity {
 	private SceneAdapter adapter;
 	private Handler mHandler;
 	private List<XiamiDataModel> SourceDataList = null;
-	String[]  sceneTitle={"开车","跑步","聚会","睡眠","学习","工作"};
+	String[] sceneTitle = { "开车", "跑步", "聚会", "睡眠", "学习", "工作" };
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -76,8 +77,8 @@ public class SceneActivity extends BaseActivity {
 		mSceneList = (GridView) findViewById(R.id.album_list);
 		adapter = new SceneAdapter(this);
 		mSceneList.setAdapter(adapter);
-		
-		//修改layout
+
+		// 修改layout
 		mSceneList.setVerticalSpacing(20);
 		mSceneList.setHorizontalSpacing(20);
 	}
@@ -91,13 +92,15 @@ public class SceneActivity extends BaseActivity {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 
-				XiamiDataModel model = (XiamiDataModel) adapter.getItem(position);
+				XiamiDataModel model = (XiamiDataModel) adapter
+						.getItem(position);
 				if (null != model) {
 					SceneInfor mSceneInfor = new SceneInfor();
 					mSceneInfor.setSceneName(model.getTitle());
-					mSceneInfor.setSceneID((int)model.getId());
+					mSceneInfor.setSceneID((int) model.getId());
 					mSceneInfor.setMusicType(model.getType());
-					Intent intent = new Intent(SceneActivity.this,	XiamiMusicListActivity.class);
+					Intent intent = new Intent(SceneActivity.this,
+							XiamiMusicListActivity.class);
 					intent.putExtra("sceneInfor", mSceneInfor);
 					intent.putExtra("musicType", 2);
 					startActivity(intent);
@@ -108,6 +111,16 @@ public class SceneActivity extends BaseActivity {
 		mHandler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
+				switch (msg.what) {
+				case Configure.XIAMI_RESPOND_SECCESS:
+					JsonElement jsonData = (JsonElement) msg.obj;
+					handlXiamiResponse(jsonData);
+					break;
+				case Configure.XIAMI_RESPOND_FAILED:
+					int errorCode=msg.arg1;
+					Toast.makeText(SceneActivity.this, errorCode,	Toast.LENGTH_SHORT).show();
+					break;					
+				}
 			}
 		};
 	}
@@ -116,15 +129,8 @@ public class SceneActivity extends BaseActivity {
 	protected void onStart() {
 		super.onStart();
 
-//		WifiInfo curWifiInfor = NetworkUtils.getCurWifiInfor(SceneActivity.this);
-//		String gps = NetworkUtils.getGPSInfor(SceneActivity.this);
 		HashMap<String, Object> params = new HashMap<String, Object>();
-//		params.put("gps", gps);
-//		params.put("ssid", curWifiInfor.getSSID());
-//		params.put("bssid", curWifiInfor.getBSSID());
-		FindSceneTask findSongByIdTask = new FindSceneTask(getApplicationContext());
-		findSongByIdTask.execute(params);
-
+		mXMMusicData.getJsonData(mHandler, "tag.genre-list", params);
 	}
 
 	/**
@@ -137,18 +143,18 @@ public class SceneActivity extends BaseActivity {
 	private List<XiamiDataModel> filledData(List<SceneInfor> list) {
 
 		List<XiamiDataModel> dataList = new ArrayList<XiamiDataModel>();
-		
-		if (list != null) {		
-			
-				int size = list.size();
-				for (int i = 0; i < size; i++) {
-					SceneInfor sceneSongs = list.get(i);
-					XiamiDataModel sceneModel = new XiamiDataModel();
-					sceneModel.setId(sceneSongs.getSceneID());
-					sceneModel.setTitle(sceneSongs.getSceneName());
-					sceneModel.setType(sceneSongs.getMusicType());
-					sceneModel.setLogoUrl(sceneSongs.getSceneLogo());
-					dataList.add(sceneModel);
+
+		if (list != null) {
+
+			int size = list.size();
+			for (int i = 0; i < size; i++) {
+				SceneInfor sceneSongs = list.get(i);
+				XiamiDataModel sceneModel = new XiamiDataModel();
+				sceneModel.setId(sceneSongs.getSceneID());
+				sceneModel.setTitle(sceneSongs.getSceneName());
+				sceneModel.setType(sceneSongs.getMusicType());
+				sceneModel.setLogoUrl(sceneSongs.getSceneLogo());
+				dataList.add(sceneModel);
 			}
 		}
 		return dataList;
@@ -174,39 +180,28 @@ public class SceneActivity extends BaseActivity {
 
 	}
 
-	class FindSceneTask extends RequestDataTask {
+	private void handlXiamiResponse(JsonElement jsonData) {
 
-		public FindSceneTask(Context context) {
-			super(mJsonUtil, context,"tag.genre-list");
-		}
-
-		@Override
-		public void postInBackground(JsonElement response) {
-		}
-
-		@Override
-		protected void onPostExecute(JsonElement jsonData) {
-			super.onPostExecute(jsonData);
-			if (jsonData != null) {
-				
-				List<SceneInfor>onlineCollects= mJsonUtil.getGenreList(jsonData);
-				SourceDataList=filledData(onlineCollects);
-				mSceneList.post(new Runnable() {
-					@Override
-					public void run() {
-						if (null != SourceDataList) {
-							adapter.updateListView(SourceDataList);
-						} else {
-							Toast.makeText(SceneActivity.this, "没有搜索到专辑信息",
-									Toast.LENGTH_SHORT).show();
-						}
+		if (jsonData != null) {
+			List<SceneInfor> onlineCollects = mXMMusicData
+					.getGenreList(jsonData);
+			SourceDataList = filledData(onlineCollects);
+			mSceneList.post(new Runnable() {
+				@Override
+				public void run() {
+					if (null != SourceDataList) {
+						adapter.updateListView(SourceDataList);
+					} else {
+						Toast.makeText(SceneActivity.this, "没有搜索到专辑信息",
+								Toast.LENGTH_SHORT).show();
 					}
-				});
-			} else {
-				Toast.makeText(getApplicationContext(),
-						R.string.error_response, Toast.LENGTH_SHORT).show();
-			}
+				}
+			});
+		} else {
+			Toast.makeText(getApplicationContext(), R.string.error_response,
+					Toast.LENGTH_SHORT).show();
 		}
+
 	}
 
 }

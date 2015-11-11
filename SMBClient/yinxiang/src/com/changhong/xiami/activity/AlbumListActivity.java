@@ -3,15 +3,12 @@ package com.changhong.xiami.activity;
 /**
  * 专辑大全
  */
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
-import android.widget.AbsListView;
-import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -19,31 +16,16 @@ import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.changhong.xiami.activity.CollectActivity.FindCollectTask;
-import com.changhong.xiami.artist.CharacterParser;
-import com.changhong.xiami.artist.PinyinComparator;
-import com.changhong.xiami.artist.SideBar;
-import com.changhong.xiami.artist.SideBar.OnTouchingLetterChangedListener;
-import com.changhong.xiami.artist.SortAdapter;
 import com.changhong.xiami.data.AlbumAdapter;
-import com.changhong.xiami.data.JsonUtil;
-import com.changhong.xiami.data.RequestDataTask;
-import com.changhong.xiami.data.XMMusicData;
 import com.changhong.xiami.data.XiamiDataModel;
 import com.changhong.yinxiang.R;
 import com.changhong.yinxiang.activity.BaseActivity;
 import com.changhong.yinxiang.utils.Configure;
 import com.google.gson.JsonElement;
 import com.xiami.music.api.utils.RequestMethods;
-import com.xiami.sdk.entities.ArtistRegion;
 import com.xiami.sdk.entities.OnlineAlbum;
-import com.xiami.sdk.entities.OnlineArtist;
-import com.xiami.sdk.entities.OnlineCollect;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -114,10 +96,14 @@ public class AlbumListActivity extends BaseActivity {
 			@Override
 			public void handleMessage(Message msg) {
 				switch (msg.what) {
-				case HIGH_LIGHTED_LETTER:
-                    String s=(String) msg.obj;
-				
+				case Configure.XIAMI_RESPOND_SECCESS:
+					JsonElement jsonData = (JsonElement) msg.obj;
+					handlXiamiResponse(jsonData);
 					break;
+				case Configure.XIAMI_RESPOND_FAILED:
+					int errorCode=msg.arg1;
+					Toast.makeText(AlbumListActivity.this, errorCode,	Toast.LENGTH_SHORT).show();
+					break;					
 				}
 			}
 		};
@@ -151,8 +137,7 @@ public class AlbumListActivity extends BaseActivity {
 		params.put("type", "all");
 		params.put("limit", MAX_PAGE_SIZE);
 		params.put("page", 1);
-		FindAlbumListTask findAlbumListTask = new FindAlbumListTask(	getApplicationContext());
-		findAlbumListTask.execute(params);
+		mXMMusicData.getJsonData(mHandler,RequestMethods.METHOD_RANK_NEWALBUM, params);
 	}
 
 
@@ -217,27 +202,9 @@ public class AlbumListActivity extends BaseActivity {
 
 	}
 	
-	
-	class FindAlbumListTask extends RequestDataTask {
-
-		public FindAlbumListTask(Context context) {
-			super(mJsonUtil, context,	RequestMethods.METHOD_RANK_NEWALBUM);
-		}
-
-		@Override
-		public void postInBackground(JsonElement response) {
-		}
-
-		@Override
-		protected void onPostExecute(JsonElement jsonData) {
-			super.onPostExecute(jsonData);
-			
-			if(null == jsonData){
-				Toast.makeText(AlbumListActivity.this, "没有搜索到专辑信息",Toast.LENGTH_SHORT).show();
-				return;
-			}
-			
-			List<OnlineAlbum>OnlineAlbums= mJsonUtil.getAlbumList(jsonData);
+	private void handlXiamiResponse(JsonElement jsonData) {
+		if (jsonData != null) {
+			List<OnlineAlbum>OnlineAlbums= mXMMusicData.getAlbumList(jsonData);
 			SourceDataList=filledData(OnlineAlbums);
 			mAlbumList.post(new Runnable() {
 				@Override
@@ -245,10 +212,14 @@ public class AlbumListActivity extends BaseActivity {
 					if (null != SourceDataList) {
 						adapter.updateListView(SourceDataList);
 					} else {
-						Toast.makeText(AlbumListActivity.this, "没有搜索到专辑信息",Toast.LENGTH_SHORT).show();
+						Toast.makeText(AlbumListActivity.this, "没有搜索到专辑信息",
+								Toast.LENGTH_SHORT).show();
 					}
 				}
 			});
+		} else {
+			Toast.makeText(getApplicationContext(), R.string.error_response,Toast.LENGTH_SHORT).show();
 		}
+
 	}
 }

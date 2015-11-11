@@ -305,6 +305,40 @@ public class XMMusicData {
 	}
 
 	
+
+	public List<OnlineArtist> getArtistList(JsonElement element) {
+
+		if (null == element)return null;
+
+		List<OnlineArtist> dataList = new ArrayList<OnlineArtist>();
+		JsonArray arraySong = element.getAsJsonArray();
+		int size = arraySong.size();
+
+		for (int i = 0; i < size; i++) {
+
+			JsonObject songObj = arraySong.get(i).getAsJsonObject();
+			OnlineSong song = new OnlineSong();
+			song.setSongId(songObj.get("song_id").getAsLong());
+			song.setArtistId(songObj.get("artist_id").getAsLong());
+			song.setSongId(songObj.get("song_id").getAsLong());
+			song.setAlbumId(songObj.get("album_id").getAsLong());
+			song.setLength(songObj.get("length").getAsInt());
+			song.setMusicType(songObj.get("music_type").getAsInt());
+			song.setCdSerial(songObj.get("cd_serial").getAsInt());
+			song.setSongName(songObj.get("song_name").getAsString());
+			song.setArtistName(songObj.get("artist_name").getAsString());
+			song.setArtistLogo(songObj.get("artist_logo").getAsString());
+			song.setAlbumName(songObj.get("album_name").getAsString());
+			song.setLogo(songObj.get("album_logo").getAsString());
+			song.setSingers(songObj.get("singers").getAsString());
+//			dataList.add(song);
+		}
+		return dataList;
+	}
+
+	
+	
+	
 	/**
 	 * 请求数据接口（自解析Json方式）
 	 * 
@@ -385,4 +419,10 @@ public class XMMusicData {
 		return bitmap;
 	}
 
+	public OnlineArtist getArtistDetail(JsonElement jsonData) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	
 }
