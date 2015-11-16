@@ -1,8 +1,7 @@
-package com.changhong.xiami.artist;
+package com.changhong.xiami.data;
 
 import java.util.Comparator;
 
-import com.changhong.xiami.data.XiamiDataModel;
 
 
 public class PinyinComparator implements Comparator<XiamiDataModel> {

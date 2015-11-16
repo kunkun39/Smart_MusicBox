@@ -1,10 +1,9 @@
-package com.changhong.xiami.artist;
+package com.changhong.xiami.data;
 
 import java.util.LinkedList;
 import java.util.List;
 import com.baidu.android.common.logging.Log;
 import com.changhong.common.utils.StringUtils;
-import com.changhong.xiami.data.XiamiDataModel;
 import com.changhong.yinxiang.R;
 import com.nostra13.universalimageloader.core.ImageLoader;
 

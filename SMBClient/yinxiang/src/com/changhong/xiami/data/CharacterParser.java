@@ -1,4 +1,4 @@
-package com.changhong.xiami.artist;
+package com.changhong.xiami.data;
 
 /**
  * Java汉字转换为拼音
