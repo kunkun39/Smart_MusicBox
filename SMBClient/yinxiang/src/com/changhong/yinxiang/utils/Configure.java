@@ -16,13 +16,21 @@ public class Configure {
 	public final static int XIAMI_RANK_ALL=1006;//专辑歌曲列表
 	
 	
+	
+	/*
+	 * 服务器请求参数类型RequestMethods
+	 */
+	public final static String RequestMethods_PROMOTION_ALBUMS="rank.promotion-albums";//新碟首发
+	
 	public static int getRequestType(String str){
 		int i=XIAMI_RESPOND_SECCESS;
 		if(str.equals(RequestMethods.METHOD_RECOMMEND_DAILYLIST)){
 			i=XIAMI_TODAY_RECOMSONGS;
-		}else if(str.equals(RequestMethods.METHOD_RANK_GETPROMOTIONALBUMS)){
+		}else if(str.equals(Configure.RequestMethods_PROMOTION_ALBUMS)){
 			i=XIAMI_PROMOTION_ALBUMS;
-		}
+		}else if(str.equals(RequestMethods.METHOD_RANK_DETAIL)){
+			i=XIAMI_RANK_HUAYU;
+		}		
 		return i;
 	}
 }

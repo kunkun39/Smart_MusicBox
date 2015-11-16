@@ -26,5 +26,7 @@
     <string name="error_auth_expired">授权过期</string>
     <string name="error_io">网络读写错误</string>
     <string name="recommend_dailylist">今日推荐歌曲</string>
+    <string name="rank_huayu">亚洲新歌榜</string>
+    <string name="rank_top">TOP排行榜</string>
 
 </resources>

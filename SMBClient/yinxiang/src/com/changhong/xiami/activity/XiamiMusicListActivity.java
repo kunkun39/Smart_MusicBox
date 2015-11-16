@@ -48,7 +48,7 @@ public class XiamiMusicListActivity extends BaseActivity {
 	private int curMusicType = 1;
 	private String curTitle;
 	private Handler mhandler = new Handler() {
-
+		JsonElement element=null;
 		@Override
 		public void handleMessage(Message msg) {
 			// TODO Auto-generated method stub
@@ -93,20 +93,22 @@ public class XiamiMusicListActivity extends BaseActivity {
 				break;
 
 			case Configure.XIAMI_TODAY_RECOMSONGS:// 今日推荐歌曲列表4
-				JsonElement element = (JsonElement) msg.obj;
-				JsonObject jsonObj=element.getAsJsonObject();
-				
-				element=jsonObj.get("songs");
-				curTitle=getString(R.string.recommend_dailylist);
-				songsList=mXMMusicData.getSongList(element);
+				element = (JsonElement) msg.obj;
+				JsonObject jsonObj = element.getAsJsonObject();
+
+				element = jsonObj.get("songs");
+				curTitle = getString(R.string.recommend_dailylist);
+				songsList = mXMMusicData.getSongList(element);
 				mhandler.sendEmptyMessage(MUSIC_LIST_UPDATE);
 				break;
 			case Configure.XIAMI_RANK_HUAYU:
-				
+				element = (JsonElement) msg.obj;
+				showRankMusics(element);
 				break;
-				
+
 			case Configure.XIAMI_RANK_ALL:
-				
+				element = (JsonElement) msg.obj;
+				showRankMusics(element);
 				break;
 			}
 		}
@@ -151,6 +153,12 @@ public class XiamiMusicListActivity extends BaseActivity {
 		});
 		if (Configure.XIAMI_TODAY_RECOMSONGS == curMusicType) {
 			mXMMusicData.getTodayRecom(mhandler, 20);
+		} else if (Configure.XIAMI_RANK_HUAYU == curMusicType) {
+			curTitle = getString(R.string.rank_huayu);
+			mXMMusicData.getHuayuRank(mhandler);
+		}  else if (Configure.XIAMI_RANK_ALL == curMusicType) {
+			curTitle = getString(R.string.rank_top);
+			mXMMusicData.getALLRank(mhandler);
 		} else {
 			mhandler.sendEmptyMessage(curMusicType);
 		}
@@ -196,6 +204,13 @@ public class XiamiMusicListActivity extends BaseActivity {
 	//
 	//
 	// }
+
+	private void showRankMusics(JsonElement element){
+		
+		
+		songsList = mXMMusicData.getRankSongList(element);
+		mhandler.sendEmptyMessage(MUSIC_LIST_UPDATE);
+	}
 
 	private void handlXiamiResponse(JsonElement jsonData) {
 

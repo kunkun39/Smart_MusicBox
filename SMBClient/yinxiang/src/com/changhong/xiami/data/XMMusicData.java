@@ -19,6 +19,8 @@ import android.os.Message;
 import android.util.Log;
 import android.util.Pair;
 
+import com.changhong.common.utils.StringUtils;
+import com.changhong.yinxiang.utils.Configure;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -198,14 +200,32 @@ public class XMMusicData {
 	 */
 	public void getPromotionALbums(Handler handler,int page,int limit){
 		HashMap<String, Object> params = new HashMap<String, Object>();
-		params.put("type", "huayu");
+		params.put("type", RankType.music_all);
 		params.put("page", page);
 		params.put("limit", limit);
-		RequestDataTask requestDataTask = new RequestDataTask(this, handler, RequestMethods.METHOD_RANK_GETPROMOTIONALBUMS);
+		RequestDataTask requestDataTask = new RequestDataTask(this, handler, Configure.RequestMethods_PROMOTION_ALBUMS);
 		requestDataTask.execute(params);
 	}
-	
-	
+	/*
+	 * 获取华语排行榜歌曲
+	 */
+	public void getHuayuRank(Handler handler){
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("type", RankType.hito);
+		params.put("time", 0);
+		RequestDataTask requestDataTask = new RequestDataTask(this, handler, RequestMethods.METHOD_RANK_DETAIL);
+		requestDataTask.execute(params);
+	}
+	/*
+	 * 获取全部排行榜歌曲
+	 */
+	public void getALLRank(Handler handler){
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("type", RankType.music_all);
+		params.put("time", 0);
+		RequestDataTask requestDataTask = new RequestDataTask(this, handler, RequestMethods.METHOD_RANK_DETAIL);
+		requestDataTask.execute(params);
+	}
 	
 	/*
 	 * =======================数据解析部分==============================================
@@ -287,6 +307,7 @@ public class XMMusicData {
 	 * 
 	 */
 	public List<OnlineAlbum> albumsElementToList(JsonElement element){
+		String albumImage=null;
 		List<OnlineAlbum> dataList = new ArrayList<OnlineAlbum>();
 		if (element.isJsonArray()) {
 
@@ -302,8 +323,14 @@ public class XMMusicData {
 				onlineAlbum.setArtistId(itemObj.get("artist_id").getAsInt());
 				onlineAlbum.setArtistName(itemObj.get("artist_name")
 						.getAsString());
-				onlineAlbum.setArtistLogo(itemObj.get("artist_logo")
-						.getAsString());
+				
+				//当有专辑图片时，显示专辑图片，反之则显示艺术家图片
+				albumImage=itemObj.get("album_logo").getAsString();
+				if(!StringUtils.hasLength(albumImage)){
+					albumImage=itemObj.get("artist_logo").getAsString();
+				}
+				onlineAlbum.setArtistLogo(albumImage);
+				
 				onlineAlbum.setAlbumCategory(itemObj.get("album_category")
 						.getAsString());
 				onlineAlbum.setCompany(itemObj.get("company").getAsString());
@@ -397,7 +424,19 @@ public class XMMusicData {
 		return dataList;
 	}
 
-	
+	/*
+	 * 获取排行榜歌曲列表
+	 */
+	public List<OnlineSong> getRankSongList(JsonElement element){
+		if (null == element)return null;
+
+		List<OnlineSong> dataList = new ArrayList<OnlineSong>();
+		JsonObject jsonObj = element.getAsJsonObject();
+		element = jsonObj.get("songs");
+		
+		dataList=getSongList(element);
+		return dataList;
+	}
 	
 	
 	/**

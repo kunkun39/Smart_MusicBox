@@ -33,6 +33,7 @@ import com.google.gson.JsonObject;
 import com.xiami.sdk.entities.LanguageType;
 import com.xiami.sdk.entities.OnlineAlbum;
 import com.xiami.sdk.entities.OnlineSong;
+import com.xiami.sdk.utils.ImageUtil;
 
 public class XiamiMainActivity extends BaseActivity {
 
@@ -80,10 +81,10 @@ public class XiamiMainActivity extends BaseActivity {
 		public void handleMessage(Message msg) {
 			// TODO Auto-generated method stub
 			jsonElement = (JsonElement) msg.obj;
-			obj = jsonElement.getAsJsonObject();
+			
 			switch (msg.what) {
 			case Configure.XIAMI_TODAY_RECOMSONGS:
-
+				obj = jsonElement.getAsJsonObject();
 				jsonElement = obj.get("songs");
 				todayRecomList = XMData.getSongList(jsonElement);
 				TRAdapter.setData(todayRecomList);
@@ -278,7 +279,7 @@ public class XiamiMainActivity extends BaseActivity {
 
 	private void getXMData() {
 
-		// XMData.getTodayRecom(handler, 10);
+		 XMData.getTodayRecom(handler, 10);
 		XMData.getPromotionALbums(handler, 1, 3);
 	}
 
@@ -292,11 +293,11 @@ public class XiamiMainActivity extends BaseActivity {
 		album2 = promotionAlbums.get(1);
 		album3 = promotionAlbums.get(2);
 
-		MyApplication.imageLoader.displayImage(album1.getImageUrl(300),
+		MyApplication.imageLoader.displayImage(ImageUtil.transferImgUrl(album1.getArtistLogo(), 330),
 				albumMsg1);
-		MyApplication.imageLoader.displayImage(album2.getImageUrl(300),
+		MyApplication.imageLoader.displayImage(ImageUtil.transferImgUrl(album2.getArtistLogo(), 330),
 				albumMsg2);
-		MyApplication.imageLoader.displayImage(album3.getImageUrl(300),
+		MyApplication.imageLoader.displayImage(ImageUtil.transferImgUrl(album3.getArtistLogo(), 330),
 				albumMsg3);
 
 		albumTitle1.setText(album1.getAlbumName() + "\n"
