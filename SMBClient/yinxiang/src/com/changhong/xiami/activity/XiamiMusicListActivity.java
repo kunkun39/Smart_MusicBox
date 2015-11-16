@@ -42,8 +42,6 @@ public class XiamiMusicListActivity extends BaseActivity {
 	private int albumIndex = 0;
 	private final int MUSIC_TYPE_ALBUM = 1;
 	private final int MUSIC_TYPE_SCENE = 2;
-	private final int MUSIC_TYPE_COLLECT = 3;
-    private final int MUSIC_TYPE_TODAY=4;
 
 	private final int MUSIC_LIST_UPDATE = 99;
 
@@ -75,7 +73,7 @@ public class XiamiMusicListActivity extends BaseActivity {
 				// getAlbumList();
 				break;
 
-			case MUSIC_TYPE_COLLECT: // 精选集音乐类型3
+			case Configure.MUSIC_TYPE_COLLECT: // 精选集音乐类型3
 				albumID = getIntent().getIntExtra("list_id", 0);
 				// getAlbumList();
 				break;
@@ -94,10 +92,22 @@ public class XiamiMusicListActivity extends BaseActivity {
 
 				break;
 
-			case MUSIC_TYPE_TODAY:// 今日推荐歌曲列表4
-				getTodayRecom();
+			case Configure.XIAMI_TODAY_RECOMSONGS:// 今日推荐歌曲列表4
+				JsonElement element = (JsonElement) msg.obj;
+				JsonObject jsonObj=element.getAsJsonObject();
+				
+				element=jsonObj.get("songs");
+				curTitle=getString(R.string.recommend_dailylist);
+				songsList=mXMMusicData.getSongList(element);
+				mhandler.sendEmptyMessage(MUSIC_LIST_UPDATE);
 				break;
-
+			case Configure.XIAMI_RANK_HUAYU:
+				
+				break;
+				
+			case Configure.XIAMI_RANK_ALL:
+				
+				break;
 			}
 		}
 
@@ -139,11 +149,11 @@ public class XiamiMusicListActivity extends BaseActivity {
 				finish();
 			}
 		});
-		mhandler.sendEmptyMessage(curMusicType);
-	}
-	
-	private void getTodayRecom(){
-		mXMMusicData.getTodayRecom(mhandler, 30);
+		if (Configure.XIAMI_TODAY_RECOMSONGS == curMusicType) {
+			mXMMusicData.getTodayRecom(mhandler, 20);
+		} else {
+			mhandler.sendEmptyMessage(curMusicType);
+		}
 	}
 
 	// private void getAlbumList() {

@@ -193,8 +193,12 @@ public class XMMusicData {
 		
 	}
 	
-	public void getNewALbums(Handler handler,int page,int limit){
+	/*
+	 * 获取新碟首发专辑列表
+	 */
+	public void getPromotionALbums(Handler handler,int page,int limit){
 		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("type", "huayu");
 		params.put("page", page);
 		params.put("limit", limit);
 		RequestDataTask requestDataTask = new RequestDataTask(this, handler, RequestMethods.METHOD_RANK_GETPROMOTIONALBUMS);
@@ -274,6 +278,16 @@ public class XMMusicData {
 		String more = obj.get("more").getAsString();
 		element = obj.get("albums");
 
+		dataList=albumsElementToList(element);
+		return dataList;
+	}
+
+	/*
+	 * 
+	 * 
+	 */
+	public List<OnlineAlbum> albumsElementToList(JsonElement element){
+		List<OnlineAlbum> dataList = new ArrayList<OnlineAlbum>();
 		if (element.isJsonArray()) {
 
 			JsonArray array = element.getAsJsonArray();
@@ -304,9 +318,9 @@ public class XMMusicData {
 				dataList.add(onlineAlbum);
 			}
 		}
+		
 		return dataList;
 	}
-
 	
 	
 	/**

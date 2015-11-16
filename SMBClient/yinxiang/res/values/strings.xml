@@ -25,5 +25,6 @@
     <string name="error_sign_algorithm">签名算法异常</string>
     <string name="error_auth_expired">授权过期</string>
     <string name="error_io">网络读写错误</string>
+    <string name="recommend_dailylist">今日推荐歌曲</string>
 
 </resources>
