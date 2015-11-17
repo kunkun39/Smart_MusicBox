@@ -17,7 +17,7 @@ public class SideBar extends View {
 	// 触摸事件
 	private OnTouchingLetterChangedListener onTouchingLetterChangedListener;
 	// 26个字母
-	public static String[] b = { "A", "B", "C", "D", "E", "F", "G", "H", "I",
+	public static String[] b = {"热", "A", "B", "C", "D", "E", "F", "G", "H", "I",
 			"J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V",
 			"W", "X", "Y", "Z", "#" };
 	private int choose = -1;// 选中
@@ -45,7 +45,7 @@ public class SideBar extends View {
 	}
 
 
-	public void matchChoose(String s) {
+	public void matchChoose(String s) {		
 		for (int i = 0; i < b.length; i++) {
 			if(b[i].equals(s)){
 				choose=i;

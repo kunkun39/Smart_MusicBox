@@ -30,6 +30,8 @@ import com.changhong.yinxiang.R;
 import com.changhong.yinxiang.activity.BaseActivity;
 import com.changhong.yinxiang.utils.Configure;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.xiami.music.api.utils.RequestMethods;
 import com.xiami.sdk.entities.ArtistRegion;
 import com.xiami.sdk.entities.OnlineArtist;
@@ -51,6 +53,7 @@ public class ArtistDetailActivity extends BaseActivity {
 	private final int MAX_PAGE_SIZE = 100;
 	long  curArtistID=-1;
 	Bitmap  singerImg=null;
+	private XiamiDataModel model;
 
 
 	public static final int REFRESH_SINGER = 0x01;
@@ -64,9 +67,8 @@ public class ArtistDetailActivity extends BaseActivity {
 	protected void initView() {
 		setContentView(R.layout.xiami_singer_infor);
 
-		curArtistID=getIntent().getExtras().getLong("artistID");		
-		String name=getIntent().getStringExtra("artistName");
-	
+		model=(XiamiDataModel) getIntent().getSerializableExtra("XiamiDataModel");
+		curArtistID=model.getId();			
 		mXMMusicData = XMMusicData.getInstance(this);
 
 		/**
@@ -81,9 +83,7 @@ public class ArtistDetailActivity extends BaseActivity {
 		singerLogo=(ImageView) findViewById(R.id.singer_logo);
 		mSongList = (ListView) findViewById(R.id.song_list);
 		singer_name=(TextView) findViewById(R.id.singer_name);
-		singer_countLikes=(TextView) findViewById(R.id.singer_countlikes);
-		singer_name.setText(name);
-		
+		singer_countLikes=(TextView) findViewById(R.id.singer_countlikes);		
 		adapter = new SongAdapter(this);
 		mSongList.setAdapter(adapter);
 
@@ -93,6 +93,13 @@ public class ArtistDetailActivity extends BaseActivity {
 	protected void initData() {
 		
 		super.initData();
+		
+		singer_name.setText(model.getArtist());
+		int likeCount=model.getLikeCount();
+		if(likeCount>10000)	singer_countLikes.setText(likeCount/1000+" 万粉丝");
+		else singer_countLikes.setText(likeCount+" 粉丝");
+		ImageLoader.getInstance().displayImage(model.getArtistImgUrl(), singerLogo);
+		
 		// 长按进入歌手详情
 		mSongList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 					@Override
@@ -116,9 +123,9 @@ public class ArtistDetailActivity extends BaseActivity {
 					singerLogo.setImageBitmap(singerImg);
 					break;
 					
-				case Configure.XIAMI_RESPOND_SECCESS:
+				case Configure.XIAMI_ARTIST_DETAIL:
 					JsonElement jsonData = (JsonElement) msg.obj;
-					handlXiamiResponse(jsonData);
+					handleXiamiResponse(jsonData);
 					break;
 				case Configure.XIAMI_RESPOND_FAILED:
 					int errorCode=msg.arg1;
@@ -132,27 +139,38 @@ public class ArtistDetailActivity extends BaseActivity {
 	@Override
 	protected void onStart() {
 		super.onStart();		
-		HashMap<String, Object> params = new HashMap<String, Object>();
-		params.put("artist_id", curArtistID);
-		params.put("full_des", true);
-		mXMMusicData.getJsonData(mHandler,RequestMethods.METHOD_ARTIST_DETAIL, params);
+//		HashMap<String, Object> params = new HashMap<String, Object>();
+//		params.put("artist_id", curArtistID);
+//		params.put("full_des", true);
+//		mXMMusicData.getJsonData(mHandler,RequestMethods.METHOD_ARTIST_DETAIL, params);
+		requestHotSongsByArtistId();
 	}
 
-
+	private void requestHotSongsByArtistId() {
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("artist_id", curArtistID);
+		params.put("limit", 100);
+		params.put("page", 1);	
+		mXMMusicData.getJsonData(mHandler,RequestMethods.METHOD_ARTIST_HOTSONGS, params);
+	}
+	
 
 	
-	private void handlXiamiResponse(JsonElement jsonData) {
+	private void handleXiamiResponse(JsonElement jsonData) {
 		if(null ==jsonData)return;
 		
-		OnlineArtist  mOnlineArtist= mXMMusicData.getArtistDetail(jsonData);
-		String imgUrl=mOnlineArtist.getImageUrl(Configure.IMAGE_SIZE3);
+//		OnlineArtist  mOnlineArtist= mXMMusicData.getArtistDetail(jsonData);
+//		String imgUrl=mOnlineArtist.getImageUrl();
+		JsonObject obj = jsonData.getAsJsonObject();
+		jsonData =obj.get("songs");
+
 		final List<OnlineSong> songs   =   mXMMusicData.getSongList(jsonData);
 		
 		//显示歌手背景
-		Message msg=new Message();
-		msg.what=REFRESH_SINGER;
-		msg.arg1=mOnlineArtist.getCountLikes();
-		mHandler.sendMessage(msg);
+//		Message msg=new Message();
+//		msg.what=REFRESH_SINGER;
+//		msg.arg1=mOnlineArtist.getCountLikes();
+//		mHandler.sendMessage(msg);
 		
 		mSongList.post(new Runnable() {
 			@Override

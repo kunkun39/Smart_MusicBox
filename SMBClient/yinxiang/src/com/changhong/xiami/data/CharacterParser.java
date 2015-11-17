@@ -1,5 +1,7 @@
 package com.changhong.xiami.data;
 
+import com.changhong.common.utils.StringUtils;
+
 /**
  * Java汉字转换为拼音
  * 
@@ -108,6 +110,10 @@ public class CharacterParser {
 
 	/** * 词组解析 * * @param chs * @return */
 	public String getSelling(String chs) {
+		
+		if(!StringUtils.hasLength(chs))
+			return "unknown";
+		
 		String key, value;
 		buffer = new StringBuilder();
 		for (int i = 0; i < chs.length(); i++) {

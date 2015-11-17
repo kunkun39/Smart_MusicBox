@@ -17,7 +17,6 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.changhong.xiami.data.JsonUtil;
 import com.changhong.xiami.data.MusicsListAdapter;
 import com.changhong.xiami.data.RequestDataTask;
 import com.changhong.xiami.data.SceneInfor;

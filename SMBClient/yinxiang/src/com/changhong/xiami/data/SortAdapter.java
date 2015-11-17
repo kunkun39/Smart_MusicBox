@@ -88,8 +88,9 @@ public class SortAdapter extends BaseAdapter implements SectionIndexer {
 
 		// 如果当前位置等于该分类首字母的Char的位置 ，则认为是第一次出现
 		if (position == getPositionForSection(section)) {
-			
-			viewHolder.letter.setText(mContent.getSortLetters());
+			 String sortLetter=mContent.getSortLetters();
+			 sortLetter=sortLetter.replace("!", "热门");
+			viewHolder.letter.setText(sortLetter);
 			viewHolder.letter.setVisibility(View.VISIBLE);
 			viewHolder.divideLine.setVisibility(View.VISIBLE);
 

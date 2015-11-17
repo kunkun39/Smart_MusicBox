@@ -25,6 +25,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import com.xiami.music.api.utils.RequestMethods;
 import com.xiami.sdk.XiamiSDK;
 import com.xiami.sdk.entities.ArtistBook;
@@ -395,28 +396,26 @@ public class XMMusicData {
 		List<OnlineArtist> dataList = new ArrayList<OnlineArtist>();
 
 		JsonObject obj = element.getAsJsonObject();
-		String total = obj.get("total").getAsString();
-		String more = obj.get("more").getAsString();
-		element = obj.get("artists");
-
-		if (element.isJsonArray()) {
-
-			JsonArray array = element.getAsJsonArray();
+		String total =getJsonObjectValue(obj,"total"); 
+		String more = getJsonObjectValue(obj,"more");
+		JsonArray array =getJsonObjectArray(obj,"artists");
+		if (null !=array) {
 			int size = array.size();
 			for (int i = 0; i < size; i++) {
-				JsonObject itemObj = array.get(i).getAsJsonObject();
-
+				JsonObject itemObj =getJsonObject(array.get(i));
+				if(null ==itemObj)continue;
+				
 				OnlineArtist onlineArtist = new OnlineArtist();
-				onlineArtist.setId(itemObj.get("artist_id").getAsInt());
-				onlineArtist.setName(itemObj.get("artist_name").getAsString());
-				onlineArtist.setLogo(itemObj.get("artist_logo").getAsString());				
-				onlineArtist.setCategory(itemObj.get("category").getAsInt());
-				onlineArtist.setEnglish_name(itemObj.get("english_name").getAsString());
-				onlineArtist.setGender(itemObj.get("gender").getAsString());
-				onlineArtist.setDescription(itemObj.get("description").getAsString());
-				onlineArtist.setArea(itemObj.get("area").getAsString());		
-				onlineArtist.setCountLikes(itemObj.get("count_likes").getAsInt());
-				onlineArtist.setRecommends(itemObj.get("recommends").getAsInt());
+				onlineArtist.setId(getJsonObjectValueInt(itemObj,"artist_id"));
+				onlineArtist.setName(getJsonObjectValue(itemObj,"artist_name"));
+				onlineArtist.setLogo(getJsonObjectValue(itemObj,"artist_logo"));				
+				onlineArtist.setCategory(getJsonObjectValueInt(itemObj,"artist_id"));
+				onlineArtist.setEnglish_name(getJsonObjectValue(itemObj,"english_name"));
+				onlineArtist.setGender(getJsonObjectValue(itemObj,"gender"));
+				onlineArtist.setDescription(getJsonObjectValue(itemObj,"description") );
+				onlineArtist.setArea(getJsonObjectValue(itemObj,"area"));		
+				onlineArtist.setCountLikes(getJsonObjectValueInt(itemObj,"count_likes"));
+				onlineArtist.setRecommends(getJsonObjectValueInt(itemObj,"recommends"));
 				
 				dataList.add(onlineArtist);
 			}
@@ -438,6 +437,33 @@ public class XMMusicData {
 		return dataList;
 	}
 	
+	/**
+	 * 获取艺人详细信息
+	 * @param jsonData
+	 * @return
+	 */
+	public OnlineArtist getArtistDetail(JsonElement element) {
+	
+		if(null ==element)return null;;
+		
+		JsonObject itemObj = element.getAsJsonObject();
+		
+		OnlineArtist onlineArtist = new OnlineArtist();
+		onlineArtist.setId(getJsonObjectValueInt(itemObj,"artist_id"));
+		onlineArtist.setName(getJsonObjectValue(itemObj,"artist_name"));
+		onlineArtist.setLogo(getJsonObjectValue(itemObj,"artist_logo"));				
+		onlineArtist.setCategory(getJsonObjectValueInt(itemObj,"artist_id"));
+		onlineArtist.setEnglish_name(getJsonObjectValue(itemObj,"english_name"));
+		onlineArtist.setGender(getJsonObjectValue(itemObj,"gender"));
+		onlineArtist.setDescription(getJsonObjectValue(itemObj,"description") );
+		onlineArtist.setArea(getJsonObjectValue(itemObj,"area"));		
+		onlineArtist.setCountLikes(getJsonObjectValueInt(itemObj,"count_likes"));
+		onlineArtist.setRecommends(getJsonObjectValueInt(itemObj,"recommends"));		
+		
+		return onlineArtist;
+	}
+
+
 	
 	/**
 	 * 请求数据接口（自解析Json方式）
@@ -519,10 +545,101 @@ public class XMMusicData {
 		return bitmap;
 	}
 
-	public OnlineArtist getArtistDetail(JsonElement jsonData) {
-		// TODO Auto-generated method stub
-		return null;
+	
+	
+	
+	private int getJsonObjectValueInt(JsonObject jsonObj, String key) {
+
+		int rValue = 0;
+		
+			try {
+				rValue = jsonObj.get(key).getAsInt();
+			} catch (JsonParseException e) {
+				e.printStackTrace();
+			}catch(NullPointerException ex){
+				ex.printStackTrace();
+			}
+		
+		return rValue;
+	}
+	
+	
+	private float getJsonObjectValueFloat(JsonObject jsonObj, String key) {
+
+		float rValue = 0;
+		try {
+			rValue = jsonObj.get(key).getAsFloat();
+		} catch (JsonParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}catch(NullPointerException ex){
+			ex.printStackTrace();
+		}
+		return rValue;
 	}
 
+	private String getJsonObjectValue(JsonObject jsonObj, String key) {
+
+		String rValue = "";
+		try {
+			rValue = jsonObj.get(key).getAsString();
+		} catch (JsonParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}catch(NullPointerException ex){
+			ex.printStackTrace();
+		}
+		return rValue;
+	}
+
+	private boolean getJsonObjectValueBool(JsonObject jsonObj, String key) {
+
+		boolean rValue = false;
+		try {
+			rValue = jsonObj.get(key).getAsBoolean();
+		} catch (JsonParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}catch(NullPointerException ex){
+			ex.printStackTrace();
+		}
+		return rValue;
+
+	}
+
+	private JsonArray getJsonObjectArray(JsonObject jsonObj, String key) {
+
+		JsonArray rValue = null;
+		try {
+			JsonElement element=jsonObj.get(key);
+			if(element.isJsonArray()){
+		      	rValue = element.getAsJsonArray();
+			}
+		} catch (JsonParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}catch(NullPointerException ex){
+			ex.printStackTrace();
+		}
+		return rValue;
+
+	}
+		
+	private JsonObject getJsonObject(JsonElement element) {
+
+		JsonObject rValue = null;
+		try {
+			if(element.isJsonObject()){
+		      	rValue = element.getAsJsonObject();
+			}
+		} catch (JsonParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}catch(NullPointerException ex){
+			ex.printStackTrace();
+		}
+		return rValue;
+
+	}
 	
 }

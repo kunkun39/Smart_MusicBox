@@ -4,7 +4,6 @@ import com.changhong.common.service.ClientSendCommandService;
 import com.changhong.common.service.NetworkConnectChangedReceiver;
 import com.changhong.common.system.MyApplication;
 import com.changhong.common.widgets.BoxSelectAdapter;
-import com.changhong.xiami.data.JsonUtil;
 import com.changhong.xiami.data.XMMusicData;
 
 import android.app.Activity;

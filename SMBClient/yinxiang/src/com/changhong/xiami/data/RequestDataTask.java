@@ -20,7 +20,8 @@ public class RequestDataTask extends	AsyncTask<HashMap<String, Object>, Long, Js
 	private XMMusicData mXMMusicData;
 	private String method;
 	private Handler parentHandler;
-	private int ErrorCode;
+	private int respondCode;
+	
 
 	public RequestDataTask(XMMusicData xmmusicData, Handler parent,
 			String method) {
@@ -29,15 +30,15 @@ public class RequestDataTask extends	AsyncTask<HashMap<String, Object>, Long, Js
 		this.parentHandler = parent;
 	}
 
-	protected void postExecute(JsonElement result) {
+	protected void doPostExecute(JsonElement result) {
 		if (null != parentHandler) {
 			Message msg = parentHandler.obtainMessage();
-			if (-1 == ErrorCode) {
+			if (Configure.XIAMI_RESPOND_SECCESS == respondCode) {
 				msg.what = Configure.getRequestType(method);
 				msg.obj = result;
 			} else {
 				msg.what = Configure.XIAMI_RESPOND_FAILED;
-				msg.arg1 = ErrorCode;
+				msg.arg1 = respondCode;
 			}
 			parentHandler.sendMessage(msg);
 		}
@@ -49,7 +50,6 @@ public class RequestDataTask extends	AsyncTask<HashMap<String, Object>, Long, Js
 	public JsonElement doInBackground(HashMap<String, Object>... params) {
 
 		try {
-			ErrorCode = -1;
 		
 			int count=params.length;			
 			for (int i = 0; i < params.length; i++) {			
@@ -59,31 +59,31 @@ public class RequestDataTask extends	AsyncTask<HashMap<String, Object>, Long, Js
 						// 获取的响应为：json字符串
 						XiamiApiResponse response = mXMMusicData.getXiamiResponse(result);
 						if (mXMMusicData.isResponseValid(response)) {
+							respondCode = Configure.XIAMI_RESPOND_SECCESS;
 							JsonElement JsonData = response.getData();
-							postExecute(JsonData);
-							return JsonData;	
+							doPostExecute(JsonData);
 						}
 					} else {
 						// 查询失败
-						ErrorCode = R.string.error_response;
+						respondCode = R.string.error_response;
 					}			
 			}
 			return null;
 
 		} catch (NoSuchAlgorithmException e) {
-			ErrorCode = R.string.error_sign_algorithm;
+			respondCode = R.string.error_sign_algorithm;
 			e.printStackTrace();
 			return null;
 		} catch (IOException e) {
-			ErrorCode = R.string.error_io;
+			respondCode = R.string.error_io;
 			e.printStackTrace();
 			return null;
 		} catch (AuthExpiredException e) {
-			ErrorCode = R.string.error_auth_expired;
+			respondCode = R.string.error_auth_expired;
 			e.printStackTrace();
 			return null;
 		} catch (ResponseErrorException e) {
-			ErrorCode = R.string.error_response;
+			respondCode = R.string.error_response;
 			return null;
 		}
 	}

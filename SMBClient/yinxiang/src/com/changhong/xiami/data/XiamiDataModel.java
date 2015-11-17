@@ -1,13 +1,14 @@
 package com.changhong.xiami.data;
 
 
+import java.io.Serializable;
 import java.util.List;
 
 import com.xiami.sdk.entities.OnlineSong;
 
 import android.graphics.Bitmap;
 
-public class XiamiDataModel {
+public class XiamiDataModel  implements  Serializable{
 
 	private long id;   //数据id
 	

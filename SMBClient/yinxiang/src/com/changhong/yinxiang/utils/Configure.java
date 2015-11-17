@@ -16,6 +16,15 @@ public class Configure {
 	public final static int XIAMI_RANK_ALL=1006;//专辑歌曲列表
 	
 	
+	public final static int XIAMI_ARTIST_WORDBOOK=1014;//艺人大全
+	public final static int XIAMI_RECOMMEND_PROMOTIONS_ARTISTS=1015;//推荐艺人
+	public final static int XIAMI_ARTIST_DETAIL=1016;//艺人详细信息
+	
+	
+
+
+
+	
 	
 	/*
 	 * 服务器请求参数类型RequestMethods
@@ -26,11 +35,20 @@ public class Configure {
 		int i=XIAMI_RESPOND_SECCESS;
 		if(str.equals(RequestMethods.METHOD_RECOMMEND_DAILYLIST)){
 			i=XIAMI_TODAY_RECOMSONGS;
+		}else if(str.equals(RequestMethods.METHOD_COLLECT_RECOMMEND)){
+			i=XIAMI_PROMOTION_ALBUMS;
+		}else if(str.equals(RequestMethods.METHOD_ARTIST_WORDBOOK)){
+			i=XIAMI_ARTIST_WORDBOOK;
+		}else if(str.equals(RequestMethods.METHOD_RECOMMEND_PROMOTIONS_ARTISTS)){
+			i=XIAMI_RECOMMEND_PROMOTIONS_ARTISTS;
+		}else if(str.equals(RequestMethods.METHOD_ARTIST_DETAIL)){
+			i=XIAMI_ARTIST_DETAIL;
 		}else if(str.equals(Configure.RequestMethods_PROMOTION_ALBUMS)){
 			i=XIAMI_PROMOTION_ALBUMS;
 		}else if(str.equals(RequestMethods.METHOD_RANK_DETAIL)){
 			i=XIAMI_RANK_HUAYU;
 		}		
+		
 		return i;
 	}
 }

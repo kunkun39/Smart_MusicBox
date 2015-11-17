@@ -22,7 +22,6 @@ import android.widget.Toast;
 
 import com.changhong.common.utils.NetworkUtils;
 import com.changhong.xiami.data.RequestDataTask;
-import com.changhong.xiami.data.JsonUtil;
 import com.changhong.xiami.data.SceneAdapter;
 import com.changhong.xiami.data.SceneInfor;
 import com.changhong.xiami.data.XMMusicData;

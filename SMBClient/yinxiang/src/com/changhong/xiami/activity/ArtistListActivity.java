@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
@@ -34,6 +35,8 @@ import com.xiami.music.api.utils.RequestMethods;
 import com.xiami.sdk.entities.ArtistRegion;
 import com.xiami.sdk.entities.OnlineAlbum;
 import com.xiami.sdk.entities.OnlineArtist;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -52,14 +55,16 @@ public class ArtistListActivity extends BaseActivity {
 	private int curPageSize = 0;
 	private final int MAX_PAGE_SIZE = 50;
 	private int curArtistType;
+	private int  handleCount;
+
    String[] artistCategory={"chinese_M","chinese_F","chinese_B","english_M","english_F","english_B","korea_M","korea_F","korea_B"," japanese_M"," japanese_F"," japanese_B"};
- 
+   
 	/**
 	 * 汉字转换成拼音的类
 	 */
 	private CharacterParser characterParser;
 	private List<XiamiDataModel> SourceDataList = null;
-
+	private JsonElement hotArtists=null;
 	/**
 	 * 根据拼音来排列ListView里面的数据类
 	 */
@@ -94,6 +99,8 @@ public class ArtistListActivity extends BaseActivity {
 		radioGroup=(RadioGroup) findViewById(R.id.singer_category);
 		adapter = new SortAdapter(this);
 		mArtistList.setAdapter(adapter);
+		SourceDataList = new ArrayList<XiamiDataModel>();
+
 
 	}
 
@@ -111,8 +118,9 @@ public class ArtistListActivity extends BaseActivity {
 						long artistID=model.getId();
 						if(artistID>0){
 								Intent intent=new Intent(ArtistListActivity.this, ArtistDetailActivity.class);
-								intent.putExtra("artistID", artistID);
-								intent.putExtra("artistName", model.getTitle());		
+//								intent.putExtra("artistID", artistID);
+//								intent.putExtra("artistName", model.getTitle());
+								intent.putExtra("XiamiDataModel",(Serializable)model);
 								startActivity(intent);
 						}
 					}
@@ -157,7 +165,6 @@ public class ArtistListActivity extends BaseActivity {
 				if (position != -1) {
 					mArtistList.setSelection(position);
 				}
-
 			}
 		});
 		
@@ -167,9 +174,15 @@ public class ArtistListActivity extends BaseActivity {
 			public void onCheckedChanged(RadioGroup group, int checkedId) {
 				// 设备变化
 				curArtistType= matchArtistTypeIndex(checkedId);
+				SourceDataList.clear();
+				if(null == hotArtists){
+						requestHotArtist();	
+				}else{
+						handleXiamiResponse(hotArtists,true);
+						requestArtistBook();
+				}
+			}
 
-
-			}	
 		});
 
      ((RadioButton) radioGroup.getChildAt(0)).setChecked(true);
@@ -178,15 +191,22 @@ public class ArtistListActivity extends BaseActivity {
 		mHandler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
+
 				switch (msg.what) {
 				case HIGH_LIGHTED_LETTER:
                     String s=(String) msg.obj;
 					sideBar.matchChoose(s);
 					sideBar.invalidate();
 					break;
-				case Configure.XIAMI_RESPOND_SECCESS:
-					JsonElement jsonData = (JsonElement) msg.obj;
-					handlXiamiResponse(jsonData);
+				case Configure.XIAMI_RECOMMEND_PROMOTIONS_ARTISTS://推荐艺人
+					hotArtists = (JsonElement) msg.obj;
+					handleXiamiResponse(hotArtists,true);
+					requestArtistBook();
+					break;							
+				case Configure.XIAMI_ARTIST_WORDBOOK:
+					JsonElement  jsonData = (JsonElement) msg.obj;
+					handleCount--;
+					handleXiamiResponse(jsonData,false);
 					break;
 				case Configure.XIAMI_RESPOND_FAILED:
 					int errorCode=msg.arg1;
@@ -202,41 +222,8 @@ public class ArtistListActivity extends BaseActivity {
 
 	@Override
 	protected void onStart() {
-		super.onStart();
-
-//		// 获取推荐歌曲
-//		new Thread(new Runnable() {
-//			@Override
-//			public void run() {
-//				final List<OnlineArtist> results = mXMMusicData	.fetchArtistListSync(ArtistRegion.chinese_M, MAX_PAGE_SIZE, 1);
-//				SourceDataList = filledData(results);
-//			
-//				// 根据a-z进行排序源数据
-//				Collections.sort(SourceDataList, pinyinComparator);
-//			
-//				//高亮显示第一个歌手Letter
-//				Message msg=new Message();
-//				msg.what=HIGH_LIGHTED_LETTER;
-//				msg.obj=SourceDataList.get(0).getSortLetters();
-//				mHandler.sendMessage(msg);
-//				
-//				mArtistList.post(new Runnable() {
-//					@Override
-//					public void run() {
-//						if(null !=SourceDataList){
-//						       adapter.updateListView(SourceDataList);
-//						}else{
-//                            Toast.makeText(ArtistListActivity.this,"没有搜索到艺人信息", Toast.LENGTH_SHORT).show();
-//						}
-//					}
-//				});
-//				
-//			
-//			}
-//		}).start();
-				
-		requestArtistBook(artistCategory);
-		
+		super.onStart();	
+		requestHotArtist();		
 	}
 
 
@@ -248,39 +235,66 @@ public class ArtistListActivity extends BaseActivity {
 	 *            数据
 	 * @return SortModel列表
 	 */
-	private List<XiamiDataModel> filledData(List<OnlineArtist> artists) {
+	private void filledData(List<OnlineArtist> artists,boolean hot) {
 
-		List<XiamiDataModel> sortList = new ArrayList<XiamiDataModel>();
-
+		 String artistArea="";
 		int size = artists.size();
 		for (int i = 0; i < size; i++) {
 
 			OnlineArtist artist = artists.get(i);
+			artistArea=artist.getArea();
 			String singer = artist.getName();
 			XiamiDataModel sortModel = new XiamiDataModel();
 			sortModel.setId(artist.getId());
 			sortModel.setTitle(singer);
 			sortModel.setLikeCount(artist.getCountLikes());
-			sortModel.setArtistImgUrl(artist.getImageUrl(Configure.IMAGE_SIZE1));
-			// 汉字转换成拼音
-			String pinyin = characterParser.getSelling(singer);
-			String sortString = pinyin.substring(0, 1).toUpperCase();
-
-			// 正则表达式，判断首字母是否是英文字母
-			if (sortString.matches("[A-Z]")) {
-				sortModel.setSortLetters(sortString.toUpperCase());
-			} else {
-				sortModel.setSortLetters("#");
+			sortModel.setArtistImgUrl(artist.getImageUrl());
+			
+			if(hot){				
+				    sortModel.setSortLetters("!");		
+				    Log.e("艺人区域", "区域"+artistArea);
+				    if(!artistIsInCurArea(artistArea))continue;
+				    
+			}else{
+					// 汉字转换成拼音
+					String pinyin = characterParser.getSelling(singer);
+					String sortString = pinyin.substring(0, 1).toUpperCase();
+		            
+					// 正则表达式，判断首字母是否是英文字母
+					if (sortString.matches("[A-Z]")) {
+						sortModel.setSortLetters(sortString.toUpperCase());
+					} else {
+						sortModel.setSortLetters("#");
+					}
 			}
-			sortList.add(sortModel);
-		}
-		return sortList;
-
+			SourceDataList.add(sortModel);
+		}		
 	}
 	
 	
+	private void requestHotArtist() {
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("limit", 100);
+		handleCount=0;
+		mXMMusicData.getJsonData(mHandler,RequestMethods.METHOD_RECOMMEND_PROMOTIONS_ARTISTS, params);
+	}
 	
-	private void requestArtistBook(String[] categorys ) {
+	
+	private void requestArtistBook( ) {
+		String[] categorys=artistCategory;
+		
+		if(2 == curArtistType){//艺人大全
+			categorys=new String[]{"chinese_M","chinese_F","chinese_B"};
+		}else if(3 == curArtistType){//欧美
+			categorys=new String[]{"english_M","english_F","english_B"};
+		}else if(4 == curArtistType){//日本
+			categorys=new String[]{"japanese_M","japanese_F","japanese_B"};
+		}else if(5 == curArtistType){//韩国
+			categorys=new String[]{"korea_M","korea_F","korea_B"};
+		}else if(6 == curArtistType){//
+			categorys=new String[]{"musician"};
+		}
+		
 		int size=categorys.length;
 		HashMap[]  paramList=new HashMap[size];
 		for (int i = 0; i < size; i++) {		
@@ -290,6 +304,7 @@ public class ArtistListActivity extends BaseActivity {
 			params.put("page", 1);
 			paramList[i]=params;
 		}
+		handleCount=categorys.length;
 		mXMMusicData.getJsonData(mHandler,RequestMethods.METHOD_ARTIST_WORDBOOK, paramList);
 	}
 
@@ -315,7 +330,6 @@ public class ArtistListActivity extends BaseActivity {
 	
 	
 	
-	
 	/**
 	 * 位图资源释放
 	 */
@@ -331,11 +345,13 @@ public class ArtistListActivity extends BaseActivity {
 	}
 	
 	
-	private void handlXiamiResponse(JsonElement jsonData) {
+	private void handleXiamiResponse(JsonElement jsonData,boolean hot) {
 		if(null ==jsonData)return;
 		
 		final List<OnlineArtist> results = mXMMusicData	.getArtistList(jsonData);
-		SourceDataList = filledData(results);	
+		filledData(results,hot);		
+		if(handleCount>0 || SourceDataList.size()<=0)return;
+		
 		// 根据a-z进行排序源数据
 		Collections.sort(SourceDataList, pinyinComparator);
 	
@@ -343,6 +359,8 @@ public class ArtistListActivity extends BaseActivity {
 		Message msg=new Message();
 		msg.what=HIGH_LIGHTED_LETTER;
 		msg.obj=SourceDataList.get(0).getSortLetters();
+		if("!".equals(msg.obj))msg.obj="热";
+		
 		mHandler.sendMessage(msg);
 		
 		mArtistList.post(new Runnable() {
@@ -356,6 +374,28 @@ public class ArtistListActivity extends BaseActivity {
 			}
 		});
 	}
+	
+  private boolean artistIsInCurArea(String artistArea){
+	  
+	  if(1==curArtistType){	  
+	    	 return true;
+	  }else if(2==curArtistType &&( artistArea.contains("大陆") || artistArea.contains("香港") ||  artistArea.contains("台湾"))){
+	    	 return true;
+	    }else  if(3==curArtistType && (artistArea.contains("english")
+	    		|| artistArea.contains("美国") ||  artistArea.contains("欧美") || artistArea.contains("英国"))){
+	    	 return true;
+
+	    }else  if(4==curArtistType && (artistArea.contains("korea") || artistArea.contains("韩国"))){
+	    	 return true;
+
+	    }else  if(5==curArtistType && (artistArea.contains("japanese") || artistArea.contains("日本"))){
+	    	 return true;
+
+	    }else  if(6==curArtistType && artistArea.contains("other")){
+	    	 return true;
+	    }
+	  return false;
+  }
 	
 		
 	@Override
