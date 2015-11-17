@@ -35,7 +35,7 @@ public class Configure {
 		int i=XIAMI_RESPOND_SECCESS;
 		if(str.equals(RequestMethods.METHOD_RECOMMEND_DAILYLIST)){
 			i=XIAMI_TODAY_RECOMSONGS;
-		}else if(str.equals(RequestMethods.METHOD_COLLECT_RECOMMEND)){
+		}else if(str.equals(RequestMethods_PROMOTION_ALBUMS)){
 			i=XIAMI_PROMOTION_ALBUMS;
 		}else if(str.equals(RequestMethods.METHOD_ARTIST_WORDBOOK)){
 			i=XIAMI_ARTIST_WORDBOOK;
