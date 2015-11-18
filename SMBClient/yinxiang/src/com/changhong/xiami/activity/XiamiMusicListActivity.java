@@ -7,7 +7,9 @@ package com.changhong.xiami.activity;
  */
 import java.util.HashMap;
 import java.util.List;
+
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -17,6 +19,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.changhong.xiami.data.MusicsListAdapter;
 import com.changhong.xiami.data.RequestDataTask;
 import com.changhong.xiami.data.SceneInfor;
@@ -158,6 +161,11 @@ public class XiamiMusicListActivity extends BaseActivity {
 		}  else if (Configure.XIAMI_RANK_ALL == curMusicType) {
 			curTitle = getString(R.string.rank_top);
 			mXMMusicData.getALLRank(mhandler);
+		}else if (Configure.XIAMI_RANK_LIST == curMusicType) {
+			Intent intent=getIntent();
+			curTitle =intent.getStringExtra("rankTitle");
+			String rankType=intent.getStringExtra("rankType");
+			mXMMusicData.getSignaRank(mhandler,rankType);
 		} else {
 			mhandler.sendEmptyMessage(curMusicType);
 		}

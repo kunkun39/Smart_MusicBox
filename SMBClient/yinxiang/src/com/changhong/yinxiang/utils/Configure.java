@@ -14,6 +14,7 @@ public class Configure {
 	public final static int MUSIC_TYPE_COLLECT=1004;//专辑歌曲列表
 	public final static int XIAMI_RANK_HUAYU=1005;//专辑歌曲列表
 	public final static int XIAMI_RANK_ALL=1006;//专辑歌曲列表
+	public final static int XIAMI_RANK_LIST=1007;//榜单列表
 	
 	
 	public final static int XIAMI_ARTIST_WORDBOOK=1014;//艺人大全
@@ -47,6 +48,8 @@ public class Configure {
 			i=XIAMI_PROMOTION_ALBUMS;
 		}else if(str.equals(RequestMethods.METHOD_RANK_DETAIL)){
 			i=XIAMI_RANK_HUAYU;
+		}	else if(str.equals(RequestMethods.METHOD_RANK_LIST )){
+			i=XIAMI_RANK_LIST;
 		}		
 		
 		return i;

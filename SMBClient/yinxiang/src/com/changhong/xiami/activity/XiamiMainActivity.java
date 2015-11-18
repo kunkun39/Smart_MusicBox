@@ -119,6 +119,8 @@ public class XiamiMainActivity extends BaseActivity {
 				startActivity(intent);
 				break;
 			case R.id.xiami_rank_more:
+				intent=new Intent(XiamiMainActivity.this,XiamiMoreRankActivity.class);
+				startActivity(intent);
 				break;
 			case R.id.xiami_concert_more:
 				break;

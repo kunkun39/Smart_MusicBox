@@ -36,6 +36,7 @@ import com.xiami.sdk.entities.OnlineArtist;
 import com.xiami.sdk.entities.OnlineCollect;
 import com.xiami.sdk.entities.OnlineSong;
 import com.xiami.sdk.entities.QueryInfo;
+import com.xiami.sdk.entities.RankListItem;
 import com.xiami.sdk.entities.RankType;
 import com.xiami.sdk.entities.SceneSongs;
 
@@ -71,28 +72,33 @@ public class XMMusicData {
 	 * 自解析JSON接口
 	 * 
 	 * @param methodCode
-	 * @param params  数组
+	 * @param params
+	 *            数组
 	 * @return
 	 */
-	public void getJsonData(Handler handler, String method,HashMap<String, Object>[] params) {
+	public void getJsonData(Handler handler, String method,
+			HashMap<String, Object>[] params) {
 
 		Log.e("YDINFOR",
 				"++++++++++++++++xiamiRequest()+++++++++++++++++++++++++++++");
-		RequestDataTask requestDataTask = new RequestDataTask(this, handler, method);
+		RequestDataTask requestDataTask = new RequestDataTask(this, handler,
+				method);
 		requestDataTask.execute(params);
 	}
-	
+
 	/**
 	 * 
 	 * @param handler
 	 * @param method
 	 * @param params
 	 */
-	public void getJsonData(Handler handler, String method,HashMap<String, Object> params) {
+	public void getJsonData(Handler handler, String method,
+			HashMap<String, Object> params) {
 
 		Log.e("YDINFOR",
 				"++++++++++++++++xiamiRequest()+++++++++++++++++++++++++++++");
-		RequestDataTask requestDataTask = new RequestDataTask(this, handler, method);
+		RequestDataTask requestDataTask = new RequestDataTask(this, handler,
+				method);
 		requestDataTask.execute(params);
 	}
 
@@ -114,10 +120,9 @@ public class XMMusicData {
 		}
 	}
 
-	
-	
 	/**
 	 * 获取音乐风格列表（场景音乐）
+	 * 
 	 * @param element
 	 * @return
 	 */
@@ -150,9 +155,9 @@ public class XMMusicData {
 		return dataList;
 	}
 
-	
 	/**
 	 * 获取场景音乐
+	 * 
 	 * @param element
 	 * @return
 	 */
@@ -187,53 +192,85 @@ public class XMMusicData {
 	 * 
 	 * 获取今日推荐歌曲列表
 	 */
-	public void getTodayRecom(Handler handler,int limit){
-		
+	public void getTodayRecom(Handler handler, int limit) {
+
 		HashMap<String, Object> params = new HashMap<String, Object>();
 		params.put("limit", limit);
-		RequestDataTask requestDataTask = new RequestDataTask(this, handler, RequestMethods.METHOD_RECOMMEND_DAILYLIST);
+		RequestDataTask requestDataTask = new RequestDataTask(this, handler,
+				RequestMethods.METHOD_RECOMMEND_DAILYLIST);
 		requestDataTask.execute(params);
-		
+
 	}
-	
+
 	/*
 	 * 获取新碟首发专辑列表
 	 */
-	public void getPromotionALbums(Handler handler,int page,int limit){
+	public void getPromotionALbums(Handler handler, int page, int limit) {
 		HashMap<String, Object> params = new HashMap<String, Object>();
 		params.put("type", RankType.music_all);
 		params.put("page", page);
 		params.put("limit", limit);
-		RequestDataTask requestDataTask = new RequestDataTask(this, handler, Configure.RequestMethods_PROMOTION_ALBUMS);
+		RequestDataTask requestDataTask = new RequestDataTask(this, handler,
+				Configure.RequestMethods_PROMOTION_ALBUMS);
 		requestDataTask.execute(params);
 	}
+
 	/*
 	 * 获取华语排行榜歌曲
 	 */
-	public void getHuayuRank(Handler handler){
+	public void getHuayuRank(Handler handler) {
 		HashMap<String, Object> params = new HashMap<String, Object>();
 		params.put("type", RankType.hito);
 		params.put("time", 0);
-		RequestDataTask requestDataTask = new RequestDataTask(this, handler, RequestMethods.METHOD_RANK_DETAIL);
+		RequestDataTask requestDataTask = new RequestDataTask(this, handler,
+				RequestMethods.METHOD_RANK_DETAIL);
 		requestDataTask.execute(params);
 	}
+
 	/*
 	 * 获取全部排行榜歌曲
 	 */
-	public void getALLRank(Handler handler){
+	public void getALLRank(Handler handler) {
 		HashMap<String, Object> params = new HashMap<String, Object>();
 		params.put("type", RankType.music_all);
 		params.put("time", 0);
-		RequestDataTask requestDataTask = new RequestDataTask(this, handler, RequestMethods.METHOD_RANK_DETAIL);
+		RequestDataTask requestDataTask = new RequestDataTask(this, handler,
+				RequestMethods.METHOD_RANK_DETAIL);
+		requestDataTask.execute(params);
+	}
+
+	/*
+	 * 获取排行榜 榜单列表
+	 */
+	public void getRankType(Handler handler) {
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("", "");
+		RequestDataTask requestDataTask = new RequestDataTask(this, handler,
+				RequestMethods.METHOD_RANK_LIST);
+		requestDataTask.execute(params);
+	}
+
+	
+	/*
+	 * 获取指定类型榜单的歌曲列表
+	 * 
+	 */
+	public void getSignaRank(Handler handler,String type){
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("type",type);
+		params.put("time", 0);
+		RequestDataTask requestDataTask = new RequestDataTask(this, handler,
+				RequestMethods.METHOD_RANK_DETAIL);
 		requestDataTask.execute(params);
 	}
 	
 	/*
 	 * =======================数据解析部分==============================================
 	 */
-	
+
 	/**
 	 * 获取精选辑列表
+	 * 
 	 * @param element
 	 * @return
 	 */
@@ -284,8 +321,9 @@ public class XMMusicData {
 	/**
 	 * 解析专辑列表
 	 * 
-	 * @param element  JSON数据
-	 * @return  专辑列表
+	 * @param element
+	 *            JSON数据
+	 * @return 专辑列表
 	 */
 	public List<OnlineAlbum> getAlbumList(JsonElement element) {
 
@@ -299,7 +337,7 @@ public class XMMusicData {
 		String more = obj.get("more").getAsString();
 		element = obj.get("albums");
 
-		dataList=albumsElementToList(element);
+		dataList = albumsElementToList(element);
 		return dataList;
 	}
 
@@ -307,8 +345,8 @@ public class XMMusicData {
 	 * 
 	 * 
 	 */
-	public List<OnlineAlbum> albumsElementToList(JsonElement element){
-		String albumImage=null;
+	public List<OnlineAlbum> albumsElementToList(JsonElement element) {
+		String albumImage = null;
 		List<OnlineAlbum> dataList = new ArrayList<OnlineAlbum>();
 		if (element.isJsonArray()) {
 
@@ -324,14 +362,14 @@ public class XMMusicData {
 				onlineAlbum.setArtistId(itemObj.get("artist_id").getAsInt());
 				onlineAlbum.setArtistName(itemObj.get("artist_name")
 						.getAsString());
-				
-				//当有专辑图片时，显示专辑图片，反之则显示艺术家图片
-				albumImage=itemObj.get("album_logo").getAsString();
-				if(!StringUtils.hasLength(albumImage)){
-					albumImage=itemObj.get("artist_logo").getAsString();
+
+				// 当有专辑图片时，显示专辑图片，反之则显示艺术家图片
+				albumImage = itemObj.get("album_logo").getAsString();
+				if (!StringUtils.hasLength(albumImage)) {
+					albumImage = itemObj.get("artist_logo").getAsString();
 				}
 				onlineAlbum.setArtistLogo(albumImage);
-				
+
 				onlineAlbum.setAlbumCategory(itemObj.get("album_category")
 						.getAsString());
 				onlineAlbum.setCompany(itemObj.get("company").getAsString());
@@ -346,19 +384,21 @@ public class XMMusicData {
 				dataList.add(onlineAlbum);
 			}
 		}
-		
+
 		return dataList;
 	}
-	
-	
+
 	/**
 	 * 解析歌曲集
-	 * @param element JSON数据
-	 * @return  歌曲集
+	 * 
+	 * @param element
+	 *            JSON数据
+	 * @return 歌曲集
 	 */
 	public List<OnlineSong> getSongList(JsonElement element) {
 
-		if (null == element)return null;
+		if (null == element)
+			return null;
 
 		List<OnlineSong> dataList = new ArrayList<OnlineSong>();
 		JsonArray arraySong = element.getAsJsonArray();
@@ -386,8 +426,6 @@ public class XMMusicData {
 		return dataList;
 	}
 
-	
-
 	public List<OnlineArtist> getArtistList(JsonElement element) {
 
 		if (null == element)
@@ -396,27 +434,35 @@ public class XMMusicData {
 		List<OnlineArtist> dataList = new ArrayList<OnlineArtist>();
 
 		JsonObject obj = element.getAsJsonObject();
-		String total =getJsonObjectValue(obj,"total"); 
-		String more = getJsonObjectValue(obj,"more");
-		JsonArray array =getJsonObjectArray(obj,"artists");
-		if (null !=array) {
+		String total = getJsonObjectValue(obj, "total");
+		String more = getJsonObjectValue(obj, "more");
+		JsonArray array = getJsonObjectArray(obj, "artists");
+		if (null != array) {
 			int size = array.size();
 			for (int i = 0; i < size; i++) {
-				JsonObject itemObj =getJsonObject(array.get(i));
-				if(null ==itemObj)continue;
-				
+				JsonObject itemObj = getJsonObject(array.get(i));
+				if (null == itemObj)
+					continue;
+
 				OnlineArtist onlineArtist = new OnlineArtist();
-				onlineArtist.setId(getJsonObjectValueInt(itemObj,"artist_id"));
-				onlineArtist.setName(getJsonObjectValue(itemObj,"artist_name"));
-				onlineArtist.setLogo(getJsonObjectValue(itemObj,"artist_logo"));				
-				onlineArtist.setCategory(getJsonObjectValueInt(itemObj,"artist_id"));
-				onlineArtist.setEnglish_name(getJsonObjectValue(itemObj,"english_name"));
-				onlineArtist.setGender(getJsonObjectValue(itemObj,"gender"));
-				onlineArtist.setDescription(getJsonObjectValue(itemObj,"description") );
-				onlineArtist.setArea(getJsonObjectValue(itemObj,"area"));		
-				onlineArtist.setCountLikes(getJsonObjectValueInt(itemObj,"count_likes"));
-				onlineArtist.setRecommends(getJsonObjectValueInt(itemObj,"recommends"));
-				
+				onlineArtist.setId(getJsonObjectValueInt(itemObj, "artist_id"));
+				onlineArtist
+						.setName(getJsonObjectValue(itemObj, "artist_name"));
+				onlineArtist
+						.setLogo(getJsonObjectValue(itemObj, "artist_logo"));
+				onlineArtist.setCategory(getJsonObjectValueInt(itemObj,
+						"artist_id"));
+				onlineArtist.setEnglish_name(getJsonObjectValue(itemObj,
+						"english_name"));
+				onlineArtist.setGender(getJsonObjectValue(itemObj, "gender"));
+				onlineArtist.setDescription(getJsonObjectValue(itemObj,
+						"description"));
+				onlineArtist.setArea(getJsonObjectValue(itemObj, "area"));
+				onlineArtist.setCountLikes(getJsonObjectValueInt(itemObj,
+						"count_likes"));
+				onlineArtist.setRecommends(getJsonObjectValueInt(itemObj,
+						"recommends"));
+
 				dataList.add(onlineArtist);
 			}
 		}
@@ -426,51 +472,103 @@ public class XMMusicData {
 	/*
 	 * 获取排行榜歌曲列表
 	 */
-	public List<OnlineSong> getRankSongList(JsonElement element){
-		if (null == element)return null;
+	public List<OnlineSong> getRankSongList(JsonElement element) {
+		if (null == element)
+			return null;
 
 		List<OnlineSong> dataList = new ArrayList<OnlineSong>();
 		JsonObject jsonObj = element.getAsJsonObject();
 		element = jsonObj.get("songs");
-		
-		dataList=getSongList(element);
+
+		dataList = getSongList(element);
 		return dataList;
 	}
 	
+	/*
+	 * 
+	 * 获取榜单列表数据
+	 */
+	public List<RankListItem> getRankListItem(JsonElement element){
+		List<RankListItem> dataList=new ArrayList<RankListItem>();
+		JsonArray arrayItems=element.getAsJsonArray();
+		
+		int size = arrayItems.size();
+		for (int i = 0; i < size; i++) {
+			JsonObject itemObj=arrayItems.get(i).getAsJsonObject();
+			JsonArray itemContent=itemObj.getAsJsonArray("items");
+			for (int j = 0; j < itemContent.size(); j++) {
+				JsonObject rankContent=itemContent.get(j).getAsJsonObject(); 
+				RankListItem rankListItem=new RankListItem();
+				rankListItem.setCycleType(rankContent.get("cycle_type").getAsString());
+				rankListItem.setLogo(rankContent.get("logo").getAsString());
+				rankListItem.setLogoMiddle(rankContent.get("logo_middle").getAsString());
+				rankListItem.setSongs(getSongList(rankContent.get("songs")));
+				rankListItem.setTitle(rankContent.get("title").getAsString());
+				rankListItem.setType(rankContent.get("type").getAsString());
+				rankListItem.setUpdateDate(rankContent.get("update_date").getAsString());
+				dataList.add(rankListItem);
+			}
+		}
+
+//		for (int j = 0; j < size; j++) {
+//
+//			JsonObject songObj = array.get(j).getAsJsonObject();
+//			RankListItem rankItem = new RankListItem();
+//			rankItem.setCycleType(songObj.get("cycle_type").getAsString());
+//			rankItem.setLogo(songObj.get("logo").getAsString());
+//			rankItem.setLogoMiddle(songObj.get("logo_middle").getAsString());
+//			rankItem.setSongs(getSongList(songObj.get("songs")));
+//			rankItem.setTitle(songObj.get("title").getAsString());
+//			rankItem.setType(songObj.get("type").getAsString());
+//			rankItem.setUpdateDate(songObj.get("update_date").getAsString());
+//			
+//			
+//			dataList.add(rankItem);
+//		}
+		
+		return dataList;
+	}
+
 	/**
 	 * 获取艺人详细信息
+	 * 
 	 * @param jsonData
 	 * @return
 	 */
 	public OnlineArtist getArtistDetail(JsonElement element) {
-	
-		if(null ==element)return null;;
-		
+
+		if (null == element)
+			return null;
+		;
+
 		JsonObject itemObj = element.getAsJsonObject();
-		
+
 		OnlineArtist onlineArtist = new OnlineArtist();
-		onlineArtist.setId(getJsonObjectValueInt(itemObj,"artist_id"));
-		onlineArtist.setName(getJsonObjectValue(itemObj,"artist_name"));
-		onlineArtist.setLogo(getJsonObjectValue(itemObj,"artist_logo"));				
-		onlineArtist.setCategory(getJsonObjectValueInt(itemObj,"artist_id"));
-		onlineArtist.setEnglish_name(getJsonObjectValue(itemObj,"english_name"));
-		onlineArtist.setGender(getJsonObjectValue(itemObj,"gender"));
-		onlineArtist.setDescription(getJsonObjectValue(itemObj,"description") );
-		onlineArtist.setArea(getJsonObjectValue(itemObj,"area"));		
-		onlineArtist.setCountLikes(getJsonObjectValueInt(itemObj,"count_likes"));
-		onlineArtist.setRecommends(getJsonObjectValueInt(itemObj,"recommends"));		
-		
+		onlineArtist.setId(getJsonObjectValueInt(itemObj, "artist_id"));
+		onlineArtist.setName(getJsonObjectValue(itemObj, "artist_name"));
+		onlineArtist.setLogo(getJsonObjectValue(itemObj, "artist_logo"));
+		onlineArtist.setCategory(getJsonObjectValueInt(itemObj, "artist_id"));
+		onlineArtist
+				.setEnglish_name(getJsonObjectValue(itemObj, "english_name"));
+		onlineArtist.setGender(getJsonObjectValue(itemObj, "gender"));
+		onlineArtist.setDescription(getJsonObjectValue(itemObj, "description"));
+		onlineArtist.setArea(getJsonObjectValue(itemObj, "area"));
+		onlineArtist
+				.setCountLikes(getJsonObjectValueInt(itemObj, "count_likes"));
+		onlineArtist
+				.setRecommends(getJsonObjectValueInt(itemObj, "recommends"));
+
 		return onlineArtist;
 	}
 
-
-	
 	/**
 	 * 请求数据接口（自解析Json方式）
 	 * 
-	 * @param methodCode  方法名称
-	 * @param params  应用传入参数
-	 * @return  
+	 * @param methodCode
+	 *            方法名称
+	 * @param params
+	 *            应用传入参数
+	 * @return
 	 */
 	public String xiamiRequest(String methodCode,
 			HashMap<java.lang.String, java.lang.Object> params)
@@ -478,13 +576,13 @@ public class XMMusicData {
 			com.xiami.core.exceptions.AuthExpiredException,
 			com.xiami.core.exceptions.ResponseErrorException {
 
-		Log.e("YDINFOR",	"++++++++++++++++xiamiRequest()+++++++++++++++++++++++++++++");
+		Log.e("YDINFOR",
+				"++++++++++++++++xiamiRequest()+++++++++++++++++++++++++++++");
 		// mXiamiSDK.enableLog(true);
 		String results = mXiamiSDK.xiamiSDKRequest(methodCode, params);
 		return results;
 	}
 
-	
 	/**
 	 * 
 	 * @param respond
@@ -545,25 +643,21 @@ public class XMMusicData {
 		return bitmap;
 	}
 
-	
-	
-	
 	private int getJsonObjectValueInt(JsonObject jsonObj, String key) {
 
 		int rValue = 0;
-		
-			try {
-				rValue = jsonObj.get(key).getAsInt();
-			} catch (JsonParseException e) {
-				e.printStackTrace();
-			}catch(NullPointerException ex){
-				ex.printStackTrace();
-			}
-		
+
+		try {
+			rValue = jsonObj.get(key).getAsInt();
+		} catch (JsonParseException e) {
+			e.printStackTrace();
+		} catch (NullPointerException ex) {
+			ex.printStackTrace();
+		}
+
 		return rValue;
 	}
-	
-	
+
 	private float getJsonObjectValueFloat(JsonObject jsonObj, String key) {
 
 		float rValue = 0;
@@ -572,7 +666,7 @@ public class XMMusicData {
 		} catch (JsonParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}catch(NullPointerException ex){
+		} catch (NullPointerException ex) {
 			ex.printStackTrace();
 		}
 		return rValue;
@@ -586,7 +680,7 @@ public class XMMusicData {
 		} catch (JsonParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}catch(NullPointerException ex){
+		} catch (NullPointerException ex) {
 			ex.printStackTrace();
 		}
 		return rValue;
@@ -600,7 +694,7 @@ public class XMMusicData {
 		} catch (JsonParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}catch(NullPointerException ex){
+		} catch (NullPointerException ex) {
 			ex.printStackTrace();
 		}
 		return rValue;
@@ -611,35 +705,35 @@ public class XMMusicData {
 
 		JsonArray rValue = null;
 		try {
-			JsonElement element=jsonObj.get(key);
-			if(element.isJsonArray()){
-		      	rValue = element.getAsJsonArray();
+			JsonElement element = jsonObj.get(key);
+			if (element.isJsonArray()) {
+				rValue = element.getAsJsonArray();
 			}
 		} catch (JsonParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}catch(NullPointerException ex){
+		} catch (NullPointerException ex) {
 			ex.printStackTrace();
 		}
 		return rValue;
 
 	}
-		
+
 	private JsonObject getJsonObject(JsonElement element) {
 
 		JsonObject rValue = null;
 		try {
-			if(element.isJsonObject()){
-		      	rValue = element.getAsJsonObject();
+			if (element.isJsonObject()) {
+				rValue = element.getAsJsonObject();
 			}
 		} catch (JsonParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}catch(NullPointerException ex){
+		} catch (NullPointerException ex) {
 			ex.printStackTrace();
 		}
 		return rValue;
 
 	}
-	
+
 }
