@@ -19,7 +19,6 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -33,19 +32,20 @@ import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
-
 import com.changhong.yinxiang.R;
+import com.changhong.yinxiang.remotecontrol.AudioCtrlAdapter;
 import com.changhong.yinxiang.remotecontrol.TVInputDialogFragment;
 import com.changhong.yinxiang.utils.YuYingWordsUtils;
 import com.changhong.yinxiang.view.AudioControlDialog;
 import com.changhong.yinxiang.view.DYControlDialog;
 import com.changhong.yinxiang.view.LightsControlDialog;
+import com.changhong.yinxiang.view.SwitchButton;
 import com.changhong.yinxiang.view.YinXiaoControlDialog;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -62,6 +62,8 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 
 	private GestureDetector detector;
 
+	RelativeLayout ctrlMain;
+	LinearLayout ctrlAudio;
 	/**
 	 * server ip part
 	 */
@@ -143,14 +145,17 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 		ImageView backBtn = (ImageView) v.findViewById(R.id.btn_b);
 		Button list = (Button) v.findViewById(R.id.btn_list);
 		
+		//功能切换键
+		ImageView  funSwitch=(ImageView) v.findViewById(R.id.function_switch);
 		//音效控件
+		 ctrlMain= (RelativeLayout) v.findViewById(R.id.control_main);
+		 ctrlAudio= (LinearLayout) v.findViewById(R.id.control_audio);		
 	
-		
-		
-		
-		
-		
-		
+		SwitchButton lights_controller=(SwitchButton) v.findViewById(R.id.lightscontrol);
+		lights_controller.init("light5");
+	
+	
+
 		btn_up.setOnTouchListener(this);
 		btn_up.setOnClickListener(this);
 		btn_down.setOnTouchListener(this);
@@ -161,6 +166,10 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 		btn_right.setOnClickListener(this);
 		btn_center.setOnTouchListener(this);
 		btn_center.setOnClickListener(this);
+		funSwitch.setOnTouchListener(this);
+		funSwitch.setOnClickListener(this);	
+		
+		
 //		btn_v1.setOnTouchListener(this);
 //		btn_v1.setOnClickListener(new OnClickListener() {
 //
@@ -310,52 +319,75 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 		// }
 		// });
 		
-		if (yinXiaoControlDialog == null) {
-			yinXiaoControlDialog = new YinXiaoControlDialog(getActivity());
-			yinXiaoControlDialog.setCanceledOnTouchOutside(true);
-			yinXiaoControlDialog.YX_game.setOnClickListener(this);
-			yinXiaoControlDialog.YX_game.setOnTouchListener(this);
-			yinXiaoControlDialog.YX_movie.setOnClickListener(this);
-			yinXiaoControlDialog.YX_movie.setOnTouchListener(this);
-			yinXiaoControlDialog.YX_music.setOnClickListener(this);
-			yinXiaoControlDialog.YX_music.setOnTouchListener(this);
-			yinXiaoControlDialog.YX_tv.setOnClickListener(this);
-			yinXiaoControlDialog.YX_tv.setOnTouchListener(this);
-			yinXiaoControlDialog.YX_xt.setOnClickListener(this);
-			yinXiaoControlDialog.YX_xt.setOnTouchListener(this);
-			yinXiaoControlDialog.YX_yd.setOnClickListener(this);
-			yinXiaoControlDialog.YX_yd.setOnTouchListener(this);
-		}
-		if (lightsControlDialog == null) {
-			lightsControlDialog = new LightsControlDialog(getActivity());
-			lightsControlDialog.setCanceledOnTouchOutside(true);
-			lightsControlDialog.lights_controller.setOnClickListener(this);
-			lightsControlDialog.lights_controller.setOnTouchListener(this);
-			lightsControlDialog.lights_down.setOnClickListener(this);
-			lightsControlDialog.lights_down.setOnTouchListener(this);
-			lightsControlDialog.lights_moon.setOnClickListener(this);
-			lightsControlDialog.lights_moon.setOnTouchListener(this);
-			lightsControlDialog.lights_sun.setOnClickListener(this);
-			lightsControlDialog.lights_sun.setOnTouchListener(this);
-			lightsControlDialog.lights_up.setOnClickListener(this);
-			lightsControlDialog.lights_up.setOnTouchListener(this);
-		}
-		if (audioControlDialog == null) {
-			audioControlDialog = new AudioControlDialog(getActivity());
-			audioControlDialog.setCanceledOnTouchOutside(true);
-			audioControlDialog.btnAudiodown.setOnClickListener(this);
-			audioControlDialog.btnAudiodown.setOnTouchListener(this);
-			audioControlDialog.btnAudioup.setOnClickListener(this);
-			audioControlDialog.btnAudioup.setOnTouchListener(this);
-		}
-		if (dyControlDialog == null) {
-			dyControlDialog = new DYControlDialog(getActivity());
-			dyControlDialog.setCanceledOnTouchOutside(true);
-			dyControlDialog.btnDYdown.setOnClickListener(this);
-			dyControlDialog.btnDYdown.setOnTouchListener(this);
-			dyControlDialog.btnDYup.setOnClickListener(this);
-			dyControlDialog.btnDYup.setOnTouchListener(this);
-		}
+			
+	
+		//灯光控制
+		lights_controller.setOnClickListener(this);
+		lights_controller.setOnTouchListener(this);
+//	    audio_light.setOnItemClickListener(new OnItemClickListener() {
+//					@Override
+//					public void onItemClick(AdapterView<?> parent, View view,
+//							int position, long id) {
+//                               						
+//					}
+//				});
+//	    
+//		//音效控制		
+//		audio_yinxiao.setOnItemClickListener(new OnItemClickListener() {
+//			@Override
+//			public void onItemClick(AdapterView<?> parent, View view,
+//					int position, long id) {				
+//			}
+//		});
+		
+		
+		
+//		if (yinXiaoControlDialog == null) {
+//			yinXiaoControlDialog = new YinXiaoControlDialog(getActivity());
+//			yinXiaoControlDialog.setCanceledOnTouchOutside(true);
+//			yinXiaoControlDialog.YX_game.setOnClickListener(this);
+//			yinXiaoControlDialog.YX_game.setOnTouchListener(this);
+//			yinXiaoControlDialog.YX_movie.setOnClickListener(this);
+//			yinXiaoControlDialog.YX_movie.setOnTouchListener(this);
+//			yinXiaoControlDialog.YX_music.setOnClickListener(this);
+//			yinXiaoControlDialog.YX_music.setOnTouchListener(this);
+//			yinXiaoControlDialog.YX_tv.setOnClickListener(this);
+//			yinXiaoControlDialog.YX_tv.setOnTouchListener(this);
+//			yinXiaoControlDialog.YX_xt.setOnClickListener(this);
+//			yinXiaoControlDialog.YX_xt.setOnTouchListener(this);
+//			yinXiaoControlDialog.YX_yd.setOnClickListener(this);
+//			yinXiaoControlDialog.YX_yd.setOnTouchListener(this);
+//		}
+//		if (lightsControlDialog == null) {
+//			lightsControlDialog = new LightsControlDialog(getActivity());
+//			lightsControlDialog.setCanceledOnTouchOutside(true);
+//			lightsControlDialog.lights_controller.setOnClickListener(this);
+//			lightsControlDialog.lights_controller.setOnTouchListener(this);
+//			lightsControlDialog.lights_down.setOnClickListener(this);
+//			lightsControlDialog.lights_down.setOnTouchListener(this);
+//			lightsControlDialog.lights_moon.setOnClickListener(this);
+//			lightsControlDialog.lights_moon.setOnTouchListener(this);
+//			lightsControlDialog.lights_sun.setOnClickListener(this);
+//			lightsControlDialog.lights_sun.setOnTouchListener(this);
+//			lightsControlDialog.lights_up.setOnClickListener(this);
+//			lightsControlDialog.lights_up.setOnTouchListener(this);
+//		}
+//		if (audioControlDialog == null) {
+//			audioControlDialog = new AudioControlDialog(getActivity());
+//			audioControlDialog.setCanceledOnTouchOutside(true);
+//			audioControlDialog.btnAudiodown.setOnClickListener(this);
+//			audioControlDialog.btnAudiodown.setOnTouchListener(this);
+//			audioControlDialog.btnAudioup.setOnClickListener(this);
+//			audioControlDialog.btnAudioup.setOnTouchListener(this);
+//		}
+//		if (dyControlDialog == null) {
+//			dyControlDialog = new DYControlDialog(getActivity());
+//			dyControlDialog.setCanceledOnTouchOutside(true);
+//			dyControlDialog.btnDYdown.setOnClickListener(this);
+//			dyControlDialog.btnDYdown.setOnTouchListener(this);
+//			dyControlDialog.btnDYup.setOnClickListener(this);
+//			dyControlDialog.btnDYup.setOnTouchListener(this);
+//		}
 		centerPoint.set((180.25f - 35.5f) * density, (343.25f - 35.5f)* density);
 
 		// 长按触发语音换台功能
@@ -822,6 +854,17 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 				dyControlDialog.imgback.setBackgroundResource(R.drawable.dy);
 			}
 			break;
+		case R.id.function_switch:
+			//功能切换按钮
+			if(View.GONE==ctrlMain.getVisibility()){
+				ctrlMain.setVisibility(View.VISIBLE);
+				ctrlAudio.setVisibility(View.GONE);
+			}else{
+				ctrlMain.setVisibility(View.GONE);
+				ctrlAudio.setVisibility(View.VISIBLE);
+			}
+			break;
+			
 		default:
 			break;
 		}

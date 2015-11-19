@@ -40,22 +40,28 @@ public class AudioCtrlAdapter extends BaseAdapter {
 
 	private List<String> audioCtrlAll;
 	private Context context;
-	private String keyStr;
-	private String displayName, musicPath;
-	private boolean checkSetFlag = false;
-
+	public static final int AUDIO_CTRL_YINXIAO=1;
+	public static final int AUDIO_CTRL_LIGHT=2;
+	
 	/**
 	 * YD add 20150806 for fileEdit 音频文件编辑功能
 	 */
        Handler mHandler=null;
 
-	public AudioCtrlAdapter(Context context, List<String>audioCtrl) {
+	public AudioCtrlAdapter(Context context, String  imgs) {
 		this.context = context;
-		this.audioCtrlAll = audioCtrl;
+		initAudioCtrl(imgs);
 		this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 	
-	
+	private void initAudioCtrl(String  imgs){
+		String[] imgList=imgs.split(";");
+		audioCtrlAll=new ArrayList<String>();
+		for (int i = 0; i < imgList.length; i++) {
+			audioCtrlAll.add(imgList[i]);
+		}
+		
+	}
 	
 
 	
@@ -75,9 +81,8 @@ public class AudioCtrlAdapter extends BaseAdapter {
 	// 创建View方法
 	public View getView(final int position, View convertView, ViewGroup parent) {
 		if (convertView == null) {
-			convertView = inflater.inflate(R.layout.switch_button,null);	
+			convertView =new ImageView(context);	
 		} 
-		((SwitchButton)convertView).init(audioCtrlAll.get(position));
 		return convertView;
 	}
 }

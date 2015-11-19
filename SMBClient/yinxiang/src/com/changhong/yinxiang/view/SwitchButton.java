@@ -21,6 +21,11 @@ public class SwitchButton extends ImageView{
         switchStatus=false;
     }
     
+    public SwitchButton(Context context, AttributeSet attrs) {
+    	super(context, attrs, 0);
+        switchStatus=false;
+    }
+    
     
     public void init(String imgName){
 	     this.imageName=imgName;
