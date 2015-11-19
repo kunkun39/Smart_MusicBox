@@ -5,15 +5,15 @@
               android:orientation="vertical">
 
  <LinearLayout 
-              android:background="@drawable/yinxiao_bg"
+              android:background="@drawable/yinxiao"
               android:layout_width="match_parent"
             android:layout_height="0dip"
-            android:layout_weight="3"
-              android:orientation="horizontal">
+            android:layout_weight="2.1"
+            android:orientation="horizontal">
               
   <View  android:layout_width="0dip"
                     android:layout_height="match_parent"
-                    android:layout_weight="2.1" />   "
+                    android:layout_weight="2.1" />
  <GridView
             android:id="@+id/audio_yinxiao"
             android:layout_width="0dip"
@@ -23,65 +23,63 @@
             android:layout_marginRight="10dip"           
             android:numColumns="3"
             android:verticalSpacing="10dp"
-            android:horizontalSpacing="10dp"
+            android:horizontalSpacing="5dp"
             android:stretchMode="columnWidth"
             android:gravity="center"/>
 </LinearLayout>
 <FrameLayout 
 	android:layout_width="fill_parent"
 	android:layout_height="0dip"
-	android:layout_weight="4"
-	android:layout_marginTop="10dip"
-	android:background="@drawable/yinxiaoback">
+	android:layout_weight="2.5"
+	android:background="@drawable/light_bg">
 	
     <LinearLayout 
-              android:background="@drawable/light_bg"
-              android:layout_width="match_parent"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-	        android:layout_marginTop="10dip"           
               android:orientation="horizontal">
               
   <View  android:layout_width="0dip"
                     android:layout_height="match_parent"
-                    android:layout_weight="2.1" />   "
+                    android:layout_weight="2.1" />
  <GridView
             android:id="@+id/audio_light"
             android:layout_width="0dip"
             android:layout_height="match_parent"
             android:layout_weight="7.9"
-            android:layout_marginLeft="50dip"
-            android:layout_marginRight="10dip"           
+            android:layout_marginTop="30dip"
+            android:layout_marginBottom="30dip"            
+            android:layout_marginLeft="30dip"
+            android:layout_marginRight="5dip"           
             android:numColumns="2"
-            android:verticalSpacing="10dp"
-            android:horizontalSpacing="10dp"
+            android:verticalSpacing="70dp"
+            android:horizontalSpacing="70dp"
             android:stretchMode="columnWidth"
             android:gravity="center"/>
  
  </LinearLayout>
  
     <LinearLayout 
-              android:background="@drawable/light_bg"
-              android:layout_width="match_parent"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-             android:layout_marginTop="10dip"          
-              android:orientation="horizontal">
+            android:orientation="horizontal">
               
   <View  android:layout_width="0dip"
                     android:layout_height="match_parent"
-                    android:layout_weight="4.6" /> 
+                    android:layout_weight="4.65" /> 
                     
   <!-- degnguang-->
  <com.changhong.yinxiang.view.SwitchButton
-            android:id="@+id/audio_lightswitch"
+            android:id="@+id/lightscontrol"
             android:layout_width="0dip"
             android:layout_height="match_parent"
+            android:padding="25dip"
             android:layout_weight="3.2"
             android:src="@drawable/light5_focus"
             android:scaleType="fitCenter"/>
  
  <View  android:layout_width="0dip"
                     android:layout_height="match_parent"
-                    android:layout_weight="2.2" /> 
+                    android:layout_weight="2.15" /> 
  </LinearLayout>
        
 </FrameLayout>

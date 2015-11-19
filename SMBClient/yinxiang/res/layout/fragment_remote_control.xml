@@ -6,7 +6,7 @@
     android:orientation="vertical" >
     
     <!-- 切换按钮 -->
-    <ImageView  android:id="@+id/audioctrl"
+    <ImageView  android:id="@+id/function_switch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
@@ -30,7 +30,7 @@
     <FrameLayout   
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/audioctrl" >
+        android:layout_below="@id/function_switch" >
         
       <RelativeLayout android:id="@+id/control_main"
         android:layout_width="match_parent"
@@ -109,9 +109,12 @@
       
     <!-- 音效控制 -->
     <include layout="@layout/control_audio_dialog" 
+        android:id="@+id/control_audio"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"/>"
+        android:layout_marginTop="20dip"  
+        android:layout_marginBottom="20dip"    
+        android:visibility="gone"/>
          
          
     </FrameLayout>
