@@ -114,7 +114,7 @@
     <!-- view分割线样式 -->
     <style name="bg_line">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">1px</item>
+        <item name="android:layout_height">2px</item>
         <item name="android:background">@color/border_clo</item>
     </style>
     

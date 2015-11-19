@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/song_logo"
+        android:layout_width="50dip"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_margin="15dip"
+        android:layout_centerVertical="true"
+        android:scaleType="fitCenter"/>
+
+    <ImageView
+        android:id="@+id/song_type"
+        android:layout_width="25dip"
+        android:layout_height="25dip"
+        android:layout_toRightOf="@id/song_logo"
+        android:layout_alignBottom="@id/song_logo"  
+        android:layout_marginLeft="7dip"
+        android:src="@drawable/musictype"
+        android:scaleType="fitCenter"/>
+    
+     <TextView
+        android:id="@+id/song_artist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/song_type"    
+        android:layout_alignParentBottom="true"    
+        android:layout_marginLeft="5dip"    
+        android:textSize="@dimen/text_content"    
+        android:textColor="@color/text_default"/>
+    
+    <TextView
+        android:id="@+id/song_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/song_type"
+        android:layout_alignLeft="@id/song_type"        
+        android:textSize="@dimen/text_title"    
+        android:textColor="@color/text_title" />
+      
+    <ImageView
+        android:id="@+id/song_play"
+        android:layout_width="28dip"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="20dip" 
+        android:gravity="center_vertical"
+        android:src="@drawable/play" 
+        android:scaleType="fitCenter"/>
+    
+     <View style="@style/bg_line" 
+        android:layout_alignParentBottom="true"/>
+    
+</RelativeLayout>

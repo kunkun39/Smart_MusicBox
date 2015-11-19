@@ -90,7 +90,7 @@
                         android:layout_weight="1"
                         android:background="@color/xiami_second_background"
                         android:scaleType="fitCenter"
-                        android:src="@drawable/xmmain_search" />
+                        android:src="@drawable/xmsearch_down" />
 
                     <ImageView
                         android:id="@+id/xiami_random_songs"

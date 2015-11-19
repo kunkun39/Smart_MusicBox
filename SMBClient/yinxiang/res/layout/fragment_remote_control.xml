@@ -4,6 +4,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
+    
+    <!-- 切换按钮 -->
+    <ImageView  android:id="@+id/audioctrl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="75dip"
+        android:layout_marginRight="20dip"
+        android:src="@drawable/audioctrl_selector" 
+        android:scaleType="fitCenter"/>
+    
 
     <RelativeLayout
         android:id="@+id/right_menu"
@@ -12,14 +24,17 @@
         android:layout_alignParentRight="true"
         android:background="#00ffcc"
         android:visibility="gone" >
-        <include layout="@layout/sidemenu" />
-        
+        <include layout="@layout/sidemenu" />      
     </RelativeLayout>
-
-    <RelativeLayout
+    
+    <FrameLayout   
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="60dip"
+        android:layout_below="@id/audioctrl" >
+        
+      <RelativeLayout android:id="@+id/control_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:orientation="vertical" >
 
         <ImageView
@@ -33,86 +48,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="30dip"
-            android:layout_marginLeft="15dip"
-            android:layout_marginRight="15dip"
+            android:layout_marginTop="20dip"  
+            android:layout_marginBottom="20dip"                               
             android:orientation="vertical" >
 
             <LinearLayout
-                android:id="@+id/img_volume"
                 android:layout_width="match_parent"
                 android:layout_height="0dip"
-                android:layout_weight="2"
-                android:background="@drawable/tv_control_menu_bg"              
-                android:orientation="horizontal" >"
-
-                    <ImageView
-                        android:id="@+id/volume1"
-                        android:layout_width="0dip"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:padding="12dip"
-                        android:src="@drawable/volume1" 
-                        android:scaleType="fitCenter" 
-                        android:background="@drawable/ctrlmenu_left_selector" />
-
-                    <ImageView
-                        android:id="@+id/volume2"
-                        android:layout_width="0dip"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:padding="12dip"
-                        android:src="@drawable/volume2" 
-                        android:scaleType="fitCenter" 
-                        android:background="@drawable/ctrlmenu_selector" />
-
-                    <ImageView
-                        android:id="@+id/volume3"
-                        android:layout_width="0dip"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:padding="12dip"
-                         android:src="@drawable/volume3" 
-                        android:scaleType="fitCenter" 
-                       android:background="@drawable/ctrlmenu_selector" />
-
-                    <ImageView
-                        android:id="@+id/vlight"
-                        android:layout_width="0dip"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:padding="12dip"
-                        android:src="@drawable/vlight" 
-                        android:scaleType="fitCenter"
-                        android:background="@drawable/ctrlmenu_selector" />
-
-                    <ImageView
-                        android:id="@+id/btn_menu"
-                        android:layout_width="0dip"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:padding="12dip"
-                        android:src="@drawable/menu" 
-                        android:scaleType="fitCenter" 
-                        android:background="@drawable/ctrlmenu_right_selector" />
-                    
-                </LinearLayout>
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dip"
-                android:layout_marginBottom="15dip"
-                android:layout_marginLeft="25dip"
-                android:layout_marginRight="25dip"
-                android:layout_marginTop="15dip"
-                android:layout_weight="9" >
-               <include layout="@layout/ctrlremote_center" />
-            
-            </RelativeLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dip"
-                android:layout_marginBottom="10dip"
                 android:layout_marginLeft="15dip"
                 android:layout_marginRight="15dip"
                 android:layout_weight="2"
@@ -121,7 +63,7 @@
                 <ImageView
                     android:id="@+id/btn_home"
                     android:layout_width="0dip"
-                    android:layout_height="match_parent"
+                    android:layout_height="30dip"
                     android:layout_weight="2"
                     android:src="@drawable/btn_home_selector" 
                     android:scaleType="fitCenter" />
@@ -130,16 +72,50 @@
                     android:layout_width="0dip"
                     android:layout_height="match_parent"
                     android:layout_weight="3" />
-
-                <ImageView
-                    android:id="@+id/btn_b"
-                    android:layout_width="0dip"
-                    android:layout_height="match_parent"
-                    android:layout_weight="2"
-                    android:src="@drawable/btn_b_selector" 
-                    android:scaleType="fitCenter" />
+                
+                 <ImageView
+                        android:id="@+id/btn_menu"
+                        android:layout_width="0dip"
+                        android:layout_height="25dip"
+                        android:layout_weight="2"
+                        android:src="@drawable/ctrlmenu_selector" 
+                        android:scaleType="fitCenter" />               
             </LinearLayout>
-        </LinearLayout>
+            
+            <!-- 遥控器 -->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dip"
+                android:layout_marginBottom="10dip"
+                android:layout_marginLeft="25dip"
+                android:layout_marginRight="25dip"
+                android:layout_marginTop="10dip"
+                android:layout_weight="9" >
+               <include layout="@layout/ctrlremote_center" />           
+            </RelativeLayout>
+
+           <ImageView   android:id="@+id/btn_b"
+                    android:layout_width="40dip"
+                    android:layout_height="0dip"
+                    android:layout_weight="2"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/btn_b_selector" 
+                    android:scaleType="fitCenter" />                  
+        </LinearLayout>  
+            
     </RelativeLayout>
+        
+      
+      
+    <!-- 音效控制 -->
+    <include layout="@layout/control_audio_dialog" 
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"/>"
+         
+         
+    </FrameLayout>
+
+   
 
 </RelativeLayout>

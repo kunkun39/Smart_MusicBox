@@ -1,31 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="360dip"
-    android:layout_height="147dip"
-    android:background="@drawable/audioback"
-    tools:context=".view.AudioControlDialog" >
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
 
-    <ImageView
-        android:id="@+id/showaudios"
-        android:layout_width="360dip"
-    	android:layout_height="147dip"
-        android:background="@drawable/audio" />
-
-    <Button
-        android:id="@+id/audiodown"
-        android:layout_width="65dip"
-        android:layout_height="65dip"
-        android:layout_marginLeft="74dip"
-        android:layout_marginTop="36dip"
-        android:background="@android:color/transparent" />
-
-    <Button
-        android:id="@+id/audioup"
-        android:layout_width="65dip"
-        android:layout_height="65dip"
-        android:layout_marginLeft="216dip"
-        android:layout_marginTop="36dip"
-        android:background="@android:color/transparent" />
-
+ <LinearLayout 
+              android:background="@drawable/yinxiao_bg"
+              android:layout_width="match_parent"
+            android:layout_height="0dip"
+            android:layout_weight="3"
+              android:orientation="horizontal">
+              
+  <View  android:layout_width="0dip"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2.1" />   "
+ <GridView
+            android:id="@+id/audio_yinxiao"
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:layout_weight="7.9"
+            android:layout_marginLeft="50dip"
+            android:layout_marginRight="10dip"           
+            android:numColumns="3"
+            android:verticalSpacing="10dp"
+            android:horizontalSpacing="10dp"
+            android:stretchMode="columnWidth"
+            android:gravity="center"/>
+</LinearLayout>
+<FrameLayout 
+	android:layout_width="fill_parent"
+	android:layout_height="0dip"
+	android:layout_weight="4"
+	android:layout_marginTop="10dip"
+	android:background="@drawable/yinxiaoback">
+	
+    <LinearLayout 
+              android:background="@drawable/light_bg"
+              android:layout_width="match_parent"
+            android:layout_height="match_parent"
+	        android:layout_marginTop="10dip"           
+              android:orientation="horizontal">
+              
+  <View  android:layout_width="0dip"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2.1" />   "
+ <GridView
+            android:id="@+id/audio_light"
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:layout_weight="7.9"
+            android:layout_marginLeft="50dip"
+            android:layout_marginRight="10dip"           
+            android:numColumns="2"
+            android:verticalSpacing="10dp"
+            android:horizontalSpacing="10dp"
+            android:stretchMode="columnWidth"
+            android:gravity="center"/>
+ 
+ </LinearLayout>
+ 
+    <LinearLayout 
+              android:background="@drawable/light_bg"
+              android:layout_width="match_parent"
+            android:layout_height="match_parent"
+             android:layout_marginTop="10dip"          
+              android:orientation="horizontal">
+              
+  <View  android:layout_width="0dip"
+                    android:layout_height="match_parent"
+                    android:layout_weight="4.6" /> 
+                    
+  <!-- degnguang-->
+ <com.changhong.yinxiang.view.SwitchButton
+            android:id="@+id/audio_lightswitch"
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:layout_weight="3.2"
+            android:src="@drawable/light5_focus"
+            android:scaleType="fitCenter"/>
+ 
+ <View  android:layout_width="0dip"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2.2" /> 
+ </LinearLayout>
+       
 </FrameLayout>
+</LinearLayout>
