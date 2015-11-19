@@ -39,6 +39,7 @@ import com.xiami.sdk.entities.QueryInfo;
 import com.xiami.sdk.entities.RankListItem;
 import com.xiami.sdk.entities.RankType;
 import com.xiami.sdk.entities.SceneSongs;
+import com.xiami.sdk.utils.ImageUtil;
 
 public class XMMusicData {
 
@@ -50,7 +51,7 @@ public class XMMusicData {
 	public static final String SECRET = "7ede04a287d0f92c366880ba515293fd";
 
 	/**
-	 * 单例的musicData类
+	 * 单例的musicData�?
 	 */
 	private static XMMusicData xMMusicData = null;
 	private Gson mGson;
@@ -216,7 +217,7 @@ public class XMMusicData {
 	}
 
 	/*
-	 * 获取华语排行榜歌曲
+	 * 获取华语排行榜歌�?
 	 */
 	public void getHuayuRank(Handler handler) {
 		HashMap<String, Object> params = new HashMap<String, Object>();
@@ -228,7 +229,7 @@ public class XMMusicData {
 	}
 
 	/*
-	 * 获取全部排行榜歌曲
+	 * 获取全部排行榜歌�?
 	 */
 	public void getALLRank(Handler handler) {
 		HashMap<String, Object> params = new HashMap<String, Object>();
@@ -240,7 +241,7 @@ public class XMMusicData {
 	}
 
 	/*
-	 * 获取排行榜 榜单列表
+	 * 获取排行�?榜单列表
 	 */
 	public void getRankType(Handler handler) {
 		HashMap<String, Object> params = new HashMap<String, Object>();
@@ -252,7 +253,7 @@ public class XMMusicData {
 
 	
 	/*
-	 * 获取指定类型榜单的歌曲列表
+	 * 获取指定类型榜单的歌曲列�?
 	 * 
 	 */
 	public void getSignaRank(Handler handler,String type){
@@ -363,7 +364,7 @@ public class XMMusicData {
 				onlineAlbum.setArtistName(itemObj.get("artist_name")
 						.getAsString());
 
-				// 当有专辑图片时，显示专辑图片，反之则显示艺术家图片
+				// 当有专辑图片时，显示专辑图片，反之则显示艺术家图�?
 				albumImage = itemObj.get("album_logo").getAsString();
 				if (!StringUtils.hasLength(albumImage)) {
 					albumImage = itemObj.get("artist_logo").getAsString();
@@ -389,11 +390,11 @@ public class XMMusicData {
 	}
 
 	/**
-	 * 解析歌曲集
+	 * 解析歌曲�?
 	 * 
 	 * @param element
 	 *            JSON数据
-	 * @return 歌曲集
+	 * @return 歌曲�?
 	 */
 	public List<OnlineSong> getSongList(JsonElement element) {
 
@@ -470,7 +471,7 @@ public class XMMusicData {
 	}
 
 	/*
-	 * 获取排行榜歌曲列表
+	 * 获取排行榜歌曲列�?
 	 */
 	public List<OnlineSong> getRankSongList(JsonElement element) {
 		if (null == element)
@@ -562,7 +563,7 @@ public class XMMusicData {
 	}
 
 	/**
-	 * 请求数据接口（自解析Json方式）
+	 * 请求数据接口（自解析Json方式�?
 	 * 
 	 * @param methodCode
 	 *            方法名称
@@ -583,6 +584,16 @@ public class XMMusicData {
 		return results;
 	}
 
+	/**
+	 * 根据给定控件尺寸size，向上兼容返回一个合适的图片尺寸
+	 * @param url
+	 * @param size
+	 * @return
+	 */
+	public String transferImgUrl(String url,int size ){
+		return ImageUtil.transferImgUrl(url, size);
+	}
+	
 	/**
 	 * 
 	 * @param respond

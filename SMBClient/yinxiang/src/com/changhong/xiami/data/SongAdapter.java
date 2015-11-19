@@ -3,6 +3,8 @@ package com.changhong.xiami.data;
 import java.util.LinkedList;
 import java.util.List;
 import com.changhong.yinxiang.R;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.xiami.music.model.Image;
 import com.xiami.sdk.entities.OnlineSong;
 
 import android.content.Context;
@@ -18,6 +20,7 @@ import android.widget.TextView;
 public class SongAdapter extends BaseAdapter{
 
 	List<OnlineSong> mSongList = new LinkedList<OnlineSong>();
+	private   String singer,logo;
 	private Context mContext;
 	
 	public SongAdapter(Context mContext) {
@@ -25,10 +28,14 @@ public class SongAdapter extends BaseAdapter{
 	}
 	
 	/**
-	 * 当ListView数据发生变化时,调用此方法来更新ListView
+	 * 当ListView数据发生变化�?调用此方法来更新ListView
 	 * @param list
 	 */
-	public void updateListView(List<OnlineSong> list){
+	public void updateListView(List<OnlineSong> list,String singer,String logo){
+		
+		this.singer=singer;
+		this.logo=logo;
+		
 		mSongList.clear();
     	mSongList.addAll(list);
         notifyDataSetInvalidated();      
@@ -52,31 +59,19 @@ public class SongAdapter extends BaseAdapter{
 		final OnlineSong mContent = mSongList.get(position);
 		if (view == null) {
 			viewHolder = new ViewHolder();
-			view = LayoutInflater.from(mContext).inflate(R.layout.sort_item, null);
-			
-			
-			viewHolder.songTitle = (TextView) view.findViewById(R.id.item_name);
-			viewHolder.songFile = (TextView) view.findViewById(R.id.sort_catalog);
-//			viewHolder.songId = (TextView) view.findViewById(R.id.item_id);
-			viewHolder.songContent = (TextView) view.findViewById(R.id.item_content);
-			
-			
-			ImageView img=(ImageView) view.findViewById(R.id.item_logo);
-			ImageView nextImg=(ImageView) view.findViewById(R.id.item_next);
-			
-			img.setVisibility(View.GONE);			
-			nextImg.setImageResource(R.drawable.fmplay);
-			viewHolder.songId.setVisibility(View.VISIBLE);
+			view = LayoutInflater.from(mContext).inflate(R.layout.songs_item, null);		
+			viewHolder.songTitle = (TextView) view.findViewById(R.id.song_name);
+			viewHolder.songArtist = (TextView) view.findViewById(R.id.song_artist);
+			viewHolder.singerLogo = (ImageView) view.findViewById(R.id.song_logo);	
+			viewHolder.songArtist.setText(singer);	
+			ImageLoader.getInstance().displayImage(logo, viewHolder.singerLogo );
 			
 			view.setTag(viewHolder);
-			
 		} else {
 			viewHolder = (ViewHolder) view.getTag();
 		}
 		
-		viewHolder.songId.setText((position+1)+"");	
 		viewHolder.songTitle.setText(this.mSongList.get(position).getSongName());	
-//		viewHolder.songFile.setText(this.mSongList.get(position).getListenFile());	
 
 		return view;
 
@@ -86,11 +81,9 @@ public class SongAdapter extends BaseAdapter{
 
 	final static class ViewHolder {
 		
-		TextView songId;
-		TextView songFile;
+		TextView songArtist;
 		TextView songTitle;
-		TextView songContent;
-
+        ImageView  singerLogo;
 	}
 
 }

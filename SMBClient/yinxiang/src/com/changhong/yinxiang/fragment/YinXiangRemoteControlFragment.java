@@ -13,6 +13,7 @@ import com.changhong.common.system.MyApplication;
 import com.changhong.common.utils.StringUtils;
 import android.os.Bundle;
 import android.os.Handler;
+import android.content.Context;
 import android.graphics.PointF;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -43,7 +44,6 @@ import com.changhong.yinxiang.utils.YuYingWordsUtils;
 import com.changhong.yinxiang.view.AudioControlDialog;
 import com.changhong.yinxiang.view.DYControlDialog;
 import com.changhong.yinxiang.view.LightsControlDialog;
-import com.changhong.yinxiang.view.TVNumInputDialog;
 import com.changhong.yinxiang.view.YinXiaoControlDialog;
 
 import java.util.HashMap;
@@ -52,7 +52,7 @@ import java.util.Map;
 
 public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 		implements OnClickListener, OnTouchListener, OnGestureListener {
-	private static final String TAG = "TVhelper";
+	private static final String TAG = "yinXiang";
 	// private BidirSlidingLayout bidirSlidingLayout;
 	/**
 	 * control part
@@ -74,8 +74,7 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 	private PointF startPoint = new PointF();
 	private PointF endPoint = new PointF();
 
-	// 数字键盘
-	TVNumInputDialog numInputDialog = null;
+	
 	// 音效键盘
 	YinXiaoControlDialog yinXiaoControlDialog = null;
 	// 灯光键盘
@@ -124,7 +123,7 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 		// bidirSlidingLayout = (BidirSlidingLayout)
 		// findViewById(R.id.bidir_sliding_layout);
 		img_d = (ImageView) v.findViewById(R.id.img_d);
-		img_v = v.findViewById(R.id.img_volume);
+//		img_v = v.findViewById(R.id.img_volume);
 		// title = (TextView) v.findViewById(R.id.title);
 		// clients = (ListView) v.findViewById(R.id.clients);
 		// list = (Button) v.findViewById(R.id.btn_list);
@@ -135,14 +134,23 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 		Button btn_left = (Button) v.findViewById(R.id.left);
 		Button btn_right = (Button) v.findViewById(R.id.right);
 		Button btn_center = (Button) v.findViewById(R.id.center);
-		ImageView btn_v2 = (ImageView) v.findViewById(R.id.volume2);
-		ImageView btn_v1 = (ImageView) v.findViewById(R.id.volume1);
-		ImageView btn_v3 = (ImageView) v.findViewById(R.id.volume3);
-		ImageView btn_vlight = (ImageView) v.findViewById(R.id.vlight);
+//		ImageView btn_v2 = (ImageView) v.findViewById(R.id.volume2);
+//		ImageView btn_v1 = (ImageView) v.findViewById(R.id.volume1);
+//		ImageView btn_v3 = (ImageView) v.findViewById(R.id.volume3);
+//		ImageView btn_vlight = (ImageView) v.findViewById(R.id.vlight);
 		ImageView home = (ImageView) v.findViewById(R.id.btn_home);
 		ImageView menu = (ImageView) v.findViewById(R.id.btn_menu);
 		ImageView backBtn = (ImageView) v.findViewById(R.id.btn_b);
 		Button list = (Button) v.findViewById(R.id.btn_list);
+		
+		//音效控件
+	
+		
+		
+		
+		
+		
+		
 		btn_up.setOnTouchListener(this);
 		btn_up.setOnClickListener(this);
 		btn_down.setOnTouchListener(this);
@@ -153,54 +161,54 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 		btn_right.setOnClickListener(this);
 		btn_center.setOnTouchListener(this);
 		btn_center.setOnClickListener(this);
-		btn_v1.setOnTouchListener(this);
-		btn_v1.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-				MyApplication.vibrator.vibrate(100);
-				if (dyControlDialog != null && !dyControlDialog.isShowing()) {
-					dyControlDialog.show();
-				}
-			}
-		});
-		btn_v2.setOnTouchListener(this);
-		btn_v2.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-				MyApplication.vibrator.vibrate(100);
-				if (audioControlDialog != null
-						&& !audioControlDialog.isShowing()) {
-					audioControlDialog.show();
-				}
-			}
-		});
-
-		btn_v3.setOnTouchListener(this);
-		btn_v3.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				MyApplication.vibrator.vibrate(100);
-				if (yinXiaoControlDialog != null
-						&& !yinXiaoControlDialog.isShowing()) {
-					yinXiaoControlDialog.show();
-				}
-			}
-		});
-		btn_vlight.setOnTouchListener(this);
-		btn_vlight.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				MyApplication.vibrator.vibrate(100);
-				if (lightsControlDialog != null
-						&& !lightsControlDialog.isShowing()) {
-					lightsControlDialog.show();
-				}
-			}
-		});
+//		btn_v1.setOnTouchListener(this);
+//		btn_v1.setOnClickListener(new OnClickListener() {
+//
+//			@Override
+//			public void onClick(View arg0) {
+//				// TODO Auto-generated method stub
+//				MyApplication.vibrator.vibrate(100);
+//				if (dyControlDialog != null && !dyControlDialog.isShowing()) {
+//					dyControlDialog.show();
+//				}
+//			}
+//		});
+//		btn_v2.setOnTouchListener(this);
+//		btn_v2.setOnClickListener(new OnClickListener() {
+//
+//			@Override
+//			public void onClick(View arg0) {
+//				// TODO Auto-generated method stub
+//				MyApplication.vibrator.vibrate(100);
+//				if (audioControlDialog != null
+//						&& !audioControlDialog.isShowing()) {
+//					audioControlDialog.show();
+//				}
+//			}
+//		});
+//
+//		btn_v3.setOnTouchListener(this);
+//		btn_v3.setOnClickListener(new OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				MyApplication.vibrator.vibrate(100);
+//				if (yinXiaoControlDialog != null
+//						&& !yinXiaoControlDialog.isShowing()) {
+//					yinXiaoControlDialog.show();
+//				}
+//			}
+//		});
+//		btn_vlight.setOnTouchListener(this);
+//		btn_vlight.setOnClickListener(new OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				MyApplication.vibrator.vibrate(100);
+//				if (lightsControlDialog != null
+//						&& !lightsControlDialog.isShowing()) {
+//					lightsControlDialog.show();
+//				}
+//			}
+//		});
 
 //		btn_vnum.setOnTouchListener(this);
 //		btn_vnum.setOnClickListener(new OnClickListener() {
@@ -301,30 +309,7 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 		// bidirSlidingLayout.closeRightMenu();
 		// }
 		// });
-		if (numInputDialog == null) {
-			numInputDialog = new TVNumInputDialog(getActivity());
-			numInputDialog.setCanceledOnTouchOutside(false);
-			numInputDialog.btn0.setOnClickListener(this);
-			numInputDialog.btn1.setOnClickListener(this);
-			numInputDialog.btn2.setOnClickListener(this);
-			numInputDialog.btn3.setOnClickListener(this);
-			numInputDialog.btn4.setOnClickListener(this);
-			numInputDialog.btn5.setOnClickListener(this);
-			numInputDialog.btn6.setOnClickListener(this);
-			numInputDialog.btn7.setOnClickListener(this);
-			numInputDialog.btn8.setOnClickListener(this);
-			numInputDialog.btn9.setOnClickListener(this);
-			numInputDialog.btnOk.setOnClickListener(this);
-			numInputDialog.btnCancle.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					MyApplication.vibrator.vibrate(100);
-					if (numInputDialog != null && numInputDialog.isShowing()) {
-						numInputDialog.dismiss();
-					}
-				}
-			});
-		}
+		
 		if (yinXiaoControlDialog == null) {
 			yinXiaoControlDialog = new YinXiaoControlDialog(getActivity());
 			yinXiaoControlDialog.setCanceledOnTouchOutside(true);
@@ -427,10 +412,7 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 			ClientSendCommandService.msg = "key:right";
 			break;
 		case R.id.center:
-		case R.id.numok:
-			MyApplication.vibrator.vibrate(100);
-			ClientSendCommandService.msg = "key:ok";
-			break;
+	
 		case R.id.btn_b:
 			MyApplication.vibrator.vibrate(100);
 			ClientSendCommandService.msg = "key:back";
@@ -455,46 +437,7 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 			MyApplication.vibrator.vibrate(100);
 			ClientSendCommandService.msg = "key:power";
 			break;
-		case R.id.num0:
-			MyApplication.vibrator.vibrate(100);
-			ClientSendCommandService.msg = "key:0";
-			break;
-		case R.id.num1:
-			MyApplication.vibrator.vibrate(100);
-			ClientSendCommandService.msg = "key:1";
-			break;
-		case R.id.num2:
-			MyApplication.vibrator.vibrate(100);
-			ClientSendCommandService.msg = "key:2";
-			break;
-		case R.id.num3:
-			MyApplication.vibrator.vibrate(100);
-			ClientSendCommandService.msg = "key:3";
-			break;
-		case R.id.num4:
-			MyApplication.vibrator.vibrate(100);
-			ClientSendCommandService.msg = "key:4";
-			break;
-		case R.id.num5:
-			MyApplication.vibrator.vibrate(100);
-			ClientSendCommandService.msg = "key:5";
-			break;
-		case R.id.num6:
-			MyApplication.vibrator.vibrate(100);
-			ClientSendCommandService.msg = "key:6";
-			break;
-		case R.id.num7:
-			MyApplication.vibrator.vibrate(100);
-			ClientSendCommandService.msg = "key:7";
-			break;
-		case R.id.num8:
-			MyApplication.vibrator.vibrate(100);
-			ClientSendCommandService.msg = "key:8";
-			break;
-		case R.id.num9:
-			MyApplication.vibrator.vibrate(100);
-			ClientSendCommandService.msg = "key:9";
-			break;
+		
 		case R.id.yinxiao_movie:
 			MyApplication.vibrator.vibrate(100);
 			ClientSendCommandService.msg = "key:yxmovie";
@@ -678,38 +621,38 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 				img_d.setImageResource(R.drawable.tv_control_direction);
 			}
 			break;
-		case R.id.volume2:
-			if (event.getAction() == MotionEvent.ACTION_DOWN) {
-				LongKeyValue = "";
-//				img_v.setBackgroundResource(R.drawable.tv_control_menu_volum2);
-			} else if (event.getAction() == MotionEvent.ACTION_UP) {
-//				img_v.setBackgroundResource(R.drawable.tv_control_menu);
-			}
-			break;
-		case R.id.volume1:
-			if (event.getAction() == MotionEvent.ACTION_DOWN) {
-				LongKeyValue = "";
-//				img_v.setBackgroundResource(R.drawable.tv_control_menu_volum1);
-			} else if (event.getAction() == MotionEvent.ACTION_UP) {
-//				img_v.setBackgroundResource(R.drawable.tv_control_menu);
-			}
-			break;
-		case R.id.volume3:
-			if (event.getAction() == MotionEvent.ACTION_DOWN) {
-				LongKeyValue = "";
-//				img_v.setBackgroundResource(R.drawable.tv_control_menu_tv);
-			} else if (event.getAction() == MotionEvent.ACTION_UP) {
-//				img_v.setBackgroundResource(R.drawable.tv_control_menu);
-			}
-			break;
-		case R.id.vlight:
-			if (event.getAction() == MotionEvent.ACTION_DOWN) {
-				LongKeyValue = "";
-//				img_v.setBackgroundResource(R.drawable.tv_control_menu_channel);
-			} else if (event.getAction() == MotionEvent.ACTION_UP) {
-//				img_v.setBackgroundResource(R.drawable.tv_control_menu);
-			}
-			break;
+//		case R.id.volume2:
+//			if (event.getAction() == MotionEvent.ACTION_DOWN) {
+//				LongKeyValue = "";
+////				img_v.setBackgroundResource(R.drawable.tv_control_menu_volum2);
+//			} else if (event.getAction() == MotionEvent.ACTION_UP) {
+////				img_v.setBackgroundResource(R.drawable.tv_control_menu);
+//			}
+//			break;
+//		case R.id.volume1:
+//			if (event.getAction() == MotionEvent.ACTION_DOWN) {
+//				LongKeyValue = "";
+////				img_v.setBackgroundResource(R.drawable.tv_control_menu_volum1);
+//			} else if (event.getAction() == MotionEvent.ACTION_UP) {
+////				img_v.setBackgroundResource(R.drawable.tv_control_menu);
+//			}
+//			break;
+//		case R.id.volume3:
+//			if (event.getAction() == MotionEvent.ACTION_DOWN) {
+//				LongKeyValue = "";
+////				img_v.setBackgroundResource(R.drawable.tv_control_menu_tv);
+//			} else if (event.getAction() == MotionEvent.ACTION_UP) {
+////				img_v.setBackgroundResource(R.drawable.tv_control_menu);
+//			}
+//			break;
+//		case R.id.vlight:
+//			if (event.getAction() == MotionEvent.ACTION_DOWN) {
+//				LongKeyValue = "";
+////				img_v.setBackgroundResource(R.drawable.tv_control_menu_channel);
+//			} else if (event.getAction() == MotionEvent.ACTION_UP) {
+////				img_v.setBackgroundResource(R.drawable.tv_control_menu);
+//			}
+//			break;
 			
 //		case R.id.num:
 //			if (event.getAction() == MotionEvent.ACTION_DOWN) {
@@ -1312,4 +1255,22 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 			}
 		}
 	}
+	
+	
+/**
+ * 音效设置类
+ */
+	
+	private class AudioControl{
+		    
+		     public AudioControl(Context context){
+		    	   initAudioView(context);
+		     }	
+		     private void initAudioView(Context context){
+		    	 
+		     }
+	}
+	
+	
+	
 }

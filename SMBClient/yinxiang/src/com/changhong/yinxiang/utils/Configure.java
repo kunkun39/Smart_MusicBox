@@ -20,6 +20,11 @@ public class Configure {
 	public final static int XIAMI_ARTIST_WORDBOOK=1014;//艺人大全
 	public final static int XIAMI_RECOMMEND_PROMOTIONS_ARTISTS=1015;//推荐艺人
 	public final static int XIAMI_ARTIST_DETAIL=1016;//艺人详细信息
+	public final static int XIAMI_ARTIST_HOTSONGS=1017;//热门歌曲
+	
+	public final static int XIAMI_COLLECT_RECOMMEND=1018;//精选集推荐
+
+	
 	
 	
 
@@ -50,6 +55,10 @@ public class Configure {
 			i=XIAMI_RANK_HUAYU;
 		}	else if(str.equals(RequestMethods.METHOD_RANK_LIST )){
 			i=XIAMI_RANK_LIST;
+		}else if(str.equals(RequestMethods.METHOD_ARTIST_HOTSONGS)){
+			i=XIAMI_ARTIST_HOTSONGS;
+		}else if(str.equals(RequestMethods.METHOD_COLLECT_RECOMMEND)){
+			i=XIAMI_COLLECT_RECOMMEND;
 		}		
 		
 		return i;

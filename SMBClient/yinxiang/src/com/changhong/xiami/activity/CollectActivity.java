@@ -95,7 +95,7 @@ public class CollectActivity extends BaseActivity {
 			@Override
 			public void handleMessage(Message msg) {
 				switch (msg.what) {
-				case Configure.XIAMI_RESPOND_SECCESS:
+				case Configure.XIAMI_COLLECT_RECOMMEND:
 					JsonElement jsonData = (JsonElement) msg.obj;
 					handlXiamiResponse(jsonData);
 					break;

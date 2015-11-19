@@ -43,7 +43,7 @@ public class XiamiMainActivity extends BaseActivity {
 	// 更多信息
 	private Button moreToday, moreAlbum, moreRank, moreConcert;
 
-	// 今日歌曲栏
+	// 今日歌曲�?
 	private HorizontalListView horListView;
 	private ImageView xiamiMainSearch, randomMusic;
 
@@ -57,11 +57,11 @@ public class XiamiMainActivity extends BaseActivity {
 
 	private List<OnlineAlbum> promotionAlbums = null;
 
-	// 排行榜
+	// 排行�?
 	private ImageView rankHY, rankOM;
 	private ImageView playRankHY, playRankAll;
 
-	// 音乐会
+	// 音乐�?
 	private ImageView concertAlbum, concertScene, concertArtist,
 			concertCollection;
 
@@ -164,12 +164,20 @@ public class XiamiMainActivity extends BaseActivity {
 				dealRank(4);
 				break;
 			case R.id.xiami_concert_album:
+				intent = new Intent(XiamiMainActivity.this,AlbumListActivity.class);
+				startActivity(intent);
 				break;
 			case R.id.xiami_concert_scene:
+				intent = new Intent(XiamiMainActivity.this,SceneActivity.class);
+				startActivity(intent);
 				break;
 			case R.id.xiami_concert_artist:
+				intent = new Intent(XiamiMainActivity.this,ArtistListActivity.class);
+				startActivity(intent);
 				break;
 			case R.id.xiami_concert_collection:
+				intent = new Intent(XiamiMainActivity.this,CollectActivity.class);
+				startActivity(intent);
 				break;
 			}
 		}
@@ -265,7 +273,7 @@ public class XiamiMainActivity extends BaseActivity {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				// TODO Auto-generated method stub
-				// 播放点击歌曲以后的所有今日推荐歌曲,待完成
+				// 播放点击歌曲以后的所有今日推荐歌�?待完�?
 			}
 		});
 
