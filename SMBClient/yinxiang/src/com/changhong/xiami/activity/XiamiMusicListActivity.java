@@ -5,6 +5,7 @@ package com.changhong.xiami.activity;
  * 传入参数的名字为 albumID
  * BY CYM
  */
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -38,6 +39,7 @@ public class XiamiMusicListActivity extends BaseActivity {
 	private ListView musicsList;
 	private MusicsListAdapter adapter;
 	private List<OnlineSong> songsList;
+	private List<OnlineSong> playList=new ArrayList<OnlineSong>();
 	private OnlineAlbum album;
 	private long albumID = 0;
 	private int albumIndex = 0;
@@ -159,15 +161,22 @@ public class XiamiMusicListActivity extends BaseActivity {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				// TODO Auto-generated method stub
-				//获取onlinesong详细信息（包括音乐播放地址的信息，初始信息未包括音乐播放地址）
+				
+				if(!playList.isEmpty()){
+					playList.clear();
+				}
+				for(int i=position;i<songsList.size();i++){
+					playList.add(songsList.get(i));
+				}
+				
 				new Thread(new Runnable() {
 					
 					@Override
 					public void run() {
 						// TODO Auto-generated method stub
 						Looper.prepare();
-						songsList=mXMMusicData.getDetailList(songsList);
-						mXMMusicData.sendMusics(XiamiMusicListActivity.this,songsList);
+						playList=mXMMusicData.getDetailList(playList);
+						mXMMusicData.sendMusics(XiamiMusicListActivity.this,playList);
 					}
 				}).start();
 				

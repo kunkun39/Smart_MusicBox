@@ -790,26 +790,26 @@ public class XMMusicData {
 				for (OnlineSong onlineSong : list) {
 					String tempPath = Encryptor.decryptUrl(onlineSong
 							.getListenFile());// 解密播放地址
-					// String tempPath = onlineSong.getListenFile();
+//					 String tempPath = onlineSong.getListenFile();
 					String title = onlineSong.getSongName().trim();
 					String artist = onlineSong.getArtistName().trim();
 					int duration = onlineSong.getLength();
 					JSONObject music = new JSONObject();
 
-					if (tempPath.startsWith(HTTPDService.defaultHttpServerPath)) {
-						tempPath = tempPath.replace(
-								HTTPDService.defaultHttpServerPath, "")
-								.replace(" ", "%20");
-					} else {
-						for (String otherHttpServerPath : HTTPDService.otherHttpServerPaths) {
-							if (tempPath.startsWith(otherHttpServerPath)) {
-								tempPath = tempPath.replace(
-										otherHttpServerPath, "").replace(" ",
-										"%20");
-							}
-						}
-					}
-					tempPath = httpAddress + tempPath;
+//					if (tempPath.startsWith(HTTPDService.defaultHttpServerPath)) {
+//						tempPath = tempPath.replace(
+//								HTTPDService.defaultHttpServerPath, "")
+//								.replace(" ", "%20");
+//					} else {
+//						for (String otherHttpServerPath : HTTPDService.otherHttpServerPaths) {
+//							if (tempPath.startsWith(otherHttpServerPath)) {
+//								tempPath = tempPath.replace(
+//										otherHttpServerPath, "").replace(" ",
+//										"%20");
+//							}
+//						}
+//					}
+//					tempPath = httpAddress + tempPath;
 
 					music.put("tempPath", tempPath);
 					music.put("title", title);
@@ -850,15 +850,16 @@ public class XMMusicData {
 	 */
 
 	public List<OnlineSong> getDetailList(List<OnlineSong> list) {
-		List<OnlineSong> detailList = new ArrayList<OnlineSong>();
+		List<OnlineSong> dataList = new ArrayList<OnlineSong>();
+		
 		if (list != null && list.size() > 0) {
 			for (int i = 0; i < list.size(); i++) {
 				OnlineSong song = new OnlineSong();
 				song = mXiamiSDK.findSongByIdSync(list.get(i).getSongId(),
 						OnlineSong.Quality.L);
-				detailList.add(song);
+				dataList.add(song);
 			}
 		}
-		return detailList;
+		return dataList;
 	}
 }

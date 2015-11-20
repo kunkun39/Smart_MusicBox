@@ -1,5 +1,6 @@
 package com.changhong.xiami.activity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Intent;
@@ -64,6 +65,11 @@ public class XiamiMainActivity extends BaseActivity {
 
 	/*
 	 * 
+	 */
+	private List<OnlineSong> playList = new ArrayList<OnlineSong>();
+
+	/*
+	 * 
 	 * 申明handler的各种action
 	 */
 	private final static int SHOW_TODAY_RECOMMEND_MUSIC = 1;
@@ -76,7 +82,7 @@ public class XiamiMainActivity extends BaseActivity {
 		public void handleMessage(Message msg) {
 			// TODO Auto-generated method stub
 			jsonElement = (JsonElement) msg.obj;
-			
+
 			switch (msg.what) {
 			case Configure.XIAMI_TODAY_RECOMSONGS:
 				obj = jsonElement.getAsJsonObject();
@@ -114,7 +120,8 @@ public class XiamiMainActivity extends BaseActivity {
 				startActivity(intent);
 				break;
 			case R.id.xiami_rank_more:
-				intent=new Intent(XiamiMainActivity.this,XiamiMoreRankActivity.class);
+				intent = new Intent(XiamiMainActivity.this,
+						XiamiMoreRankActivity.class);
 				startActivity(intent);
 				break;
 			case R.id.xiami_concert_more:
@@ -122,20 +129,21 @@ public class XiamiMainActivity extends BaseActivity {
 			case R.id.xiami_recommend_today:
 				break;
 			case R.id.xiami_search:
-				intent=new Intent(XiamiMainActivity.this,SearchActivity.class);
+				intent = new Intent(XiamiMainActivity.this,
+						SearchActivity.class);
 				startActivity(intent);
 				break;
 			case R.id.xiami_random_songs:
-				//随便听听快捷方式
-				 ClientSendCommandService.msg = "key:music";
-	             ClientSendCommandService.handler.sendEmptyMessage(1);
+				// 随便听听快捷方式
+				ClientSendCommandService.msg = "key:music";
+				ClientSendCommandService.handler.sendEmptyMessage(1);
 				break;
 			case R.id.xiami_new_album1:
 				dealPromotionAlbums(intent, 0);
 
 				break;
 			case R.id.xiami_new_album1_play:
-							break;
+				break;
 			case R.id.xiami_new_album2:
 				dealPromotionAlbums(intent, 1);
 				break;
@@ -159,19 +167,22 @@ public class XiamiMainActivity extends BaseActivity {
 				dealRank(4);
 				break;
 			case R.id.xiami_concert_album:
-				intent = new Intent(XiamiMainActivity.this,AlbumListActivity.class);
+				intent = new Intent(XiamiMainActivity.this,
+						AlbumListActivity.class);
 				startActivity(intent);
 				break;
 			case R.id.xiami_concert_scene:
-				intent = new Intent(XiamiMainActivity.this,SceneActivity.class);
+				intent = new Intent(XiamiMainActivity.this, SceneActivity.class);
 				startActivity(intent);
 				break;
 			case R.id.xiami_concert_artist:
-				intent = new Intent(XiamiMainActivity.this,ArtistListActivity.class);
+				intent = new Intent(XiamiMainActivity.this,
+						ArtistListActivity.class);
 				startActivity(intent);
 				break;
 			case R.id.xiami_concert_collection:
-				intent = new Intent(XiamiMainActivity.this,CollectActivity.class);
+				intent = new Intent(XiamiMainActivity.this,
+						CollectActivity.class);
 				startActivity(intent);
 				break;
 			}
@@ -269,6 +280,7 @@ public class XiamiMainActivity extends BaseActivity {
 					int position, long id) {
 				// TODO Auto-generated method stub
 				// 播放点击歌曲以后的所有今日推荐歌�?待完�?
+				play(position, todayRecomList);
 			}
 		});
 
@@ -284,7 +296,7 @@ public class XiamiMainActivity extends BaseActivity {
 
 	private void getXMData() {
 
-		 XMData.getTodayRecom(handler, 10);
+		XMData.getTodayRecom(handler, 10);
 		XMData.getPromotionALbums(handler, 1, 3);
 	}
 
@@ -298,11 +310,14 @@ public class XiamiMainActivity extends BaseActivity {
 		album2 = promotionAlbums.get(1);
 		album3 = promotionAlbums.get(2);
 
-		MyApplication.imageLoader.displayImage(ImageUtil.transferImgUrl(album1.getArtistLogo(), 330),
+		MyApplication.imageLoader.displayImage(
+				ImageUtil.transferImgUrl(album1.getArtistLogo(), 330),
 				albumMsg1);
-		MyApplication.imageLoader.displayImage(ImageUtil.transferImgUrl(album2.getArtistLogo(), 330),
+		MyApplication.imageLoader.displayImage(
+				ImageUtil.transferImgUrl(album2.getArtistLogo(), 330),
 				albumMsg2);
-		MyApplication.imageLoader.displayImage(ImageUtil.transferImgUrl(album3.getArtistLogo(), 330),
+		MyApplication.imageLoader.displayImage(
+				ImageUtil.transferImgUrl(album3.getArtistLogo(), 330),
 				albumMsg3);
 
 		albumTitle1.setText(album1.getAlbumName() + "\n"
@@ -323,29 +338,51 @@ public class XiamiMainActivity extends BaseActivity {
 		intent.putExtra("albumID", promotionAlbums.get(index).getAlbumId());
 		startActivity(intent);
 	}
-	
-	private void dealRank(int i){
-		Intent intent=null;
-		if(1==i){
-			intent=new Intent(XiamiMainActivity.this,XiamiMusicListActivity.class);
+
+	private void dealRank(int i) {
+		Intent intent = null;
+		if (1 == i) {
+			intent = new Intent(XiamiMainActivity.this,
+					XiamiMusicListActivity.class);
 			intent.putExtra("musicType", Configure.XIAMI_RANK_HUAYU);
 			startActivity(intent);
-		}else if(2==i){
-			
-		}else if(3==i){
-			intent=new Intent(XiamiMainActivity.this,XiamiMusicListActivity.class);
+		} else if (2 == i) {
+
+		} else if (3 == i) {
+			intent = new Intent(XiamiMainActivity.this,
+					XiamiMusicListActivity.class);
 			intent.putExtra("musicType", Configure.XIAMI_RANK_ALL);
 			startActivity(intent);
-		}else if(4==i){
-			
+		} else if (4 == i) {
+
 		}
 	}
-	
+
 	/*
 	 * 
 	 * 播放专辑音乐
 	 */
-	
+	private void play(final int position, final List<OnlineSong> list) {
+		if (null == list && list.size() < position) {
+			return;
+		}
+		if (!playList.isEmpty()) {
+			playList.clear();
+		}
+		for (int i = position; i < list.size(); i++) {
+			playList.add(list.get(i));
+		}
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+
+				playList = XMData.getDetailList(playList);
+				XMData.sendMusics(XiamiMainActivity.this, playList);
+			}
+		}).start();
+	}
 
 	/*
 	 * ==========================================================================
