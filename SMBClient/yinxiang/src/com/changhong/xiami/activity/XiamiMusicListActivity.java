@@ -8,29 +8,28 @@ package com.changhong.xiami.activity;
 import java.util.HashMap;
 import java.util.List;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.changhong.xiami.data.MusicsListAdapter;
-import com.changhong.xiami.data.RequestDataTask;
 import com.changhong.xiami.data.SceneInfor;
 import com.changhong.yinxiang.R;
 import com.changhong.yinxiang.activity.BaseActivity;
 import com.changhong.yinxiang.utils.Configure;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.xiami.music.api.utils.RequestMethods;
 import com.xiami.sdk.entities.OnlineAlbum;
-import com.xiami.sdk.entities.OnlineCollect;
 import com.xiami.sdk.entities.OnlineSong;
 
 public class XiamiMusicListActivity extends BaseActivity {
@@ -153,6 +152,28 @@ public class XiamiMusicListActivity extends BaseActivity {
 				finish();
 			}
 		});
+		
+		musicsList.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				// TODO Auto-generated method stub
+				//获取onlinesong详细信息（包括音乐播放地址的信息，初始信息未包括音乐播放地址）
+				new Thread(new Runnable() {
+					
+					@Override
+					public void run() {
+						// TODO Auto-generated method stub
+						Looper.prepare();
+						songsList=mXMMusicData.getDetailList(songsList);
+						mXMMusicData.sendMusics(XiamiMusicListActivity.this,songsList);
+					}
+				}).start();
+				
+			}
+		});
+		
 		if (Configure.XIAMI_TODAY_RECOMSONGS == curMusicType) {
 			mXMMusicData.getTodayRecom(mhandler, 20);
 		} else if (Configure.XIAMI_RANK_HUAYU == curMusicType) {

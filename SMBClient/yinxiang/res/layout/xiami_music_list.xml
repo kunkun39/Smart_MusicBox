@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/transparent"
+    android:background="@drawable/main_bg"
     android:descendantFocusability="blocksDescendants"
     android:orientation="vertical"
     android:paddingBottom="5dp"
@@ -23,7 +23,7 @@
             android:id="@+id/ablum_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:gravity="center"
             android:textSize="18sp" />
     </LinearLayout>

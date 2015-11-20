@@ -1,20 +1,16 @@
 package com.changhong.xiami.activity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Intent;
-import android.graphics.Bitmap.Config;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -30,7 +26,6 @@ import com.changhong.yinxiang.activity.SearchActivity;
 import com.changhong.yinxiang.utils.Configure;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.xiami.sdk.entities.LanguageType;
 import com.xiami.sdk.entities.OnlineAlbum;
 import com.xiami.sdk.entities.OnlineSong;
 import com.xiami.sdk.utils.ImageUtil;
@@ -43,7 +38,7 @@ public class XiamiMainActivity extends BaseActivity {
 	// 更多信息
 	private Button moreToday, moreAlbum, moreRank, moreConcert;
 
-	// 今日歌曲�?
+	// 今日歌曲�?
 	private HorizontalListView horListView;
 	private ImageView xiamiMainSearch, randomMusic;
 
@@ -57,11 +52,11 @@ public class XiamiMainActivity extends BaseActivity {
 
 	private List<OnlineAlbum> promotionAlbums = null;
 
-	// 排行�?
+	// 排行�?
 	private ImageView rankHY, rankOM;
 	private ImageView playRankHY, playRankAll;
 
-	// 音乐�?
+	// 音乐�?
 	private ImageView concertAlbum, concertScene, concertArtist,
 			concertCollection;
 
@@ -140,7 +135,7 @@ public class XiamiMainActivity extends BaseActivity {
 
 				break;
 			case R.id.xiami_new_album1_play:
-				break;
+							break;
 			case R.id.xiami_new_album2:
 				dealPromotionAlbums(intent, 1);
 				break;
@@ -273,7 +268,7 @@ public class XiamiMainActivity extends BaseActivity {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				// TODO Auto-generated method stub
-				// 播放点击歌曲以后的所有今日推荐歌�?待完�?
+				// 播放点击歌曲以后的所有今日推荐歌�?待完�?
 			}
 		});
 
@@ -345,6 +340,12 @@ public class XiamiMainActivity extends BaseActivity {
 			
 		}
 	}
+	
+	/*
+	 * 
+	 * 播放专辑音乐
+	 */
+	
 
 	/*
 	 * ==========================================================================

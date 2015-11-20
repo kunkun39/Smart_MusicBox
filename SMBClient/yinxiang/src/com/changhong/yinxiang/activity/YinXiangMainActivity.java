@@ -57,6 +57,7 @@ import com.changhong.yinxiang.fragment.YinXiangNetMusicFragment;
 import com.changhong.yinxiang.fragment.YinXiangRemoteControlFragment;
 import com.changhong.yinxiang.fragment.YinXiangSettingFragment;
 import com.changhong.yinxiang.music.MusicEditServer;
+import com.changhong.yinxiang.nanohttpd.HTTPDService;
 import com.changhong.yinxiang.service.AppLogService;
 import com.changhong.yinxiang.service.ClientGetCommandService;
 import com.changhong.yinxiang.service.ClientLocalThreadRunningService;
@@ -138,6 +139,11 @@ public class YinXiangMainActivity extends FragmentActivity {
 				ClientLocalThreadRunningService.class);
 		startService(service3);
 
+		/*
+		 * 启动HTTP服务
+		 */
+		Intent http = new Intent(YinXiangMainActivity.this, HTTPDService.class);
+        startService(http);
 		/**
 		 * 启动通讯服务
 		 */

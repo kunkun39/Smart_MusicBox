@@ -3,6 +3,8 @@ package com.changhong.xiami.data;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -11,15 +13,24 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.util.Pair;
+import android.widget.Toast;
 
+import com.changhong.common.service.ClientSendCommandService;
+import com.changhong.common.system.MyApplication;
+import com.changhong.common.utils.NetworkUtils;
 import com.changhong.common.utils.StringUtils;
+import com.changhong.yinxiang.nanohttpd.HTTPDService;
 import com.changhong.yinxiang.utils.Configure;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -39,6 +50,8 @@ import com.xiami.sdk.entities.QueryInfo;
 import com.xiami.sdk.entities.RankListItem;
 import com.xiami.sdk.entities.RankType;
 import com.xiami.sdk.entities.SceneSongs;
+import com.xiami.sdk.entities.OnlineSong.Quality;
+import com.xiami.sdk.utils.Encryptor;
 import com.xiami.sdk.utils.ImageUtil;
 
 public class XMMusicData {
@@ -50,8 +63,11 @@ public class XMMusicData {
 	public static final String KEY = "825bdc1bf1ff6bc01cd6619403f1a072";
 	public static final String SECRET = "7ede04a287d0f92c366880ba515293fd";
 
+	/*
+	 * music
+	 */
 	/**
-	 * 单例的musicData�?
+	 * 单例的musicData�?
 	 */
 	private static XMMusicData xMMusicData = null;
 	private Gson mGson;
@@ -217,7 +233,7 @@ public class XMMusicData {
 	}
 
 	/*
-	 * 获取华语排行榜歌�?
+	 * 获取华语排行榜歌�?
 	 */
 	public void getHuayuRank(Handler handler) {
 		HashMap<String, Object> params = new HashMap<String, Object>();
@@ -229,7 +245,7 @@ public class XMMusicData {
 	}
 
 	/*
-	 * 获取全部排行榜歌�?
+	 * 获取全部排行榜歌�?
 	 */
 	public void getALLRank(Handler handler) {
 		HashMap<String, Object> params = new HashMap<String, Object>();
@@ -241,7 +257,7 @@ public class XMMusicData {
 	}
 
 	/*
-	 * 获取排行�?榜单列表
+	 * 获取排行�?榜单列表
 	 */
 	public void getRankType(Handler handler) {
 		HashMap<String, Object> params = new HashMap<String, Object>();
@@ -251,20 +267,18 @@ public class XMMusicData {
 		requestDataTask.execute(params);
 	}
 
-	
 	/*
-	 * 获取指定类型榜单的歌曲列�?
-	 * 
+	 * 获取指定类型榜单的歌曲列�?
 	 */
-	public void getSignaRank(Handler handler,String type){
+	public void getSignaRank(Handler handler, String type) {
 		HashMap<String, Object> params = new HashMap<String, Object>();
-		params.put("type",type);
+		params.put("type", type);
 		params.put("time", 0);
 		RequestDataTask requestDataTask = new RequestDataTask(this, handler,
 				RequestMethods.METHOD_RANK_DETAIL);
 		requestDataTask.execute(params);
 	}
-	
+
 	/*
 	 * =======================数据解析部分==============================================
 	 */
@@ -364,7 +378,7 @@ public class XMMusicData {
 				onlineAlbum.setArtistName(itemObj.get("artist_name")
 						.getAsString());
 
-				// 当有专辑图片时，显示专辑图片，反之则显示艺术家图�?
+				// 当有专辑图片时，显示专辑图片，反之则显示艺术家图�?
 				albumImage = itemObj.get("album_logo").getAsString();
 				if (!StringUtils.hasLength(albumImage)) {
 					albumImage = itemObj.get("artist_logo").getAsString();
@@ -390,11 +404,11 @@ public class XMMusicData {
 	}
 
 	/**
-	 * 解析歌曲�?
+	 * 解析歌曲�?
 	 * 
 	 * @param element
 	 *            JSON数据
-	 * @return 歌曲�?
+	 * @return 歌曲�?
 	 */
 	public List<OnlineSong> getSongList(JsonElement element) {
 
@@ -471,7 +485,7 @@ public class XMMusicData {
 	}
 
 	/*
-	 * 获取排行榜歌曲列�?
+	 * 获取排行榜歌曲列�?
 	 */
 	public List<OnlineSong> getRankSongList(JsonElement element) {
 		if (null == element)
@@ -484,49 +498,52 @@ public class XMMusicData {
 		dataList = getSongList(element);
 		return dataList;
 	}
-	
+
 	/*
 	 * 
 	 * 获取榜单列表数据
 	 */
-	public List<RankListItem> getRankListItem(JsonElement element){
-		List<RankListItem> dataList=new ArrayList<RankListItem>();
-		JsonArray arrayItems=element.getAsJsonArray();
-		
+	public List<RankListItem> getRankListItem(JsonElement element) {
+		List<RankListItem> dataList = new ArrayList<RankListItem>();
+		JsonArray arrayItems = element.getAsJsonArray();
+
 		int size = arrayItems.size();
 		for (int i = 0; i < size; i++) {
-			JsonObject itemObj=arrayItems.get(i).getAsJsonObject();
-			JsonArray itemContent=itemObj.getAsJsonArray("items");
+			JsonObject itemObj = arrayItems.get(i).getAsJsonObject();
+			JsonArray itemContent = itemObj.getAsJsonArray("items");
 			for (int j = 0; j < itemContent.size(); j++) {
-				JsonObject rankContent=itemContent.get(j).getAsJsonObject(); 
-				RankListItem rankListItem=new RankListItem();
-				rankListItem.setCycleType(rankContent.get("cycle_type").getAsString());
+				JsonObject rankContent = itemContent.get(j).getAsJsonObject();
+				RankListItem rankListItem = new RankListItem();
+				rankListItem.setCycleType(rankContent.get("cycle_type")
+						.getAsString());
 				rankListItem.setLogo(rankContent.get("logo").getAsString());
-				rankListItem.setLogoMiddle(rankContent.get("logo_middle").getAsString());
+				rankListItem.setLogoMiddle(rankContent.get("logo_middle")
+						.getAsString());
 				rankListItem.setSongs(getSongList(rankContent.get("songs")));
 				rankListItem.setTitle(rankContent.get("title").getAsString());
 				rankListItem.setType(rankContent.get("type").getAsString());
-				rankListItem.setUpdateDate(rankContent.get("update_date").getAsString());
+				rankListItem.setUpdateDate(rankContent.get("update_date")
+						.getAsString());
 				dataList.add(rankListItem);
 			}
 		}
 
-//		for (int j = 0; j < size; j++) {
-//
-//			JsonObject songObj = array.get(j).getAsJsonObject();
-//			RankListItem rankItem = new RankListItem();
-//			rankItem.setCycleType(songObj.get("cycle_type").getAsString());
-//			rankItem.setLogo(songObj.get("logo").getAsString());
-//			rankItem.setLogoMiddle(songObj.get("logo_middle").getAsString());
-//			rankItem.setSongs(getSongList(songObj.get("songs")));
-//			rankItem.setTitle(songObj.get("title").getAsString());
-//			rankItem.setType(songObj.get("type").getAsString());
-//			rankItem.setUpdateDate(songObj.get("update_date").getAsString());
-//			
-//			
-//			dataList.add(rankItem);
-//		}
-		
+		// for (int j = 0; j < size; j++) {
+		//
+		// JsonObject songObj = array.get(j).getAsJsonObject();
+		// RankListItem rankItem = new RankListItem();
+		// rankItem.setCycleType(songObj.get("cycle_type").getAsString());
+		// rankItem.setLogo(songObj.get("logo").getAsString());
+		// rankItem.setLogoMiddle(songObj.get("logo_middle").getAsString());
+		// rankItem.setSongs(getSongList(songObj.get("songs")));
+		// rankItem.setTitle(songObj.get("title").getAsString());
+		// rankItem.setType(songObj.get("type").getAsString());
+		// rankItem.setUpdateDate(songObj.get("update_date").getAsString());
+		//
+		//
+		// dataList.add(rankItem);
+		// }
+
 		return dataList;
 	}
 
@@ -563,7 +580,7 @@ public class XMMusicData {
 	}
 
 	/**
-	 * 请求数据接口（自解析Json方式�?
+	 * 请求数据接口（自解析Json方式�?
 	 * 
 	 * @param methodCode
 	 *            方法名称
@@ -586,14 +603,15 @@ public class XMMusicData {
 
 	/**
 	 * 根据给定控件尺寸size，向上兼容返回一个合适的图片尺寸
+	 * 
 	 * @param url
 	 * @param size
 	 * @return
 	 */
-	public String transferImgUrl(String url,int size ){
+	public String transferImgUrl(String url, int size) {
 		return ImageUtil.transferImgUrl(url, size);
 	}
-	
+
 	/**
 	 * 
 	 * @param respond
@@ -747,4 +765,100 @@ public class XMMusicData {
 
 	}
 
+	/*
+	 * 
+	 * 发送音乐列表到音响端
+	 */
+	public void sendMusics(Context context, List<OnlineSong> list) {
+
+		if (NetworkUtils.isWifiConnected(context)) {
+			if (!StringUtils.hasLength(ClientSendCommandService.serverIP)) {
+				Toast.makeText(context, "手机未连接音箱，请确认后再推送", Toast.LENGTH_SHORT)
+						.show();
+				return;
+			}
+			MyApplication.vibrator.vibrate(100);
+
+			String ipAddress = NetworkUtils.getLocalHostIp();
+			String httpAddress = "http://" + ipAddress + ":"
+					+ HTTPDService.HTTP_PORT;
+
+			try {
+				JSONObject o = new JSONObject();
+				JSONArray array = new JSONArray();
+
+				for (OnlineSong onlineSong : list) {
+					String tempPath = Encryptor.decryptUrl(onlineSong
+							.getListenFile());// 解密播放地址
+					// String tempPath = onlineSong.getListenFile();
+					String title = onlineSong.getSongName().trim();
+					String artist = onlineSong.getArtistName().trim();
+					int duration = onlineSong.getLength();
+					JSONObject music = new JSONObject();
+
+					if (tempPath.startsWith(HTTPDService.defaultHttpServerPath)) {
+						tempPath = tempPath.replace(
+								HTTPDService.defaultHttpServerPath, "")
+								.replace(" ", "%20");
+					} else {
+						for (String otherHttpServerPath : HTTPDService.otherHttpServerPaths) {
+							if (tempPath.startsWith(otherHttpServerPath)) {
+								tempPath = tempPath.replace(
+										otherHttpServerPath, "").replace(" ",
+										"%20");
+							}
+						}
+					}
+					tempPath = httpAddress + tempPath;
+
+					music.put("tempPath", tempPath);
+					music.put("title", title);
+					music.put("artist", artist);
+					music.put("duration", duration);
+					array.put(music);
+
+				}
+				o.put("musicss", array.toString());
+
+				File jsonFile = new File(HTTPDService.defaultHttpServerPath
+						+ "/MusicList.json");
+				if (jsonFile.exists()) {
+					jsonFile.delete();
+				}
+				jsonFile.createNewFile();
+
+				FileWriter fw = new FileWriter(jsonFile);
+				fw.write(o.toString(), 0, o.toString().length());
+				fw.flush();
+				fw.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+				Toast.makeText(context, "音频获取失败", Toast.LENGTH_SHORT).show();
+			}
+			// 发送播放地址
+			ClientSendCommandService.msg = "GetMusicList:" + httpAddress
+					+ "/MusicList.json";
+			ClientSendCommandService.handler.sendEmptyMessage(4);
+			// }
+		} else {
+			Toast.makeText(context, "请链接无线网络", Toast.LENGTH_SHORT).show();
+		}
+	}
+
+	/**
+	 * 根据简略信息歌曲列表返回带歌曲地址的详细歌曲列表
+	 */
+
+	public List<OnlineSong> getDetailList(List<OnlineSong> list) {
+		List<OnlineSong> detailList = new ArrayList<OnlineSong>();
+		if (list != null && list.size() > 0) {
+			for (int i = 0; i < list.size(); i++) {
+				OnlineSong song = new OnlineSong();
+				song = mXiamiSDK.findSongByIdSync(list.get(i).getSongId(),
+						OnlineSong.Quality.L);
+				detailList.add(song);
+			}
+		}
+		return detailList;
+	}
 }
