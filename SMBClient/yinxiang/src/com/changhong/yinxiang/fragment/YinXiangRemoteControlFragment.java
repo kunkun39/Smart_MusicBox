@@ -14,7 +14,9 @@ import com.changhong.common.utils.StringUtils;
 import android.os.Bundle;
 import android.os.Handler;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.PointF;
+import android.graphics.drawable.ColorDrawable;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -32,6 +34,9 @@ import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -40,6 +45,7 @@ import android.widget.Toast;
 import com.changhong.yinxiang.R;
 import com.changhong.yinxiang.remotecontrol.AudioCtrlAdapter;
 import com.changhong.yinxiang.remotecontrol.TVInputDialogFragment;
+import com.changhong.yinxiang.utils.Configure;
 import com.changhong.yinxiang.utils.YuYingWordsUtils;
 import com.changhong.yinxiang.view.AudioControlDialog;
 import com.changhong.yinxiang.view.DYControlDialog;
@@ -76,7 +82,8 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 	private PointF startPoint = new PointF();
 	private PointF endPoint = new PointF();
 
-	
+	GridView yinXiaoControl, lightsControl;
+
 	// 音效键盘
 	YinXiaoControlDialog yinXiaoControlDialog = null;
 	// 灯光键盘
@@ -125,7 +132,7 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 		// bidirSlidingLayout = (BidirSlidingLayout)
 		// findViewById(R.id.bidir_sliding_layout);
 		img_d = (ImageView) v.findViewById(R.id.img_d);
-//		img_v = v.findViewById(R.id.img_volume);
+		// img_v = v.findViewById(R.id.img_volume);
 		// title = (TextView) v.findViewById(R.id.title);
 		// clients = (ListView) v.findViewById(R.id.clients);
 		// list = (Button) v.findViewById(R.id.btn_list);
@@ -136,25 +143,34 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 		Button btn_left = (Button) v.findViewById(R.id.left);
 		Button btn_right = (Button) v.findViewById(R.id.right);
 		Button btn_center = (Button) v.findViewById(R.id.center);
-//		ImageView btn_v2 = (ImageView) v.findViewById(R.id.volume2);
-//		ImageView btn_v1 = (ImageView) v.findViewById(R.id.volume1);
-//		ImageView btn_v3 = (ImageView) v.findViewById(R.id.volume3);
-//		ImageView btn_vlight = (ImageView) v.findViewById(R.id.vlight);
+		// ImageView btn_v2 = (ImageView) v.findViewById(R.id.volume2);
+		// ImageView btn_v1 = (ImageView) v.findViewById(R.id.volume1);
+		// ImageView btn_v3 = (ImageView) v.findViewById(R.id.volume3);
+		// ImageView btn_vlight = (ImageView) v.findViewById(R.id.vlight);
 		ImageView home = (ImageView) v.findViewById(R.id.btn_home);
 		ImageView menu = (ImageView) v.findViewById(R.id.btn_menu);
 		ImageView backBtn = (ImageView) v.findViewById(R.id.btn_b);
 		Button list = (Button) v.findViewById(R.id.btn_list);
-		
-		//功能切换键
-		ImageView  funSwitch=(ImageView) v.findViewById(R.id.function_switch);
-		//音效控件
-		 ctrlMain= (RelativeLayout) v.findViewById(R.id.control_main);
-		 ctrlAudio= (LinearLayout) v.findViewById(R.id.control_audio);		
-	
-		SwitchButton lights_controller=(SwitchButton) v.findViewById(R.id.lightscontrol);
-		lights_controller.init("light5");
-	
-	
+
+		// 功能切换键
+		CheckBox funSwitch = (CheckBox) v.findViewById(R.id.function_switch);
+		// 音效控件
+		ctrlMain = (RelativeLayout) v.findViewById(R.id.control_main);
+		ctrlAudio = (LinearLayout) v.findViewById(R.id.control_audio);
+
+		Button lights_Center = (Button) v.findViewById(R.id.lightscontrol);
+
+		yinXiaoControl = (GridView) v.findViewById(R.id.audio_yinxiao);
+		lightsControl = (GridView) v.findViewById(R.id.audio_light);
+
+		yinXiaoControl.setSelector(new ColorDrawable(Color.TRANSPARENT));
+		lightsControl.setSelector(new ColorDrawable(Color.TRANSPARENT));
+		AudioCtrlAdapter adapter = new AudioCtrlAdapter(getActivity(), 6,
+				(int) (width * 0.2f), (int) (height * 0.135f));
+		yinXiaoControl.setAdapter(adapter);
+		adapter = new AudioCtrlAdapter(getActivity(), 4, (int) (width * 0.27f),
+				(int) (height * 0.16));
+		lightsControl.setAdapter(adapter);
 
 		btn_up.setOnTouchListener(this);
 		btn_up.setOnClickListener(this);
@@ -166,69 +182,82 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 		btn_right.setOnClickListener(this);
 		btn_center.setOnTouchListener(this);
 		btn_center.setOnClickListener(this);
-		funSwitch.setOnTouchListener(this);
-		funSwitch.setOnClickListener(this);	
-		
-		
-//		btn_v1.setOnTouchListener(this);
-//		btn_v1.setOnClickListener(new OnClickListener() {
-//
-//			@Override
-//			public void onClick(View arg0) {
-//				// TODO Auto-generated method stub
-//				MyApplication.vibrator.vibrate(100);
-//				if (dyControlDialog != null && !dyControlDialog.isShowing()) {
-//					dyControlDialog.show();
-//				}
-//			}
-//		});
-//		btn_v2.setOnTouchListener(this);
-//		btn_v2.setOnClickListener(new OnClickListener() {
-//
-//			@Override
-//			public void onClick(View arg0) {
-//				// TODO Auto-generated method stub
-//				MyApplication.vibrator.vibrate(100);
-//				if (audioControlDialog != null
-//						&& !audioControlDialog.isShowing()) {
-//					audioControlDialog.show();
-//				}
-//			}
-//		});
-//
-//		btn_v3.setOnTouchListener(this);
-//		btn_v3.setOnClickListener(new OnClickListener() {
-//			@Override
-//			public void onClick(View v) {
-//				MyApplication.vibrator.vibrate(100);
-//				if (yinXiaoControlDialog != null
-//						&& !yinXiaoControlDialog.isShowing()) {
-//					yinXiaoControlDialog.show();
-//				}
-//			}
-//		});
-//		btn_vlight.setOnTouchListener(this);
-//		btn_vlight.setOnClickListener(new OnClickListener() {
-//			@Override
-//			public void onClick(View v) {
-//				MyApplication.vibrator.vibrate(100);
-//				if (lightsControlDialog != null
-//						&& !lightsControlDialog.isShowing()) {
-//					lightsControlDialog.show();
-//				}
-//			}
-//		});
 
-//		btn_vnum.setOnTouchListener(this);
-//		btn_vnum.setOnClickListener(new OnClickListener() {
-//			@Override
-//			public void onClick(View v) {
-//				MyApplication.vibrator.vibrate(100);
-//				if (numInputDialog != null && !numInputDialog.isShowing()) {
-//					numInputDialog.show();
-//				}
-//			}
-//		});
+		funSwitch.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView,
+					boolean isChecked) {
+
+				if (isChecked) {
+					ctrlMain.setVisibility(View.GONE);
+					ctrlAudio.setVisibility(View.VISIBLE);
+				} else {
+					ctrlMain.setVisibility(View.VISIBLE);
+					ctrlAudio.setVisibility(View.GONE);
+				}
+			}
+		});
+
+		// btn_v1.setOnTouchListener(this);
+		// btn_v1.setOnClickListener(new OnClickListener() {
+		//
+		// @Override
+		// public void onClick(View arg0) {
+		// // TODO Auto-generated method stub
+		// MyApplication.vibrator.vibrate(100);
+		// if (dyControlDialog != null && !dyControlDialog.isShowing()) {
+		// dyControlDialog.show();
+		// }
+		// }
+		// });
+		// btn_v2.setOnTouchListener(this);
+		// btn_v2.setOnClickListener(new OnClickListener() {
+		//
+		// @Override
+		// public void onClick(View arg0) {
+		// // TODO Auto-generated method stub
+		// MyApplication.vibrator.vibrate(100);
+		// if (audioControlDialog != null
+		// && !audioControlDialog.isShowing()) {
+		// audioControlDialog.show();
+		// }
+		// }
+		// });
+		//
+		// btn_v3.setOnTouchListener(this);
+		// btn_v3.setOnClickListener(new OnClickListener() {
+		// @Override
+		// public void onClick(View v) {
+		// MyApplication.vibrator.vibrate(100);
+		// if (yinXiaoControlDialog != null
+		// && !yinXiaoControlDialog.isShowing()) {
+		// yinXiaoControlDialog.show();
+		// }
+		// }
+		// });
+		// btn_vlight.setOnTouchListener(this);
+		// btn_vlight.setOnClickListener(new OnClickListener() {
+		// @Override
+		// public void onClick(View v) {
+		// MyApplication.vibrator.vibrate(100);
+		// if (lightsControlDialog != null
+		// && !lightsControlDialog.isShowing()) {
+		// lightsControlDialog.show();
+		// }
+		// }
+		// });
+
+		// btn_vnum.setOnTouchListener(this);
+		// btn_vnum.setOnClickListener(new OnClickListener() {
+		// @Override
+		// public void onClick(View v) {
+		// MyApplication.vibrator.vibrate(100);
+		// if (numInputDialog != null && !numInputDialog.isShowing()) {
+		// numInputDialog.show();
+		// }
+		// }
+		// });
 
 		// back.setOnTouchListener(this);
 		home.setOnClickListener(this);
@@ -318,84 +347,48 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 		// bidirSlidingLayout.closeRightMenu();
 		// }
 		// });
-		
-			
-	
-		//灯光控制
-		lights_controller.setOnClickListener(this);
-		lights_controller.setOnTouchListener(this);
-//	    audio_light.setOnItemClickListener(new OnItemClickListener() {
-//					@Override
-//					public void onItemClick(AdapterView<?> parent, View view,
-//							int position, long id) {
-//                               						
-//					}
-//				});
-//	    
-//		//音效控制		
-//		audio_yinxiao.setOnItemClickListener(new OnItemClickListener() {
-//			@Override
-//			public void onItemClick(AdapterView<?> parent, View view,
-//					int position, long id) {				
-//			}
-//		});
-		
-		
-		
-//		if (yinXiaoControlDialog == null) {
-//			yinXiaoControlDialog = new YinXiaoControlDialog(getActivity());
-//			yinXiaoControlDialog.setCanceledOnTouchOutside(true);
-//			yinXiaoControlDialog.YX_game.setOnClickListener(this);
-//			yinXiaoControlDialog.YX_game.setOnTouchListener(this);
-//			yinXiaoControlDialog.YX_movie.setOnClickListener(this);
-//			yinXiaoControlDialog.YX_movie.setOnTouchListener(this);
-//			yinXiaoControlDialog.YX_music.setOnClickListener(this);
-//			yinXiaoControlDialog.YX_music.setOnTouchListener(this);
-//			yinXiaoControlDialog.YX_tv.setOnClickListener(this);
-//			yinXiaoControlDialog.YX_tv.setOnTouchListener(this);
-//			yinXiaoControlDialog.YX_xt.setOnClickListener(this);
-//			yinXiaoControlDialog.YX_xt.setOnTouchListener(this);
-//			yinXiaoControlDialog.YX_yd.setOnClickListener(this);
-//			yinXiaoControlDialog.YX_yd.setOnTouchListener(this);
-//		}
-//		if (lightsControlDialog == null) {
-//			lightsControlDialog = new LightsControlDialog(getActivity());
-//			lightsControlDialog.setCanceledOnTouchOutside(true);
-//			lightsControlDialog.lights_controller.setOnClickListener(this);
-//			lightsControlDialog.lights_controller.setOnTouchListener(this);
-//			lightsControlDialog.lights_down.setOnClickListener(this);
-//			lightsControlDialog.lights_down.setOnTouchListener(this);
-//			lightsControlDialog.lights_moon.setOnClickListener(this);
-//			lightsControlDialog.lights_moon.setOnTouchListener(this);
-//			lightsControlDialog.lights_sun.setOnClickListener(this);
-//			lightsControlDialog.lights_sun.setOnTouchListener(this);
-//			lightsControlDialog.lights_up.setOnClickListener(this);
-//			lightsControlDialog.lights_up.setOnTouchListener(this);
-//		}
-//		if (audioControlDialog == null) {
-//			audioControlDialog = new AudioControlDialog(getActivity());
-//			audioControlDialog.setCanceledOnTouchOutside(true);
-//			audioControlDialog.btnAudiodown.setOnClickListener(this);
-//			audioControlDialog.btnAudiodown.setOnTouchListener(this);
-//			audioControlDialog.btnAudioup.setOnClickListener(this);
-//			audioControlDialog.btnAudioup.setOnTouchListener(this);
-//		}
-//		if (dyControlDialog == null) {
-//			dyControlDialog = new DYControlDialog(getActivity());
-//			dyControlDialog.setCanceledOnTouchOutside(true);
-//			dyControlDialog.btnDYdown.setOnClickListener(this);
-//			dyControlDialog.btnDYdown.setOnTouchListener(this);
-//			dyControlDialog.btnDYup.setOnClickListener(this);
-//			dyControlDialog.btnDYup.setOnTouchListener(this);
-//		}
-		centerPoint.set((180.25f - 35.5f) * density, (343.25f - 35.5f)* density);
+
+		// 灯光控制
+		lights_Center.setOnClickListener(this);
+		lights_Center.setOnTouchListener(this);
+		lightsControl.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				MyApplication.vibrator.vibrate(100);
+				int resID = matchLightResID(position);
+				if (resID >0) {
+					lightsControl.setBackgroundResource(resID);
+					String cmdStr = Configure.getAudioSettingCMD(resID);
+					ClientSendCommandService.msg = "key:" + cmdStr;
+					ClientSendCommandService.handler.sendEmptyMessage(1);
+				}
+			}
+		});
+
+		// 音效控制
+		yinXiaoControl.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				MyApplication.vibrator.vibrate(100);
+				int resID = matchYinxiaoResID(position);
+				if (resID > 0) {
+					yinXiaoControl.setBackgroundResource(resID);
+					String cmdStr = Configure.getAudioSettingCMD(resID);
+					ClientSendCommandService.msg = "key:" + cmdStr;
+					ClientSendCommandService.handler.sendEmptyMessage(1);
+				}
+			}
+		});
+		centerPoint.set((180.25f - 35.5f) * density, (343.25f - 35.5f)
+				* density);
 
 		// 长按触发语音换台功能
 		btn_center.setOnLongClickListener(new View.OnLongClickListener() {
 			@Override
 			public boolean onLongClick(View v) {
 				MyApplication.vibrator.vibrate(100);
-
 				/**
 				 * stop first, because last action maybe not finished
 				 */
@@ -444,7 +437,7 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 			ClientSendCommandService.msg = "key:right";
 			break;
 		case R.id.center:
-	
+
 		case R.id.btn_b:
 			MyApplication.vibrator.vibrate(100);
 			ClientSendCommandService.msg = "key:back";
@@ -457,59 +450,59 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 			MyApplication.vibrator.vibrate(100);
 			ClientSendCommandService.msg = "key:home";
 			break;
-		case R.id.audioup:
-			MyApplication.vibrator.vibrate(100);
-			ClientSendCommandService.msg = "key:volumeup";
-			break;
-		case R.id.audiodown:
-			MyApplication.vibrator.vibrate(100);
-			ClientSendCommandService.msg = "key:volumedown";
-			break;
+//		case R.id.audioup:
+//			MyApplication.vibrator.vibrate(100);
+//			ClientSendCommandService.msg = "key:volumeup";
+//			break;
+//		case R.id.audiodown:
+//			MyApplication.vibrator.vibrate(100);
+//			ClientSendCommandService.msg = "key:volumedown";
+//			break;
 		case R.id.power:
 			MyApplication.vibrator.vibrate(100);
 			ClientSendCommandService.msg = "key:power";
 			break;
-		
-		case R.id.yinxiao_movie:
-			MyApplication.vibrator.vibrate(100);
-			ClientSendCommandService.msg = "key:yxmovie";
-			break;
-		case R.id.yinxiao_tv:
-			MyApplication.vibrator.vibrate(100);
-			ClientSendCommandService.msg = "key:yxtv";
-			break;
-		case R.id.yinxiao_music:
-			MyApplication.vibrator.vibrate(100);
-			ClientSendCommandService.msg = "key:yxmusic";
-			break;
-		case R.id.yinxiao_game:
-			MyApplication.vibrator.vibrate(100);
-			ClientSendCommandService.msg = "key:yxgame";
-			break;
-		case R.id.yinxiao_yd:
-			MyApplication.vibrator.vibrate(100);
-			ClientSendCommandService.msg = "key:yxyd";
-			break;
-		case R.id.yinxiao_xt:
-			MyApplication.vibrator.vibrate(100);
-			ClientSendCommandService.msg = "key:yxxt";
-			break;
-		case R.id.lightsup:
-			MyApplication.vibrator.vibrate(100);
-			ClientSendCommandService.msg = "key:lightsup";
-			break;
-		case R.id.lightsdown:
-			MyApplication.vibrator.vibrate(100);
-			ClientSendCommandService.msg = "key:lightsdown";
-			break;
-		case R.id.lightsmoon:
-			MyApplication.vibrator.vibrate(100);
-			ClientSendCommandService.msg = "key:lightsmoon";
-			break;
-		case R.id.lightssun:
-			MyApplication.vibrator.vibrate(100);
-			ClientSendCommandService.msg = "key:lightssun";
-			break;
+
+		// case R.id.yinxiao_movie:
+		// MyApplication.vibrator.vibrate(100);
+		// ClientSendCommandService.msg = "key:yxmovie";
+		// break;
+		// case R.id.yinxiao_tv:
+		// MyApplication.vibrator.vibrate(100);
+		// ClientSendCommandService.msg = "key:yxtv";
+		// break;
+		// case R.id.yinxiao_music:
+		// MyApplication.vibrator.vibrate(100);
+		// ClientSendCommandService.msg = "key:yxmusic";
+		// break;
+		// case R.id.yinxiao_game:
+		// MyApplication.vibrator.vibrate(100);
+		// ClientSendCommandService.msg = "key:yxgame";
+		// break;
+		// case R.id.yinxiao_yd:
+		// MyApplication.vibrator.vibrate(100);
+		// ClientSendCommandService.msg = "key:yxyd";
+		// break;
+		// case R.id.yinxiao_xt:
+		// MyApplication.vibrator.vibrate(100);
+		// ClientSendCommandService.msg = "key:yxxt";
+		// break;
+		// case R.id.lightsup:
+		// MyApplication.vibrator.vibrate(100);
+		// ClientSendCommandService.msg = "key:lightsup";
+		// break;
+		// case R.id.lightsdown:
+		// MyApplication.vibrator.vibrate(100);
+		// ClientSendCommandService.msg = "key:lightsdown";
+		// break;
+		// case R.id.lightsmoon:
+		// MyApplication.vibrator.vibrate(100);
+		// ClientSendCommandService.msg = "key:lightsmoon";
+		// break;
+		// case R.id.lightssun:
+		// MyApplication.vibrator.vibrate(100);
+		// ClientSendCommandService.msg = "key:lightssun";
+		// break;
 		case R.id.lightscontrol:
 			MyApplication.vibrator.vibrate(100);
 			ClientSendCommandService.msg = "key:lightscontrol";
@@ -653,54 +646,54 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 				img_d.setImageResource(R.drawable.tv_control_direction);
 			}
 			break;
-//		case R.id.volume2:
-//			if (event.getAction() == MotionEvent.ACTION_DOWN) {
-//				LongKeyValue = "";
-////				img_v.setBackgroundResource(R.drawable.tv_control_menu_volum2);
-//			} else if (event.getAction() == MotionEvent.ACTION_UP) {
-////				img_v.setBackgroundResource(R.drawable.tv_control_menu);
-//			}
-//			break;
-//		case R.id.volume1:
-//			if (event.getAction() == MotionEvent.ACTION_DOWN) {
-//				LongKeyValue = "";
-////				img_v.setBackgroundResource(R.drawable.tv_control_menu_volum1);
-//			} else if (event.getAction() == MotionEvent.ACTION_UP) {
-////				img_v.setBackgroundResource(R.drawable.tv_control_menu);
-//			}
-//			break;
-//		case R.id.volume3:
-//			if (event.getAction() == MotionEvent.ACTION_DOWN) {
-//				LongKeyValue = "";
-////				img_v.setBackgroundResource(R.drawable.tv_control_menu_tv);
-//			} else if (event.getAction() == MotionEvent.ACTION_UP) {
-////				img_v.setBackgroundResource(R.drawable.tv_control_menu);
-//			}
-//			break;
-//		case R.id.vlight:
-//			if (event.getAction() == MotionEvent.ACTION_DOWN) {
-//				LongKeyValue = "";
-////				img_v.setBackgroundResource(R.drawable.tv_control_menu_channel);
-//			} else if (event.getAction() == MotionEvent.ACTION_UP) {
-////				img_v.setBackgroundResource(R.drawable.tv_control_menu);
-//			}
-//			break;
-			
-//		case R.id.num:
-//			if (event.getAction() == MotionEvent.ACTION_DOWN) {
-//				LongKeyValue = "";
-//				img_v.setBackgroundResource(R.drawable.tv_control_menu_num);
-//			} else if (event.getAction() == MotionEvent.ACTION_UP) {
-//				img_v.setBackgroundResource(R.drawable.tv_control_menu);
-//			}
-//			break;
-			
-			case R.id.btn_menu:
+		// case R.id.volume2:
+		// if (event.getAction() == MotionEvent.ACTION_DOWN) {
+		// LongKeyValue = "";
+		// // img_v.setBackgroundResource(R.drawable.tv_control_menu_volum2);
+		// } else if (event.getAction() == MotionEvent.ACTION_UP) {
+		// // img_v.setBackgroundResource(R.drawable.tv_control_menu);
+		// }
+		// break;
+		// case R.id.volume1:
+		// if (event.getAction() == MotionEvent.ACTION_DOWN) {
+		// LongKeyValue = "";
+		// // img_v.setBackgroundResource(R.drawable.tv_control_menu_volum1);
+		// } else if (event.getAction() == MotionEvent.ACTION_UP) {
+		// // img_v.setBackgroundResource(R.drawable.tv_control_menu);
+		// }
+		// break;
+		// case R.id.volume3:
+		// if (event.getAction() == MotionEvent.ACTION_DOWN) {
+		// LongKeyValue = "";
+		// // img_v.setBackgroundResource(R.drawable.tv_control_menu_tv);
+		// } else if (event.getAction() == MotionEvent.ACTION_UP) {
+		// // img_v.setBackgroundResource(R.drawable.tv_control_menu);
+		// }
+		// break;
+		// case R.id.vlight:
+		// if (event.getAction() == MotionEvent.ACTION_DOWN) {
+		// LongKeyValue = "";
+		// // img_v.setBackgroundResource(R.drawable.tv_control_menu_channel);
+		// } else if (event.getAction() == MotionEvent.ACTION_UP) {
+		// // img_v.setBackgroundResource(R.drawable.tv_control_menu);
+		// }
+		// break;
+
+		// case R.id.num:
+		// if (event.getAction() == MotionEvent.ACTION_DOWN) {
+		// LongKeyValue = "";
+		// img_v.setBackgroundResource(R.drawable.tv_control_menu_num);
+		// } else if (event.getAction() == MotionEvent.ACTION_UP) {
+		// img_v.setBackgroundResource(R.drawable.tv_control_menu);
+		// }
+		// break;
+
+		case R.id.btn_menu:
 			if (event.getAction() == MotionEvent.ACTION_DOWN) {
 				LongKeyValue = "";
-//				img_v.setBackgroundResource(R.drawable.tv_control_menu_menu);
+				// img_v.setBackgroundResource(R.drawable.tv_control_menu_menu);
 			} else if (event.getAction() == MotionEvent.ACTION_UP) {
-//				img_v.setBackgroundResource(R.drawable.tv_control_menu);
+				// img_v.setBackgroundResource(R.drawable.tv_control_menu);
 			}
 			break;
 		case R.id.btn_home:
@@ -717,126 +710,124 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 						.setBackgroundResource(R.drawable.yinxiao);
 			}
 			break;
-		case R.id.yinxiao_tv:
-			if (event.getAction() == MotionEvent.ACTION_DOWN) {
-				LongKeyValue = "";
-				yinXiaoControlDialog.imgback
-						.setBackgroundResource(R.drawable.yinxiaotv);
-			} else if (event.getAction() == MotionEvent.ACTION_UP) {
-				yinXiaoControlDialog.imgback
-						.setBackgroundResource(R.drawable.yinxiao);
-			}
-			break;
-		case R.id.yinxiao_music:
-			if (event.getAction() == MotionEvent.ACTION_DOWN) {
-				LongKeyValue = "";
-				yinXiaoControlDialog.imgback
-						.setBackgroundResource(R.drawable.yinxiaomusic);
-			} else if (event.getAction() == MotionEvent.ACTION_UP) {
-				yinXiaoControlDialog.imgback
-						.setBackgroundResource(R.drawable.yinxiao);
-			}
-			break;
-		case R.id.yinxiao_game:
-			if (event.getAction() == MotionEvent.ACTION_DOWN) {
-				LongKeyValue = "";
-				yinXiaoControlDialog.imgback
-						.setBackgroundResource(R.drawable.yixiaogame);
-			} else if (event.getAction() == MotionEvent.ACTION_UP) {
-				yinXiaoControlDialog.imgback
-						.setBackgroundResource(R.drawable.yinxiao);
-			}
-			break;
-		case R.id.yinxiao_yd:
-			if (event.getAction() == MotionEvent.ACTION_DOWN) {
-				LongKeyValue = "";
-				yinXiaoControlDialog.imgback
-						.setBackgroundResource(R.drawable.yinxiaoyd);
-			} else if (event.getAction() == MotionEvent.ACTION_UP) {
-				yinXiaoControlDialog.imgback
-						.setBackgroundResource(R.drawable.yinxiao);
-			}
-			break;
-		case R.id.yinxiao_xt:
-			if (event.getAction() == MotionEvent.ACTION_DOWN) {
-				LongKeyValue = "";
-				yinXiaoControlDialog.imgback
-						.setBackgroundResource(R.drawable.yinxiaoxt);
-			} else if (event.getAction() == MotionEvent.ACTION_UP) {
-				yinXiaoControlDialog.imgback
-						.setBackgroundResource(R.drawable.yinxiao);
-			}
-			break;
-		case R.id.lightsdown:
-			if (event.getAction() == MotionEvent.ACTION_DOWN) {
-				LongKeyValue = "";
-				lightsControlDialog.imgback
-						.setBackgroundResource(R.drawable.lightsdown);
-			} else if (event.getAction() == MotionEvent.ACTION_UP) {
-				lightsControlDialog.imgback
-						.setBackgroundResource(R.drawable.lights);
-			}
-			break;
+		// case R.id.yinxiao_tv:
+		// if (event.getAction() == MotionEvent.ACTION_DOWN) {
+		// LongKeyValue = "";
+		// yinXiaoControlDialog.imgback
+		// .setBackgroundResource(R.drawable.yinxiaotv);
+		// } else if (event.getAction() == MotionEvent.ACTION_UP) {
+		// yinXiaoControlDialog.imgback
+		// .setBackgroundResource(R.drawable.yinxiao);
+		// }
+		// break;
+		// case R.id.yinxiao_music:
+		// if (event.getAction() == MotionEvent.ACTION_DOWN) {
+		// LongKeyValue = "";
+		// yinXiaoControlDialog.imgback
+		// .setBackgroundResource(R.drawable.yinxiaomusic);
+		// } else if (event.getAction() == MotionEvent.ACTION_UP) {
+		// yinXiaoControlDialog.imgback
+		// .setBackgroundResource(R.drawable.yinxiao);
+		// }
+		// break;
+		// case R.id.yinxiao_game:
+		// if (event.getAction() == MotionEvent.ACTION_DOWN) {
+		// LongKeyValue = "";
+		// yinXiaoControlDialog.imgback
+		// .setBackgroundResource(R.drawable.yixiaogame);
+		// } else if (event.getAction() == MotionEvent.ACTION_UP) {
+		// yinXiaoControlDialog.imgback
+		// .setBackgroundResource(R.drawable.yinxiao);
+		// }
+		// break;
+		// case R.id.yinxiao_yd:
+		// if (event.getAction() == MotionEvent.ACTION_DOWN) {
+		// LongKeyValue = "";
+		// // yinXiaoControlDialog.imgback
+		// // .setBackgroundResource(R.drawable.yinxiaoyd);
+		// } else if (event.getAction() == MotionEvent.ACTION_UP) {
+		// yinXiaoControlDialog.imgback
+		// .setBackgroundResource(R.drawable.yinxiao);
+		// }
+		// break;
+		// case R.id.yinxiao_xt:
+		// if (event.getAction() == MotionEvent.ACTION_DOWN) {
+		// LongKeyValue = "";
+		// yinXiaoControlDialog.imgback
+		// .setBackgroundResource(R.drawable.yinxiaoxt);
+		// } else if (event.getAction() == MotionEvent.ACTION_UP) {
+		// yinXiaoControlDialog.imgback
+		// .setBackgroundResource(R.drawable.yinxiao);
+		// }
+		// break;
+		// case R.id.lightsdown:
+		// if (event.getAction() == MotionEvent.ACTION_DOWN) {
+		// LongKeyValue = "";
+		// lightsControl
+		// .setBackgroundResource(R.drawable.lightsdown);
+		// } else if (event.getAction() == MotionEvent.ACTION_UP) {
+		// lightsControl
+		// .setBackgroundResource(R.drawable.lights);
+		// }
+		// break;
 		case R.id.lightscontrol:
 			if (event.getAction() == MotionEvent.ACTION_DOWN) {
 				LongKeyValue = "";
-				lightsControlDialog.imgback
+				lightsControl
 						.setBackgroundResource(R.drawable.lightscontroller);
 			} else if (event.getAction() == MotionEvent.ACTION_UP) {
-				lightsControlDialog.imgback
-						.setBackgroundResource(R.drawable.lights);
+				lightsControl
+						.setBackgroundResource(R.drawable.lightscontroller);
 			}
 			break;
-		case R.id.lightsup:
-			if (event.getAction() == MotionEvent.ACTION_DOWN) {
-				LongKeyValue = "";
-				lightsControlDialog.imgback
-						.setBackgroundResource(R.drawable.lightsup);
-			} else if (event.getAction() == MotionEvent.ACTION_UP) {
-				lightsControlDialog.imgback
-						.setBackgroundResource(R.drawable.lights);
-			}
-			break;
-		case R.id.lightssun:
-			if (event.getAction() == MotionEvent.ACTION_DOWN) {
-				LongKeyValue = "";
-				lightsControlDialog.imgback
-						.setBackgroundResource(R.drawable.lightssun);
-			} else if (event.getAction() == MotionEvent.ACTION_UP) {
-				lightsControlDialog.imgback
-						.setBackgroundResource(R.drawable.lights);
-			}
-			break;
-		case R.id.lightsmoon:
-			if (event.getAction() == MotionEvent.ACTION_DOWN) {
-				LongKeyValue = "";
-				lightsControlDialog.imgback
-						.setBackgroundResource(R.drawable.lightsmoon);
-			} else if (event.getAction() == MotionEvent.ACTION_UP) {
-				lightsControlDialog.imgback
-						.setBackgroundResource(R.drawable.lights);
-			}
-			break;
-		case R.id.audiodown:
-			if (event.getAction() == MotionEvent.ACTION_DOWN) {
-				LongKeyValue = "key:volumedown";
-				audioControlDialog.imgback
-						.setBackgroundResource(R.drawable.audiodown);
-			} else if (event.getAction() == MotionEvent.ACTION_UP) {
-				audioControlDialog.imgback
-						.setBackgroundResource(R.drawable.audio);
-			}
-			break;
-		case R.id.audioup:
-			if (event.getAction() == MotionEvent.ACTION_DOWN) {
-				LongKeyValue = "key:volumeup";
-				audioControlDialog.imgback
-						.setBackgroundResource(R.drawable.audioup);
-			} else if (event.getAction() == MotionEvent.ACTION_UP) {
-				audioControlDialog.imgback
-						.setBackgroundResource(R.drawable.audio);
-			}
-			break;
+		// case R.id.lightsup:
+		// if (event.getAction() == MotionEvent.ACTION_DOWN) {
+		// LongKeyValue = "";
+		// lightsControl
+		// .setBackgroundResource(R.drawable.lightsup);
+		// } else if (event.getAction() == MotionEvent.ACTION_UP) {
+		// lightsControl
+		// .setBackgroundResource(R.drawable.lights);
+		// }
+		// break;
+		// case R.id.lightssun:
+		// if (event.getAction() == MotionEvent.ACTION_DOWN) {
+		// LongKeyValue = "";
+		// lightsControl
+		// .setBackgroundResource(R.drawable.lightssun);
+		// } else if (event.getAction() == MotionEvent.ACTION_UP) {
+		// lightsControl
+		// .setBackgroundResource(R.drawable.lights);
+		// }
+		// break;
+		// case R.id.lightsmoon:
+		// if (event.getAction() == MotionEvent.ACTION_DOWN) {
+		// LongKeyValue = "";
+		// lightsControl.setBackgroundResource(R.drawable.lightsmoon);
+		// } else if (event.getAction() == MotionEvent.ACTION_UP) {
+		// lightsControl.setBackgroundResource(R.drawable.lights);
+		// }
+		// break;
+//		case R.id.audiodown:
+//			if (event.getAction() == MotionEvent.ACTION_DOWN) {
+//				LongKeyValue = "key:volumedown";
+//				audioControlDialog.imgback
+//						.setBackgroundResource(R.drawable.audiodown);
+//			} else if (event.getAction() == MotionEvent.ACTION_UP) {
+//				audioControlDialog.imgback
+//						.setBackgroundResource(R.drawable.audio);
+//			}
+//			break;
+//		case R.id.audioup:
+//			if (event.getAction() == MotionEvent.ACTION_DOWN) {
+//				LongKeyValue = "key:volumeup";
+//				audioControlDialog.imgback
+//						.setBackgroundResource(R.drawable.audioup);
+//			} else if (event.getAction() == MotionEvent.ACTION_UP) {
+//				audioControlDialog.imgback
+//						.setBackgroundResource(R.drawable.audio);
+//			}
+//			break;
 		case R.id.dydown:
 			if (event.getAction() == MotionEvent.ACTION_DOWN) {
 				LongKeyValue = "key:dydown";
@@ -855,16 +846,16 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 			}
 			break;
 		case R.id.function_switch:
-			//功能切换按钮
-			if(View.GONE==ctrlMain.getVisibility()){
+			// 功能切换按钮
+			if (View.GONE == ctrlMain.getVisibility()) {
 				ctrlMain.setVisibility(View.VISIBLE);
 				ctrlAudio.setVisibility(View.GONE);
-			}else{
+			} else {
 				ctrlMain.setVisibility(View.GONE);
 				ctrlAudio.setVisibility(View.VISIBLE);
 			}
 			break;
-			
+
 		default:
 			break;
 		}
@@ -968,8 +959,10 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 		ClientSendCommandService.handler.sendEmptyMessage(1);
 	}
 
-	private void moveBall(float fromXDelta, float toXDelta, float fromYDelta,float toYDelta) {
-		TranslateAnimation animation = new TranslateAnimation(fromXDelta,toXDelta, fromYDelta, toYDelta);
+	private void moveBall(float fromXDelta, float toXDelta, float fromYDelta,
+			float toYDelta) {
+		TranslateAnimation animation = new TranslateAnimation(fromXDelta,
+				toXDelta, fromYDelta, toYDelta);
 		animation.setDuration(500);
 		animation.setInterpolator(new AccelerateInterpolator());
 		animation.setAnimationListener(new AnimationListener() {
@@ -1287,10 +1280,10 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 							getActivity());
 					yuYingHelpDialog.show();
 				} else {
-					Toast.makeText(getActivity(),
-							"语音搜索:" + recognitionResult,
+					Toast.makeText(getActivity(), "语音搜索:" + recognitionResult,
 							Toast.LENGTH_SHORT).show();
-					ClientSendCommandService.msg="search:"+"|"+recognitionResult;
+					ClientSendCommandService.msg = "search:" + "|"
+							+ recognitionResult;
 					ClientSendCommandService.handler.sendEmptyMessage(1);
 				}
 			} else {
@@ -1298,22 +1291,29 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 			}
 		}
 	}
-	
-	
-/**
- * 音效设置类
- */
-	
-	private class AudioControl{
-		    
-		     public AudioControl(Context context){
-		    	   initAudioView(context);
-		     }	
-		     private void initAudioView(Context context){
-		    	 
-		     }
+
+	/**
+	 * 匹配音效资源ID
+	 */
+
+	private int matchYinxiaoResID(int position) {
+		int resID = -1;
+		if (position < Configure.yinxiao_resID.length) {
+			resID = Configure.yinxiao_resID[position];
+		}
+		return resID;
 	}
-	
-	
-	
+
+	/**
+	 * 匹配灯光资源ID
+	 */
+
+	private int matchLightResID(int position) {
+		int resID = -1;
+		if (position < Configure.light_resID.length) {
+			resID = Configure.light_resID[position];
+		}
+		return resID;
+	}
+
 }

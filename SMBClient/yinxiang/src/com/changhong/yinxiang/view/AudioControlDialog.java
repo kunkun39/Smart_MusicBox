@@ -29,9 +29,9 @@ public class AudioControlDialog extends Dialog {
 //        window.setWindowAnimations(R.style.dialogWindowAnim);
         setContentView(R.layout.control_audio_dialog);
 
-        btnAudiodown = (Button) findViewById(R.id.audiodown);
-        btnAudioup = (Button) findViewById(R.id.audioup);
-        imgback = (ImageView) findViewById(R.id.showaudios);
+//        btnAudiodown = (Button) findViewById(R.id.audiodown);
+//        btnAudioup = (Button) findViewById(R.id.audioup);
+//        imgback = (ImageView) findViewById(R.id.showaudios);
     }
 
     @Override

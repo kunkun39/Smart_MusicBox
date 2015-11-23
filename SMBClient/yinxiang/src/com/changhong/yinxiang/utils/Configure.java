@@ -1,5 +1,8 @@
 package com.changhong.yinxiang.utils;
 
+import com.changhong.common.service.ClientSendCommandService;
+import com.changhong.common.system.MyApplication;
+import com.changhong.yinxiang.R;
 import com.xiami.music.api.utils.RequestMethods;
 
 public class Configure {
@@ -25,8 +28,34 @@ public class Configure {
 	public final static int XIAMI_COLLECT_RECOMMEND=1018;//精选集推荐
 
 	
-	
-	
+	public final static int[] yinxiao_resID={R.drawable.yinxiaomovie,R.drawable.yinxiaotv,R.drawable.yinxiaomusic,R.drawable.yinxiaogame,R.drawable.yinxiaoyd,R.drawable.yinxiaoxt};
+	public final static int[] light_resID={R.drawable.lightsup,R.drawable.lightsdown,R.drawable.lightssun,R.drawable.lightsmoon};
+
+	public static String getAudioSettingCMD(int resID){
+		String re_value="";
+		if(R.drawable.yinxiaomovie==resID){
+			re_value="yinxiaomovie";
+		}else if(R.drawable.yinxiaotv==resID){
+			re_value="yinxiaotv";
+		}else if(R.drawable.yinxiaomusic==resID){
+			re_value="yinxiaomusic";
+		}else if(R.drawable.yinxiaogame==resID){
+			re_value="yinxiaogame";
+		}else if(R.drawable.yinxiaoyd==resID){
+			re_value="yinxiaoyd";
+		}else if(R.drawable.yinxiaoxt==resID){
+			re_value="yinxiaoxt";
+		}else if(R.drawable.lightsup==resID){
+			re_value="lightsup";
+		}else if(R.drawable.lightsdown==resID){
+			re_value="lightsdown";
+		}else if(R.drawable.lightssun==resID){
+			re_value="lightssun";
+		}else if(R.drawable.lightsmoon==resID){
+			re_value="lightsmoon";
+		}
+		return re_value;
+	}
 
 
 
