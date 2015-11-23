@@ -5,24 +5,28 @@
               android:orientation="vertical">
 
  <LinearLayout 
-              android:background="@drawable/yinxiao"
-              android:layout_width="match_parent"
+            android:layout_width="match_parent"
             android:layout_height="0dip"
             android:layout_weight="2.1"
             android:orientation="horizontal">
-              
-  <View  android:layout_width="0dip"
+            
+  <TextView  android:layout_width="0dip"
                     android:layout_height="match_parent"
-                    android:layout_weight="2.1" />
+                    android:layout_weight="2.1"      
+                    android:background="@drawable/audioctrl_bg"     
+                    android:text="音 效"  
+                    android:textColor="@color/white"    
+                    android:textSize="@dimen/text_title" 
+                    android:gravity="center" />
+  
  <GridView
             android:id="@+id/audio_yinxiao"
+            android:background="@drawable/yinxiao"           
             android:layout_width="0dip"
             android:layout_height="match_parent"
-            android:layout_weight="7.9"
-            android:layout_marginLeft="50dip"
-            android:layout_marginRight="10dip"           
+            android:layout_weight="7.9"       
             android:numColumns="3"
-            android:verticalSpacing="10dp"
+            android:verticalSpacing="5dp"
             android:horizontalSpacing="5dp"
             android:stretchMode="columnWidth"
             android:gravity="center"/>
@@ -31,31 +35,32 @@
 	android:layout_width="fill_parent"
 	android:layout_height="0dip"
 	android:layout_weight="2.5"
-	android:background="@drawable/light_bg">
+	>
 	
     <LinearLayout 
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
               android:orientation="horizontal">
-              
-  <View  android:layout_width="0dip"
+            
+  <TextView  android:layout_width="0dip"
                     android:layout_height="match_parent"
-                    android:layout_weight="2.1" />
+                    android:layout_weight="2.1"                                 
+                    android:background="@drawable/audioctrl_bg"     
+                    android:text="灯 光"  
+                    android:textColor="@color/white"    
+                    android:textSize="@dimen/text_title" 
+                    android:gravity="center" />
  <GridView
             android:id="@+id/audio_light"
+            android:background="@drawable/lights"            
             android:layout_width="0dip"
             android:layout_height="match_parent"
-            android:layout_weight="7.9"
-            android:layout_marginTop="30dip"
-            android:layout_marginBottom="30dip"            
-            android:layout_marginLeft="30dip"
-            android:layout_marginRight="5dip"           
+            android:layout_weight="7.9"        
             android:numColumns="2"
-            android:verticalSpacing="70dp"
-            android:horizontalSpacing="70dp"
+            android:verticalSpacing="5dp"
+            android:horizontalSpacing="5dp"
             android:stretchMode="columnWidth"
-            android:gravity="center"/>
- 
+            android:gravity="center"/> 
  </LinearLayout>
  
     <LinearLayout 
@@ -67,15 +72,14 @@
                     android:layout_height="match_parent"
                     android:layout_weight="4.65" /> 
                     
-  <!-- degnguang-->
- <com.changhong.yinxiang.view.SwitchButton
+  <!-- 灯光控制开关-->
+ <Button
             android:id="@+id/lightscontrol"
             android:layout_width="0dip"
             android:layout_height="match_parent"
             android:padding="25dip"
             android:layout_weight="3.2"
-            android:src="@drawable/light5_focus"
-            android:scaleType="fitCenter"/>
+            android:background="@android:color/transparent" />
  
  <View  android:layout_width="0dip"
                     android:layout_height="match_parent"

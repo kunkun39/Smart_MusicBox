@@ -6,15 +6,17 @@
     android:orientation="vertical" >
     
     <!-- 切换按钮 -->
-    <ImageView  android:id="@+id/function_switch"
-        android:layout_width="wrap_content"
+      <CheckBox
+                android:id="@+id/function_switch"
+                android:button="@null"     
+                android:drawableTop="@drawable/audioctrl_selector"                           
+               android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:layout_marginTop="75dip"
         android:layout_marginRight="20dip"
-        android:src="@drawable/audioctrl_selector" 
-        android:scaleType="fitCenter"/>
+                 />
     
 
     <RelativeLayout
@@ -114,11 +116,17 @@
         android:layout_height="match_parent"
         android:layout_marginTop="20dip"  
         android:layout_marginBottom="20dip"    
-        android:visibility="gone"/>
-         
-         
+        android:visibility="gone"/>      
+        
+        <!-- 音量控制 -->
+    <include layout="@layout/control_audio_volume" 
+        android:id="@+id/control_volume"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"        
+        android:layout_gravity="bottom"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"             
+        android:visibility="visible"/>    
     </FrameLayout>
-
-   
 
 </RelativeLayout>
