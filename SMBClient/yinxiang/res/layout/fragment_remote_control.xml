@@ -100,7 +100,7 @@
                     android:layout_width="40dip"
                     android:layout_height="0dip"
                     android:layout_weight="2"
-                    android:layout_gravity="center_horizontal"
+                    android:layout_gravity="center_horizontal"                    
                     android:src="@drawable/btn_b_selector" 
                     android:scaleType="fitCenter" />                  
         </LinearLayout>  
@@ -123,10 +123,8 @@
         android:id="@+id/control_volume"
         android:layout_width="match_parent"
         android:layout_height="50dp"        
-        android:layout_gravity="bottom"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"             
-        android:visibility="visible"/>    
+        android:layout_gravity="bottom"                
+        android:visibility="gone"/>    
     </FrameLayout>
 
 </RelativeLayout>
