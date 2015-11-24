@@ -119,6 +119,7 @@ public class XiamiMainActivity extends BaseActivity {
 			case R.id.xiami_promotion_album_more:
 				intent = new Intent(XiamiMainActivity.this,
 						AlbumListActivity.class);
+				intent.putExtra("albumList", Configure.XIAMI_PROMOTION_ALBUMS);
 				startActivity(intent);
 				break;
 			case R.id.xiami_rank_more:
@@ -174,6 +175,7 @@ public class XiamiMainActivity extends BaseActivity {
 			case R.id.xiami_concert_album:
 				intent = new Intent(XiamiMainActivity.this,
 						AlbumListActivity.class);
+				intent.putExtra("albumList", Configure.XIAMI_NEW_ALBUMS);
 				startActivity(intent);
 				break;
 			case R.id.xiami_concert_scene:
@@ -340,7 +342,7 @@ public class XiamiMainActivity extends BaseActivity {
 		}
 		intent = new Intent(XiamiMainActivity.this,
 				XiamiMusicListActivity.class);
-		intent.putExtra("musicType", Configure.MUSIC_TYPE_COLLECT);
+		intent.putExtra("musicType", Configure.XIAMI_ALBUM_DETAIL);
 		intent.putExtra("albumID", promotionAlbums.get(index).getAlbumId());
 		startActivity(intent);
 	}

@@ -211,9 +211,7 @@ public class XiamiMusicListActivity extends BaseActivity {
 	}
 
 	private void getAlbumList(JsonElement element) {
-		JsonObject obj=element.getAsJsonObject();
-		OnlineAlbum album=mXMMusicData.resolveAlbum(obj);	
-		songsList=album.getSongs();
+		songsList=mXMMusicData.getTheAlbumSongs(element);	
 		mhandler.sendEmptyMessage(MUSIC_LIST_UPDATE);
 		}
 

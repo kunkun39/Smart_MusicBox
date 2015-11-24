@@ -38,6 +38,8 @@ public class AlbumListActivity extends BaseActivity {
 
 	private int curPageSize = 0;
 	private final int MAX_PAGE_SIZE = 50;
+	
+	private int curType=Configure.XIAMI_NEW_ALBUMS;
 
 	private List<XiamiDataModel> SourceDataList = null;
 
@@ -96,9 +98,14 @@ public class AlbumListActivity extends BaseActivity {
 		mHandler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
+				JsonElement jsonData=null;
 				switch (msg.what) {
-				case Configure.XIAMI_RESPOND_SECCESS:
-					JsonElement jsonData = (JsonElement) msg.obj;
+				case Configure.XIAMI_NEW_ALBUMS:
+					jsonData = (JsonElement) msg.obj;
+					handlXiamiResponse(jsonData);
+					break;
+				case Configure.XIAMI_PROMOTION_ALBUMS:
+					jsonData = (JsonElement) msg.obj;
 					handlXiamiResponse(jsonData);
 					break;
 				case Configure.XIAMI_RESPOND_FAILED:
@@ -134,15 +141,34 @@ public class AlbumListActivity extends BaseActivity {
 //			}
 //		}).start();
 		
+		curType=getIntent().getIntExtra("albumList", Configure.XIAMI_NEW_ALBUMS);
+		if(curType==Configure.XIAMI_NEW_ALBUMS){
+			showNewAlbums();
+		}else if(curType==Configure.XIAMI_PROMOTION_ALBUMS){
+			showPromotionAlbums();
+		}
+	}
+
+
+	/*
+	 * 获取新碟上架专辑信息
+	 */
+
+	private void showNewAlbums(){
 		HashMap<String, Object> params = new HashMap<String, Object>();
 		params.put("type", "all");
 		params.put("limit", MAX_PAGE_SIZE);
 		params.put("page", 1);
 		mXMMusicData.getJsonData(mHandler,RequestMethods.METHOD_RANK_NEWALBUM, params);
 	}
-
-
-
+	/*
+	 *获取新碟首发专辑信息 
+	 */
+	private void showPromotionAlbums(){
+		mXMMusicData.getPromotionALbums(mHandler, 1, 15);
+	}
+	
+	
 	/**
 	 * 为ListView填充数据
 	 * 

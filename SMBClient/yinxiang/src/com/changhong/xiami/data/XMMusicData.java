@@ -452,8 +452,6 @@ public class XMMusicData {
 			song.setSongName(songObj.get("song_name").getAsString());
 			song.setArtistName(songObj.get("artist_name").getAsString());
 			song.setArtistLogo(songObj.get("artist_logo").getAsString());
-			
-			
 			song.setSingers(songObj.get("singers").getAsString());
 			dataList.add(song);
 		}
@@ -569,7 +567,7 @@ public class XMMusicData {
 	/*
 	 * 获取指定专辑ID的歌曲列表
 	 */
-	public List<OnlineSong> getTheAlbum(JsonElement element) {
+	public List<OnlineSong> getTheAlbumSongs(JsonElement element) {
 		List<OnlineSong> songList = new ArrayList<OnlineSong>();
 		JsonObject obj = element.getAsJsonObject();
 		element = obj.get("songs");

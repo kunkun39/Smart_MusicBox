@@ -45,7 +45,7 @@ public class XMMusicController {
 				sendRankMusics(playMusicList);
 				break;
 			case Configure.XIAMI_ALBUM_DETAIL:
-				playMusicList=mXMData.getTheAlbum(element);
+				playMusicList=mXMData.getTheAlbumSongs(element);
 				sendRankMusics(playMusicList);
 				break;
 			}
