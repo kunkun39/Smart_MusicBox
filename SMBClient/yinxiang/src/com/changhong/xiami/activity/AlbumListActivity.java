@@ -85,6 +85,7 @@ public class AlbumListActivity extends BaseActivity {
 						long albumID=model.getId();
 						if(albumID>0){
 								Intent intent=new Intent(AlbumListActivity.this, XiamiMusicListActivity.class);
+								intent.putExtra("musicType", Configure.XIAMI_ALBUM_DETAIL);
 								intent.putExtra("albumID", albumID);
 								startActivity(intent);
 						}

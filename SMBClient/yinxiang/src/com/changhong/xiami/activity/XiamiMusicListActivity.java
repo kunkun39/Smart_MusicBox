@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import com.changhong.xiami.data.MusicsListAdapter;
 import com.changhong.xiami.data.SceneInfor;
+import com.changhong.xiami.data.XMMusicData;
 import com.changhong.yinxiang.R;
 import com.changhong.yinxiang.activity.BaseActivity;
 import com.changhong.yinxiang.utils.Configure;
@@ -39,7 +40,7 @@ public class XiamiMusicListActivity extends BaseActivity {
 	private ListView musicsList;
 	private MusicsListAdapter adapter;
 	private List<OnlineSong> songsList;
-	private List<OnlineSong> playList=new ArrayList<OnlineSong>();
+	private List<OnlineSong> playList = new ArrayList<OnlineSong>();
 	private OnlineAlbum album;
 	private long albumID = 0;
 	private int albumIndex = 0;
@@ -51,7 +52,8 @@ public class XiamiMusicListActivity extends BaseActivity {
 	private int curMusicType = 1;
 	private String curTitle;
 	private Handler mhandler = new Handler() {
-		JsonElement element=null;
+		JsonElement element = null;
+
 		@Override
 		public void handleMessage(Message msg) {
 			// TODO Auto-generated method stub
@@ -71,9 +73,9 @@ public class XiamiMusicListActivity extends BaseActivity {
 				albumName.setText(curTitle);
 				adapter.setData(songsList);
 				break;
-			case MUSIC_TYPE_ALBUM: // 专辑音乐类型1
-				albumID = getIntent().getIntExtra("albumID", 0);
-				// getAlbumList();
+			case Configure.XIAMI_ALBUM_DETAIL: // 专辑音乐类型1
+				element=(JsonElement) msg.obj;
+				getAlbumList(element);
 				break;
 
 			case Configure.MUSIC_TYPE_COLLECT: // 精选集音乐类型3
@@ -104,7 +106,7 @@ public class XiamiMusicListActivity extends BaseActivity {
 				songsList = mXMMusicData.getSongList(element);
 				mhandler.sendEmptyMessage(MUSIC_LIST_UPDATE);
 				break;
-			case Configure.XIAMI_RANK_HUAYU:
+			case Configure.XIAMI_RANK_DETAIL:
 				element = (JsonElement) msg.obj;
 				showRankMusics(element);
 				break;
@@ -154,97 +156,69 @@ public class XiamiMusicListActivity extends BaseActivity {
 				finish();
 			}
 		});
-		
+
 		musicsList.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				// TODO Auto-generated method stub
-				
-				if(!playList.isEmpty()){
+
+				if (!playList.isEmpty()) {
 					playList.clear();
 				}
-				for(int i=position;i<songsList.size();i++){
+				for (int i = position; i < songsList.size(); i++) {
 					playList.add(songsList.get(i));
 				}
-				
+
 				new Thread(new Runnable() {
-					
+
 					@Override
 					public void run() {
 						// TODO Auto-generated method stub
 						Looper.prepare();
-						playList=mXMMusicData.getDetailList(playList);
-						mXMMusicData.sendMusics(XiamiMusicListActivity.this,playList);
+						playList = mXMMusicData.getDetailList(playList);
+						mXMMusicData.sendMusics(XiamiMusicListActivity.this,
+								playList);
 					}
 				}).start();
-				
+
 			}
 		});
-		
+
 		if (Configure.XIAMI_TODAY_RECOMSONGS == curMusicType) {
 			mXMMusicData.getTodayRecom(mhandler, 20);
 		} else if (Configure.XIAMI_RANK_HUAYU == curMusicType) {
 			curTitle = getString(R.string.rank_huayu);
 			mXMMusicData.getHuayuRank(mhandler);
-		}  else if (Configure.XIAMI_RANK_ALL == curMusicType) {
+		} else if (Configure.XIAMI_RANK_ALL == curMusicType) {
 			curTitle = getString(R.string.rank_top);
 			mXMMusicData.getALLRank(mhandler);
-		}else if (Configure.XIAMI_RANK_LIST == curMusicType) {
-			Intent intent=getIntent();
-			curTitle =intent.getStringExtra("rankTitle");
-			String rankType=intent.getStringExtra("rankType");
-			mXMMusicData.getSignaRank(mhandler,rankType);
-		} else {
+		} else if (Configure.XIAMI_RANK_LIST == curMusicType) {
+			Intent intent = getIntent();
+			curTitle = intent.getStringExtra("rankTitle");
+			String rankType = intent.getStringExtra("rankType");
+			mXMMusicData.getTheRank(mhandler, rankType);
+		}else if (Configure.XIAMI_ALBUM_DETAIL == curMusicType) {
+			albumID=getIntent().getLongExtra("albumID", 0);
+			if(0==albumID){
+				return;
+			}
+			mXMMusicData.getTheAlbum(mhandler, albumID);
+		}else {
 			mhandler.sendEmptyMessage(curMusicType);
 		}
 	}
 
-	// private void getAlbumList() {
-	//
-	// new Thread(new Runnable() {
-	//
-	// @Override
-	// public void run() {
-	// // TODO Auto-generated method stub
-	//
-	// //测试代码
-	// if(curMusicType == MUSIC_TYPE_ALBUM){
-	// ArrayList<OnlineAlbum> albumList = (ArrayList<OnlineAlbum>)
-	// mXMMusicData.getNewAlbums(
-	// LanguageType.huayu, 10, 1);
-	// album = albumList.get(albumIndex);
-	// albumID=album.getAlbumId();
-	// //根据ID获取专辑相信信息，带歌曲列表
-	// album = XMMusicData.getInstance(XiamiMusicListActivity.this)
-	// .getDetailAlbum(albumID);
-	// songsList=album.getSongs();
-	// curTitle=album.getAlbumName();
-	//
-	// }else if(curMusicType == MUSIC_TYPE_SCENE){
-	// OnlineCollect mOnlineCollect=
-	// mXMMusicData.getCollectDetailSync((int)albumID);
-	// songsList=mOnlineCollect.getSongs();
-	// curTitle=mOnlineCollect.getCollectName();
-	// }else if(curMusicType == MUSIC_TYPE_COLLECT){
-	// OnlineCollect mOnlineCollect=
-	// mXMMusicData.getCollectDetailSync((int)albumID);
-	// songsList=mOnlineCollect.getSongs();
-	// curTitle=mOnlineCollect.getCollectName();
-	// }
-	// //根据ID获取专辑相信信息，带歌曲列表
-	// mhandler.sendEmptyMessage(MUSIC_LIST_UPDATE);
-	//
-	// }
-	// }).start();
-	//
-	//
-	// }
+	private void getAlbumList(JsonElement element) {
+		JsonObject obj=element.getAsJsonObject();
+		OnlineAlbum album=mXMMusicData.resolveAlbum(obj);	
+		songsList=album.getSongs();
+		mhandler.sendEmptyMessage(MUSIC_LIST_UPDATE);
+		}
 
-	private void showRankMusics(JsonElement element){
-		
-		
+	private void showRankMusics(JsonElement element) {
+
 		songsList = mXMMusicData.getRankSongList(element);
 		mhandler.sendEmptyMessage(MUSIC_LIST_UPDATE);
 	}

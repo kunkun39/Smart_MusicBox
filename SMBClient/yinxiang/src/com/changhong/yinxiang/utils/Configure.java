@@ -15,10 +15,11 @@ public class Configure {
 	public final static int XIAMI_TODAY_RECOMSONGS=1002;//今日推荐单曲
 	public final static int XIAMI_PROMOTION_ALBUMS=1003;//新碟首发
 	public final static int MUSIC_TYPE_COLLECT=1004;//专辑歌曲列表
-	public final static int XIAMI_RANK_HUAYU=1005;//专辑歌曲列表
-	public final static int XIAMI_RANK_ALL=1006;//专辑歌曲列表
+	public final static int XIAMI_RANK_HUAYU=1005;//华语排行榜
+	public final static int XIAMI_RANK_ALL=1006;//全部歌曲排行榜
 	public final static int XIAMI_RANK_LIST=1007;//榜单列表
-	
+	public final static int XIAMI_RANK_DETAIL=1008;//指定榜单类型
+	public final static int XIAMI_ALBUM_DETAIL=1009;//指定指定专辑
 	
 	public final static int XIAMI_ARTIST_WORDBOOK=1014;//艺人大全
 	public final static int XIAMI_RECOMMEND_PROMOTIONS_ARTISTS=1015;//推荐艺人
@@ -81,13 +82,15 @@ public class Configure {
 		}else if(str.equals(Configure.RequestMethods_PROMOTION_ALBUMS)){
 			i=XIAMI_PROMOTION_ALBUMS;
 		}else if(str.equals(RequestMethods.METHOD_RANK_DETAIL)){
-			i=XIAMI_RANK_HUAYU;
+			i=XIAMI_RANK_DETAIL;
 		}	else if(str.equals(RequestMethods.METHOD_RANK_LIST )){
 			i=XIAMI_RANK_LIST;
 		}else if(str.equals(RequestMethods.METHOD_ARTIST_HOTSONGS)){
 			i=XIAMI_ARTIST_HOTSONGS;
 		}else if(str.equals(RequestMethods.METHOD_COLLECT_RECOMMEND)){
 			i=XIAMI_COLLECT_RECOMMEND;
+		}else if(str.equals(RequestMethods.METHOD_ALBUMS_DETAIL)){
+			i=XIAMI_ALBUM_DETAIL;
 		}		
 		
 		return i;

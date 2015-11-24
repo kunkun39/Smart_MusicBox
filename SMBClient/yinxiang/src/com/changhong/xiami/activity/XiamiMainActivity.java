@@ -6,6 +6,7 @@ import java.util.List;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -29,6 +30,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.xiami.sdk.entities.OnlineAlbum;
 import com.xiami.sdk.entities.OnlineSong;
+import com.xiami.sdk.entities.RankType;
 import com.xiami.sdk.utils.ImageUtil;
 
 public class XiamiMainActivity extends BaseActivity {
@@ -143,16 +145,19 @@ public class XiamiMainActivity extends BaseActivity {
 
 				break;
 			case R.id.xiami_new_album1_play:
+				playAlbum(0);
 				break;
 			case R.id.xiami_new_album2:
 				dealPromotionAlbums(intent, 1);
 				break;
 			case R.id.xiami_new_album2_play:
+				playAlbum(1);
 				break;
 			case R.id.xiami_new_album3:
 				dealPromotionAlbums(intent, 2);
 				break;
 			case R.id.xiami_new_album3_play:
+				playAlbum(2);
 				break;
 			case R.id.xiami_hyrank_image:
 				dealRank(1);
@@ -328,6 +333,7 @@ public class XiamiMainActivity extends BaseActivity {
 				+ album3.getArtistName());
 	}
 
+	//进入新碟首发歌曲详情
 	private void dealPromotionAlbums(Intent intent, int index) {
 		if (null == promotionAlbums || promotionAlbums.size() < 3) {
 			return;
@@ -338,6 +344,25 @@ public class XiamiMainActivity extends BaseActivity {
 		intent.putExtra("albumID", promotionAlbums.get(index).getAlbumId());
 		startActivity(intent);
 	}
+	//播放新碟首发
+	private void playAlbum(int i){
+		OnlineAlbum album=promotionAlbums.get(i);
+		final long albumID=album.getAlbumId();
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				mXMController.playTheAlbum(albumID);
+				
+			}
+		}).start();
+	}
+	
+	//播放排行榜歌曲
+	private void playRankSongs(String type){
+		mXMController.playRankMusic(type);
+	}
 
 	private void dealRank(int i) {
 		Intent intent = null;
@@ -347,14 +372,14 @@ public class XiamiMainActivity extends BaseActivity {
 			intent.putExtra("musicType", Configure.XIAMI_RANK_HUAYU);
 			startActivity(intent);
 		} else if (2 == i) {
-
+			playRankSongs(RankType.hito.toString());
 		} else if (3 == i) {
 			intent = new Intent(XiamiMainActivity.this,
 					XiamiMusicListActivity.class);
 			intent.putExtra("musicType", Configure.XIAMI_RANK_ALL);
 			startActivity(intent);
 		} else if (4 == i) {
-
+			playRankSongs(RankType.music_all.toString());
 		}
 	}
 

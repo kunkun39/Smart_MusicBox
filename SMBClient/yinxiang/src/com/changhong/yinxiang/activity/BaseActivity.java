@@ -4,6 +4,7 @@ import com.changhong.common.service.ClientSendCommandService;
 import com.changhong.common.service.NetworkConnectChangedReceiver;
 import com.changhong.common.system.MyApplication;
 import com.changhong.common.widgets.BoxSelectAdapter;
+import com.changhong.xiami.data.XMMusicController;
 import com.changhong.xiami.data.XMMusicData;
 
 import android.app.Activity;
@@ -39,6 +40,7 @@ public abstract class BaseActivity extends Activity{
 	
 	//json数据解析
 	protected XMMusicData mXMMusicData;
+	protected XMMusicController mXMController;
 
 	
 	@Override
@@ -54,6 +56,7 @@ public abstract class BaseActivity extends Activity{
 	protected  void initData(){
 		
 		mXMMusicData=XMMusicData.getInstance(this);
+		mXMController=XMMusicController.getInstance(this);
 		/**
 		 * IP连接部分
 		 */

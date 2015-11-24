@@ -270,12 +270,24 @@ public class XMMusicData {
 	/*
 	 * 获取指定类型榜单的歌曲列�?
 	 */
-	public void getSignaRank(Handler handler, String type) {
+	public void getTheRank(Handler handler, String type) {
 		HashMap<String, Object> params = new HashMap<String, Object>();
 		params.put("type", type);
 		params.put("time", 0);
 		RequestDataTask requestDataTask = new RequestDataTask(this, handler,
 				RequestMethods.METHOD_RANK_DETAIL);
+		requestDataTask.execute(params);
+	}
+
+	/*
+	 * 获取指定专辑ID的歌曲列表
+	 */
+	public void getTheAlbum(Handler handler, long id) {
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("album_id", id);
+		params.put("full_des", false);
+		RequestDataTask requestDataTask = new RequestDataTask(this, handler,
+				RequestMethods.METHOD_ALBUMS_DETAIL);
 		requestDataTask.execute(params);
 	}
 
@@ -361,7 +373,7 @@ public class XMMusicData {
 	 * 
 	 */
 	public List<OnlineAlbum> albumsElementToList(JsonElement element) {
-		String albumImage = null;
+
 		List<OnlineAlbum> dataList = new ArrayList<OnlineAlbum>();
 		if (element.isJsonArray()) {
 
@@ -369,38 +381,39 @@ public class XMMusicData {
 			int size = array.size();
 			for (int i = 0; i < size; i++) {
 				JsonObject itemObj = array.get(i).getAsJsonObject();
-
-				OnlineAlbum onlineAlbum = new OnlineAlbum();
-				onlineAlbum.setAlbumId(itemObj.get("album_id").getAsInt());
-				onlineAlbum.setAlbumName(itemObj.get("album_name")
-						.getAsString());
-				onlineAlbum.setArtistId(itemObj.get("artist_id").getAsInt());
-				onlineAlbum.setArtistName(itemObj.get("artist_name")
-						.getAsString());
-
-				// 当有专辑图片时，显示专辑图片，反之则显示艺术家图�?
-				albumImage = itemObj.get("album_logo").getAsString();
-				if (!StringUtils.hasLength(albumImage)) {
-					albumImage = itemObj.get("artist_logo").getAsString();
-				}
-				onlineAlbum.setArtistLogo(albumImage);
-
-				onlineAlbum.setAlbumCategory(itemObj.get("album_category")
-						.getAsString());
-				onlineAlbum.setCompany(itemObj.get("company").getAsString());
-				onlineAlbum.setLanguage(itemObj.get("language").getAsString());
-				onlineAlbum.setDescription(itemObj.get("description")
-						.getAsString());
-				onlineAlbum.setCdCount(itemObj.get("cd_count").getAsString());
-				onlineAlbum.setPublishTime(itemObj.get("gmt_publish")
-						.getAsInt());
-				onlineAlbum.setSongCount(itemObj.get("song_count").getAsInt());
-				onlineAlbum.setGrade(itemObj.get("grade").getAsFloat());
+				OnlineAlbum onlineAlbum = resolveAlbum(itemObj);
 				dataList.add(onlineAlbum);
 			}
 		}
 
 		return dataList;
+	}
+
+	public OnlineAlbum resolveAlbum(JsonObject obj) {
+		String albumImage = null;
+		OnlineAlbum album = new OnlineAlbum();
+		album.setAlbumId(obj.get("album_id").getAsInt());
+		album.setAlbumName(obj.get("album_name").getAsString());
+		album.setArtistId(obj.get("artist_id").getAsInt());
+		album.setArtistName(obj.get("artist_name").getAsString());
+
+		// 当有专辑图片时，显示专辑图片，反之则显示艺术家图�?
+		albumImage = obj.get("album_logo").getAsString();
+		if (!StringUtils.hasLength(albumImage)) {
+			albumImage = obj.get("artist_logo").getAsString();
+		}
+		album.setArtistLogo(albumImage);
+
+		album.setAlbumCategory(obj.get("album_category").getAsString());
+		album.setCompany(obj.get("company").getAsString());
+		album.setLanguage(obj.get("language").getAsString());
+		album.setDescription(obj.get("description").getAsString());
+		album.setCdCount(obj.get("cd_count").getAsString());
+		album.setPublishTime(obj.get("gmt_publish").getAsInt());
+		album.setSongCount(obj.get("song_count").getAsInt());
+		album.setGrade(obj.get("grade").getAsFloat());
+
+		return album;
 	}
 
 	/**
@@ -420,21 +433,27 @@ public class XMMusicData {
 		int size = arraySong.size();
 
 		for (int i = 0; i < size; i++) {
-
 			JsonObject songObj = arraySong.get(i).getAsJsonObject();
 			OnlineSong song = new OnlineSong();
 			song.setSongId(songObj.get("song_id").getAsLong());
 			song.setArtistId(songObj.get("artist_id").getAsLong());
 			song.setSongId(songObj.get("song_id").getAsLong());
-			song.setAlbumId(songObj.get("album_id").getAsLong());
+			try {
+				song.setAlbumId(songObj.get("album_id").getAsLong());
+				song.setAlbumName(songObj.get("album_name").getAsString());
+				song.setLogo(songObj.get("album_logo").getAsString());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
 			song.setLength(songObj.get("length").getAsInt());
 			song.setMusicType(songObj.get("music_type").getAsInt());
 			song.setCdSerial(songObj.get("cd_serial").getAsInt());
 			song.setSongName(songObj.get("song_name").getAsString());
 			song.setArtistName(songObj.get("artist_name").getAsString());
 			song.setArtistLogo(songObj.get("artist_logo").getAsString());
-			song.setAlbumName(songObj.get("album_name").getAsString());
-			song.setLogo(songObj.get("album_logo").getAsString());
+			
+			
 			song.setSingers(songObj.get("singers").getAsString());
 			dataList.add(song);
 		}
@@ -545,6 +564,17 @@ public class XMMusicData {
 		// }
 
 		return dataList;
+	}
+
+	/*
+	 * 获取指定专辑ID的歌曲列表
+	 */
+	public List<OnlineSong> getTheAlbum(JsonElement element) {
+		List<OnlineSong> songList = new ArrayList<OnlineSong>();
+		JsonObject obj = element.getAsJsonObject();
+		element = obj.get("songs");
+		songList = getSongList(element);
+		return songList;
 	}
 
 	/**
@@ -790,26 +820,29 @@ public class XMMusicData {
 				for (OnlineSong onlineSong : list) {
 					String tempPath = Encryptor.decryptUrl(onlineSong
 							.getListenFile());// 解密播放地址
-//					 String tempPath = onlineSong.getListenFile();
+					// String tempPath = onlineSong.getListenFile();
 					String title = onlineSong.getSongName().trim();
 					String artist = onlineSong.getArtistName().trim();
 					int duration = onlineSong.getLength();
 					JSONObject music = new JSONObject();
 
-//					if (tempPath.startsWith(HTTPDService.defaultHttpServerPath)) {
-//						tempPath = tempPath.replace(
-//								HTTPDService.defaultHttpServerPath, "")
-//								.replace(" ", "%20");
-//					} else {
-//						for (String otherHttpServerPath : HTTPDService.otherHttpServerPaths) {
-//							if (tempPath.startsWith(otherHttpServerPath)) {
-//								tempPath = tempPath.replace(
-//										otherHttpServerPath, "").replace(" ",
-//										"%20");
-//							}
-//						}
-//					}
-//					tempPath = httpAddress + tempPath;
+					// if
+					// (tempPath.startsWith(HTTPDService.defaultHttpServerPath))
+					// {
+					// tempPath = tempPath.replace(
+					// HTTPDService.defaultHttpServerPath, "")
+					// .replace(" ", "%20");
+					// } else {
+					// for (String otherHttpServerPath :
+					// HTTPDService.otherHttpServerPaths) {
+					// if (tempPath.startsWith(otherHttpServerPath)) {
+					// tempPath = tempPath.replace(
+					// otherHttpServerPath, "").replace(" ",
+					// "%20");
+					// }
+					// }
+					// }
+					// tempPath = httpAddress + tempPath;
 
 					music.put("tempPath", tempPath);
 					music.put("title", title);
@@ -851,7 +884,7 @@ public class XMMusicData {
 
 	public List<OnlineSong> getDetailList(List<OnlineSong> list) {
 		List<OnlineSong> dataList = new ArrayList<OnlineSong>();
-		
+
 		if (list != null && list.size() > 0) {
 			for (int i = 0; i < list.size(); i++) {
 				OnlineSong song = new OnlineSong();
