@@ -15,6 +15,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.changhong.common.service.ClientSendCommandService;
@@ -39,7 +40,7 @@ public class XiamiMainActivity extends BaseActivity {
 	 * 控件申明
 	 */
 	// 更多信息
-	private Button moreToday, moreAlbum, moreRank, moreConcert;
+	private RelativeLayout moreToday, moreAlbum, moreRank, moreConcert;
 
 	// 今日歌曲�?
 	private HorizontalListView horListView;
@@ -218,10 +219,10 @@ public class XiamiMainActivity extends BaseActivity {
 		 * 本类控件
 		 */
 
-		moreToday = (Button) findViewById(R.id.xiami_recommend_today_more);
-		moreAlbum = (Button) findViewById(R.id.xiami_promotion_album_more);
-		moreRank = (Button) findViewById(R.id.xiami_rank_more);
-		moreConcert = (Button) findViewById(R.id.xiami_concert_more);
+		moreToday = (RelativeLayout) findViewById(R.id.xiami_recommend_today_more);
+		moreAlbum = (RelativeLayout) findViewById(R.id.xiami_promotion_album_more);
+		moreRank = (RelativeLayout) findViewById(R.id.xiami_rank_more);
+		moreConcert = (RelativeLayout) findViewById(R.id.xiami_concert_more);
 
 		horListView = (HorizontalListView) findViewById(R.id.xiami_recommend_today);
 		xiamiMainSearch = (ImageView) findViewById(R.id.xiami_search);

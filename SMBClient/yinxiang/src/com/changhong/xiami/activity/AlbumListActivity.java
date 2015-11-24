@@ -38,16 +38,16 @@ public class AlbumListActivity extends BaseActivity {
 
 	private int curPageSize = 0;
 	private final int MAX_PAGE_SIZE = 50;
-	
-	private int curType=Configure.XIAMI_NEW_ALBUMS;
+
+	private int curType = Configure.XIAMI_NEW_ALBUMS;
 
 	private List<XiamiDataModel> SourceDataList = null;
 
 	public static final int HIGH_LIGHTED_LETTER = 0x01;
-	  /**
-     * 专辑发行日期格式
-     */
-    private SimpleDateFormat mFormat = new SimpleDateFormat("yyyy-MM-dd");
+	/**
+	 * 专辑发行日期格式
+	 */
+	private SimpleDateFormat mFormat = new SimpleDateFormat("yyyy-MM-dd");
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -57,7 +57,6 @@ public class AlbumListActivity extends BaseActivity {
 	@Override
 	protected void initView() {
 		setContentView(R.layout.xiami_album_list);
-
 
 		/**
 		 * IP连接部分
@@ -79,26 +78,27 @@ public class AlbumListActivity extends BaseActivity {
 
 		// 长按进入歌手详情
 		mAlbumList.setOnItemClickListener(new OnItemClickListener() {
-					@Override
-					public void onItemClick(AdapterView<?> parent,
-							View view, int position, long id) {
-						
-						XiamiDataModel model = (XiamiDataModel) adapter.getItem(position);			
-						long albumID=model.getId();
-						if(albumID>0){
-								Intent intent=new Intent(AlbumListActivity.this, XiamiMusicListActivity.class);
-								intent.putExtra("musicType", Configure.XIAMI_ALBUM_DETAIL);
-								intent.putExtra("albumID", albumID);
-								startActivity(intent);
-						}
-					}
-				});
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
 
-		
+				XiamiDataModel model = (XiamiDataModel) adapter
+						.getItem(position);
+				long albumID = model.getId();
+				if (albumID > 0) {
+					Intent intent = new Intent(AlbumListActivity.this,
+							XiamiMusicListActivity.class);
+					intent.putExtra("musicType", Configure.XIAMI_ALBUM_DETAIL);
+					intent.putExtra("albumID", albumID);
+					startActivity(intent);
+				}
+			}
+		});
+
 		mHandler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
-				JsonElement jsonData=null;
+				JsonElement jsonData = null;
 				switch (msg.what) {
 				case Configure.XIAMI_NEW_ALBUMS:
 					jsonData = (JsonElement) msg.obj;
@@ -109,9 +109,10 @@ public class AlbumListActivity extends BaseActivity {
 					handlXiamiResponse(jsonData);
 					break;
 				case Configure.XIAMI_RESPOND_FAILED:
-					int errorCode=msg.arg1;
-					Toast.makeText(AlbumListActivity.this, errorCode,	Toast.LENGTH_SHORT).show();
-					break;					
+					int errorCode = msg.arg1;
+					Toast.makeText(AlbumListActivity.this, errorCode,
+							Toast.LENGTH_SHORT).show();
+					break;
 				}
 			}
 		};
@@ -121,54 +122,57 @@ public class AlbumListActivity extends BaseActivity {
 	protected void onStart() {
 		super.onStart();
 
-//		// 获取推荐歌曲
-//		new Thread(new Runnable() {
-//			@Override
-//			public void run() {
-//				final List<OnlineAlbum> results = mXMMusicData.getWeekHotAlbumsSync(MAX_PAGE_SIZE, 1);
-//				
-//				SourceDataList = filledData(results);					
-//				mAlbumList.post(new Runnable() {
-//					@Override
-//					public void run() {
-//						if(null !=SourceDataList){
-//						       adapter.updateListView(SourceDataList);
-//						}else{
-//                            Toast.makeText(AlbumListActivity.this,"没有搜索到专辑信息", Toast.LENGTH_SHORT).show();
-//						}
-//					}
-//				});		
-//			}
-//		}).start();
-		
-		curType=getIntent().getIntExtra("albumList", Configure.XIAMI_NEW_ALBUMS);
-		if(curType==Configure.XIAMI_NEW_ALBUMS){
+		// // 获取推荐歌曲
+		// new Thread(new Runnable() {
+		// @Override
+		// public void run() {
+		// final List<OnlineAlbum> results =
+		// mXMMusicData.getWeekHotAlbumsSync(MAX_PAGE_SIZE, 1);
+		//
+		// SourceDataList = filledData(results);
+		// mAlbumList.post(new Runnable() {
+		// @Override
+		// public void run() {
+		// if(null !=SourceDataList){
+		// adapter.updateListView(SourceDataList);
+		// }else{
+		// Toast.makeText(AlbumListActivity.this,"没有搜索到专辑信息",
+		// Toast.LENGTH_SHORT).show();
+		// }
+		// }
+		// });
+		// }
+		// }).start();
+
+		curType = getIntent().getIntExtra("albumList",
+				Configure.XIAMI_NEW_ALBUMS);
+		if (curType == Configure.XIAMI_NEW_ALBUMS) {
 			showNewAlbums();
-		}else if(curType==Configure.XIAMI_PROMOTION_ALBUMS){
+		} else if (curType == Configure.XIAMI_PROMOTION_ALBUMS) {
 			showPromotionAlbums();
 		}
 	}
-
 
 	/*
 	 * 获取新碟上架专辑信息
 	 */
 
-	private void showNewAlbums(){
+	private void showNewAlbums() {
 		HashMap<String, Object> params = new HashMap<String, Object>();
 		params.put("type", "all");
 		params.put("limit", MAX_PAGE_SIZE);
 		params.put("page", 1);
-		mXMMusicData.getJsonData(mHandler,RequestMethods.METHOD_RANK_NEWALBUM, params);
+		mXMMusicData.getJsonData(mHandler, RequestMethods.METHOD_RANK_NEWALBUM,
+				params);
 	}
+
 	/*
-	 *获取新碟首发专辑信息 
+	 * 获取新碟首发专辑信息
 	 */
-	private void showPromotionAlbums(){
+	private void showPromotionAlbums() {
 		mXMMusicData.getPromotionALbums(mHandler, 1, 15);
 	}
-	
-	
+
 	/**
 	 * 为ListView填充数据
 	 * 
@@ -178,74 +182,69 @@ public class AlbumListActivity extends BaseActivity {
 	 */
 	private List<XiamiDataModel> filledData(List<OnlineAlbum> albums) {
 
-		if(null == albums)return null;
-		
+		if (null == albums)
+			return null;
+
 		List<XiamiDataModel> albumList = new ArrayList<XiamiDataModel>();
 
 		int size = albums.size();
 		for (int i = 0; i < size; i++) {
 
-		    OnlineAlbum album = (OnlineAlbum) albums.get(i);
-		    long albumID=album.getAlbumId();
-		    String imgUrl=album.getArtistLogo();
+			OnlineAlbum album = (OnlineAlbum) albums.get(i);
+			long albumID = album.getAlbumId();
+			String imgUrl = album.getArtistLogo();
 			String name = album.getAlbumName();
-            Date mIssueTime = new Date(album.getPublishTime()*1000);
-			String content=album.getArtistName()+"\n"+album.getAlbumCategory()+" "+mFormat.format(mIssueTime);
-		
-		   		    
+			Date mIssueTime = new Date(album.getPublishTime() * 1000);
+			String content = album.getArtistName() + "\n"
+					+ album.getAlbumCategory() + " "
+					+ mFormat.format(mIssueTime);
+
 			XiamiDataModel albumModel = new XiamiDataModel();
 			albumModel.setId(albumID);
 			albumModel.setTitle(name);
-			albumModel.setLogoUrl(imgUrl);			
-			albumModel.setDescription(content);						
+			albumModel.setLogoUrl(imgUrl);
+			albumModel.setDescription(content);
 			albumList.add(albumModel);
 		}
 		return albumList;
 
 	}
-	
-	
-	
-	
+
 	/**
 	 * 位图资源释放
 	 */
-	private void  BitmapRecycle(){
-		int size=SourceDataList.size();
+	private void BitmapRecycle() {
+		int size = SourceDataList.size();
 		for (int i = 0; i < size; i++) {
 			Bitmap bit = SourceDataList.get(i).getLogoImg();
-			if(bit != null && !bit.isRecycled()) {
-			    bit.recycle();
+			if (bit != null && !bit.isRecycled()) {
+				bit.recycle();
 			}
 		}
-		
+
 	}
-	
-		
+
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
 		BitmapRecycle();
 
 	}
-	
+
 	private void handlXiamiResponse(JsonElement jsonData) {
 		if (jsonData != null) {
-			List<OnlineAlbum>OnlineAlbums= mXMMusicData.getAlbumList(jsonData);
-			SourceDataList=filledData(OnlineAlbums);
-			mAlbumList.post(new Runnable() {
-				@Override
-				public void run() {
-					if (null != SourceDataList) {
-						adapter.updateListView(SourceDataList);
-					} else {
-						Toast.makeText(AlbumListActivity.this, "没有搜索到专辑信息",
-								Toast.LENGTH_SHORT).show();
-					}
-				}
-			});
+			List<OnlineAlbum> OnlineAlbums = mXMMusicData
+					.getAlbumList(jsonData);
+			SourceDataList = filledData(OnlineAlbums);
+			if (null != SourceDataList) {
+				adapter.updateListView(SourceDataList);
+			} else {
+				Toast.makeText(AlbumListActivity.this, "没有搜索到专辑信息",
+						Toast.LENGTH_SHORT).show();
+			}
 		} else {
-			Toast.makeText(getApplicationContext(), R.string.error_response,Toast.LENGTH_SHORT).show();
+			Toast.makeText(getApplicationContext(), R.string.error_response,
+					Toast.LENGTH_SHORT).show();
 		}
 
 	}
