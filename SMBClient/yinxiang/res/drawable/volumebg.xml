@@ -1,24 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layer-list   xmlns:android="http://schemas.android.com/apk/res/android" >
-<!-- 滑竿背景 -->
-    <item
-        android:id="@android:id/background"
-        android:drawable="@drawable/volume_point">
-    </item>
-
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     
-<!-- 第二进度条式样 
-    <item
-        android:id="@android:id/secondaryProgress"
-        android:drawable="@drawable/seekbar_secondaryprogress">
+    <item android:id="@android:id/background">
+        <shape>
+            <corners android:radius="10dp" />
+            <gradient
+                    android:startColor="#ffffffff"
+                    android:centerColor="#aa111111"
+                    android:centerY="0.75"
+                    android:endColor="#aa111111"
+                    android:angle="270" />
+        </shape>
     </item>
-    -->
     
     
-<!-- 进度条式样 -->
-    <item
-        android:id="@android:id/progress"
-        android:drawable="@drawable/volume_scale">
+    <item android:id="@android:id/progress">
+        <clip>
+            <shape>
+                <corners android:radius="10dp" />
+                <gradient
+                        android:startColor="#aa111111"
+                        android:centerColor="#aa111111"
+                        android:centerY="0.75"
+                        android:endColor="#aa111111"
+                        android:angle="270"/>
+            </shape>
+        </clip>
     </item>
-
 </layer-list>

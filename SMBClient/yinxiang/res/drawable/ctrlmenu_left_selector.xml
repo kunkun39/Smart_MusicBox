@@ -3,6 +3,6 @@
     <item android:state_pressed="true" android:drawable="@drawable/tv_control_focusl" /> <!--按下时效果-->  
     <item android:state_focused="true" android:drawable="@drawable/tv_control_focusl" /> <!--按下时效果--> 
     <item android:state_selected="true"   android:drawable="@drawable/tv_control_focusl" /> 
-    <item android:drawable="@drawable/default_null" /> 
+    <item android:drawable="@drawable/inull" /> 
     
 </selector> 
