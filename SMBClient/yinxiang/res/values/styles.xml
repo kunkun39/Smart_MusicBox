@@ -154,6 +154,7 @@
 		<item name="android:windowFrame">@null</item>
 		<item name="android:background">#00000000</item>
 		<item name="android:windowIsTranslucent">false</item> 
+		<item name="android:windowIsFloating">true</item><!--是否浮现在activity之上-->		
 		<item name="android:windowBackground">@android:color/transparent</item>
 		<item name="android:backgroundDimEnabled">false</item>
 	</style>
@@ -196,13 +197,12 @@
     
     <!-- 音响子菜单风格 -->
     <style name="yx_tab">  
-    <item name="android:layout_height">wrap_content</item>  
-    <item name="android:layout_width">match_parent</item>  
+    <item name="android:layout_height">match_parent</item>  
+    <item name="android:layout_width">0dip</item>  
     <item name="android:layout_weight">1</item>  
     <item name="android:gravity">center</item>  
     <item name="android:textSize">14sp</item>  
-    <item name="android:paddingTop">5dip</item>  
-    <item name="android:paddingBottom">0dip</item>       
+    <item name="android:layout_margin">15dip</item>  
     <item name="android:button">@null</item>  
    </style>  
    
@@ -236,7 +236,8 @@
 <style name="img_switch"  parent="@android:style/Widget.CompoundButton.CheckBox">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:button">@drawable/switchbtn_selector</item>
+        <item name="android:background">@drawable/switchbtn_selector</item>
+         <item name="android:button">@null</item>        
         <item name="android:layout_margin">3dp</item>      
   </style>
   
