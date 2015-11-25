@@ -345,6 +345,7 @@ public class XiamiMainActivity extends BaseActivity {
 				XiamiMusicListActivity.class);
 		intent.putExtra("musicType", Configure.XIAMI_ALBUM_DETAIL);
 		intent.putExtra("albumID", promotionAlbums.get(index).getAlbumId());
+		intent.putExtra("albumName", promotionAlbums.get(index).getAlbumName());
 		startActivity(intent);
 	}
 	//播放新碟首发

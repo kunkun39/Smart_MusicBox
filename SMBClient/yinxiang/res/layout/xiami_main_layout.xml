@@ -87,6 +87,7 @@
                         android:layout_weight="1"
                         android:background="@color/xiami_second_background"
                         android:scaleType="fitCenter"
+                        style="@style/xiami_main_margin"
                         android:src="@drawable/xmsearch_down" />
 
                     <ImageView
@@ -96,7 +97,9 @@
                         android:layout_weight="2"
                         android:background="@color/xiami_second_background"
                         android:scaleType="fitXY"
-                        android:src="@drawable/xmmain_random" />
+                        android:src="@drawable/xmmain_random" 
+                        style="@style/xiami_main_margin"
+                        />
                 </LinearLayout>
             </LinearLayout>
 
@@ -306,17 +309,17 @@
                         <FrameLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="5dp" >
+                             >
 
                             <ImageView
                                 android:id="@+id/xiami_hyrank_image"
                                 android:layout_width="match_parent"
                                 android:layout_height="@dimen/xiami_main_rank_item_height"
-                                android:layout_gravity="bottom|right"
                                 android:scaleType="fitXY"
                                 android:src="@drawable/xmmain_rank_huayu"
                                 android:textColor="@color/black"
-                                android:textSize="20sp" />
+                                style="@style/xiami_main_margin"
+                                 />
 
                             <ImageView
                                 android:id="@+id/xiami_hyrank_play"
@@ -324,24 +327,24 @@
                                 android:layout_height="40dp"
                                 android:layout_gravity="bottom|right"
                                 android:layout_marginBottom="@dimen/xiami_main_rank_play_bottom"
-                                android:layout_marginRight="5dp"
+                                android:layout_marginRight="10dp"
                                 android:src="@drawable/play" />
                         </FrameLayout>
 
                         <FrameLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="5dp" >
+                             >
 
                             <ImageView
                                 android:id="@+id/xiami_allrank_image"
                                 android:layout_width="match_parent"
                                 android:layout_height="@dimen/xiami_main_rank_item_height"
-                                android:layout_gravity="bottom|right"
                                 android:scaleType="fitXY"
                                 android:src="@drawable/xmmain_rank_all"
                                 android:textColor="@color/black"
-                                android:textSize="20sp" />
+                                style="@style/xiami_main_margin"
+                                />
 
                             <ImageView
                                 android:id="@+id/xiami_allrank_play"
@@ -349,7 +352,7 @@
                                 android:layout_height="40dp"
                                 android:layout_gravity="bottom|right"
                                 android:layout_marginBottom="@dimen/xiami_main_rank_play_bottom"
-                                android:layout_marginRight="5dp"
+                                android:layout_marginRight="10dp"
                                 android:src="@drawable/play" />
                         </FrameLayout>
                     </LinearLayout>
@@ -404,8 +407,7 @@
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="@dimen/xiami_main_rank_item_height"
-                            android:layout_marginTop="5dp"
+                            android:layout_height="wrap_content"
                             android:orientation="horizontal" >
 
                             <ImageView
@@ -414,6 +416,7 @@
                                 android:layout_height="@dimen/xiami_main_rank_item_height"
                                 android:layout_weight="1"
                                 android:scaleType="fitXY"
+                                style="@style/xiami_main_margin"
                                 android:src="@drawable/xmmain_concert_album" />
 
                             <ImageView
@@ -422,13 +425,13 @@
                                 android:layout_height="@dimen/xiami_main_rank_item_height"
                                 android:layout_weight="1"
                                 android:scaleType="fitXY"
+                                style="@style/xiami_main_margin"
                                 android:src="@drawable/xmmain_concert_scene" />
                         </LinearLayout>
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="@dimen/xiami_main_rank_item_height"
-                            android:layout_marginTop="5dp"
+                            android:layout_height="wrap_content"
                             android:orientation="horizontal" >
 
                             <ImageView
@@ -437,6 +440,7 @@
                                 android:layout_height="@dimen/xiami_main_rank_item_height"
                                 android:layout_weight="1"
                                 android:scaleType="fitXY"
+                                style="@style/xiami_main_margin"
                                 android:src="@drawable/xmmain_concert_artist" />
 
                             <ImageView
@@ -445,6 +449,7 @@
                                 android:layout_height="@dimen/xiami_main_rank_item_height"
                                 android:layout_weight="1"
                                 android:scaleType="fitXY"
+                                style="@style/xiami_main_margin"
                                 android:src="@drawable/xmmain_concert_collection" />
                         </LinearLayout>
                     </LinearLayout>

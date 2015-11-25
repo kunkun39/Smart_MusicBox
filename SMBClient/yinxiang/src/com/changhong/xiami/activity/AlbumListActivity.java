@@ -232,9 +232,15 @@ public class AlbumListActivity extends BaseActivity {
 	}
 
 	private void handlXiamiResponse(JsonElement jsonData) {
+		List<OnlineAlbum> OnlineAlbums=null;
 		if (jsonData != null) {
-			List<OnlineAlbum> OnlineAlbums = mXMMusicData
-					.getAlbumList(jsonData);
+			if (curType == Configure.XIAMI_NEW_ALBUMS) {
+				OnlineAlbums = mXMMusicData
+						.getAlbumList(jsonData);
+				
+			}else if(curType==Configure.XIAMI_PROMOTION_ALBUMS){
+				OnlineAlbums= mXMMusicData.albumsElementToList(jsonData);
+			}
 			SourceDataList = filledData(OnlineAlbums);
 			if (null != SourceDataList) {
 				adapter.updateListView(SourceDataList);

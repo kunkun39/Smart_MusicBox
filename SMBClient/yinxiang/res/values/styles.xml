@@ -239,4 +239,13 @@
         <item name="android:button">@drawable/switchbtn_selector</item>
         <item name="android:layout_margin">3dp</item>      
   </style>
+  
+<style 
+    name="xiami_main_margin">
+    <item name="android:layout_marginTop">5dp</item>
+    <item name="android:layout_marginLeft">5dp</item>
+    <item name="android:layout_marginBottom">5dp</item>
+    <item name="android:layout_marginRight">5dp</item>
+    
+</style>
 </resources>

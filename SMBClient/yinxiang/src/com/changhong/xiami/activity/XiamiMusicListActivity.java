@@ -201,6 +201,7 @@ public class XiamiMusicListActivity extends BaseActivity {
 			mXMMusicData.getTheRank(mhandler, rankType);
 		}else if (Configure.XIAMI_ALBUM_DETAIL == curMusicType) {
 			albumID=getIntent().getLongExtra("albumID", 0);
+			curTitle=getIntent().getStringExtra("albumName");
 			if(0==albumID){
 				return;
 			}
