@@ -39,17 +39,17 @@ public class Configure {
 	public static String getAudioSettingCMD(int resID) {
 		String re_value = "";
 		if (R.drawable.yinxiaomovie == resID) {
-			re_value = "yinxiaomovie";
+			re_value = "yxmovie";
 		} else if (R.drawable.yinxiaotv == resID) {
-			re_value = "yinxiaotv";
+			re_value = "yxtv";
 		} else if (R.drawable.yinxiaomusic == resID) {
-			re_value = "yinxiaomusic";
+			re_value = "yxmusic";
 		} else if (R.drawable.yinxiaogame == resID) {
-			re_value = "yinxiaogame";
+			re_value = "yxgame";
 		} else if (R.drawable.yinxiaoyd == resID) {
-			re_value = "yinxiaoyd";
+			re_value = "yxyd";
 		} else if (R.drawable.yinxiaoxt == resID) {
-			re_value = "yinxiaoxt";
+			re_value = "yxxt";
 		} else if (R.drawable.lightsup == resID) {
 			re_value = "lightsup";
 		} else if (R.drawable.lightsdown == resID) {

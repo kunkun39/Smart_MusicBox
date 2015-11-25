@@ -69,12 +69,12 @@ import android.widget.Toast;
 import com.changhong.common.utils.NetworkUtils;
 import com.changhong.common.widgets.BoxSelectAdapter;
 import com.changhong.yinxiang.R;
+import com.changhong.yinxiang.fragment.XiamiMusicFragment;
 import com.changhong.yinxiang.fragment.YinXiangCategoryFragment;
 import com.changhong.yinxiang.fragment.YinXiangFMFragment;
 import com.changhong.yinxiang.fragment.YinXiangNetMusicFragment;
 import com.changhong.yinxiang.fragment.YinXiangRemoteControlFragment;
 import com.changhong.yinxiang.fragment.YinXiangSettingFragment;
-import com.changhong.yinxiang.fragment.YinXiangRemoteControlFragment.BaiDuVoiceChannelDialogRecogListener;
 import com.changhong.yinxiang.music.MusicEditServer;
 import com.changhong.yinxiang.nanohttpd.HTTPDService;
 import com.changhong.yinxiang.service.AppLogService;
@@ -911,8 +911,8 @@ public class YinXiangMainActivity extends FragmentActivity  implements OnClickLi
 			break;
 		case 3: //麦克风	        
 			break;
-		case 4: // 音乐速递
-			fragment = new YinXiangNetMusicFragment();
+		case 4: //虾米音乐
+			fragment = new XiamiMusicFragment();
 			break;
 		case 5: // 一键推送
 			fragment = new YinXiangCategoryFragment();
