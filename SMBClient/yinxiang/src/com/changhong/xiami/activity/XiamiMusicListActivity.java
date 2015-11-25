@@ -26,6 +26,7 @@ import android.widget.Toast;
 import com.changhong.xiami.data.MusicsListAdapter;
 import com.changhong.xiami.data.SceneInfor;
 import com.changhong.xiami.data.XMMusicData;
+import com.changhong.xiami.data.XMPlayMusics;
 import com.changhong.yinxiang.R;
 import com.changhong.yinxiang.activity.BaseActivity;
 import com.changhong.yinxiang.utils.Configure;
@@ -171,17 +172,7 @@ public class XiamiMusicListActivity extends BaseActivity {
 					playList.add(songsList.get(i));
 				}
 
-				new Thread(new Runnable() {
-
-					@Override
-					public void run() {
-						// TODO Auto-generated method stub
-						Looper.prepare();
-						playList = mXMMusicData.getDetailList(playList);
-						mXMMusicData.sendMusics(XiamiMusicListActivity.this,
-								playList);
-					}
-				}).start();
+				XMPlayMusics.getInstance(XiamiMusicListActivity.this).playMusics(playList);
 
 			}
 		});

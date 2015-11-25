@@ -6,6 +6,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 
+import com.changhong.xiami.activity.XiamiMusicListActivity;
 import com.changhong.yinxiang.utils.Configure;
 import com.google.gson.JsonElement;
 import com.xiami.sdk.entities.OnlineSong;
@@ -87,15 +88,7 @@ public class XMMusicController {
 	 * 播放传进来的音乐
 	 */
 	public void sendRankMusics(final List<OnlineSong> list){
-		new Thread(new Runnable() {
-			
-			@Override
-			public void run() {
-				// TODO Auto-generated method stub
-				List<OnlineSong> playlist=mXMData.getDetailList(list);
-				mXMData.sendMusics(context,playlist);
-			}
-		}).start();
+		XMPlayMusics.getInstance(context).playMusics(list);
 		
 	}
 
