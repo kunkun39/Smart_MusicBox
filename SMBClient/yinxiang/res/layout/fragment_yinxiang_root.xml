@@ -4,99 +4,115 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/main_bg"
-    android:orientation="vertical"
-    tools:context=".YinXiangRemoteControlActivity" >
+    android:orientation="vertical">
 
     <!-- IP选择 -->
-
-    <RelativeLayout
-        android:id="@+id/banner"
+    <LinearLayout
+        android:id="@+id/banner"     
+        android:orientation="horizontal" 
         android:layout_width="fill_parent"
         android:layout_height="60dip"
         android:background="@drawable/title_banner"
+        android:gravity="center"
         android:focusable="false" >
-        
+   
+      <ImageView
+        android:id="@+id/btn_set"
+        android:layout_width="0dip"
+        android:layout_height="25dip"
+       android:layout_weight="1" 
+       android:src="@drawable/set" 
+       android:scaleType="fitCenter" />
         
         <TextView
             android:id="@+id/title"
-            android:layout_width="100dip"
-            android:layout_height="64.3dip"
-            android:layout_centerInParent="true"
+             android:layout_width="0dip"
+             android:layout_height="match_parent"
+            android:layout_weight="2" 
             android:ellipsize="marquee"
-            android:gravity="center_vertical"
+            android:gravity="right|center_vertical"
             android:singleLine="true"
             android:text="未连接"
             android:textSize="20sp" />
 
         <ImageView
-            android:layout_width="16.7dip"
-            android:layout_height="10.7dip"
-            android:layout_toRightOf="@id/title"
-            android:layout_centerVertical="true"
-            android:background="@drawable/title_ip_select" />
+             android:layout_width="0dip"
+             android:layout_height="10.7dip"
+            android:layout_weight="1" 
+            android:src="@drawable/title_ip_select" 
+           android:scaleType="fitCenter" />
 
-        <Button
+        <ImageView
             android:id="@+id/power"
-            android:layout_width="80.5dip"
-            android:layout_height="77.3dip"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="5dip"
-            android:layout_alignBaseline="@id/title"        
-            android:background="@drawable/btn_power_selector" />
-    </RelativeLayout>
+            android:layout_width="0dip"
+             android:layout_height="match_parent"
+            android:layout_weight="1" 
+            android:src="@drawable/btn_power_selector" 
+           android:scaleType="fitCenter" />
+    </LinearLayout>
 
     <!-- 内容 -->
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical" >
 
-        <FrameLayout
-            android:id="@+id/yx_tabcontent"
-            android:layout_width="fill_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1" />
-
         <RadioGroup
             android:id="@+id/yx_rgtab"
             android:layout_width="match_parent"
-            android:layout_height="60dip"
-            android:background="@drawable/fragment_bg"
-            android:orientation="horizontal" >
+            android:layout_height="65dip"
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal" 
+            android:background="@drawable/fragment_bg">
 
             <RadioButton
                 style="@style/yx_tab"
-                android:layout_height="match_parent" 
-                android:layout_margin="10dip"
                 android:background="@drawable/fragment_controller_selector" />
 
             <RadioButton
                 style="@style/yx_tab"
-                android:layout_height="match_parent"
-                android:layout_margin="10dip"
                 android:background="@drawable/fragment_radio_selector"/>
             
             <!-- 麦克风 -->
              <RadioButton
-                style="@style/yx_tab"
+                android:layout_width="0dip"
                 android:layout_height="match_parent"
-                android:background="@drawable/fragment_microphone_selector"/>
-
+                android:layout_weight="1.8" 
+                android:button="@null"
+                android:visibility="invisible"/>
             <RadioButton
                 style="@style/yx_tab"
-                android:layout_height="match_parent"
-                android:layout_margin="10dip"
-                android:background="@drawable/fragment_music_selector"/>
-            
+                android:background="@drawable/fragment_music_selector"/>           
              <RadioButton
                 style="@style/yx_tab"
-                android:layout_height="match_parent"
-                android:layout_margin="10dip"
-                android:background="@drawable/fragment_tuisong_selector"/>
-        
+                android:background="@drawable/fragment_tuisong_selector"/>        
         </RadioGroup>
-    </LinearLayout>
+        
+        <!-- 麦克风 -->
+             <Button   android:id="@+id/yx_microphone"               
+                android:layout_width="wrap_content"
+                android:layout_height="65dip"
+                android:layout_alignParentBottom="true"
+                 android:layout_centerHorizontal="true"
+                android:button="@null"
+                android:background="@drawable/microphone"/> 
+        
+        <FrameLayout
+            android:id="@+id/yx_tabcontent"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_above="@id/yx_rgtab" />
+        
+        <!--搜索 -->
+    <include layout="@layout/search_dialog" 
+        android:id="@+id/search_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/yx_rgtab" 
+        android:layout_marginBottom="5dip"    
+        android:visibility="gone"/>      
+     </RelativeLayout>   
 
     <!-- IP选择 -->
 

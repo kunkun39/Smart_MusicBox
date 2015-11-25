@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content" >
+      
+<LinearLayout  android:id="@+id/search_main" 
+                android:layout_width="match_parent"
+              android:layout_height="60dip"  
+              android:paddingLeft="30dip"
+              android:paddingRight="20dip"              
+              android:background="@drawable/musictab_bg" 
+              android:orientation="horizontal"
+              android:gravity="center">
+  
+       <!-- 输入框 -->
+  <EditText   android:id="@+id/search_input"               android:layout_width="0dip"
+         android:layout_height="match_parent"
+         android:layout_weight="5"  
+         android:layout_margin="10dip" 
+         android:background="@color/white" />
+   
+  <!-- 提交submit -->
+  <Button  android:id="@+id/search_submit"  
+         android:layout_width="0dip"
+        android:layout_height="match_parent"
+         android:layout_weight="1.5" 
+         android:layout_margin="12dip" 
+         android:background="@drawable/btnbg" 
+         android:text="搜索"
+         android:textColor="@color/white" />                  
+  </LinearLayout>
+  
+   <!-- 指示箭头 -->
+   <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+             android:layout_below="@id/search_main"
+             android:layout_marginTop="5dip"
+             android:layout_centerHorizontal="true"
+            android:adjustViewBounds="true"
+            android:src="@drawable/arrow_down"
+            android:scaleType="fitCenter"/>
+ </RelativeLayout>
+  
+
+  
