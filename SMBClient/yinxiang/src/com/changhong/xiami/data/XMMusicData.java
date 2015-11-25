@@ -444,8 +444,7 @@ public class XMMusicData {
 				song.setLogo(songObj.get("album_logo").getAsString());
 			} catch (Exception e) {
 				e.printStackTrace();
-			}
-			
+			}			
 			song.setLength(songObj.get("length").getAsInt());
 			song.setMusicType(songObj.get("music_type").getAsInt());
 			song.setCdSerial(songObj.get("cd_serial").getAsInt());
@@ -478,10 +477,8 @@ public class XMMusicData {
 
 				OnlineArtist onlineArtist = new OnlineArtist();
 				onlineArtist.setId(getJsonObjectValueInt(itemObj, "artist_id"));
-				onlineArtist
-						.setName(getJsonObjectValue(itemObj, "artist_name"));
-				onlineArtist
-						.setLogo(getJsonObjectValue(itemObj, "artist_logo"));
+				onlineArtist.setName(getJsonObjectValue(itemObj, "artist_name"));
+				onlineArtist.setLogo(getJsonObjectValue(itemObj, "artist_logo"));
 				onlineArtist.setCategory(getJsonObjectValueInt(itemObj,
 						"artist_id"));
 				onlineArtist.setEnglish_name(getJsonObjectValue(itemObj,

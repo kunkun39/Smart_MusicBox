@@ -13,6 +13,7 @@ import com.changhong.common.system.MyApplication;
 import com.changhong.common.utils.StringUtils;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.graphics.Color;
 import android.graphics.PointF;
 import android.graphics.drawable.ColorDrawable;
@@ -47,6 +48,8 @@ import com.changhong.yinxiang.remotecontrol.AudioCtrlAdapter;
 import com.changhong.yinxiang.remotecontrol.TVInputDialogFragment;
 import com.changhong.yinxiang.utils.Configure;
 import com.changhong.yinxiang.utils.YuYingWordsUtils;
+import com.changhong.yinxiang.view.MyToast;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,7 +79,6 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 	private String LongKeyValue = null;
 	private PointF startPoint = new PointF();
 	private PointF endPoint = new PointF();
-	private  AudioCtrlParams audioCtrlParams=new AudioCtrlParams() ;
 	GridView yinXiaoControl, lightsControl;
 
 //	// 音效键盘
@@ -87,6 +89,11 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 //	AudioControlDialog audioControlDialog = null;
 //	// 低音
 //	DYControlDialog dyControlDialog = null;
+	//音量控制条
+	Handler audioHandler = null ;
+
+	
+	
 	// 长按键
 	Handler mHandler1 = new Handler();
 	Runnable mRunnable = new Runnable() {
@@ -96,15 +103,6 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 				MyApplication.vibrator.vibrate(30);
 				ClientSendCommandService.msg = LongKeyValue;
 				ClientSendCommandService.handler.sendEmptyMessage(1);
-			}
-			
-			//定时关闭声音设置
-			if(audioCtrlParams.isClose){
-				 if(audioCtrlParams.count>100){
-					 audioCtrlParams.isClose=false;
-					 audioCtrlParams.count=0;
-					 volumeBar.setVisibility(View.GONE);
-				 }
 			}
 			mHandler1.postDelayed(mRunnable, 150);
 		}
@@ -430,6 +428,23 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 //		});
 
 //		initBaiduConfiguration();
+		
+		audioHandler=new Handler(){
+
+			@Override
+			public void handleMessage(Message msg) {
+				switch (msg.what) {
+				case 1://定时关闭音量控制条
+					 if(View.VISIBLE == volumeBar.getVisibility()){
+						 volumeBar.setVisibility(View.GONE);
+					 }
+					break;
+				default:
+					break;
+				}				super.handleMessage(msg);
+			}
+			
+		};
 	}
 
 	/***************************************************** 系统方法重载部分 ***********************************************/
@@ -467,71 +482,15 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 			MyApplication.vibrator.vibrate(100);
 			ClientSendCommandService.msg = "key:home";
 			break;
-//		case R.id.audioup:
-//			MyApplication.vibrator.vibrate(100);
-//			ClientSendCommandService.msg = "key:volumeup";
-//			break;
-//		case R.id.audiodown:
-//			MyApplication.vibrator.vibrate(100);
-//			ClientSendCommandService.msg = "key:volumedown";
-//			break;
 		case R.id.power:
 			MyApplication.vibrator.vibrate(100);
 			ClientSendCommandService.msg = "key:power";
 			break;
 
-		// case R.id.yinxiao_movie:
-		// MyApplication.vibrator.vibrate(100);
-		// ClientSendCommandService.msg = "key:yxmovie";
-		// break;
-		// case R.id.yinxiao_tv:
-		// MyApplication.vibrator.vibrate(100);
-		// ClientSendCommandService.msg = "key:yxtv";
-		// break;
-		// case R.id.yinxiao_music:
-		// MyApplication.vibrator.vibrate(100);
-		// ClientSendCommandService.msg = "key:yxmusic";
-		// break;
-		// case R.id.yinxiao_game:
-		// MyApplication.vibrator.vibrate(100);
-		// ClientSendCommandService.msg = "key:yxgame";
-		// break;
-		// case R.id.yinxiao_yd:
-		// MyApplication.vibrator.vibrate(100);
-		// ClientSendCommandService.msg = "key:yxyd";
-		// break;
-		// case R.id.yinxiao_xt:
-		// MyApplication.vibrator.vibrate(100);
-		// ClientSendCommandService.msg = "key:yxxt";
-		// break;
-		// case R.id.lightsup:
-		// MyApplication.vibrator.vibrate(100);
-		// ClientSendCommandService.msg = "key:lightsup";
-		// break;
-		// case R.id.lightsdown:
-		// MyApplication.vibrator.vibrate(100);
-		// ClientSendCommandService.msg = "key:lightsdown";
-		// break;
-		// case R.id.lightsmoon:
-		// MyApplication.vibrator.vibrate(100);
-		// ClientSendCommandService.msg = "key:lightsmoon";
-		// break;
-		// case R.id.lightssun:
-		// MyApplication.vibrator.vibrate(100);
-		// ClientSendCommandService.msg = "key:lightssun";
-		// break;
 		case R.id.lightscontrol:
 			MyApplication.vibrator.vibrate(100);
 			ClientSendCommandService.msg = "key:lightscontrol";
 			break;
-//		case R.id.dydown:
-//			MyApplication.vibrator.vibrate(100);
-//			ClientSendCommandService.msg = "key:dydown";
-//			break;
-//		case R.id.dyup:
-//			MyApplication.vibrator.vibrate(100);
-//			ClientSendCommandService.msg = "key:dyup";
-//			break;
 		default:
 			ClientSendCommandService.msg = "";
 			break;
@@ -1375,10 +1334,9 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 		//显示音量设置条
 		if(View.GONE==volumeBar.getVisibility()){
 			volumeBar.setVisibility(View.VISIBLE);
-			audioCtrlParams.isClose=true;
-			mHandler1.postDelayed(mRunnable, 3000);
 		}
-		
+		audioHandler.sendEmptyMessageDelayed(1, 15000);
+
 		//设置音量条的值
 		int curValue=dyAndVolControl.getProgress();		
 		if(cmd.equals("key:volumedown") ){
@@ -1393,16 +1351,10 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 		}else if(cmd.equals("key:dyup") ){
 			curValue+=2;
 			notice="低音  加";
-		}
-		
+		}		
 		dyAndVolControl.setProgress(curValue);
-		Toast.makeText(getActivity(), notice, Toast.LENGTH_SHORT).show();
+		MyToast.show(getActivity(), notice);
 	}
 	
-	
-	class AudioCtrlParams{
-		  boolean isClose=false;
-		  int  count=0;
-	}
 
 }

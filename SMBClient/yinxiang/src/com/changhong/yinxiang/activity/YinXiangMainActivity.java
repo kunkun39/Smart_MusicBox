@@ -23,6 +23,7 @@ import com.baidu.voicerecognition.android.Candidate;
 import com.baidu.voicerecognition.android.VoiceRecognitionClient;
 import com.baidu.voicerecognition.android.VoiceRecognitionConfig;
 import com.changhong.baidu.BaiDuVoiceChannelControlDialog;
+import com.changhong.baidu.BaiDuVoiceClient;
 import com.changhong.baidu.BaiDuVoiceConfiguration;
 import com.changhong.common.domain.AppInfo;
 import com.changhong.common.service.ClientSendCommandService;
@@ -56,10 +57,12 @@ import android.view.View.OnTouchListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -122,7 +125,14 @@ public class YinXiangMainActivity extends FragmentActivity  implements OnClickLi
 	private FragmentManager fragmentManager;
 	private RadioGroup radioGroup;
 	
-	private SearchDialog searchInputDialog=null;
+	//搜索输入框
+	private RelativeLayout searchInputDialog=null;
+	private ViewHolder searchViewHolder=null;
+	
+	//百度语音输入
+	BaiDuVoiceClient  mBaiDuVoiceClient=null;
+	
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -171,9 +181,11 @@ public class YinXiangMainActivity extends FragmentActivity  implements OnClickLi
 		 * 启动WiFi监听的广播接收器
 		 */
 		regWifiBroadcastRec();
+		mBaiDuVoiceClient=new BaiDuVoiceClient(this);
 	}
 
 	private void initViewAndEvent() {
+		
 		/**
 		 * init all views
 		 */
@@ -184,8 +196,11 @@ public class YinXiangMainActivity extends FragmentActivity  implements OnClickLi
 		ImageView power = (ImageView) findViewById(R.id.power);
 		ImageView setBtn = (ImageView) findViewById(R.id.btn_set);
 		Button microphone = (Button) findViewById(R.id.yx_microphone);
+		searchInputDialog= (RelativeLayout) findViewById(R.id.search_layout);
+		 searchViewHolder = new ViewHolder();
+	     searchViewHolder.search_keywords=(EditText) searchInputDialog.findViewById(R.id.search_input);
+	     searchViewHolder.btnSubmit=(Button) searchInputDialog.findViewById(R.id.search_submit);
 
-		
 		
 
 
@@ -262,43 +277,22 @@ public class YinXiangMainActivity extends FragmentActivity  implements OnClickLi
 		setBtn.setOnTouchListener(this);
 		microphone.setOnTouchListener(this);
 		microphone.setOnClickListener(this);
+	    searchViewHolder.btnSubmit.setOnClickListener(this);
+
 
 		// 长按触发语音换台功能
 	 microphone.setOnLongClickListener(new View.OnLongClickListener() {
 			@Override
 			public boolean onLongClick(View v) {
 				MyApplication.vibrator.vibrate(100);
-				/**
-				 * stop first, because last action maybe not finished
-				 */
-				recognitionClient.stopVoiceRecognition();
-				/**
-				 * 语音的配置
-				 */
-				VoiceRecognitionConfig config = BaiDuVoiceConfiguration
-						.getVoiceRecognitionConfig();
-				/**
-				 * 下面发起识别
-				 */
-				int code = recognitionClient.startVoiceRecognition(
-						recogListener, config);
-				if (code != VoiceRecognitionClient.START_WORK_RESULT_WORKING) {
-					Toast.makeText(YinXiangMainActivity.this, "网络连接出错，请重新尝试",
-							Toast.LENGTH_LONG).show();
-				}
+				mBaiDuVoiceClient.startVoiceRecognition();
 				return true;
 			}
 		});
 	
-	 if (searchInputDialog == null) {
-			searchInputDialog = new SearchDialog(this);
-			searchInputDialog.setCanceledOnTouchOutside(false);
-			searchInputDialog.btnSubmit.setOnClickListener(this);
-		}
-	 
 		// 设置默认进入遥控器控制界面
 		((RadioButton) radioGroup.getChildAt(0)).setChecked(true);	
-		initBaiduConfiguration();
+		
 
 	}
 
@@ -319,17 +313,18 @@ public class YinXiangMainActivity extends FragmentActivity  implements OnClickLi
 		switch (v.getId()) {
 	
 		case R.id.yx_microphone://麦克风
-               if(searchInputDialog.isShowing()){
-            	   searchInputDialog.cancel();
+               if(View.VISIBLE==searchInputDialog.getVisibility()){
+            	   searchInputDialog.setVisibility(View.GONE);
             	   v.setBackgroundResource(R.drawable.microphone);
                }else{
-            	   searchInputDialog.show();
+            	   searchInputDialog.setVisibility(View.VISIBLE);
             	   v.setBackgroundResource(R.drawable.keyboard);
                }
 	
 			break;
 		case R.id.btn_set://设置
 			MyApplication.vibrator.vibrate(100);
+			((RadioButton) radioGroup.getChildAt(2)).setChecked(true);	
 			FragmentTransaction transaction = fragmentManager	.beginTransaction();
 			Fragment mFragment = new YinXiangSettingFragment();
 			// 增加fragment到backstack。
@@ -356,7 +351,12 @@ public class YinXiangMainActivity extends FragmentActivity  implements OnClickLi
 			break;
 		case R.id.search_submit:
 			MyApplication.vibrator.vibrate(100);
-			String keys=searchInputDialog.search_keywords.getText().toString();
+			String keys=searchViewHolder.search_keywords.getText().toString();
+			if(StringUtils.hasLength(keys)){
+				  //发送信息，搜索
+			}else{
+				Toast.makeText(YinXiangMainActivity.this, "您还没有输入搜索关键字哦！", Toast.LENGTH_SHORT).show();
+			}
 			break;
 		default:
 			break;
@@ -377,7 +377,7 @@ public class YinXiangMainActivity extends FragmentActivity  implements OnClickLi
 			 * 语音识别对话结束
 			 */
 			if (v.getId() == R.id.yx_microphone) {
-				recognitionClient.speakFinish();
+				mBaiDuVoiceClient.speakFinish();
 			}
 			break;
 		}
@@ -964,271 +964,29 @@ public class YinXiangMainActivity extends FragmentActivity  implements OnClickLi
 	}
 	
 	
-	/********************************************** 语音部分代码 *********************************************************/
+	
+private static final String music = "music";
+private static final String movie= "movie";
+private static final String tv= "tv";
 
-	/**
-	 * baidu recognition client, void to init many times, so use static here
-	 */
-	private static VoiceRecognitionClient recognitionClient;
-
-	/**
-	 * 识别回调接口
-	 */
-	private BaiDuVoiceChannelDialogRecogListener recogListener = new BaiDuVoiceChannelDialogRecogListener();
-
-	/**
-	 * 初始化百度的配置
-	 */
-	private void initBaiduConfiguration() {
-		if (recognitionClient == null) {
-			recognitionClient = VoiceRecognitionClient
-					.getInstance(YinXiangMainActivity.this);
-			recognitionClient.setTokenApis(BaiDuVoiceConfiguration.API_KEY,
-					BaiDuVoiceConfiguration.SECRET_KEY);
-		}
+private void searchKey(String key) {
+	    	
+		StringBuffer sb = new StringBuffer();
+		sb.append("search:");
+		sb.append("|");
+		sb.append(movie);
+		sb.append(";");
+		sb.append(key);
+		
+		ClientSendCommandService.msg = sb.toString();
+		ClientSendCommandService.handler.sendEmptyMessage(1);
 	}
+	
+	
+    private class ViewHolder {
+		
+	    public Button btnSubmit;
+	    public EditText search_keywords;
 
-	/**
-	 * 百度语音监听器
-	 */
-	public class BaiDuVoiceChannelDialogRecogListener implements
-			VoiceRecognitionClient.VoiceClientStatusChangeListener {
-		/**
-		 * 正在识别中
-		 */
-		private boolean isRecognitioning = false;
-
-		private int recognitioningFailedTimes = 0;
-
-		/**
-		 * channel match list, integer value stand for match time, compare han
-		 * zi one by one
-		 */
-		private Map<String, Integer> matchChannel = new HashMap<String, Integer>();
-
-		@Override
-		public void onClientStatusChange(int status, Object obj) {
-			switch (status) {
-			// 语音识别实际开始，这是真正开始识别的时间点，需在界面提示用户说话。
-			case VoiceRecognitionClient.CLIENT_STATUS_START_RECORDING:
-				isRecognitioning = true;
-				break;
-			// 检测到语音起点
-			case VoiceRecognitionClient.CLIENT_STATUS_SPEECH_START:
-				break;
-			// 已经检测到语音终点，等待网络返回
-			case VoiceRecognitionClient.CLIENT_STATUS_SPEECH_END:
-				break;
-			// 语音识别完成，显示obj中的结果
-			case VoiceRecognitionClient.CLIENT_STATUS_FINISH:
-				isRecognitioning = false;
-				updateRecognitionResult(obj);
-				break;
-			// 处理连续上屏
-			case VoiceRecognitionClient.CLIENT_STATUS_UPDATE_RESULTS:
-				break;
-			// 用户取消
-			case VoiceRecognitionClient.CLIENT_STATUS_USER_CANCELED:
-				recognitionClient.stopVoiceRecognition();
-				break;
-			default:
-				break;
-			}
-		}
-
-		@Override
-		public void onError(int errorType, int errorCode) {
-			Toast.makeText(YinXiangMainActivity.this, "抱歉哟，我们不能识别空指令", Toast.LENGTH_LONG)
-					.show();
-			isRecognitioning = false;
-			recognitionClient.stopVoiceRecognition();
-		}
-
-		@Override
-		public void onNetworkStatusChange(int status, Object obj) {
-			// 这里不做任何操作不影响简单识别
-		}
-
-		/**
-		 * 将识别结果更新到UI上，搜索模式结果类型为List<String>,输入模式结果类型为List<List<Candidate>>
-		 */
-		private void updateRecognitionResult(Object result) {
-			String recognitionResult = "";
-			if (result != null && result instanceof List) {
-				List results = (List) result;
-				if (results.size() > 0) {
-					if (results.get(0) instanceof List) {
-						List<List<Candidate>> sentences = (List<List<Candidate>>) result;
-						StringBuffer sb = new StringBuffer();
-						for (List<Candidate> candidates : sentences) {
-							if (candidates != null && candidates.size() > 0) {
-								sb.append(candidates.get(0).getWord());
-							}
-						}
-						recognitionResult = sb.toString().replace("。", "");
-					} else {
-						recognitionResult = results.get(0).toString()
-								.replace("。", "");
-					}
-				}
-			}
-
-			/**
-			 * used for check yuying laucher is successful or not
-			 * <p>
-			 * we have two flows: 1 - if text start with "打开"，"启动"，"开启" go to
-			 * open box app way 2 - else go to switch channel way
-			 */
-			boolean hasResult = false;
-			if (StringUtils.hasLength(recognitionResult)) {
-				/******************************************** 处理用户说的话 ********************************************/
-
-				String commands = YuYingWordsUtils
-						.isSearchContainsControl(recognitionResult);
-				if (StringUtils.hasLength(commands)) {
-					// TODO:流程->主页
-					String[] command = StringUtils.delimitedListToStringArray(
-							commands, "|");
-					if (command.length == 2 && command[0].equals("key:dtv")) {
-						ClientSendCommandService.msg = command[0];
-						ClientSendCommandService.handler.sendEmptyMessage(1);
-						SystemClock.sleep(300);
-						ClientSendCommandService.msg = command[1];
-						ClientSendCommandService.handler.sendEmptyMessage(1);
-					} else {
-						for (String cmd : command) {
-							ClientSendCommandService.msg = cmd;
-							ClientSendCommandService.handler
-									.sendEmptyMessage(1);
-						}
-					}
-
-					hasResult = true;
-					Toast.makeText(YinXiangMainActivity.this,
-							"语音的结果为:" + recognitionResult, Toast.LENGTH_LONG)
-							.show();
-
-				} else if (YuYingWordsUtils
-						.isSearchContainsAppKeywords(recognitionResult)) {
-					// TODO:流程->搜索应用
-					recognitionResult = YuYingWordsUtils
-							.appSearchWordsConvert(recognitionResult);
-
-					/**
-					 * search server side all applications
-					 */
-					if (ClientSendCommandService.serverAppInfo.isEmpty()) {
-						ClientSendCommandService.handler.sendEmptyMessage(6);
-						// wait for search channel finish
-						while (!ClientSendCommandService.searchApplicationFinished) {
-							SystemClock.sleep(500);
-						}
-					}
-
-					/**
-					 * compare the matched app, use char compare one by one
-					 */
-					matchChannel.clear();
-					for (int i = 0; i < recognitionResult.length(); i++) {
-						for (int j = 0; j < ClientSendCommandService.serverAppInfo
-								.size(); j++) {
-							AppInfo info = ClientSendCommandService.serverAppInfo
-									.get(j);
-							String appName = info.appName;
-							if (appName.indexOf(recognitionResult.charAt(i)) >= 0) {
-								Integer count = matchChannel.get(String
-										.valueOf(j));
-								if (count == null) {
-									matchChannel.put(String.valueOf(j), 1);
-								} else {
-									matchChannel.put(String.valueOf(j),
-											count + 1);
-								}
-							}
-						}
-					}
-
-					/**
-					 * get best matched result, the value must bigger than 2 1 -
-					 * first compare value which is bigger 2 - if value is equal
-					 * compare which is shorter 3 - if length is equal compare
-					 * which contains the input string
-					 */
-					int bestCounter = 0;
-					String bestPostion = "";
-					for (String position : matchChannel.keySet()) {
-						Integer value = matchChannel.get(position);
-
-						if (value >= 2) {
-							if (value > bestCounter) {
-								bestCounter = value;
-								bestPostion = position;
-							} else if (value == bestCounter) {
-								String bestApp = ClientSendCommandService.serverAppInfo
-										.get(Integer.valueOf(bestPostion)).appName;
-								String newApp = ClientSendCommandService.serverAppInfo
-										.get(Integer.valueOf(position)).appName;
-
-								if (newApp.length() < bestApp.length()) {
-									bestPostion = position;
-								} else if (newApp.length() == bestApp.length()) {
-									int bestIndex = bestApp
-											.indexOf(recognitionResult);
-									int newIndex = newApp
-											.indexOf(recognitionResult);
-									if (bestIndex < 0 && newIndex >= 0) {
-										bestPostion = position;
-									}
-								}
-							}
-						}
-					}
-
-					/**
-					 * send command to the server to decide which one should
-					 * open
-					 */
-					if (StringUtils.hasLength(bestPostion)) {
-						AppInfo info = ClientSendCommandService.serverAppInfo
-								.get(Integer.valueOf(bestPostion));
-						ClientSendCommandService.msg = "app_open:"
-								+ info.packageName;
-						ClientSendCommandService.handler.sendEmptyMessage(1);
-						Log.e(TAG, "message:" + "app_open:" + info.packageName);
-
-						Toast.makeText(
-								YinXiangMainActivity.this,
-								"应用的结果为:" + info.appName + "\n语音的结果为:"
-										+ recognitionResult, Toast.LENGTH_LONG)
-								.show();
-						hasResult = true;
-					} else {
-						hasResult = false;
-					}
-
-				} else {
-
-				}
-				/******************************************** 结束处理用户说的话 ******************************************/
-			}
-
-			if (!hasResult) {
-				recognitioningFailedTimes = recognitioningFailedTimes + 1;
-				if (recognitioningFailedTimes == 3) {
-					recognitioningFailedTimes = 0;
-					BaiDuVoiceChannelControlDialog yuYingHelpDialog = new BaiDuVoiceChannelControlDialog(
-							YinXiangMainActivity.this);
-					yuYingHelpDialog.show();
-				} else {
-					Toast.makeText(YinXiangMainActivity.this, "语音搜索:" + recognitionResult,
-							Toast.LENGTH_SHORT).show();
-					ClientSendCommandService.msg = "search:" + "|"
-							+ recognitionResult;
-					ClientSendCommandService.handler.sendEmptyMessage(1);
-				}
-			} else {
-				recognitioningFailedTimes = 0;
-			}
-		}
 	}
 }
