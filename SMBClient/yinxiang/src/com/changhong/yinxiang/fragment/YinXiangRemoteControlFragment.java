@@ -47,11 +47,6 @@ import com.changhong.yinxiang.remotecontrol.AudioCtrlAdapter;
 import com.changhong.yinxiang.remotecontrol.TVInputDialogFragment;
 import com.changhong.yinxiang.utils.Configure;
 import com.changhong.yinxiang.utils.YuYingWordsUtils;
-import com.changhong.yinxiang.view.AudioControlDialog;
-import com.changhong.yinxiang.view.DYControlDialog;
-import com.changhong.yinxiang.view.LightsControlDialog;
-import com.changhong.yinxiang.view.SwitchButton;
-import com.changhong.yinxiang.view.YinXiaoControlDialog;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -407,34 +402,34 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 				* density);
 
 		// 长按触发语音换台功能
-		btn_center.setOnLongClickListener(new View.OnLongClickListener() {
-			@Override
-			public boolean onLongClick(View v) {
-				MyApplication.vibrator.vibrate(100);
-				/**
-				 * stop first, because last action maybe not finished
-				 */
-				recognitionClient.stopVoiceRecognition();
-				/**
-				 * 语音的配置
-				 */
-				VoiceRecognitionConfig config = BaiDuVoiceConfiguration
-						.getVoiceRecognitionConfig();
-				/**
-				 * 下面发起识别
-				 */
-				int code = recognitionClient.startVoiceRecognition(
-						recogListener, config);
-				if (code != VoiceRecognitionClient.START_WORK_RESULT_WORKING) {
-					Toast.makeText(getActivity(), "网络连接出错，请重新尝试",
-							Toast.LENGTH_LONG).show();
-				}
+//		btn_center.setOnLongClickListener(new View.OnLongClickListener() {
+//			@Override
+//			public boolean onLongClick(View v) {
+//				MyApplication.vibrator.vibrate(100);
+//				/**
+//				 * stop first, because last action maybe not finished
+//				 */
+//				recognitionClient.stopVoiceRecognition();
+//				/**
+//				 * 语音的配置
+//				 */
+//				VoiceRecognitionConfig config = BaiDuVoiceConfiguration
+//						.getVoiceRecognitionConfig();
+//				/**
+//				 * 下面发起识别
+//				 */
+//				int code = recognitionClient.startVoiceRecognition(
+//						recogListener, config);
+//				if (code != VoiceRecognitionClient.START_WORK_RESULT_WORKING) {
+//					Toast.makeText(getActivity(), "网络连接出错，请重新尝试",
+//							Toast.LENGTH_LONG).show();
+//				}
+//
+//				return true;
+//			}
+//		});
 
-				return true;
-			}
-		});
-
-		initBaiduConfiguration();
+//		initBaiduConfiguration();
 	}
 
 	/***************************************************** 系统方法重载部分 ***********************************************/
@@ -529,14 +524,14 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 			MyApplication.vibrator.vibrate(100);
 			ClientSendCommandService.msg = "key:lightscontrol";
 			break;
-		case R.id.dydown:
-			MyApplication.vibrator.vibrate(100);
-			ClientSendCommandService.msg = "key:dydown";
-			break;
-		case R.id.dyup:
-			MyApplication.vibrator.vibrate(100);
-			ClientSendCommandService.msg = "key:dyup";
-			break;
+//		case R.id.dydown:
+//			MyApplication.vibrator.vibrate(100);
+//			ClientSendCommandService.msg = "key:dydown";
+//			break;
+//		case R.id.dyup:
+//			MyApplication.vibrator.vibrate(100);
+//			ClientSendCommandService.msg = "key:dyup";
+//			break;
 		default:
 			ClientSendCommandService.msg = "";
 			break;
@@ -635,9 +630,9 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 			/**
 			 * 语音识别对话结束
 			 */
-			if (v.getId() == R.id.center) {
-				recognitionClient.speakFinish();
-			}
+//			if (v.getId() == R.id.center) {
+//				recognitionClient.speakFinish();
+//			}
 			break;
 		}
 

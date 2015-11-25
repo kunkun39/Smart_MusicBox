@@ -5,6 +5,9 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -16,14 +19,22 @@ import android.text.TextUtils;
 import android.util.JsonReader;
 import android.view.MotionEvent;
 
+import com.baidu.voicerecognition.android.Candidate;
+import com.baidu.voicerecognition.android.VoiceRecognitionClient;
+import com.baidu.voicerecognition.android.VoiceRecognitionConfig;
+import com.changhong.baidu.BaiDuVoiceChannelControlDialog;
+import com.changhong.baidu.BaiDuVoiceConfiguration;
+import com.changhong.common.domain.AppInfo;
 import com.changhong.common.service.ClientSendCommandService;
 import com.changhong.common.service.NetworkConnectChangedReceiver;
 import com.changhong.common.system.MyApplication;
 import com.changhong.common.utils.DateUtils;
+import com.changhong.common.utils.StringUtils;
 
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.SystemClock;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -38,10 +49,14 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
+import android.view.GestureDetector.OnGestureListener;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
+import android.view.View.OnTouchListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -56,6 +71,7 @@ import com.changhong.yinxiang.fragment.YinXiangFMFragment;
 import com.changhong.yinxiang.fragment.YinXiangNetMusicFragment;
 import com.changhong.yinxiang.fragment.YinXiangRemoteControlFragment;
 import com.changhong.yinxiang.fragment.YinXiangSettingFragment;
+import com.changhong.yinxiang.fragment.YinXiangRemoteControlFragment.BaiDuVoiceChannelDialogRecogListener;
 import com.changhong.yinxiang.music.MusicEditServer;
 import com.changhong.yinxiang.nanohttpd.HTTPDService;
 import com.changhong.yinxiang.service.AppLogService;
@@ -64,6 +80,8 @@ import com.changhong.yinxiang.service.ClientLocalThreadRunningService;
 import com.changhong.yinxiang.service.UpdateLogService;
 import com.changhong.yinxiang.service.UserUpdateService;
 import com.changhong.yinxiang.setting.AppHelpDialog;
+import com.changhong.yinxiang.utils.YuYingWordsUtils;
+import com.changhong.yinxiang.view.SearchDialog;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -80,7 +98,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.IntentFilter;
 
-public class YinXiangMainActivity extends FragmentActivity {
+public class YinXiangMainActivity extends FragmentActivity  implements OnClickListener, OnTouchListener{
 
 	private static final String TAG = "YinXiangMainFragmentActivity";
 	/*
@@ -103,6 +121,8 @@ public class YinXiangMainActivity extends FragmentActivity {
 	/****************************** 定义fragment ***************************************/
 	private FragmentManager fragmentManager;
 	private RadioGroup radioGroup;
+	
+	private SearchDialog searchInputDialog=null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -110,9 +130,7 @@ public class YinXiangMainActivity extends FragmentActivity {
 		setContentView(R.layout.fragment_yinxiang_root);
 
 		initService();
-
 		initViewAndEvent();
-
 		initUpdateThread();
 
 	}
@@ -162,32 +180,40 @@ public class YinXiangMainActivity extends FragmentActivity {
 		title = (TextView) findViewById(R.id.title);
 		clients = (ListView) findViewById(R.id.clients);
 		list = (Button) findViewById(R.id.btn_list);
-		Button power = (Button) findViewById(R.id.power);
+		
+		ImageView power = (ImageView) findViewById(R.id.power);
+		ImageView setBtn = (ImageView) findViewById(R.id.btn_set);
+		Button microphone = (Button) findViewById(R.id.yx_microphone);
+
+		
+		
+
 
 		/***************************** 初始化fragment ****************************************/
 		fragmentManager = getFragmentManager();
-
 		radioGroup = (RadioGroup) findViewById(R.id.yx_rgtab);
-		radioGroup
-				.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+		radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 					@Override
 					public void onCheckedChanged(RadioGroup group, int checkedId) {
 
-						FragmentTransaction transaction = fragmentManager
-								.beginTransaction();
-						Fragment mFragment = getInstanceByIndex(checkedId);
-
-						// 增加fragment到backstack。
-						transaction.replace(R.id.yx_tabcontent, mFragment);
-						transaction.addToBackStack(null);
-						// transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-						// 提交修改
-						transaction.commit();
+						int fragmentIndex = matchFragmentIndex(checkedId);
+                        if(3 !=fragmentIndex){                   
+							FragmentTransaction transaction = fragmentManager
+									.beginTransaction();
+							Fragment mFragment = getInstanceByIndex(fragmentIndex);
+							// 增加fragment到backstack。
+							transaction.replace(R.id.yx_tabcontent, mFragment);
+							transaction.addToBackStack(null);
+							// transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+							// 提交修改
+							transaction.commit();
+						}
 					}
 				});
+		
+		
 
-		// 设置默认进入遥控器控制界面
-		((RadioButton) radioGroup.getChildAt(0)).setChecked(true);
+	
 
 		/**
 		 * Ip部分
@@ -195,13 +221,7 @@ public class YinXiangMainActivity extends FragmentActivity {
 		adapter = new BoxSelectAdapter(YinXiangMainActivity.this,
 				ClientSendCommandService.serverIpList);
 		clients.setAdapter(adapter);
-		clients.setOnTouchListener(new View.OnTouchListener() {
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				// clients.setVisibility(View.GONE);
-				return false;
-			}
-		});
+	
 		clients.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
@@ -217,52 +237,8 @@ public class YinXiangMainActivity extends FragmentActivity {
 				clients.setVisibility(View.GONE);
 			}
 		});
-		list.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				MyApplication.vibrator.vibrate(100);
-				if (ClientSendCommandService.serverIpList.isEmpty()) {
-					Toast.makeText(YinXiangMainActivity.this,
-							"没有发现长虹智能机顶盒，请确认盒子和手机连在同一个路由器内", Toast.LENGTH_LONG)
-							.show();
-				} else {
-					clients.setVisibility(View.VISIBLE);
-				}
-			}
-		});
-
-		power.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				MyApplication.vibrator.vibrate(100);
-				Dialog dialog = new AlertDialog.Builder(
-						YinXiangMainActivity.this)
-						.setTitle("是否启动或关闭音响？")
-						.setPositiveButton("是",
-								new DialogInterface.OnClickListener() {
-
-									@Override
-									public void onClick(DialogInterface dialog,
-											int which) {
-										ClientSendCommandService.msg = "key:power";
-										ClientSendCommandService.handler
-												.sendEmptyMessage(1);
-									}
-								})
-						.setNegativeButton("否",
-								new DialogInterface.OnClickListener() {
-									@Override
-									public void onClick(DialogInterface dialog,
-											int which) {
-										dialog.cancel();
-									}
-								}).create();
-				dialog.show();
-			}
-		});
-
+	
+	
 		mhandler = new Handler() {
 
 			@Override
@@ -279,6 +255,50 @@ public class YinXiangMainActivity extends FragmentActivity {
 				super.handleMessage(msg1);
 			}
 		};
+		list.setOnClickListener(this);	
+		power.setOnClickListener(this);
+		power.setOnTouchListener(this);
+		setBtn.setOnClickListener(this);
+		setBtn.setOnTouchListener(this);
+		microphone.setOnTouchListener(this);
+		microphone.setOnClickListener(this);
+
+		// 长按触发语音换台功能
+	 microphone.setOnLongClickListener(new View.OnLongClickListener() {
+			@Override
+			public boolean onLongClick(View v) {
+				MyApplication.vibrator.vibrate(100);
+				/**
+				 * stop first, because last action maybe not finished
+				 */
+				recognitionClient.stopVoiceRecognition();
+				/**
+				 * 语音的配置
+				 */
+				VoiceRecognitionConfig config = BaiDuVoiceConfiguration
+						.getVoiceRecognitionConfig();
+				/**
+				 * 下面发起识别
+				 */
+				int code = recognitionClient.startVoiceRecognition(
+						recogListener, config);
+				if (code != VoiceRecognitionClient.START_WORK_RESULT_WORKING) {
+					Toast.makeText(YinXiangMainActivity.this, "网络连接出错，请重新尝试",
+							Toast.LENGTH_LONG).show();
+				}
+				return true;
+			}
+		});
+	
+	 if (searchInputDialog == null) {
+			searchInputDialog = new SearchDialog(this);
+			searchInputDialog.setCanceledOnTouchOutside(false);
+			searchInputDialog.btnSubmit.setOnClickListener(this);
+		}
+	 
+		// 设置默认进入遥控器控制界面
+		((RadioButton) radioGroup.getChildAt(0)).setChecked(true);	
+		initBaiduConfiguration();
 
 	}
 
@@ -290,6 +310,90 @@ public class YinXiangMainActivity extends FragmentActivity {
 		if (ClientSendCommandService.titletxt != null) {
 			title.setText(ClientSendCommandService.titletxt);
 		}
+	}
+	
+	/***************************************************** 系统方法重载部分 ***********************************************/
+
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+	
+		case R.id.yx_microphone://麦克风
+               if(searchInputDialog.isShowing()){
+            	   searchInputDialog.cancel();
+            	   v.setBackgroundResource(R.drawable.microphone);
+               }else{
+            	   searchInputDialog.show();
+            	   v.setBackgroundResource(R.drawable.keyboard);
+               }
+	
+			break;
+		case R.id.btn_set://设置
+			MyApplication.vibrator.vibrate(100);
+			FragmentTransaction transaction = fragmentManager	.beginTransaction();
+			Fragment mFragment = new YinXiangSettingFragment();
+			// 增加fragment到backstack。
+			transaction.replace(R.id.yx_tabcontent, mFragment);
+			transaction.addToBackStack(null);
+			// 提交修改
+			transaction.commit();
+			break;
+			
+		case R.id.btn_list://ip设置
+			MyApplication.vibrator.vibrate(100);
+			if (ClientSendCommandService.serverIpList.isEmpty()) {
+				Toast.makeText(YinXiangMainActivity.this,
+						"没有发现长虹智能机顶盒，请确认盒子和手机连在同一个路由器内", Toast.LENGTH_LONG)
+						.show();
+			} else {
+				clients.setVisibility(View.VISIBLE);
+			}
+			break;
+			
+		case R.id.power:
+			MyApplication.vibrator.vibrate(100);
+			isSwitchPower();
+			break;
+		case R.id.search_submit:
+			MyApplication.vibrator.vibrate(100);
+			String keys=searchInputDialog.search_keywords.getText().toString();
+			break;
+		default:
+			break;
+		}
+	}
+
+	@Override
+	public boolean onTouch(View v, MotionEvent event) {
+		
+		switch (event.getAction() & MotionEvent.ACTION_MASK) {
+		case MotionEvent.ACTION_DOWN:
+			break;
+		case MotionEvent.ACTION_MOVE:
+		
+			break;
+		case MotionEvent.ACTION_UP:
+		/**
+			 * 语音识别对话结束
+			 */
+			if (v.getId() == R.id.yx_microphone) {
+				recognitionClient.speakFinish();
+			}
+			break;
+		}
+
+		switch (v.getId()) {
+		
+		case R.id.yx_microphone://可增加语音动画
+			if (event.getAction() == MotionEvent.ACTION_DOWN) {
+				
+			} else if (event.getAction() == MotionEvent.ACTION_UP) {
+			}
+			break;
+		default:
+			break;
+		}
+		return false;
 	}
 
 	@Override
@@ -359,6 +463,29 @@ public class YinXiangMainActivity extends FragmentActivity {
 			}
 		});
 		builder.create().show();
+		return true;
+	}
+	
+	
+	private boolean isSwitchPower() {
+		Dialog dialog = new AlertDialog.Builder(
+				YinXiangMainActivity.this)
+				.setTitle("是否启动或关闭音响？")
+				.setPositiveButton("是",
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog,int which) {
+								ClientSendCommandService.msg = "key:power";
+								ClientSendCommandService.handler.sendEmptyMessage(1);
+							}
+						})
+				.setNegativeButton("否",	new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog,int which) {
+								dialog.cancel();
+							}
+						}).create();
+		dialog.show();
 		return true;
 	}
 
@@ -773,9 +900,8 @@ public class YinXiangMainActivity extends FragmentActivity {
 	 *            索引值。
 	 * @return
 	 */
-	public Fragment getInstanceByIndex(int index) {
+	public Fragment getInstanceByIndex(int fragmentIndex) {
 		Fragment fragment = null;
-		int fragmentIndex = matchFragmentIndex(index);
 		switch (fragmentIndex) {
 		case 1: // 遥控器
 			fragment = new YinXiangRemoteControlFragment();
@@ -783,14 +909,15 @@ public class YinXiangMainActivity extends FragmentActivity {
 		case 2: // 网络电台
 			fragment = new YinXiangFMFragment();
 			break;
-		case 3: // 音乐速递
-			fragment = new YinXiangNetMusicFragment();
-
+		case 3: //麦克风	        
 			break;
-		case 4: // 一键推送
+		case 4: // 音乐速递
+			fragment = new YinXiangNetMusicFragment();
+			break;
+		case 5: // 一键推送
 			fragment = new YinXiangCategoryFragment();
 			break;
-		case 5: // 设置Fragment
+		case 6: // 设置Fragment
 			fragment = new YinXiangSettingFragment();
 			break;
 		default:
@@ -833,6 +960,275 @@ public class YinXiangMainActivity extends FragmentActivity {
 	private void unregisterWifiBroad() {
 		if (networkConnectChange != null) {
 			unregisterReceiver(networkConnectChange);
+		}
+	}
+	
+	
+	/********************************************** 语音部分代码 *********************************************************/
+
+	/**
+	 * baidu recognition client, void to init many times, so use static here
+	 */
+	private static VoiceRecognitionClient recognitionClient;
+
+	/**
+	 * 识别回调接口
+	 */
+	private BaiDuVoiceChannelDialogRecogListener recogListener = new BaiDuVoiceChannelDialogRecogListener();
+
+	/**
+	 * 初始化百度的配置
+	 */
+	private void initBaiduConfiguration() {
+		if (recognitionClient == null) {
+			recognitionClient = VoiceRecognitionClient
+					.getInstance(YinXiangMainActivity.this);
+			recognitionClient.setTokenApis(BaiDuVoiceConfiguration.API_KEY,
+					BaiDuVoiceConfiguration.SECRET_KEY);
+		}
+	}
+
+	/**
+	 * 百度语音监听器
+	 */
+	public class BaiDuVoiceChannelDialogRecogListener implements
+			VoiceRecognitionClient.VoiceClientStatusChangeListener {
+		/**
+		 * 正在识别中
+		 */
+		private boolean isRecognitioning = false;
+
+		private int recognitioningFailedTimes = 0;
+
+		/**
+		 * channel match list, integer value stand for match time, compare han
+		 * zi one by one
+		 */
+		private Map<String, Integer> matchChannel = new HashMap<String, Integer>();
+
+		@Override
+		public void onClientStatusChange(int status, Object obj) {
+			switch (status) {
+			// 语音识别实际开始，这是真正开始识别的时间点，需在界面提示用户说话。
+			case VoiceRecognitionClient.CLIENT_STATUS_START_RECORDING:
+				isRecognitioning = true;
+				break;
+			// 检测到语音起点
+			case VoiceRecognitionClient.CLIENT_STATUS_SPEECH_START:
+				break;
+			// 已经检测到语音终点，等待网络返回
+			case VoiceRecognitionClient.CLIENT_STATUS_SPEECH_END:
+				break;
+			// 语音识别完成，显示obj中的结果
+			case VoiceRecognitionClient.CLIENT_STATUS_FINISH:
+				isRecognitioning = false;
+				updateRecognitionResult(obj);
+				break;
+			// 处理连续上屏
+			case VoiceRecognitionClient.CLIENT_STATUS_UPDATE_RESULTS:
+				break;
+			// 用户取消
+			case VoiceRecognitionClient.CLIENT_STATUS_USER_CANCELED:
+				recognitionClient.stopVoiceRecognition();
+				break;
+			default:
+				break;
+			}
+		}
+
+		@Override
+		public void onError(int errorType, int errorCode) {
+			Toast.makeText(YinXiangMainActivity.this, "抱歉哟，我们不能识别空指令", Toast.LENGTH_LONG)
+					.show();
+			isRecognitioning = false;
+			recognitionClient.stopVoiceRecognition();
+		}
+
+		@Override
+		public void onNetworkStatusChange(int status, Object obj) {
+			// 这里不做任何操作不影响简单识别
+		}
+
+		/**
+		 * 将识别结果更新到UI上，搜索模式结果类型为List<String>,输入模式结果类型为List<List<Candidate>>
+		 */
+		private void updateRecognitionResult(Object result) {
+			String recognitionResult = "";
+			if (result != null && result instanceof List) {
+				List results = (List) result;
+				if (results.size() > 0) {
+					if (results.get(0) instanceof List) {
+						List<List<Candidate>> sentences = (List<List<Candidate>>) result;
+						StringBuffer sb = new StringBuffer();
+						for (List<Candidate> candidates : sentences) {
+							if (candidates != null && candidates.size() > 0) {
+								sb.append(candidates.get(0).getWord());
+							}
+						}
+						recognitionResult = sb.toString().replace("。", "");
+					} else {
+						recognitionResult = results.get(0).toString()
+								.replace("。", "");
+					}
+				}
+			}
+
+			/**
+			 * used for check yuying laucher is successful or not
+			 * <p>
+			 * we have two flows: 1 - if text start with "打开"，"启动"，"开启" go to
+			 * open box app way 2 - else go to switch channel way
+			 */
+			boolean hasResult = false;
+			if (StringUtils.hasLength(recognitionResult)) {
+				/******************************************** 处理用户说的话 ********************************************/
+
+				String commands = YuYingWordsUtils
+						.isSearchContainsControl(recognitionResult);
+				if (StringUtils.hasLength(commands)) {
+					// TODO:流程->主页
+					String[] command = StringUtils.delimitedListToStringArray(
+							commands, "|");
+					if (command.length == 2 && command[0].equals("key:dtv")) {
+						ClientSendCommandService.msg = command[0];
+						ClientSendCommandService.handler.sendEmptyMessage(1);
+						SystemClock.sleep(300);
+						ClientSendCommandService.msg = command[1];
+						ClientSendCommandService.handler.sendEmptyMessage(1);
+					} else {
+						for (String cmd : command) {
+							ClientSendCommandService.msg = cmd;
+							ClientSendCommandService.handler
+									.sendEmptyMessage(1);
+						}
+					}
+
+					hasResult = true;
+					Toast.makeText(YinXiangMainActivity.this,
+							"语音的结果为:" + recognitionResult, Toast.LENGTH_LONG)
+							.show();
+
+				} else if (YuYingWordsUtils
+						.isSearchContainsAppKeywords(recognitionResult)) {
+					// TODO:流程->搜索应用
+					recognitionResult = YuYingWordsUtils
+							.appSearchWordsConvert(recognitionResult);
+
+					/**
+					 * search server side all applications
+					 */
+					if (ClientSendCommandService.serverAppInfo.isEmpty()) {
+						ClientSendCommandService.handler.sendEmptyMessage(6);
+						// wait for search channel finish
+						while (!ClientSendCommandService.searchApplicationFinished) {
+							SystemClock.sleep(500);
+						}
+					}
+
+					/**
+					 * compare the matched app, use char compare one by one
+					 */
+					matchChannel.clear();
+					for (int i = 0; i < recognitionResult.length(); i++) {
+						for (int j = 0; j < ClientSendCommandService.serverAppInfo
+								.size(); j++) {
+							AppInfo info = ClientSendCommandService.serverAppInfo
+									.get(j);
+							String appName = info.appName;
+							if (appName.indexOf(recognitionResult.charAt(i)) >= 0) {
+								Integer count = matchChannel.get(String
+										.valueOf(j));
+								if (count == null) {
+									matchChannel.put(String.valueOf(j), 1);
+								} else {
+									matchChannel.put(String.valueOf(j),
+											count + 1);
+								}
+							}
+						}
+					}
+
+					/**
+					 * get best matched result, the value must bigger than 2 1 -
+					 * first compare value which is bigger 2 - if value is equal
+					 * compare which is shorter 3 - if length is equal compare
+					 * which contains the input string
+					 */
+					int bestCounter = 0;
+					String bestPostion = "";
+					for (String position : matchChannel.keySet()) {
+						Integer value = matchChannel.get(position);
+
+						if (value >= 2) {
+							if (value > bestCounter) {
+								bestCounter = value;
+								bestPostion = position;
+							} else if (value == bestCounter) {
+								String bestApp = ClientSendCommandService.serverAppInfo
+										.get(Integer.valueOf(bestPostion)).appName;
+								String newApp = ClientSendCommandService.serverAppInfo
+										.get(Integer.valueOf(position)).appName;
+
+								if (newApp.length() < bestApp.length()) {
+									bestPostion = position;
+								} else if (newApp.length() == bestApp.length()) {
+									int bestIndex = bestApp
+											.indexOf(recognitionResult);
+									int newIndex = newApp
+											.indexOf(recognitionResult);
+									if (bestIndex < 0 && newIndex >= 0) {
+										bestPostion = position;
+									}
+								}
+							}
+						}
+					}
+
+					/**
+					 * send command to the server to decide which one should
+					 * open
+					 */
+					if (StringUtils.hasLength(bestPostion)) {
+						AppInfo info = ClientSendCommandService.serverAppInfo
+								.get(Integer.valueOf(bestPostion));
+						ClientSendCommandService.msg = "app_open:"
+								+ info.packageName;
+						ClientSendCommandService.handler.sendEmptyMessage(1);
+						Log.e(TAG, "message:" + "app_open:" + info.packageName);
+
+						Toast.makeText(
+								YinXiangMainActivity.this,
+								"应用的结果为:" + info.appName + "\n语音的结果为:"
+										+ recognitionResult, Toast.LENGTH_LONG)
+								.show();
+						hasResult = true;
+					} else {
+						hasResult = false;
+					}
+
+				} else {
+
+				}
+				/******************************************** 结束处理用户说的话 ******************************************/
+			}
+
+			if (!hasResult) {
+				recognitioningFailedTimes = recognitioningFailedTimes + 1;
+				if (recognitioningFailedTimes == 3) {
+					recognitioningFailedTimes = 0;
+					BaiDuVoiceChannelControlDialog yuYingHelpDialog = new BaiDuVoiceChannelControlDialog(
+							YinXiangMainActivity.this);
+					yuYingHelpDialog.show();
+				} else {
+					Toast.makeText(YinXiangMainActivity.this, "语音搜索:" + recognitionResult,
+							Toast.LENGTH_SHORT).show();
+					ClientSendCommandService.msg = "search:" + "|"
+							+ recognitionResult;
+					ClientSendCommandService.handler.sendEmptyMessage(1);
+				}
+			} else {
+				recognitioningFailedTimes = 0;
+			}
 		}
 	}
 }
