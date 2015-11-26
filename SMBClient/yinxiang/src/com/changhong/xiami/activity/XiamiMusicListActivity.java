@@ -12,7 +12,6 @@ import java.util.List;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -25,14 +24,12 @@ import android.widget.Toast;
 
 import com.changhong.xiami.data.MusicsListAdapter;
 import com.changhong.xiami.data.SceneInfor;
-import com.changhong.xiami.data.XMMusicData;
 import com.changhong.xiami.data.XMPlayMusics;
 import com.changhong.yinxiang.R;
 import com.changhong.yinxiang.activity.BaseActivity;
 import com.changhong.yinxiang.utils.Configure;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.xiami.sdk.entities.OnlineAlbum;
 import com.xiami.sdk.entities.OnlineSong;
 
 public class XiamiMusicListActivity extends BaseActivity {
@@ -42,10 +39,7 @@ public class XiamiMusicListActivity extends BaseActivity {
 	private MusicsListAdapter adapter;
 	private List<OnlineSong> songsList;
 	private List<OnlineSong> playList = new ArrayList<OnlineSong>();
-	private OnlineAlbum album;
 	private long albumID = 0;
-	private int albumIndex = 0;
-	private final int MUSIC_TYPE_ALBUM = 1;
 	private final int MUSIC_TYPE_SCENE = 2;
 
 	private final int MUSIC_LIST_UPDATE = 99;

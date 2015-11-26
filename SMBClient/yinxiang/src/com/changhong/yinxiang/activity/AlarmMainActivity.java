@@ -2,7 +2,6 @@ package com.changhong.yinxiang.activity;
 
 import java.util.ArrayList;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,6 +12,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.changhong.common.service.ClientSendCommandService;
@@ -27,7 +27,7 @@ import com.changhong.yinxiang.music.MusicEditServer;
 import com.changhong.yinxiang.music.MusicUtils;
 import com.changhong.yinxiang.view.MyProgressDialog;
 
-public class AlarmMainActivity extends Activity {
+public class AlarmMainActivity extends BaseActivity {
 
 	private Button add;
 	private Button delete;
@@ -75,18 +75,24 @@ public class AlarmMainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		initView();
-		initData();
 	}
 
 	protected void initView() {
 		// TODO Auto-generated method stub
+		setContentView(R.layout.alarm_main);
+		/**
+		 * IP连接部分
+		 */
+		title = (TextView) findViewById(R.id.title);
+		back = (Button) findViewById(R.id.btn_back);
+		clients = (ListView) findViewById(R.id.clients);
+		listClients = (Button) findViewById(R.id.btn_list);
+		
 		// 启动TCP接收线程
 		mMusicEditServer = MusicEditServer.creatFileEditServer();
 		mMusicEditServer.communicationWithServer(handler,
 				MusicUtils.ACTION_SOCKET_COMMUNICATION, action);
-
-		setContentView(R.layout.alarm_main);
+		
 		add = (Button) findViewById(R.id.add);
 		delete = (Button) findViewById(R.id.delete);
 		alarmInfor = (ListView) findViewById(R.id.alarm_info);
@@ -97,6 +103,7 @@ public class AlarmMainActivity extends Activity {
 
 	protected void initData() {
 		// TODO Auto-generated method stub
+		super.initData();
 		add.setOnClickListener(new OnClickListener() {
 
 			@Override
