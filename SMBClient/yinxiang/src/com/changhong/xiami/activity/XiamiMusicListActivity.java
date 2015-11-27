@@ -6,7 +6,6 @@ package com.changhong.xiami.activity;
  * BY CYM
  */
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import android.content.Intent;
@@ -24,7 +23,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.changhong.xiami.data.MusicsListAdapter;
-import com.changhong.xiami.data.SceneInfor;
 import com.changhong.xiami.data.XMPlayMusics;
 import com.changhong.yinxiang.R;
 import com.changhong.yinxiang.activity.BaseActivity;

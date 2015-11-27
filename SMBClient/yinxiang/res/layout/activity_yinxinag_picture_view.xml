@@ -33,7 +33,7 @@
                 android:layout_height="10.7dip"
                 />
     </LinearLayout>
-    <Button
+    <ImageView
             android:id="@+id/btn_back"
             android:background="@drawable/title_btn_back_selector"
             android:layout_width="80.5dip"
