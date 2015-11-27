@@ -10,6 +10,7 @@ public class Configure {
 	public final static int IMAGE_SIZE1 = 80, IMAGE_SIZE2 = 120,
 			IMAGE_SIZE3 = 400;
 
+	public final static int XIAMI_PLAY_MUSICS = 999;
 	public final static int XIAMI_RESPOND_SECCESS = 1000;
 	public final static int XIAMI_RESPOND_FAILED = 1001;
 
@@ -21,6 +22,8 @@ public class Configure {
 	public final static int XIAMI_RANK_LIST = 1007;// 榜单列表
 	public final static int XIAMI_RANK_DETAIL = 1008;// 指定榜单类型
 	public final static int XIAMI_ALBUM_DETAIL = 1009;// 指定指定专辑
+	public final static  int XIAMI_COLLECT_DETAIL = 1010;//指定精选集
+
 
 	public final static int XIAMI_ARTIST_WORDBOOK = 1014;// 艺人大全
 	public final static int XIAMI_RECOMMEND_PROMOTIONS_ARTISTS = 1015;// 推荐艺人
@@ -29,6 +32,9 @@ public class Configure {
 
 	public final static int XIAMI_COLLECT_RECOMMEND = 1018;// 精选集推荐
 	public final static int XIAMI_NEW_ALBUMS = 1019;// 新碟上架-音乐会-专辑
+	public final static int XIAMI_SCENE_LIST = 1020;// 场景列表
+	public final static int XIAMI_SCENE_DETAIL = 1021;// 场景详细信息
+
 
 	public final static int[] yinxiao_resID = { R.drawable.yinxiaomovie,
 			R.drawable.yinxiaotv, R.drawable.yinxiaomusic,
@@ -67,6 +73,7 @@ public class Configure {
 	 */
 	public final static String RequestMethods_PROMOTION_ALBUMS = "rank.promotion-albums";// 新碟首发
 
+
 	public static int getRequestType(String str) {
 		int i = XIAMI_RESPOND_SECCESS;
 		if (str.equals(RequestMethods.METHOD_RECOMMEND_DAILYLIST)) {
@@ -91,10 +98,18 @@ public class Configure {
 			i = XIAMI_COLLECT_RECOMMEND;
 		} else if (str.equals(RequestMethods.METHOD_ALBUMS_DETAIL)) {
 			i = XIAMI_ALBUM_DETAIL;
-		} else if (str.equals(RequestMethods.METHOD_RANK_NEWALBUM)) {
+		} else if (str.equals(RequestMethods.METHOD_COLLECT_DETAIL)) {
+			i = XIAMI_COLLECT_DETAIL;
+		}else if (str.equals(RequestMethods.METHOD_RANK_NEWALBUM)) {
 			i = XIAMI_NEW_ALBUMS;
+		}else if (str.equals("radio.scene")) {
+			i = XIAMI_SCENE_LIST;
+		}else if (str.equals(RequestMethods.METHOD_RADIO_DETAIL)) {
+			i = XIAMI_SCENE_DETAIL;
 		}
-
+		
+		
+		
 		return i;
 	}
 }

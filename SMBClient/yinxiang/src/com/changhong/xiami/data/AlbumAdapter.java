@@ -3,14 +3,19 @@ package com.changhong.xiami.data;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.changhong.common.system.MyApplication;
 import com.changhong.yinxiang.R;
+import com.changhong.yinxiang.utils.Configure;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.Handler;
+import android.os.Message;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AbsListView;
@@ -26,10 +31,11 @@ public class AlbumAdapter extends BaseAdapter{
 	private int mScreenWidth;
 	private int mScreenHeight;
 	private  ImageLoader imageLoader;
+	private Handler parentHandler=null;
 
-	public AlbumAdapter(Context mContext) {
+	public AlbumAdapter(Context mContext,Handler parent) {
 		this.mContext = mContext;
-		
+		this.parentHandler=parent;
 		WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
 		Display d = wm.getDefaultDisplay();
 		mScreenWidth = d.getWidth();
@@ -80,11 +86,24 @@ public class AlbumAdapter extends BaseAdapter{
 			viewHolder = (ViewHolder) view.getTag();
 		}
 		
+		viewHolder.albumId=mAlbumList.get(position).getId();
 		viewHolder.albumName.setText(mAlbumList.get(position).getTitle());
 		viewHolder.albumContent.setText(mAlbumList.get(position).getDescription());	
 		String logo=mAlbumList.get(position).getLogoUrl();
 		imageLoader.displayImage(logo, viewHolder.albumLogo);
-
+		viewHolder.albumPlay.setOnClickListener(new OnClickListener() {			
+			@Override
+			public void onClick(View v) {
+				MyApplication.vibrator.vibrate(30);
+				if(null != parentHandler){
+				    Message msg=parentHandler.obtainMessage();
+				    msg.arg1=(int) mAlbumList.get(position).getId();
+				    msg.what=Configure.XIAMI_PLAY_MUSICS;
+				    parentHandler.sendMessage(msg);
+				}
+				      
+			}
+		});
 		return view;
 
 	}
@@ -93,7 +112,7 @@ public class AlbumAdapter extends BaseAdapter{
 
 	final static class ViewHolder {
 		
-		TextView albumId;
+		long albumId;
 		TextView albumName;
 		TextView albumContent;
 		ImageView albumLogo;

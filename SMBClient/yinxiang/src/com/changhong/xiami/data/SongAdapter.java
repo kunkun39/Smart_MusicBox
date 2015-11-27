@@ -28,7 +28,7 @@ public class SongAdapter extends BaseAdapter{
 	}
 	
 	/**
-	 * 当ListView数据发生变化�?调用此方法来更新ListView
+	 * 当ListView数据发生变化�?调用此方法来更新ListView
 	 * @param list
 	 */
 	public void updateListView(List<OnlineSong> list,String singer,String logo){
@@ -63,15 +63,15 @@ public class SongAdapter extends BaseAdapter{
 			viewHolder.songTitle = (TextView) view.findViewById(R.id.song_name);
 			viewHolder.songArtist = (TextView) view.findViewById(R.id.song_artist);
 			viewHolder.singerLogo = (ImageView) view.findViewById(R.id.song_logo);	
-			viewHolder.songArtist.setText(singer);	
-			ImageLoader.getInstance().displayImage(logo, viewHolder.singerLogo );
-			
+			viewHolder.songArtist.setText(singer);				
 			view.setTag(viewHolder);
 		} else {
 			viewHolder = (ViewHolder) view.getTag();
 		}
 		
 		viewHolder.songTitle.setText(this.mSongList.get(position).getSongName());	
+		String albumLogo=mSongList.get(position).getAlbumLogo();
+		ImageLoader.getInstance().displayImage(albumLogo, viewHolder.singerLogo );
 
 		return view;
 

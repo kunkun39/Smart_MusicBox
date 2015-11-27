@@ -205,6 +205,42 @@ public class XMMusicData {
 		return dataList;
 	}
 
+	/**
+	 * 获取场景分类
+	 * 
+	 * @param element
+	 * @return
+	 */
+	public List<SceneInfor> getSceneList(JsonElement element) {
+
+		if (null == element)
+			return null;
+
+		List<SceneInfor> dataList = new ArrayList<SceneInfor>();
+
+		JsonObject obj = element.getAsJsonObject();
+		element = obj.get("list");
+
+		if (element.isJsonArray()) {
+
+			JsonArray array = element.getAsJsonArray();
+			int size = array.size();
+			for (int i = 0; i < size; i++) {
+				JsonObject itemObj = array.get(i).getAsJsonObject();
+
+				SceneInfor scene = new SceneInfor();
+				scene.setSceneID(getJsonObjectValueInt(itemObj, "radio_id"));
+				scene.setSceneName(getJsonObjectValue(itemObj, "title"));
+				scene.setSceneLogo(getJsonObjectValue(itemObj, "logo"));
+				scene.setMusicType(getJsonObjectValueInt(itemObj, "radio_type"));
+				String tag = getJsonObjectValue(itemObj, "tag");
+				// 封装歌曲列表
+				dataList.add(scene);
+			}
+		}
+		return dataList;
+	}
+
 	/*
 	 * 
 	 * 获取今日推荐歌曲列表
@@ -288,6 +324,31 @@ public class XMMusicData {
 		params.put("full_des", false);
 		RequestDataTask requestDataTask = new RequestDataTask(this, handler,
 				RequestMethods.METHOD_ALBUMS_DETAIL);
+		requestDataTask.execute(params);
+	}
+
+	/**
+	 * 获取指定精选集ID的详细信息
+	 */
+	public void getCollectDetail(Handler handler, long id) {
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("list_id", id);
+		params.put("full_des", false);
+		RequestDataTask requestDataTask = new RequestDataTask(this, handler,
+				RequestMethods.METHOD_COLLECT_DETAIL);
+		requestDataTask.execute(params);
+	}
+	
+	
+	/**
+	 * 获取指定场景音乐
+	 */
+	public void getSceneDetail(Handler handler, long id) {
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("id", id);
+		params.put("limit", 100);
+		RequestDataTask requestDataTask = new RequestDataTask(this, handler,
+				RequestMethods.METHOD_RADIO_DETAIL);
 		requestDataTask.execute(params);
 	}
 
@@ -435,23 +496,18 @@ public class XMMusicData {
 		for (int i = 0; i < size; i++) {
 			JsonObject songObj = arraySong.get(i).getAsJsonObject();
 			OnlineSong song = new OnlineSong();
-			song.setSongId(songObj.get("song_id").getAsLong());
-			song.setArtistId(songObj.get("artist_id").getAsLong());
-			song.setSongId(songObj.get("song_id").getAsLong());
-			try {
-				song.setAlbumId(songObj.get("album_id").getAsLong());
-				song.setAlbumName(songObj.get("album_name").getAsString());
-				song.setLogo(songObj.get("album_logo").getAsString());
-			} catch (Exception e) {
-				e.printStackTrace();
-			}			
-			song.setLength(songObj.get("length").getAsInt());
-			song.setMusicType(songObj.get("music_type").getAsInt());
-			song.setCdSerial(songObj.get("cd_serial").getAsInt());
-			song.setSongName(songObj.get("song_name").getAsString());
-			song.setArtistName(songObj.get("artist_name").getAsString());
-			song.setArtistLogo(songObj.get("artist_logo").getAsString());
-			song.setSingers(songObj.get("singers").getAsString());
+			song.setSongId(getJsonObjectValueLong(songObj, "song_id"));
+			song.setArtistId(getJsonObjectValueLong(songObj, "artist_id"));
+			song.setAlbumId(getJsonObjectValueLong(songObj, "album_id"));
+			song.setAlbumName(getJsonObjectValue(songObj, "album_name"));
+			song.setLogo(getJsonObjectValue(songObj, "album_logo"));
+			song.setLength(getJsonObjectValueInt(songObj, "length"));
+			song.setMusicType(getJsonObjectValueInt(songObj, "music_type"));
+			song.setCdSerial(getJsonObjectValueInt(songObj, "cd_serial"));
+			song.setSongName(getJsonObjectValue(songObj, "song_name"));
+			song.setArtistName(getJsonObjectValue(songObj, "artist_name"));
+			song.setArtistLogo(getJsonObjectValue(songObj, "artist_logo"));
+			song.setSingers(getJsonObjectValue(songObj, "singers"));
 			dataList.add(song);
 		}
 		return dataList;
@@ -477,8 +533,10 @@ public class XMMusicData {
 
 				OnlineArtist onlineArtist = new OnlineArtist();
 				onlineArtist.setId(getJsonObjectValueInt(itemObj, "artist_id"));
-				onlineArtist.setName(getJsonObjectValue(itemObj, "artist_name"));
-				onlineArtist.setLogo(getJsonObjectValue(itemObj, "artist_logo"));
+				onlineArtist
+						.setName(getJsonObjectValue(itemObj, "artist_name"));
+				onlineArtist
+						.setLogo(getJsonObjectValue(itemObj, "artist_logo"));
 				onlineArtist.setCategory(getJsonObjectValueInt(itemObj,
 						"artist_id"));
 				onlineArtist.setEnglish_name(getJsonObjectValue(itemObj,
@@ -712,6 +770,21 @@ public class XMMusicData {
 		return rValue;
 	}
 
+	private long getJsonObjectValueLong(JsonObject jsonObj, String key) {
+
+		long rValue = 0;
+
+		try {
+			rValue = jsonObj.get(key).getAsLong();
+		} catch (JsonParseException e) {
+			e.printStackTrace();
+		} catch (NullPointerException ex) {
+			ex.printStackTrace();
+		}
+
+		return rValue;
+	}
+
 	private float getJsonObjectValueFloat(JsonObject jsonObj, String key) {
 
 		float rValue = 0;
@@ -813,10 +886,12 @@ public class XMMusicData {
 				JSONArray array = new JSONArray();
 
 				for (OnlineSong onlineSong : list) {
+					String title = onlineSong.getSongName().trim();
+
 					String tempPath = Encryptor.decryptUrl(onlineSong
 							.getListenFile());// 解密播放地址
 					// String tempPath = onlineSong.getListenFile();
-					String title = onlineSong.getSongName().trim();
+					title = onlineSong.getSongName().trim();
 					String artist = onlineSong.getArtistName().trim();
 					int duration = onlineSong.getLength();
 					JSONObject music = new JSONObject();
@@ -890,4 +965,22 @@ public class XMMusicData {
 		}
 		return dataList;
 	}
+
+	public List<OnlineSong> getSortSongs(List<OnlineSong> songs, int index) {
+		if (null == songs || index >= songs.size())
+			return null;
+
+		List<OnlineSong> songList = new ArrayList<OnlineSong>();
+		int size = songs.size();
+		for (int i = index; i < size; i++) {
+			OnlineSong song = songs.get(i);
+			songList.add(song);
+			if ((i + 1) >= songs.size()) {
+				i = -1;
+				size = index;
+			}
+		}
+		return songList;
+	}
+
 }

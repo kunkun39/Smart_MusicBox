@@ -17,6 +17,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,7 +35,7 @@ public abstract class BaseActivity extends Activity{
 
 	public static TextView title = null;
 	protected Button listClients;
-	protected Button back;
+	protected ImageView back;
 	protected ListView clients = null;
 	protected BoxSelectAdapter IpAdapter;
 	

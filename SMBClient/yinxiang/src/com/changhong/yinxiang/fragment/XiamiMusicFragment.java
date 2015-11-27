@@ -213,7 +213,7 @@ public class XiamiMusicFragment extends  Fragment {
 	  
     @Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.xiami_main_layout, container,	false);
+		View view = inflater.inflate(R.layout.fragment_xiamimusic, container,	false);
 		initView(view);
 		initData();
 		return view;

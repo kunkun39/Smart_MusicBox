@@ -128,6 +128,7 @@ public class YinXiangMainActivity extends FragmentActivity  implements OnClickLi
 	//搜索输入框
 	private RelativeLayout searchInputDialog=null;
 	private ViewHolder searchViewHolder=null;
+	private ImageView  voiceAnimal=null;
 	
 	//百度语音输入
 	BaiDuVoiceClient  mBaiDuVoiceClient=null;
@@ -200,7 +201,7 @@ public class YinXiangMainActivity extends FragmentActivity  implements OnClickLi
 		 searchViewHolder = new ViewHolder();
 	     searchViewHolder.search_keywords=(EditText) searchInputDialog.findViewById(R.id.search_input);
 	     searchViewHolder.btnSubmit=(Button) searchInputDialog.findViewById(R.id.search_submit);
-
+	     voiceAnimal= (ImageView) findViewById(R.id.voice_animal);
 		
 
 
@@ -386,8 +387,9 @@ public class YinXiangMainActivity extends FragmentActivity  implements OnClickLi
 		
 		case R.id.yx_microphone://可增加语音动画
 			if (event.getAction() == MotionEvent.ACTION_DOWN) {
-				
+				voiceAnimal.setVisibility(View.VISIBLE);
 			} else if (event.getAction() == MotionEvent.ACTION_UP) {
+				voiceAnimal.setVisibility(View.GONE);
 			}
 			break;
 		default:
@@ -974,8 +976,8 @@ private void searchKey(String key) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("search:");
 		sb.append("|");
-		sb.append(movie);
-		sb.append(";");
+//		sb.append(movie);
+//		sb.append(";");
 		sb.append(key);
 		
 		ClientSendCommandService.msg = sb.toString();

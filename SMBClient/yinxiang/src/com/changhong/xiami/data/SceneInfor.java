@@ -12,7 +12,6 @@ public class SceneInfor implements  Serializable{
 	private  int  musicType;
 	private  String  sceneName;
 	private  String  sceneLogo;
-
 	private List<OnlineSong> songsList;
 
 	public String getSceneName() {

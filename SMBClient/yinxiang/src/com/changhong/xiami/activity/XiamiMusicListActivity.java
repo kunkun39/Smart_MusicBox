@@ -18,6 +18,7 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -68,7 +69,10 @@ public class XiamiMusicListActivity extends BaseActivity {
 				albumName.setText(curTitle);
 				adapter.setData(songsList);
 				break;
+			case Configure.XIAMI_COLLECT_DETAIL:
 			case Configure.XIAMI_ALBUM_DETAIL: // 专辑音乐类型1
+			case Configure.XIAMI_SCENE_DETAIL: // 场景音乐
+
 				element=(JsonElement) msg.obj;
 				getAlbumList(element);
 				break;
@@ -76,20 +80,6 @@ public class XiamiMusicListActivity extends BaseActivity {
 			case Configure.MUSIC_TYPE_COLLECT: // 精选集音乐类型3
 				albumID = getIntent().getIntExtra("list_id", 0);
 				// getAlbumList();
-				break;
-
-			case MUSIC_TYPE_SCENE: // 场景音乐2
-				SceneInfor sceneInfor = (SceneInfor) getIntent()
-						.getSerializableExtra("sceneInfor");
-				albumID = sceneInfor.getSceneID();
-				curTitle = sceneInfor.getSceneName();
-				HashMap<String, Object> params = new HashMap<String, Object>();
-				params.put("id", 1);
-				params.put("type", 1);
-				params.put("limit", 20);
-				params.put("page", 1);
-				mXMMusicData.getJsonData(this, "tag.song", params);
-
 				break;
 
 			case Configure.XIAMI_TODAY_RECOMSONGS:// 今日推荐歌曲列表4
@@ -110,6 +100,7 @@ public class XiamiMusicListActivity extends BaseActivity {
 				element = (JsonElement) msg.obj;
 				showRankMusics(element);
 				break;
+			
 			}
 		}
 
@@ -129,7 +120,7 @@ public class XiamiMusicListActivity extends BaseActivity {
 		 * IP连接部分
 		 */
 		title = (TextView) findViewById(R.id.title);
-		back = (Button) findViewById(R.id.btn_back);
+		back = (ImageView) findViewById(R.id.btn_back);
 		clients = (ListView) findViewById(R.id.clients);
 		listClients = (Button) findViewById(R.id.btn_list);
 
@@ -191,6 +182,20 @@ public class XiamiMusicListActivity extends BaseActivity {
 				return;
 			}
 			mXMMusicData.getTheAlbum(mhandler, albumID);
+		}else if (Configure.XIAMI_COLLECT_DETAIL == curMusicType) {
+			albumID=getIntent().getLongExtra("listID", 0);
+			curTitle=getIntent().getStringExtra("listName");
+			if(0==albumID){
+				return;
+			}
+			mXMMusicData.getCollectDetail(mhandler, albumID);
+		}else if (Configure.XIAMI_SCENE_DETAIL == curMusicType) {
+			albumID=getIntent().getLongExtra("sceneID", 0);
+			curTitle=getIntent().getStringExtra("sceneName");
+			if(0==albumID){
+				return;
+			}
+			mXMMusicData.getSceneDetail(mhandler, albumID);
 		}else {
 			mhandler.sendEmptyMessage(curMusicType);
 		}

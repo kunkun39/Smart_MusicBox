@@ -13,10 +13,12 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.changhong.xiami.data.AlbumAdapter;
+import com.changhong.xiami.data.XMPlayMusics;
 import com.changhong.xiami.data.XiamiDataModel;
 import com.changhong.yinxiang.R;
 import com.changhong.yinxiang.activity.BaseActivity;
@@ -24,6 +26,8 @@ import com.changhong.yinxiang.utils.Configure;
 import com.google.gson.JsonElement;
 import com.xiami.music.api.utils.RequestMethods;
 import com.xiami.sdk.entities.OnlineAlbum;
+import com.xiami.sdk.entities.OnlineSong;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -62,13 +66,12 @@ public class AlbumListActivity extends BaseActivity {
 		 * IP连接部分
 		 */
 		title = (TextView) findViewById(R.id.title);
-		back = (Button) findViewById(R.id.btn_back);
+		back = (ImageView) findViewById(R.id.btn_back);
 		clients = (ListView) findViewById(R.id.clients);
 		listClients = (Button) findViewById(R.id.btn_list);
 
 		mAlbumList = (GridView) findViewById(R.id.album_list);
-		adapter = new AlbumAdapter(this);
-		mAlbumList.setAdapter(adapter);
+	
 
 	}
 
@@ -82,13 +85,12 @@ public class AlbumListActivity extends BaseActivity {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 
-				XiamiDataModel model = (XiamiDataModel) adapter
-						.getItem(position);
+				XiamiDataModel model = (XiamiDataModel) adapter.getItem(position);
 				long albumID = model.getId();
 				if (albumID > 0) {
-					Intent intent = new Intent(AlbumListActivity.this,
-							XiamiMusicListActivity.class);
+					Intent intent = new Intent(AlbumListActivity.this,	XiamiMusicListActivity.class);
 					intent.putExtra("musicType", Configure.XIAMI_ALBUM_DETAIL);
+					intent.putExtra("albumName", model.getTitle());				
 					intent.putExtra("albumID", albumID);
 					startActivity(intent);
 				}
@@ -110,40 +112,29 @@ public class AlbumListActivity extends BaseActivity {
 					break;
 				case Configure.XIAMI_RESPOND_FAILED:
 					int errorCode = msg.arg1;
-					Toast.makeText(AlbumListActivity.this, errorCode,
-							Toast.LENGTH_SHORT).show();
+					Toast.makeText(AlbumListActivity.this, errorCode,	Toast.LENGTH_SHORT).show();
+					break;
+				case Configure.XIAMI_ALBUM_DETAIL:
+	                //获取专辑歌曲
+					jsonData = (JsonElement) msg.obj;
+					List<OnlineSong> songs=mXMMusicData.getTheAlbumSongs(jsonData);	
+					XMPlayMusics.getInstance(AlbumListActivity.this).playMusics(songs);
+					break;
+				case Configure.XIAMI_PLAY_MUSICS:
+	                //播放音乐列表
+					int  albumID=msg.arg1;
+					mXMMusicData.getTheAlbum(this, albumID);
 					break;
 				}
 			}
 		};
+		adapter = new AlbumAdapter(this,mHandler);
+		mAlbumList.setAdapter(adapter);
 	}
 
 	@Override
 	protected void onStart() {
 		super.onStart();
-
-		// // 获取推荐歌曲
-		// new Thread(new Runnable() {
-		// @Override
-		// public void run() {
-		// final List<OnlineAlbum> results =
-		// mXMMusicData.getWeekHotAlbumsSync(MAX_PAGE_SIZE, 1);
-		//
-		// SourceDataList = filledData(results);
-		// mAlbumList.post(new Runnable() {
-		// @Override
-		// public void run() {
-		// if(null !=SourceDataList){
-		// adapter.updateListView(SourceDataList);
-		// }else{
-		// Toast.makeText(AlbumListActivity.this,"没有搜索到专辑信息",
-		// Toast.LENGTH_SHORT).show();
-		// }
-		// }
-		// });
-		// }
-		// }).start();
-
 		curType = getIntent().getIntExtra("albumList",
 				Configure.XIAMI_NEW_ALBUMS);
 		if (curType == Configure.XIAMI_NEW_ALBUMS) {
@@ -249,9 +240,10 @@ public class AlbumListActivity extends BaseActivity {
 						Toast.LENGTH_SHORT).show();
 			}
 		} else {
-			Toast.makeText(getApplicationContext(), R.string.error_response,
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(getApplicationContext(), R.string.error_response,Toast.LENGTH_SHORT).show();
 		}
-
 	}
+	
+	
+	
 }

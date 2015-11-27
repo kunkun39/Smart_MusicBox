@@ -14,6 +14,7 @@ import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -90,7 +91,7 @@ public class ArtistListActivity extends BaseActivity {
 		 * IP连接部分
 		 */
 		title = (TextView) findViewById(R.id.title);
-		back = (Button) findViewById(R.id.btn_back);
+		back = (ImageView) findViewById(R.id.btn_back);
 		clients = (ListView) findViewById(R.id.clients);
 		listClients = (Button) findViewById(R.id.btn_list);
 

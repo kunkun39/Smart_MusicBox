@@ -38,8 +38,7 @@ public class XMPlayMusics {
 			public void run() {
 				// TODO Auto-generated method stub
 				playList = mXMMData.getDetailList(list);
-				mXMMData.sendMusics(context,
-						playList);
+				mXMMData.sendMusics(context,playList);
 			}
 		});
 	}

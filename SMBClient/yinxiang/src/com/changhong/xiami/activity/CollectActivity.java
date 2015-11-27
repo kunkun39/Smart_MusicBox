@@ -3,7 +3,6 @@ package com.changhong.xiami.activity;
 /**
  * 精选集
  */
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -14,22 +13,21 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.changhong.xiami.data.CollectAdapter;
-import com.changhong.xiami.data.RequestDataTask;
-import com.changhong.xiami.data.SceneInfor;
-import com.changhong.xiami.data.XMMusicData;
+import com.changhong.xiami.data.XMPlayMusics;
 import com.changhong.xiami.data.XiamiDataModel;
 import com.changhong.yinxiang.R;
 import com.changhong.yinxiang.activity.BaseActivity;
 import com.changhong.yinxiang.utils.Configure;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.xiami.music.api.utils.RequestMethods;
 import com.xiami.sdk.entities.OnlineCollect;
+import com.xiami.sdk.entities.OnlineSong;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -57,14 +55,11 @@ public class CollectActivity extends BaseActivity {
 		 * IP连接部分
 		 */
 		title = (TextView) findViewById(R.id.title);
-		back = (Button) findViewById(R.id.btn_back);
+		back = (ImageView) findViewById(R.id.btn_back);
 		clients = (ListView) findViewById(R.id.clients);
 		listClients = (Button) findViewById(R.id.btn_list);
-
 		mCollectList = (GridView) findViewById(R.id.album_list);
-		adapter = new CollectAdapter(this);
-		mCollectList.setAdapter(adapter);
-		mCollectList.setNumColumns(1);
+		
 
 	}
 
@@ -73,19 +68,18 @@ public class CollectActivity extends BaseActivity {
 		super.initData();
 
 		SourceDataList = new ArrayList<XiamiDataModel>();
-		// 长按进入歌手详情
+		// 长按进入进入精选集播放列表
 		mCollectList.setOnItemClickListener(new OnItemClickListener() {
 			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
+			public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
 
-				XiamiDataModel model = (XiamiDataModel) adapter
-						.getItem(position);
+				XiamiDataModel model = (XiamiDataModel) adapter.getItem(position);
 				if (null != model) {
-					int list_id =(int) model.getId();
+					long list_id =model.getId();
 					Intent intent = new Intent(CollectActivity.this,XiamiMusicListActivity.class);
-					intent.putExtra("list_id", list_id);
-					intent.putExtra("musicType", 3);
+					intent.putExtra("listID", list_id);
+					intent.putExtra("musicType", Configure.XIAMI_COLLECT_DETAIL);
+					intent.putExtra("listName", model.getTitle());
 					startActivity(intent);
 				}
 			}
@@ -102,10 +96,25 @@ public class CollectActivity extends BaseActivity {
 				case Configure.XIAMI_RESPOND_FAILED:
 					int errorCode=msg.arg1;
 					Toast.makeText(CollectActivity.this, errorCode,	Toast.LENGTH_SHORT).show();
-					break;					
+					break;	
+				case Configure.XIAMI_COLLECT_DETAIL:
+	                //获取专辑歌曲
+					jsonData = (JsonElement) msg.obj;
+					jsonData = jsonData.getAsJsonObject().get("songs");
+					List<OnlineSong> songs=mXMMusicData.getSongList(jsonData);	
+					XMPlayMusics.getInstance(CollectActivity.this).playMusics(songs);
+					break;
+				case Configure.XIAMI_PLAY_MUSICS:
+	                //播放音乐列表
+					int  collectID=msg.arg1;
+					mXMMusicData.getCollectDetail(this, collectID);
+					break;
 				}
 			}
-		};
+		};		
+		adapter = new CollectAdapter(this,mHandler);
+		mCollectList.setAdapter(adapter);
+		mCollectList.setNumColumns(1);
 	}
 
 	@Override

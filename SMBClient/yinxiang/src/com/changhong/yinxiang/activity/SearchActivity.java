@@ -134,7 +134,7 @@ public class SearchActivity extends BaseActivity {
 		 * IP连接部分
 		 */
 		title = (TextView) findViewById(R.id.title);
-		back = (Button) findViewById(R.id.btn_back);
+		back = (ImageView) findViewById(R.id.btn_back);
 		clients = (ListView) findViewById(R.id.clients);
 		listClients = (Button) findViewById(R.id.btn_list);
 		search_keywords = (EditText) findViewById(R.id.search_keywords);

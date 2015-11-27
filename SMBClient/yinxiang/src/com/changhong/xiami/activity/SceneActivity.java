@@ -16,6 +16,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,6 +26,7 @@ import com.changhong.xiami.data.RequestDataTask;
 import com.changhong.xiami.data.SceneAdapter;
 import com.changhong.xiami.data.SceneInfor;
 import com.changhong.xiami.data.XMMusicData;
+import com.changhong.xiami.data.XMPlayMusics;
 import com.changhong.xiami.data.XiamiApiResponse;
 import com.changhong.xiami.data.XiamiDataModel;
 import com.changhong.yinxiang.R;
@@ -54,7 +56,6 @@ public class SceneActivity extends BaseActivity {
 	private SceneAdapter adapter;
 	private Handler mHandler;
 	private List<XiamiDataModel> SourceDataList = null;
-	String[] sceneTitle = { "开车", "跑步", "聚会", "睡眠", "学习", "工作" };
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -69,13 +70,12 @@ public class SceneActivity extends BaseActivity {
 		 * IP连接部分
 		 */
 		title = (TextView) findViewById(R.id.title);
-		back = (Button) findViewById(R.id.btn_back);
+		back = (ImageView) findViewById(R.id.btn_back);
 		clients = (ListView) findViewById(R.id.clients);
 		listClients = (Button) findViewById(R.id.btn_list);
 
 		mSceneList = (GridView) findViewById(R.id.album_list);
-		adapter = new SceneAdapter(this);
-		mSceneList.setAdapter(adapter);
+	
 
 		// 修改layout
 		mSceneList.setVerticalSpacing(20);
@@ -94,14 +94,11 @@ public class SceneActivity extends BaseActivity {
 				XiamiDataModel model = (XiamiDataModel) adapter
 						.getItem(position);
 				if (null != model) {
-					SceneInfor mSceneInfor = new SceneInfor();
-					mSceneInfor.setSceneName(model.getTitle());
-					mSceneInfor.setSceneID((int) model.getId());
-					mSceneInfor.setMusicType(model.getType());
-					Intent intent = new Intent(SceneActivity.this,
-							XiamiMusicListActivity.class);
-					intent.putExtra("sceneInfor", mSceneInfor);
-					intent.putExtra("musicType", 2);
+				
+					Intent intent = new Intent(SceneActivity.this,	XiamiMusicListActivity.class);
+					intent.putExtra("sceneID", model.getId());
+					intent.putExtra("sceneName", model.getTitle());
+					intent.putExtra("musicType", Configure.XIAMI_SCENE_DETAIL);
 					startActivity(intent);
 				}
 			}
@@ -111,17 +108,32 @@ public class SceneActivity extends BaseActivity {
 			@Override
 			public void handleMessage(Message msg) {
 				switch (msg.what) {
-				case Configure.XIAMI_RESPOND_SECCESS:
+				case Configure.XIAMI_SCENE_LIST:
 					JsonElement jsonData = (JsonElement) msg.obj;
 					handlXiamiResponse(jsonData);
 					break;
 				case Configure.XIAMI_RESPOND_FAILED:
 					int errorCode=msg.arg1;
 					Toast.makeText(SceneActivity.this, errorCode,	Toast.LENGTH_SHORT).show();
-					break;					
+					break;	
+				case Configure.XIAMI_SCENE_DETAIL:
+	                //获取专辑歌曲
+					jsonData = (JsonElement) msg.obj;
+					jsonData = jsonData.getAsJsonObject().get("songs");
+					List<OnlineSong> songs=mXMMusicData.getSongList(jsonData);	
+					XMPlayMusics.getInstance(SceneActivity.this).playMusics(songs);
+					break;
+				case Configure.XIAMI_PLAY_MUSICS:
+	                //播放音乐列表
+					int  sceneID=msg.arg1;
+					mXMMusicData.getSceneDetail(this, sceneID);
+					break;
 				}
 			}
 		};
+		
+		adapter = new SceneAdapter(this,mHandler);
+		mSceneList.setAdapter(adapter);
 	}
 
 	@Override
@@ -129,7 +141,7 @@ public class SceneActivity extends BaseActivity {
 		super.onStart();
 
 		HashMap<String, Object> params = new HashMap<String, Object>();
-		mXMMusicData.getJsonData(mHandler, "tag.genre-list", params);
+		mXMMusicData.getJsonData(mHandler, "radio.scene", params);		
 	}
 
 	/**
@@ -147,12 +159,12 @@ public class SceneActivity extends BaseActivity {
 
 			int size = list.size();
 			for (int i = 0; i < size; i++) {
-				SceneInfor sceneSongs = list.get(i);
+				SceneInfor scene = list.get(i);
 				XiamiDataModel sceneModel = new XiamiDataModel();
-				sceneModel.setId(sceneSongs.getSceneID());
-				sceneModel.setTitle(sceneSongs.getSceneName());
-				sceneModel.setType(sceneSongs.getMusicType());
-				sceneModel.setLogoUrl(sceneSongs.getSceneLogo());
+				sceneModel.setId(scene.getSceneID());
+				sceneModel.setTitle(scene.getSceneName());
+				sceneModel.setType(scene.getMusicType());
+				sceneModel.setLogoUrl(scene.getSceneLogo());
 				dataList.add(sceneModel);
 			}
 		}
@@ -182,9 +194,8 @@ public class SceneActivity extends BaseActivity {
 	private void handlXiamiResponse(JsonElement jsonData) {
 
 		if (jsonData != null) {
-			List<SceneInfor> onlineCollects = mXMMusicData
-					.getGenreList(jsonData);
-			SourceDataList = filledData(onlineCollects);
+			List<SceneInfor> scenes = mXMMusicData.getSceneList(jsonData);
+			SourceDataList = filledData(scenes);
 			mSceneList.post(new Runnable() {
 				@Override
 				public void run() {

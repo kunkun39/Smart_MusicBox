@@ -3,15 +3,20 @@ package com.changhong.xiami.data;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.changhong.common.system.MyApplication;
 import com.changhong.yinxiang.R;
+import com.changhong.yinxiang.utils.Configure;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.Handler;
+import android.os.Message;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AbsListView;
@@ -28,10 +33,11 @@ public class CollectAdapter extends BaseAdapter{
 	private int mScreenWidth;
 	private int mScreenHeight;
     ImageLoader imageLoader;
+	private Handler parentHandler=null;
 
-	public CollectAdapter(Context mContext) {
+	public CollectAdapter(Context mContext,Handler parent) {
 		this.mContext = mContext;
-		
+		this.parentHandler=parent;
 		WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
 		Display d = wm.getDefaultDisplay();
 		mScreenWidth = d.getWidth();
@@ -94,8 +100,19 @@ public class CollectAdapter extends BaseAdapter{
 		
 		imageLoader.displayImage(logo, viewHolder.collectLogo);
 		imageLoader.displayImage(artistImg, viewHolder.artistImg);
-
-		
+		viewHolder.collectLogo.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				MyApplication.vibrator.vibrate(30);
+				if(null != parentHandler){					
+				    Message msg=parentHandler.obtainMessage();
+				    msg.arg1=(int) mCollectList.get(position).getId();
+				    msg.what=Configure.XIAMI_PLAY_MUSICS;
+				    parentHandler.sendMessage(msg);
+				}				
+			}
+		});
 		return view;
 
 	}
