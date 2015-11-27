@@ -9,8 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.changhong.common.system.MyApplication;
 import com.changhong.yinxiang.R;
 import com.xiami.sdk.entities.OnlineSong;
 
@@ -66,6 +68,7 @@ public class MusicsListAdapter extends BaseAdapter {
 					.findViewById(R.id.xiami_music_item_artist_duration);
 			holder.play = (ImageButton) convertView
 					.findViewById(R.id.xiami_music_list_play);
+			holder.musicImage=(ImageView)convertView.findViewById(R.id.xiami_listitem_music_image);
 			convertView.setTag(holder);
 		} else {
 			holder = (DataHolder) convertView.getTag();
@@ -74,6 +77,7 @@ public class MusicsListAdapter extends BaseAdapter {
 		holder.index.setText(String.valueOf(position + 1));
 		holder.title.setText(song.getSongName());
 		holder.artist.setText(song.getArtistName());
+		MyApplication.imageLoader.displayImage(song.getImageUrl(), holder.musicImage);
 
 		return convertView;
 	}
@@ -83,6 +87,7 @@ public class MusicsListAdapter extends BaseAdapter {
 		public TextView title;
 		public TextView artist;
 		public ImageButton play;
+		public ImageView musicImage;
 	}
 
 }

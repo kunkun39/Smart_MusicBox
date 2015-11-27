@@ -1,41 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/main_bg"
     android:orientation="vertical" >
- <include layout="@layout/ip_setting" />
+
+    <include layout="@layout/ip_setting" />
 
     <ListView
         android:id="@+id/alarm_info"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/setting_group"
         android:layout_marginTop="70dp" >
     </ListView>
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/setting_group"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_alignParentBottom="true"
-        android:background="@color/grey" >
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:gravity="center_horizontal"
+        android:layout_marginBottom="@dimen/music_clock_bottom" 
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/add"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="20dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginRight="20dp"
             android:background="@drawable/alarm_add" />
 
         <Button
             android:id="@+id/delete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="20dp"
-            android:text="删除" />
-    </RelativeLayout>
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginLeft="20dp"
+            android:background="@drawable/alarm_delete"/>
+    </LinearLayout>
 
-</RelativeLayout>
+</FrameLayout>

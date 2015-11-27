@@ -16,4 +16,7 @@
     
     <dimen name="xiami_main_rank_play_bottom">10dp</dimen>
     
+    <!-- musickClock -->
+    <dimen name="music_clock_bottom">30dp</dimen>
+    
 </resources>
