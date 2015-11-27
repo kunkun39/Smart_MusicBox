@@ -74,7 +74,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_marginLeft="15dip"
                     android:gravity="center_vertical"
-                    android:text="热门歌曲   (100首)"
+                    android:text="热门歌曲   (0首)"
                     android:textColor="@color/text_title"
                     android:textSize="@dimen/lable_size" />
 

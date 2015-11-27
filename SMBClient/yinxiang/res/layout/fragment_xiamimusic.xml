@@ -1,0 +1,457 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="5dp" >
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="70dp"
+        android:paddingLeft="5dp"
+        android:scrollbars="vertical" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <!-- 今日推荐歌曲 -->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal" >
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/xiami_main_today_recommend"
+                    android:layout_weight="5"
+                    android:background="@color/xiami_second_background" >
+
+                    <RelativeLayout
+                        android:id="@+id/xiami_recommend_today_more"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" >
+
+                        <ImageView
+                            android:id="@+id/xmmain_todayrecm_iv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/xiami_main_title_height"
+                            android:layout_marginTop="3dp"
+                            android:src="@drawable/xmmain_today_recom" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/xiami_main_title_height"
+                            android:layout_marginLeft="10dp"
+                            android:layout_toRightOf="@id/xmmain_todayrecm_iv"
+                            android:gravity="center"
+                            android:text="今日推荐歌曲"
+                            android:textColor="@color/black"
+                            android:textSize="15sp" />
+
+                        <Button
+                            android:layout_width="30dip"
+                            android:layout_height="30dip"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginTop="5dp"
+                            android:background="@drawable/select_right" />
+                    </RelativeLayout>
+
+                    <com.changhong.common.widgets.HorizontalListView
+                        android:id="@+id/xiami_recommend_today"
+                        android:layout_width="match_parent"
+                        android:layout_height="160dp"
+                        android:layout_marginTop="40dp" />
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/xiami_main_today_recommend"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="2"
+                    android:background="@drawable/xiami_main_boder"
+                    android:gravity="center"
+                    android:orientation="vertical" >
+
+                    <ImageView
+                        android:id="@+id/xiami_search"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:background="@color/xiami_second_background"
+                        android:scaleType="fitCenter"
+                        style="@style/xiami_main_margin"
+                        android:src="@drawable/xmsearch_down" />
+
+                    <ImageView
+                        android:id="@+id/xiami_random_songs"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="2"
+                        android:background="@color/xiami_second_background"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/xmmain_random" 
+                        style="@style/xiami_main_margin"
+                        />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- 新碟首发 -->
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/xiami_second_background"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal" >
+
+                <RelativeLayout
+                    android:id="@+id/xiami_promotion_album_more"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" >
+
+                    <ImageView
+                        android:id="@+id/xmmain_recom_album_iv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/xiami_main_title_height"
+                        android:layout_marginTop="3dp"
+                        android:src="@drawable/xmmain_album" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/xiami_main_title_height"
+                        android:layout_marginLeft="10dp"
+                        android:layout_toRightOf="@id/xmmain_recom_album_iv"
+                        android:gravity="center"
+                        android:text="新碟首发"
+                        android:textColor="@color/black"
+                        android:textSize="15sp" />
+
+                    <Button
+                        android:layout_width="30dip"
+                        android:layout_height="30dip"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginTop="5dp"
+                        android:background="@drawable/select_right" />
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="45dp"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal" >
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="1"
+                        android:gravity="center_horizontal" >
+
+                        <ImageView
+                            android:id="@+id/xiami_new_album1"
+                            android:layout_width="100dp "
+                            android:layout_height="100dp"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/singer_default" />
+
+                        <ImageView
+                            android:id="@+id/xiami_new_album1_play"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginRight="5dp"
+                            android:layout_marginTop="55dp"
+                            android:background="@drawable/play" />
+
+                        <TextView
+                            android:id="@+id/xiami_new_album1_title"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/xiami_new_album1"
+                            android:gravity="center_horizontal"
+                            android:maxLines="3"
+                            android:text="专辑1"
+                            android:textColor="@color/black" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="1" >
+
+                        <ImageView
+                            android:id="@+id/xiami_new_album2"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/singer_default" />
+
+                        <ImageView
+                            android:id="@+id/xiami_new_album2_play"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginRight="5dp"
+                            android:layout_marginTop="55dp"
+                            android:background="@drawable/play" />
+
+                        <TextView
+                            android:id="@+id/xiami_new_album2_title"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/xiami_new_album2"
+                            android:gravity="center_horizontal"
+                            android:maxLines="3"
+                            android:text="专辑2"
+                            android:textColor="@color/black" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="1" >
+
+                        <ImageView
+                            android:id="@+id/xiami_new_album3"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/singer_default" />
+
+                        <ImageView
+                            android:id="@+id/xiami_new_album3_play"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginRight="5dp"
+                            android:layout_marginTop="55dp"
+                            android:background="@drawable/play" />
+
+                        <TextView
+                            android:id="@+id/xiami_new_album3_title"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/xiami_new_album3"
+                            android:gravity="center_horizontal"
+                            android:maxLines="3"
+                            android:text="专辑3"
+                            android:textColor="@color/black" />
+                    </RelativeLayout>
+                </LinearLayout>
+            </RelativeLayout>
+
+            <!-- 排行榜 -->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_weight="3"
+                    android:background="@color/xiami_second_background"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical" >
+
+                    <RelativeLayout
+                        android:id="@+id/xiami_rank_more"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" >
+
+                        <ImageView
+                            android:id="@+id/xmmain_rank_iv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/xiami_main_title_height"
+                            android:layout_marginTop="3dp"
+                            android:src="@drawable/xmmain_rank" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/xiami_main_title_height"
+                            android:layout_marginLeft="10dp"
+                            android:layout_toRightOf="@id/xmmain_rank_iv"
+                            android:gravity="center"
+                            android:text="排行榜"
+                            android:textColor="@color/black"
+                            android:textSize="15sp" />
+
+                        <Button
+                            android:layout_width="30dip"
+                            android:layout_height="30dip"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginTop="5dp"
+                            android:background="@drawable/select_right" />
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="45dp"
+                        android:orientation="vertical" >
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                             >
+
+                            <ImageView
+                                android:id="@+id/xiami_hyrank_image"
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/xiami_main_rank_item_height"
+                                android:scaleType="fitXY"
+                                android:src="@drawable/xmmain_rank_huayu"
+                                android:textColor="@color/black"
+                                style="@style/xiami_main_margin"
+                                 />
+
+                            <ImageView
+                                android:id="@+id/xiami_hyrank_play"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:layout_gravity="bottom|right"
+                                android:layout_marginBottom="@dimen/xiami_main_rank_play_bottom"
+                                android:layout_marginRight="10dp"
+                                android:src="@drawable/play" />
+                        </FrameLayout>
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                             >
+
+                            <ImageView
+                                android:id="@+id/xiami_allrank_image"
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/xiami_main_rank_item_height"
+                                android:scaleType="fitXY"
+                                android:src="@drawable/xmmain_rank_all"
+                                android:textColor="@color/black"
+                                style="@style/xiami_main_margin"
+                                />
+
+                            <ImageView
+                                android:id="@+id/xiami_allrank_play"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:layout_gravity="bottom|right"
+                                android:layout_marginBottom="@dimen/xiami_main_rank_play_bottom"
+                                android:layout_marginRight="10dp"
+                                android:src="@drawable/play" />
+                        </FrameLayout>
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <!-- 音乐会 -->
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_weight="4"
+                    android:background="@color/xiami_second_background" >
+
+                    <RelativeLayout
+                        android:id="@+id/xiami_concert_more"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" >
+
+                        <ImageView
+                            android:id="@+id/xmmain_concert_iv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/xiami_main_title_height"
+                            android:layout_marginTop="3dp"
+                            android:src="@drawable/xmmain_concert" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/xiami_main_title_height"
+                            android:layout_marginLeft="10dp"
+                            android:layout_toRightOf="@id/xmmain_concert_iv"
+                            android:gravity="center"
+                            android:text="音乐会"
+                            android:textColor="@color/black"
+                            android:textSize="15sp" />
+
+                        <Button
+                            android:layout_width="30dip"
+                            android:layout_height="30dip"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginTop="5dp"
+                            android:background="@drawable/select_right" />
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="45dp"
+                        android:orientation="vertical" >
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal" >
+
+                            <ImageView
+                                android:id="@+id/xiami_concert_album"
+                                android:layout_width="0dp"
+                                android:layout_height="@dimen/xiami_main_rank_item_height"
+                                android:layout_weight="1"
+                                android:scaleType="fitXY"
+                                style="@style/xiami_main_margin"
+                                android:src="@drawable/xmmain_concert_album" />
+
+                            <ImageView
+                                android:id="@+id/xiami_concert_scene"
+                                android:layout_width="0dp"
+                                android:layout_height="@dimen/xiami_main_rank_item_height"
+                                android:layout_weight="1"
+                                android:scaleType="fitXY"
+                                style="@style/xiami_main_margin"
+                                android:src="@drawable/xmmain_concert_scene" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal" >
+
+                            <ImageView
+                                android:id="@+id/xiami_concert_artist"
+                                android:layout_width="0dp"
+                                android:layout_height="@dimen/xiami_main_rank_item_height"
+                                android:layout_weight="1"
+                                android:scaleType="fitXY"
+                                style="@style/xiami_main_margin"
+                                android:src="@drawable/xmmain_concert_artist" />
+
+                            <ImageView
+                                android:id="@+id/xiami_concert_collection"
+                                android:layout_width="0dp"
+                                android:layout_height="@dimen/xiami_main_rank_item_height"
+                                android:layout_weight="1"
+                                android:scaleType="fitXY"
+                                style="@style/xiami_main_margin"
+                                android:src="@drawable/xmmain_concert_collection" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </RelativeLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>

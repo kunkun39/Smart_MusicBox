@@ -27,8 +27,16 @@
             android:src="@drawable/play" 
             android:background="@null"/>
         
-        
-        
+        <TextView
+            android:id="@+id/ablum_center"
+            android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+            android:layout_gravity="bottom|left"  
+            android:layout_margin="10dip" 
+            android:textColor="@color/white"  
+            android:textSize="@dimen/lable_size"
+            android:visibility="gone" />
+             
    </FrameLayout>
     
   <TextView

@@ -31,7 +31,7 @@
 
             <RadioButton
                 style="@style/yx_tab"
-                android:layout_height="match_parent"            
+                android:layout_margin="1dip"                              
                 android:drawableBottom="@drawable/musictab_selector"
                 android:text="全部" 
                 android:textSize="16sp"
@@ -39,7 +39,7 @@
 
             <RadioButton
                 style="@style/yx_tab"
-                android:layout_height="match_parent"
+                android:layout_margin="1dip"                              
                 android:drawableBottom="@drawable/musictab_selector"               
                 android:text="华语"
                 android:textSize="16sp"
@@ -47,28 +47,28 @@
       
             <RadioButton
                 style="@style/yx_tab"
-                android:layout_height="match_parent"             
+                android:layout_margin="1dip"                              
                 android:drawableBottom="@drawable/musictab_selector"
                 android:text="欧美"
                 android:textSize="16sp"
                 android:textColor="@drawable/musictab_textcolor_selector"/>
             <RadioButton
                 style="@style/yx_tab"
-                android:layout_height="match_parent"        
+                android:layout_margin="1dip"                              
                 android:drawableBottom="@drawable/musictab_selector"
                 android:text="日本"
                 android:textSize="16sp"
                 android:textColor="@drawable/musictab_textcolor_selector"/>
             <RadioButton
                 style="@style/yx_tab"
-                android:layout_height="match_parent"          
+                android:layout_margin="1dip"                              
                 android:drawableBottom="@drawable/musictab_selector"
                 android:text="韩国"
                 android:textSize="16sp"
                 android:textColor="@drawable/musictab_textcolor_selector"/>
             <RadioButton
                 style="@style/yx_tab"
-                android:layout_height="match_parent"    
+                android:layout_margin="1dip"                              
                 android:drawableBottom="@drawable/musictab_selector"
                 android:text="其他"
                 android:textSize="16sp"
