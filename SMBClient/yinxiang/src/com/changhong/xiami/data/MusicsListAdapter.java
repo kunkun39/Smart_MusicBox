@@ -3,7 +3,11 @@ package com.changhong.xiami.data;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.R.drawable;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +17,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.changhong.common.system.MyApplication;
+import com.changhong.common.utils.StringUtils;
 import com.changhong.yinxiang.R;
 import com.xiami.sdk.entities.OnlineSong;
+import com.xiami.sdk.entities.OnlineSong.Quality;
 
 public class MusicsListAdapter extends BaseAdapter {
 	private ArrayList<OnlineSong> myList = new ArrayList<OnlineSong>();
@@ -78,8 +84,26 @@ public class MusicsListAdapter extends BaseAdapter {
 		holder.title.setText(song.getSongName());
 		holder.artist.setText(song.getArtistName());
 		MyApplication.imageLoader.displayImage(song.getImageUrl(), holder.musicImage);
-
+		
+		displayQulity(holder.artist, song.getQuality());
+		
 		return convertView;
+	}
+	
+	private void displayQulity(TextView tv,String qulity){
+		Drawable draw=null;
+		if(!StringUtils.hasLength(qulity)){
+			return ;
+		}
+		if(qulity.equals(Quality.L)){
+			draw=context.getResources().getDrawable(R.drawable.music_qulity_l);
+		}else if(qulity.equals(Quality.M)){
+			draw=context.getResources().getDrawable(R.drawable.music_qulity_m);
+		}else if(qulity.equals(Quality.H)){
+			draw=context.getResources().getDrawable(R.drawable.music_qulity_h);
+		}
+		draw.setBounds(0, 0, draw.getMinimumWidth(), draw.getMinimumHeight()); //设置边界
+		tv.setCompoundDrawables(draw, null, null, null);
 	}
 
 	private final class DataHolder {
