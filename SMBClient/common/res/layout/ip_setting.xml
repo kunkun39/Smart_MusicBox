@@ -21,7 +21,8 @@
             android:gravity="center_vertical"
             android:singleLine="true"
             android:text="未连接"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:textColor="@color/white" />
 
         <ImageView
             android:layout_width="16.7dip"
@@ -29,13 +30,14 @@
             android:layout_gravity="center_vertical"
             android:background="@drawable/title_ip_select" />
     </LinearLayout>
-
-    <Button
-        android:id="@+id/btn_back"
-        android:layout_width="80.5dip"
-        android:layout_height="77.3dip"
-        android:layout_marginLeft="0dip"
-        android:background="@drawable/title_btn_back_selector" />
+    
+    <ImageView
+            android:id="@+id/btn_back"
+            android:layout_width="wrap_content"
+             android:layout_height="60dip"
+            android:layout_weight="1" 
+            android:src="@drawable/title_btn_back_selector" 
+           android:scaleType="fitCenter" />
 
    
     <!-- IP选择 -->
