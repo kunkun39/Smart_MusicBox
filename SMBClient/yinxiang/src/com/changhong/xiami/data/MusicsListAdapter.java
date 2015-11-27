@@ -92,17 +92,17 @@ public class MusicsListAdapter extends BaseAdapter {
 	
 	private void displayQulity(TextView tv,String qulity){
 		Drawable draw=null;
-		if(!StringUtils.hasLength(qulity)){
-			return ;
-		}
-		if(qulity.equals(Quality.L)){
-			draw=context.getResources().getDrawable(R.drawable.music_qulity_l);
-		}else if(qulity.equals(Quality.M)){
-			draw=context.getResources().getDrawable(R.drawable.music_qulity_m);
-		}else if(qulity.equals(Quality.H)){
+//		if(!StringUtils.hasLength(qulity)){
+//			return ;
+//		}
+//		if(qulity.equals(Quality.L)){
+//			draw=context.getResources().getDrawable(R.drawable.music_qulity_l);
+//		}else if(qulity.equals(Quality.M)){
+//			draw=context.getResources().getDrawable(R.drawable.music_qulity_m);
+//		}else if(qulity.equals(Quality.H)){
 			draw=context.getResources().getDrawable(R.drawable.music_qulity_h);
-		}
-		draw.setBounds(0, 0, draw.getMinimumWidth(), draw.getMinimumHeight()); //设置边界
+//		}
+		draw.setBounds(0, 0, 60,30); //设置边界
 		tv.setCompoundDrawables(draw, null, null, null);
 	}
 
