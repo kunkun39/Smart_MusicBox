@@ -17,15 +17,8 @@ import java.util.List;
 /**
  * Created by Administrator on 15-5-12.
  */
-public class YinXiangPictureViewActivity extends Activity {
-    /**************************************************IP连接部分*******************************************************/
-
-    public static TextView title = null;
-    public Button back;
-    public Button listClients;
-    private ListView clients = null;
-    private BoxSelectAdapter ipAdapter;
-
+public class YinXiangPictureViewActivity extends BaseActivity {
+  
     /************************************************图片加载部分*******************************************************/
 
     private GridView listViewlocal;
@@ -43,26 +36,19 @@ public class YinXiangPictureViewActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        initData();
-
-        initView();
-
-        initEvent();
     }
 
-    private void initData() {
-        imagePaths = getIntent().getStringArrayListExtra("imagePaths");
-    }
-
-    private void initView() {
+  
+    protected void initView() {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_yinxinag_picture_view);
+        
+        imagePaths = getIntent().getStringArrayListExtra("imagePaths");
 
         title = (TextView) findViewById(R.id.title);
         clients = (ListView) findViewById(R.id.clients);
         listClients = (Button) findViewById(R.id.btn_list);
-        back = (Button) findViewById(R.id.btn_back);
+        back = (ImageView) findViewById(R.id.btn_back);
 
         /**
          * 图片容器
@@ -72,48 +58,8 @@ public class YinXiangPictureViewActivity extends Activity {
 
     }
 
-    private void initEvent() {
-        /**
-         * IP连接部分
-         */
-        ipAdapter = new BoxSelectAdapter(YinXiangPictureViewActivity.this, ClientSendCommandService.serverIpList);
-        clients.setAdapter(ipAdapter);
-        clients.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                clients.setVisibility(View.GONE);
-                return false;
-            }
-        });
-        clients.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,long arg3) {
-                ClientSendCommandService.serverIP = ClientSendCommandService.serverIpList.get(arg2);
-                ClientSendCommandService.titletxt=ClientSendCommandService.getCurrentConnectBoxName();
-                title.setText(ClientSendCommandService.getCurrentConnectBoxName());
-                ClientSendCommandService.handler.sendEmptyMessage(2);
-                clients.setVisibility(View.GONE);
-            }
-        });
-        listClients.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MyApplication.vibrator.vibrate(100);
-                if (ClientSendCommandService.serverIpList.isEmpty()) {
-                    Toast.makeText(YinXiangPictureViewActivity.this, "未获取到服务器IP", Toast.LENGTH_LONG).show();
-                } else {
-                    clients.setVisibility(View.VISIBLE);
-                }
-            }
-        });
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MyApplication.vibrator.vibrate(100);
-                finish();
-            }
-        });
-
+    protected void initData() {
+           super.initData();
         /**
          * 图片部分
          */

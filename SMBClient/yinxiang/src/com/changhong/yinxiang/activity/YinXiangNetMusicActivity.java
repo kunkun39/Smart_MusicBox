@@ -13,6 +13,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,7 +38,7 @@ public class YinXiangNetMusicActivity extends Activity {
     public static TextView title = null;
     private ListView clients = null;
     private Button list = null;
-    private Button back = null;
+    private ImageView back = null;
     private Button qqButton = null;
     private Button wyButton = null;
     
@@ -55,7 +56,7 @@ public class YinXiangNetMusicActivity extends Activity {
         title = (TextView) findViewById(R.id.title);
         clients = (ListView) findViewById(R.id.clients);
         list = (Button) findViewById(R.id.btn_list);
-        back = (Button) findViewById(R.id.btn_back);
+        back = (ImageView) findViewById(R.id.btn_back);
         qqButton = (Button) findViewById(R.id.qqmusic);
         wyButton = (Button) findViewById(R.id.wymusic);
 

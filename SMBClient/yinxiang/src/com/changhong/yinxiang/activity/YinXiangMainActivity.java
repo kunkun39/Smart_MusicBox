@@ -355,6 +355,7 @@ public class YinXiangMainActivity extends FragmentActivity  implements OnClickLi
 			String keys=searchViewHolder.search_keywords.getText().toString();
 			if(StringUtils.hasLength(keys)){
 				  //发送信息，搜索
+				searchKey(keys);
 			}else{
 				Toast.makeText(YinXiangMainActivity.this, "您还没有输入搜索关键字哦！", Toast.LENGTH_SHORT).show();
 			}
@@ -967,17 +968,13 @@ public class YinXiangMainActivity extends FragmentActivity  implements OnClickLi
 	
 	
 	
-private static final String music = "music";
-private static final String movie= "movie";
-private static final String tv= "tv";
+
 
 private void searchKey(String key) {
 	    	
 		StringBuffer sb = new StringBuffer();
 		sb.append("search:");
 		sb.append("|");
-//		sb.append(movie);
-//		sb.append(";");
 		sb.append(key);
 		
 		ClientSendCommandService.msg = sb.toString();

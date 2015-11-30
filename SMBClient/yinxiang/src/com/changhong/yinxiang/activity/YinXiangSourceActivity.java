@@ -20,15 +20,15 @@ import com.changhong.yinxiang.nanohttpd.HTTPDService;
 /**
  * Created by Jack Wang
  */
-public class YinXiangSourceActivity extends Activity {
+public class YinXiangSourceActivity extends BaseActivity {
 
 	/************************************************** IP连接部分 *******************************************************/
-
-    public static TextView title = null;
-    private Button listClients;
-    private Button back;
-    private ListView clients = null;
-    private BoxSelectAdapter IpAdapter;
+//
+//    public static TextView title = null;
+//    private Button listClients;
+//    private Button back;
+//    private ListView clients = null;
+//    private BoxSelectAdapter IpAdapter;
 
 	/************************************************** 菜单部分 *******************************************************/
     Button btnBT=null;
@@ -39,20 +39,16 @@ public class YinXiangSourceActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		initView();
-
-		initEvent();
 	}
 
 
-	private void initView() {
+	protected void initView() {
 		setContentView(R.layout.activity_yinxiang_source);
         /**
          * IP连接部分
          */
         title = (TextView) findViewById(R.id.title);
-        back = (Button) findViewById(R.id.btn_back);
+        back = (ImageView) findViewById(R.id.btn_back);
         clients = (ListView) findViewById(R.id.clients);
         listClients = (Button) findViewById(R.id.btn_list);
 
@@ -66,52 +62,8 @@ public class YinXiangSourceActivity extends Activity {
         btnOTT=(Button)findViewById(R.id.ott);
 	}
 
-	private void initEvent() {
-        /**
-         * IP连接部分
-         */
-        IpAdapter = new BoxSelectAdapter(YinXiangSourceActivity.this,
-                ClientSendCommandService.serverIpList);
-        clients.setAdapter(IpAdapter);
-        clients.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                clients.setVisibility(View.GONE);
-                return false;
-            }
-        });
-        clients.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-                ClientSendCommandService.serverIP = ClientSendCommandService.serverIpList.get(arg2);
-                ClientSendCommandService.titletxt=ClientSendCommandService.getCurrentConnectBoxName();
-                title.setText(ClientSendCommandService.getCurrentConnectBoxName());
-                ClientSendCommandService.handler.sendEmptyMessage(2);
-                clients.setVisibility(View.GONE);
-            }
-        });
-        listClients.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    MyApplication.vibrator.vibrate(100);
-                    if (ClientSendCommandService.serverIpList.isEmpty()) {
-                        Toast.makeText(YinXiangSourceActivity.this, "未获取到服务器IP", Toast.LENGTH_LONG).show();
-                    } else {
-                        clients.setVisibility(View.VISIBLE);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MyApplication.vibrator.vibrate(100);
-                finish();
-            }
-        });
+	protected void initData() {
+        super.initData();
 
 		/**
 		 * 菜单部分

@@ -30,16 +30,16 @@ import com.changhong.common.system.MyApplication;
 import com.changhong.common.widgets.BoxSelectAdapter;
 import com.changhong.yinxiang.R;
 
-public class YinXiangSearchActivity extends Activity {
+public class YinXiangSearchActivity extends BaseActivity {
 
 	
-	 /**************************************************IP连接部分*******************************************************/
-
-    public static TextView title = null;
-    private Button listClients;
-    private Button back;
-    private ListView clients = null;
-    private BoxSelectAdapter IpAdapter;
+//	 /**************************************************IP连接部分*******************************************************/
+//
+//    public static TextView title = null;
+//    private Button listClients;
+//    private Button back;
+//    private ListView clients = null;
+//    private BoxSelectAdapter IpAdapter;
     
 	private EditText recognitionWord;
 	private ImageView colection;
@@ -72,21 +72,17 @@ public class YinXiangSearchActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_yinxiang_music_search);
 		initBaiduConfiguration();
-
-		initView();
-		initEvent();
 	}
 
-	private void initView() {
+	protected void initView() {
 		
-		
+		setContentView(R.layout.activity_yinxiang_music_search);
 		/**
          * IP连接部分
          */
         title = (TextView) findViewById(R.id.title);
-        back = (Button) findViewById(R.id.btn_back);
+        back = (ImageView) findViewById(R.id.btn_back);
         clients = (ListView) findViewById(R.id.clients);
         listClients = (Button) findViewById(R.id.btn_list);
 		
@@ -99,53 +95,8 @@ public class YinXiangSearchActivity extends Activity {
 		confirm = (Button) findViewById(R.id.confirm);
 	}
 
-	private void initEvent() {
-		/**
-         * IP连接部分
-         */
-        IpAdapter = new BoxSelectAdapter(YinXiangSearchActivity.this,
-                ClientSendCommandService.serverIpList);
-        clients.setAdapter(IpAdapter);
-        clients.setOnTouchListener(new OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                clients.setVisibility(View.GONE);
-                return false;
-            }
-        });
-        clients.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-                ClientSendCommandService.serverIP = ClientSendCommandService.serverIpList.get(arg2);
-                ClientSendCommandService.titletxt=ClientSendCommandService.getCurrentConnectBoxName();
-                title.setText(ClientSendCommandService.getCurrentConnectBoxName());
-                ClientSendCommandService.handler.sendEmptyMessage(2);
-                clients.setVisibility(View.GONE);
-            }
-        });
-        listClients.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    MyApplication.vibrator.vibrate(100);
-                    if (ClientSendCommandService.serverIpList.isEmpty()) {
-                        Toast.makeText(YinXiangSearchActivity.this, "未获取到服务器IP", Toast.LENGTH_LONG).show();
-                    } else {
-                        clients.setVisibility(View.VISIBLE);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-        back.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MyApplication.vibrator.vibrate(100);
-                finish();
-            }
-        });
-
+	protected void initData() {
+		super.initData();
 		/**
 		 * 
 		 * 语音输入部分
