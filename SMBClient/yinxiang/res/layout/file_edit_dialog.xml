@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="100dip"
-    android:background="@drawable/edit_bg"
+    android:background="@color/fileedit_bg"
     android:orientation="horizontal"
     android:paddingLeft="25dip"
     android:paddingRight="23dip" >
