@@ -340,6 +340,10 @@ public class XMMusicData {
 	}
 	
 	
+	
+	
+	
+	
 	/**
 	 * 获取指定场景音乐
 	 */
@@ -965,6 +969,10 @@ public class XMMusicData {
 		}
 		return dataList;
 	}
+	
+
+	
+	
 
 	public List<OnlineSong> getSortSongs(List<OnlineSong> songs, int index) {
 		if (null == songs || index >= songs.size())
