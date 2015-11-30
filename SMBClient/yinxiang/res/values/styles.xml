@@ -209,8 +209,9 @@
     <!-- 推送个选中框风格 -->
    <style name="MyCheckBox" parent="@android:style/Widget.CompoundButton.CheckBox">
    <item name="android:padding">2.0dip</item>
-   <item name="android:maxHeight">50.0dip</item>
-    <item name="android:button">@drawable/send_checkbox</item>     
+    <item name="android:button">@null</item>    
+     <item name="android:background">@drawable/send_checkbox</item>     
+    
    </style>
    
    

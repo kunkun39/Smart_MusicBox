@@ -10,7 +10,7 @@
     <color name="bright_foreground_dark">#ffffffff</color>
     <color name="mid_blue">#3658bf</color>
     <color name="dim_foreground_light_inverse_disabled">#80bebebe</color>
-    <color name="tab_textColor_selected">#ff0F876E</color>
+    <color name="tab_textColor_selected">#ff10876e</color>
     <color name="tab_textColor_default">#FFFFFFFF</color>
     <color name="imgbg_Color_default">#00000000</color>
     <color name="text_title">#AA1D1915</color>
