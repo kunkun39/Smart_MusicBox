@@ -11,7 +11,8 @@
         android:id="@+id/alarm_info"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="70dp" >
+        android:layout_marginTop="70dp" 
+        android:divider="@null">
     </ListView>
 
     <LinearLayout

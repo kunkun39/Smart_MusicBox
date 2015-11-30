@@ -1,28 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-     >
+    android:background="@drawable/main_bg"
+    android:orientation="vertical" >
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/white"
-        android:orientation="vertical" >
+        android:layout_height="60dp"
+        android:background="@drawable/fragment_bg"
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginLeft="20dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/title_btn_back_selector" />
 
         <TextView
-            style="@style/alarm_text_name"
-            android:text="闹铃" />
+            android:id="@+id/delete_title"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:gravity="center_vertical"
+            android:text="闹钟"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@color/xiami_second_background" >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/alarm_timepicker_bg" />
 
         <TimePicker
             android:id="@+id/timePicker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center">
-            <requestFocus />  
-            </TimePicker>
-            
+            android:layout_gravity="center" >
+
+            <requestFocus />
+        </TimePicker>
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/xiami_second_background"
+        android:orientation="vertical" >
 
         <View
             android:layout_width="match_parent"
@@ -32,6 +65,8 @@
             android:layout_marginTop="20dp"
             android:background="@color/grey" />
 
+        
+        
         <TextView
             style="@style/alarm_text_name"
             android:text="重复" />
@@ -41,7 +76,6 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="50dp"
             android:layout_marginRight="50dp"
-            android:layout_marginTop="20dp"
             android:orientation="horizontal" >
 
             <com.changhong.common.widgets.WeekButton
@@ -99,7 +133,7 @@
             android:layout_height="1dp"
             android:layout_marginLeft="50dp"
             android:layout_marginRight="50dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="5dp"
             android:background="@color/grey" />
 
         <LinearLayout
@@ -119,46 +153,51 @@
                 android:textColor="@color/grey"
                 android:textSize="14sp" />
         </LinearLayout>
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginLeft="50dp"
             android:layout_marginRight="50dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="5dp"
             android:background="@color/grey" />
-        <EditText 
+
+        <EditText
+            android:id="@+id/tag"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="50dp"
             android:layout_marginRight="50dp"
             android:layout_marginTop="20dp"
-            android:id="@+id/tag"
-            android:hint="标签"
-            />
+            android:hint="标签" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal" >
-        <Button
-            android:id="@+id/confirm"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:text="确定"
-            android:layout_weight="1" />
+        android:orientation="horizontal" 
+        android:background="@color/xiami_second_background">
 
         <Button
             android:id="@+id/cancel"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:text="取消"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:background="@drawable/alarm_delete_button"
+            android:layout_marginLeft="10dp"
+            android:text="取消" />
+        
+        <Button
+            android:id="@+id/confirm"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/alarm_delete_button"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:text="确定" />
 
         
     </LinearLayout>
-    
-    
 
-</RelativeLayout>
+</LinearLayout>

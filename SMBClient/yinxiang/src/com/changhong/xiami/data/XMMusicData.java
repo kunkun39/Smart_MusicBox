@@ -683,7 +683,7 @@ public class XMMusicData {
 
 		Log.e("YDINFOR",
 				"++++++++++++++++xiamiRequest()+++++++++++++++++++++++++++++");
-		// mXiamiSDK.enableLog(true);
+		 mXiamiSDK.enableLog(true);
 		String results = mXiamiSDK.xiamiSDKRequest(methodCode, params);
 		return results;
 	}
