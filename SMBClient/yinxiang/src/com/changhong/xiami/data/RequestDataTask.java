@@ -85,7 +85,11 @@ public class RequestDataTask extends	AsyncTask<HashMap<String, Object>, Long, Js
 		} catch (ResponseErrorException e) {
 			respondCode = R.string.error_response;
 			return null;
+		} catch (NullPointerException e) {
+			respondCode = R.string.error_response;
+			return null;
 		}
+		
 	}
 	
 	

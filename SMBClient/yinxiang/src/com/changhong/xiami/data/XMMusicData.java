@@ -683,7 +683,7 @@ public class XMMusicData {
 
 		Log.e("YDINFOR",
 				"++++++++++++++++xiamiRequest()+++++++++++++++++++++++++++++");
-		 mXiamiSDK.enableLog(true);
+//		 mXiamiSDK.enableLog(true);
 		String results = mXiamiSDK.xiamiSDKRequest(methodCode, params);
 		return results;
 	}
@@ -759,7 +759,7 @@ public class XMMusicData {
 		return bitmap;
 	}
 
-	private int getJsonObjectValueInt(JsonObject jsonObj, String key) {
+	public int getJsonObjectValueInt(JsonObject jsonObj, String key) {
 
 		int rValue = 0;
 
@@ -817,7 +817,7 @@ public class XMMusicData {
 		return rValue;
 	}
 
-	private boolean getJsonObjectValueBool(JsonObject jsonObj, String key) {
+	public boolean getJsonObjectValueBool(JsonObject jsonObj, String key) {
 
 		boolean rValue = false;
 		try {
@@ -847,10 +847,9 @@ public class XMMusicData {
 			ex.printStackTrace();
 		}
 		return rValue;
-
 	}
 
-	private JsonObject getJsonObject(JsonElement element) {
+	public JsonObject getJsonObject(JsonElement element) {
 
 		JsonObject rValue = null;
 		try {

@@ -156,10 +156,9 @@ public class ArtistDetailActivity extends BaseActivity {
 			return;
 
 		JsonObject obj = jsonData.getAsJsonObject();
-		int total=obj.getAsInt();
-		boolean more=obj.getAsBoolean();
-		jsonData = obj.get("songs");
-		songs = mXMMusicData.getSongList(jsonData);
+		int total=mXMMusicData.getJsonObjectValueInt(obj, "total");
+		boolean more=mXMMusicData.getJsonObjectValueBool(obj, "more");
+		songs = mXMMusicData.getTheAlbumSongs(jsonData);
 		if (null != songs) {	
 			 if(more)page++;			 
 			songCount.setText("热门歌曲   (" + total + "首)");			
