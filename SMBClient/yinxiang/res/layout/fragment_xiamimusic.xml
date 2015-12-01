@@ -52,10 +52,11 @@
                             android:textSize="15sp" />
 
                         <Button
-                            android:layout_width="30dip"
-                            android:layout_height="30dip"
+                            android:layout_width="18dip"
+                            android:layout_height="18dip"
                             android:layout_alignParentRight="true"
-                            android:layout_marginTop="5dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginRight="5dp"                            
                             android:background="@drawable/select_right" />
                     </RelativeLayout>
 
@@ -133,10 +134,11 @@
                         android:textSize="15sp" />
 
                     <Button
-                        android:layout_width="30dip"
-                        android:layout_height="30dip"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginTop="5dp"
+                        android:layout_width="18dip"
+                            android:layout_height="18dip"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginRight="5dp"        
                         android:background="@drawable/select_right" />
                 </RelativeLayout>
 
@@ -289,10 +291,11 @@
                             android:textSize="15sp" />
 
                         <Button
-                            android:layout_width="30dip"
-                            android:layout_height="30dip"
+                            android:layout_width="18dip"
+                            android:layout_height="18dip"
                             android:layout_alignParentRight="true"
-                            android:layout_marginTop="5dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginRight="5dp"        
                             android:background="@drawable/select_right" />
                     </RelativeLayout>
 
@@ -388,11 +391,13 @@
                             android:textSize="15sp" />
 
                         <Button
-                            android:layout_width="30dip"
-                            android:layout_height="30dip"
+                            android:layout_width="18dip"
+                            android:layout_height="18dip"
                             android:layout_alignParentRight="true"
-                            android:layout_marginTop="5dp"
-                            android:background="@drawable/select_right" />
+                            android:layout_marginTop="10dp"
+                            android:layout_marginRight="5dp"        
+                            android:background="@drawable/select_right" 
+                            android:visibility="gone"/>
                     </RelativeLayout>
 
                     <LinearLayout
