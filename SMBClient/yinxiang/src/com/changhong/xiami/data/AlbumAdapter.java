@@ -7,6 +7,7 @@ import com.changhong.common.system.MyApplication;
 import com.changhong.yinxiang.R;
 import com.changhong.yinxiang.utils.Configure;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.xiami.sdk.utils.ImageUtil;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -90,7 +91,8 @@ public class AlbumAdapter extends BaseAdapter{
 		viewHolder.albumName.setText(mAlbumList.get(position).getTitle());
 		viewHolder.albumContent.setText(mAlbumList.get(position).getDescription());	
 		String logo=mAlbumList.get(position).getLogoUrl();
-		imageLoader.displayImage(logo, viewHolder.albumLogo);
+		String bigLogo=ImageUtil.transferImgUrl(logo, 200);
+		imageLoader.displayImage(bigLogo, viewHolder.albumLogo);
 		viewHolder.albumPlay.setOnClickListener(new OnClickListener() {			
 			@Override
 			public void onClick(View v) {
