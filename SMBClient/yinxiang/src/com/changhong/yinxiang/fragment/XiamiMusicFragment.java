@@ -62,7 +62,7 @@ public class XiamiMusicFragment extends  Fragment {
 	// 新碟首发
 	private ImageView albumMsg1, playAlbum1, albumMsg2, playAlbum2, albumMsg3,
 			playAlbum3;
-	private TextView albumTitle1, albumTitle2, albumTitle3;
+	private TextView albumSongName1, albumSongName2, albumSongName3,albumSinger1,albumSinger2,albumSinger3;
 
 	private List<OnlineAlbum> promotionAlbums = null;
 
@@ -237,14 +237,17 @@ public class XiamiMusicFragment extends  Fragment {
 
 		albumMsg1 = (ImageView) view.findViewById(R.id.xiami_new_album1);
 		playAlbum1 = (ImageView) view.findViewById(R.id.xiami_new_album1_play);
-		albumTitle1 = (TextView) view.findViewById(R.id.xiami_new_album1_title);
+		albumSongName1 = (TextView) view.findViewById(R.id.xiami_new_album1_name);
+		albumSinger1 = (TextView) view.findViewById(R.id.xiami_new_album1_singer);
 		albumMsg2 = (ImageView) view.findViewById(R.id.xiami_new_album2);
 		playAlbum2 = (ImageView) view.findViewById(R.id.xiami_new_album2_play);
-		albumTitle2 = (TextView) view.findViewById(R.id.xiami_new_album2_title);
+		albumSongName2 = (TextView) view.findViewById(R.id.xiami_new_album2_name);
+		albumSinger2 = (TextView) view.findViewById(R.id.xiami_new_album2_singer);
 		albumMsg3 = (ImageView) view.findViewById(R.id.xiami_new_album3);
 		playAlbum3 = (ImageView) view.findViewById(R.id.xiami_new_album3_play);
-		albumTitle3 = (TextView) view.findViewById(R.id.xiami_new_album3_title);
-
+		albumSongName3 = (TextView) view.findViewById(R.id.xiami_new_album3_name);
+		albumSinger3 = (TextView) view.findViewById(R.id.xiami_new_album3_singer);
+		
 		rankHY = (ImageView) view.findViewById(R.id.xiami_hyrank_image);
 		rankOM = (ImageView) view.findViewById(R.id.xiami_allrank_image);
 		playRankHY = (ImageView) view.findViewById(R.id.xiami_hyrank_play);
@@ -334,12 +337,12 @@ public class XiamiMusicFragment extends  Fragment {
 				ImageUtil.transferImgUrl(album3.getArtistLogo(), 330),
 				albumMsg3);
 
-		albumTitle1.setText(album1.getAlbumName() + "\n"
-				+ album1.getArtistName());
-		albumTitle2.setText(album2.getAlbumName() + "\n"
-				+ album2.getArtistName());
-		albumTitle3.setText(album3.getAlbumName() + "\n"
-				+ album3.getArtistName());
+		albumSongName1.setText(album1.getAlbumName());
+		albumSinger1.setText(album1.getArtistName());
+		albumSongName2.setText(album2.getAlbumName());
+		albumSinger2.setText(album2.getArtistName());
+		albumSongName3.setText(album3.getAlbumName());
+		albumSinger3.setText(album3.getArtistName());
 	}
 
 	//进入新碟首发歌曲详情

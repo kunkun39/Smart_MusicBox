@@ -3,24 +3,34 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" 
-    android:paddingLeft="8dp"
+    android:paddingLeft="5dp"
     android:paddingTop="5dp">
 
     <ImageView
-        android:layout_width="100dp"
-        android:layout_height="100dp" 
+        android:layout_width="80dp"
+        android:layout_height="80dp" 
         android:id="@+id/today_recom_image"
         android:scaleType="fitXY"
         />
     
     <TextView 
-        android:layout_width="100dp"
+        android:layout_width="80dp"
         android:layout_height="wrap_content" 
-        android:id="@+id/today_recom_text"
-        android:textColor="@color/black"
+        android:id="@+id/today_recom_songname"
+        android:textColor="@color/music_song"
         android:textSize="12sp"
-        android:singleLine="false"
-        android:maxLines="3"
+        android:singleLine="true"
+        android:maxLines="1"
         />
-
+   
+<TextView 
+    android:layout_width="80dp"
+        android:layout_height="wrap_content" 
+        android:id="@+id/today_recom_singer"
+        android:textColor="@color/music_singer"
+        android:textSize="10sp"
+        android:singleLine="true"
+        android:maxLines="2"
+    
+    />
 </LinearLayout>

@@ -82,24 +82,23 @@
 
                     <ImageView
                         android:id="@+id/xiami_search"
+                        style="@style/xiami_main_margin"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="1"
                         android:background="@color/xiami_second_background"
                         android:scaleType="fitCenter"
-                        style="@style/xiami_main_margin"
                         android:src="@drawable/xmsearch_down" />
 
                     <ImageView
                         android:id="@+id/xiami_random_songs"
+                        style="@style/xiami_main_margin"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="2"
                         android:background="@color/xiami_second_background"
                         android:scaleType="fitXY"
-                        android:src="@drawable/xmmain_random" 
-                        style="@style/xiami_main_margin"
-                        />
+                        android:src="@drawable/xmmain_random" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -176,14 +175,24 @@
                             android:background="@drawable/play" />
 
                         <TextView
-                            android:id="@+id/xiami_new_album1_title"
+                            android:id="@+id/xiami_new_album1_name"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_below="@id/xiami_new_album1"
-                            android:gravity="center_horizontal"
-                            android:maxLines="3"
-                            android:text="专辑1"
-                            android:textColor="@color/black" />
+                            android:maxLines="1"
+                            android:singleLine="true"
+                            android:textColor="@color/music_song"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/xiami_new_album1_singer"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/xiami_new_album1_name"
+                            android:maxLines="1"
+                            android:singleLine="true"
+                            android:textColor="@color/music_singer"
+                            android:textSize="10sp" />
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -209,14 +218,24 @@
                             android:background="@drawable/play" />
 
                         <TextView
-                            android:id="@+id/xiami_new_album2_title"
+                            android:id="@+id/xiami_new_album2_name"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_below="@id/xiami_new_album2"
-                            android:gravity="center_horizontal"
-                            android:maxLines="3"
-                            android:text="专辑2"
-                            android:textColor="@color/black" />
+                            android:maxLines="1"
+                            android:singleLine="true"
+                            android:textColor="@color/music_song"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/xiami_new_album2_singer"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/xiami_new_album2_name"
+                            android:maxLines="1"
+                            android:singleLine="true"
+                            android:textColor="@color/music_singer"
+                            android:textSize="10sp" />
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -242,14 +261,24 @@
                             android:background="@drawable/play" />
 
                         <TextView
-                            android:id="@+id/xiami_new_album3_title"
+                            android:id="@+id/xiami_new_album3_name"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_below="@id/xiami_new_album3"
-                            android:gravity="center_horizontal"
-                            android:maxLines="3"
-                            android:text="专辑3"
-                            android:textColor="@color/black" />
+                            android:maxLines="1"
+                            android:singleLine="true"
+                            android:textColor="@color/music_song"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/xiami_new_album3_singer"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/xiami_new_album3_name"
+                            android:maxLines="1"
+                            android:singleLine="true"
+                            android:textColor="@color/music_singer"
+                            android:textSize="10sp" />
                     </RelativeLayout>
                 </LinearLayout>
             </RelativeLayout>
@@ -308,18 +337,16 @@
 
                         <FrameLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                             >
+                            android:layout_height="wrap_content" >
 
                             <ImageView
                                 android:id="@+id/xiami_hyrank_image"
+                                style="@style/xiami_main_margin"
                                 android:layout_width="match_parent"
                                 android:layout_height="@dimen/xiami_main_rank_item_height"
                                 android:scaleType="fitXY"
                                 android:src="@drawable/xmmain_rank_huayu"
-                                android:textColor="@color/black"
-                                style="@style/xiami_main_margin"
-                                 />
+                                android:textColor="@color/black" />
 
                             <ImageView
                                 android:id="@+id/xiami_hyrank_play"
@@ -333,18 +360,16 @@
 
                         <FrameLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                             >
+                            android:layout_height="wrap_content" >
 
                             <ImageView
                                 android:id="@+id/xiami_allrank_image"
+                                style="@style/xiami_main_margin"
                                 android:layout_width="match_parent"
                                 android:layout_height="@dimen/xiami_main_rank_item_height"
                                 android:scaleType="fitXY"
                                 android:src="@drawable/xmmain_rank_all"
-                                android:textColor="@color/black"
-                                style="@style/xiami_main_margin"
-                                />
+                                android:textColor="@color/black" />
 
                             <ImageView
                                 android:id="@+id/xiami_allrank_play"
@@ -396,8 +421,8 @@
                             android:layout_height="20dip"
                             android:layout_alignParentRight="true"
                             android:layout_marginTop="5dp"
-                            android:background="@drawable/select_right" 
-                            android:visibility="gone"/>
+                            android:background="@drawable/select_right"
+                            android:visibility="gone" />
                     </RelativeLayout>
 
                     <LinearLayout
@@ -413,20 +438,20 @@
 
                             <ImageView
                                 android:id="@+id/xiami_concert_album"
+                                style="@style/xiami_main_margin"
                                 android:layout_width="0dp"
                                 android:layout_height="@dimen/xiami_main_rank_item_height"
                                 android:layout_weight="1"
                                 android:scaleType="fitXY"
-                                style="@style/xiami_main_margin"
                                 android:src="@drawable/xmmain_concert_album" />
 
                             <ImageView
                                 android:id="@+id/xiami_concert_scene"
+                                style="@style/xiami_main_margin"
                                 android:layout_width="0dp"
                                 android:layout_height="@dimen/xiami_main_rank_item_height"
                                 android:layout_weight="1"
                                 android:scaleType="fitXY"
-                                style="@style/xiami_main_margin"
                                 android:src="@drawable/xmmain_concert_scene" />
                         </LinearLayout>
 
@@ -437,20 +462,20 @@
 
                             <ImageView
                                 android:id="@+id/xiami_concert_artist"
+                                style="@style/xiami_main_margin"
                                 android:layout_width="0dp"
                                 android:layout_height="@dimen/xiami_main_rank_item_height"
                                 android:layout_weight="1"
                                 android:scaleType="fitXY"
-                                style="@style/xiami_main_margin"
                                 android:src="@drawable/xmmain_concert_artist" />
 
                             <ImageView
                                 android:id="@+id/xiami_concert_collection"
+                                style="@style/xiami_main_margin"
                                 android:layout_width="0dp"
                                 android:layout_height="@dimen/xiami_main_rank_item_height"
                                 android:layout_weight="1"
                                 android:scaleType="fitXY"
-                                style="@style/xiami_main_margin"
                                 android:src="@drawable/xmmain_concert_collection" />
                         </LinearLayout>
                     </LinearLayout>

@@ -66,8 +66,9 @@ public class TodaySRecommendAdapter extends BaseAdapter {
 			convertView = inflater
 					.inflate(R.layout.xiami_todayrecom_item, null);
 			dataHolder = new DataHolder();
-			dataHolder.todayReText = (TextView) convertView
-					.findViewById(R.id.today_recom_text);
+			dataHolder.todayReSongName = (TextView) convertView
+					.findViewById(R.id.today_recom_songname);
+			dataHolder.todayReSinger=(TextView)convertView.findViewById(R.id.today_recom_singer);
 			dataHolder.image = (ImageView) convertView
 					.findViewById(R.id.today_recom_image);
 			convertView.setTag(dataHolder);
@@ -77,8 +78,10 @@ public class TodaySRecommendAdapter extends BaseAdapter {
 
 		OnlineSong song=myList.get(position);
 		MyApplication.imageLoader.displayImage(song.getImageUrl(100), dataHolder.image);
-		String title=song.getSongName()+"\n"+song.getAlbumName()+"\n"+song.getArtistName();
-		dataHolder.todayReText.setText(title);
+		String songName=song.getSongName();
+		String singer=song.getAlbumName()+"\n"+song.getArtistName();
+		dataHolder.todayReSongName.setText(songName);
+		dataHolder.todayReSinger.setText(singer);
 		return convertView;
 	}
 
@@ -86,7 +89,8 @@ public class TodaySRecommendAdapter extends BaseAdapter {
 	
 	
 	private final class DataHolder {
-		public TextView todayReText;
+		public TextView todayReSongName;
+		public TextView todayReSinger;
 		public ImageView image;
 	}
 
