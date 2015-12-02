@@ -1058,7 +1058,6 @@ public class TVSocketControllerService extends Service implements ServerSocketIn
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		intent.putExtra("musicpath", msg);
-		intent.putExtra("musicTitle", "手机推送");
 		startActivity(intent);
 	}
 
