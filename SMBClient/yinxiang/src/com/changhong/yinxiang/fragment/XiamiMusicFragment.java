@@ -33,6 +33,7 @@ import com.changhong.xiami.activity.XiamiMusicListActivity;
 import com.changhong.xiami.data.TodaySRecommendAdapter;
 import com.changhong.xiami.data.XMMusicController;
 import com.changhong.xiami.data.XMMusicData;
+import com.changhong.xiami.data.XMPlayMusics;
 import com.changhong.yinxiang.R;
 import com.changhong.yinxiang.activity.BaseActivity;
 import com.changhong.yinxiang.activity.SearchActivity;
@@ -410,16 +411,7 @@ public class XiamiMusicFragment extends  Fragment {
 		for (int i = position; i < list.size(); i++) {
 			playList.add(list.get(i));
 		}
-		new Thread(new Runnable() {
-
-			@Override
-			public void run() {
-				// TODO Auto-generated method stub
-
-				playList = XMData.getDetailList(playList);
-				XMData.sendMusics(getActivity(), playList);
-			}
-		}).start();
+		XMPlayMusics.getInstance(getActivity()).playMusics(playList);
 	}
 
 	
