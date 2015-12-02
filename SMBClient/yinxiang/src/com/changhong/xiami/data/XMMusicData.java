@@ -889,34 +889,14 @@ public class XMMusicData {
 				JSONArray array = new JSONArray();
 
 				for (OnlineSong onlineSong : list) {
+					String tempPath =onlineSong.getListenFile();
+					tempPath=(null==tempPath)?"null":tempPath;
+//					String tempPath = Encryptor.decryptUrl(onlineSong.getListenFile());// 解密播放地址
 					String title = onlineSong.getSongName().trim();
-
-					String tempPath = Encryptor.decryptUrl(onlineSong
-							.getListenFile());// 解密播放地址
-					// String tempPath = onlineSong.getListenFile();
-					title = onlineSong.getSongName().trim();
 					String artist = onlineSong.getArtistName().trim();
 					int duration = onlineSong.getLength();
 					JSONObject music = new JSONObject();
-
-					// if
-					// (tempPath.startsWith(HTTPDService.defaultHttpServerPath))
-					// {
-					// tempPath = tempPath.replace(
-					// HTTPDService.defaultHttpServerPath, "")
-					// .replace(" ", "%20");
-					// } else {
-					// for (String otherHttpServerPath :
-					// HTTPDService.otherHttpServerPaths) {
-					// if (tempPath.startsWith(otherHttpServerPath)) {
-					// tempPath = tempPath.replace(
-					// otherHttpServerPath, "").replace(" ",
-					// "%20");
-					// }
-					// }
-					// }
-					// tempPath = httpAddress + tempPath;
-
+                    
 					music.put("tempPath", tempPath);
 					music.put("title", title);
 					music.put("artist", artist);
@@ -925,7 +905,7 @@ public class XMMusicData {
 
 				}
 				o.put("musicss", array.toString());
-
+				o.put("musicType", "xiaMi");
 				File jsonFile = new File(HTTPDService.defaultHttpServerPath
 						+ "/MusicList.json");
 				if (jsonFile.exists()) {

@@ -223,6 +223,11 @@ public class YinXiangMusicViewActivity extends BaseActivity {
 								array.put(music);
 							}
 							o.put("musicss", array.toString());
+							if(	curStorage == STORAGE_MOBILE){
+							     o.put("musicType", "mobile");
+							}else{
+							     o.put("musicType", "yinXiang");	
+							}
 
 							File jsonFile = new File(
 									HTTPDService.defaultHttpServerPath

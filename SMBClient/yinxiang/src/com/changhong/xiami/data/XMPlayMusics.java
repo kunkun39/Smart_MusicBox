@@ -36,9 +36,9 @@ public class XMPlayMusics {
 			
 			@Override
 			public void run() {
-				// TODO Auto-generated method stub
-				playList = mXMMData.getDetailList(list);
-				mXMMData.sendMusics(context,playList);
+//				playList = mXMMData.getDetailList(list);
+//				mXMMData.sendMusics(context,playList);
+				mXMMData.sendMusics(context,list);
 			}
 		});
 	}
