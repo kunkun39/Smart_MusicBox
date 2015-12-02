@@ -17,6 +17,7 @@ import java.net.SocketException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -56,7 +57,7 @@ import com.changhong.tvserver.utils.NetworkUtils;
 import com.changhong.tvserver.utils.StringUtils;
 import com.chome.virtualkey.virtualkey;
 
-public class TVSocketControllerService extends Service {
+public class TVSocketControllerService extends Service implements ServerSocketInterface{
 	private static final String TAG = "TVSocketControlService";
 
 	virtualkey t = new virtualkey();
@@ -116,7 +117,6 @@ public class TVSocketControllerService extends Service {
 	 * TCP server
 	 */
 	private ServerSocket mServerSocket;
-	public static final int TCP_ALARM_SERVER_PORT = 9010;
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -499,7 +499,7 @@ public class TVSocketControllerService extends Service {
 
 							// 获取闹铃设置信息
 						} else if (msg1.startsWith("getAlarmMsg:")) {
-							Log.i("mmmm", TAG + ":" + msg1);
+//							Log.i("mmmm", TAG + ":" + msg1);
 							handleAlarm(msg1);
 						} else if (msg1.contains("autoctrl")) {
 							Log.i("mmmm", TAG + ":" + msg1);
@@ -1215,6 +1215,10 @@ public class TVSocketControllerService extends Service {
 		String content = "";
 		Socket socketclient = null;
 		String line = "";
+		InputStream is = null;
+		byte[] buffer = new byte[1024];
+		char[] buf=new char[1024];
+		int length = 0;
 
 		@Override
 		public void run() {
@@ -1222,25 +1226,45 @@ public class TVSocketControllerService extends Service {
 			try {
 
 				if (null == mServerSocket) {
-					mServerSocket = new ServerSocket(TCP_ALARM_SERVER_PORT);
+					mServerSocket = new ServerSocket(TCP_ALARM_SERVER_PORT, 5);
+				}
+				mServerSocket.setSoTimeout(0);
+				Log.i("mmmm", "tcp start");
+				while (true) {
+					// 获取音响端发送的socket的对象
+					socketclient = null;
+					socketclient = mServerSocket.accept();
+					Log.i("mmmm", "socketclient_accept" + socketclient);
+					  is = socketclient.getInputStream();
+
+					in = new BufferedReader(new InputStreamReader(
+							socketclient.getInputStream()));
+					content="";				
+					while ((line = in.readLine()) != null) {
+						content += line;
+						if(content.contains(TCP_END)){
+							Log.i("mmmm", "content"+content);
+							msg1 = content;
+							if (content != null) {
+								handler.sendEmptyMessage(1);
+							}
+							content=""; 
+						}
+					}
+					
+					// while (true) {
+					// if (is.available() < 0) {
+					// continue;
+					// }
+					// length = is.read(buffer);
+					// content = new String(buffer, 0, length);
+					// // 发送信息给主线程，返回响应结果
+					// msg1 = content;
+					// handler.sendEmptyMessage(1);
+					// Log.i("mm", "--recTCPData--------" + msg1);
+					// }
 				}
 
-				// while (true) {
-				Log.i("mmmm", "tcp start");
-				// 获取音响端发送的socket的对象
-				socketclient = mServerSocket.accept();
-				in = new BufferedReader(new InputStreamReader(
-						socketclient.getInputStream()));
-				// 接收从音响送来的数据
-				line = "";
-				while ((line = in.readLine()) != null) {
-					content += line;
-				}
-				Log.i("mmmm:tcp", content);
-				// 发送信息给主线程，返回响应结果
-				msg1 = content;
-				handler.sendEmptyMessage(1);
-				// }
 			} catch (IOException e) {
 				// TODO 自动生成的 catch 块
 				e.printStackTrace();
