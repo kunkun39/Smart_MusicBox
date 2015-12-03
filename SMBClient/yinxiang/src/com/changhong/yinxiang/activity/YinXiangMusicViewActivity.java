@@ -192,7 +192,7 @@ public class YinXiangMusicViewActivity extends BaseActivity {
 									+ HTTPDService.HTTP_PORT;
 							JSONObject o = new JSONObject();
 							JSONArray array = new JSONArray();
-
+                            long  songID=1000;
 							for (YinXiangMusic selectMusic : YinXiangMusicAdapter.selectMusics) {
 								String tempPath = selectMusic.getPath().trim();
 								String title = selectMusic.getTitle().trim();
@@ -216,6 +216,7 @@ public class YinXiangMusicViewActivity extends BaseActivity {
 										}
 										tempPath=httpAddress + tempPath;
 								}
+								music.put("id", songID++);
 								music.put("tempPath",  tempPath);
 								music.put("title", title);
 								music.put("artist", artist);

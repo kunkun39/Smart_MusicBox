@@ -890,13 +890,14 @@ public class XMMusicData {
 
 				for (OnlineSong onlineSong : list) {
 					String tempPath =onlineSong.getListenFile();
-					tempPath=(null==tempPath)?"null":tempPath;
-//					String tempPath = Encryptor.decryptUrl(onlineSong.getListenFile());// 解密播放地址
+					tempPath=(null==tempPath)?"netSong":tempPath;
 					String title = onlineSong.getSongName().trim();
 					String artist = onlineSong.getArtistName().trim();
 					int duration = onlineSong.getLength();
+					long songID=onlineSong.getSongId();
 					JSONObject music = new JSONObject();
                     
+					music.put("id", songID);
 					music.put("tempPath", tempPath);
 					music.put("title", title);
 					music.put("artist", artist);
