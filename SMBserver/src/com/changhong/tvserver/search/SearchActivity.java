@@ -2,9 +2,7 @@ package com.changhong.tvserver.search;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.json.JSONArray;
-
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
@@ -16,16 +14,18 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Pair;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
+import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
-
 import com.alibaba.fastjson.JSONObject;
 import com.changhong.tvserver.R;
 import com.xiami.sdk.XiamiSDK;
+import com.xiami.sdk.entities.OnlineArtist;
 import com.xiami.sdk.entities.OnlineSong;
 import com.xiami.sdk.entities.OnlineSong.Quality;
 import com.xiami.sdk.entities.QueryInfo;
@@ -33,8 +33,12 @@ import com.xiami.sdk.entities.SearchSummaryResult;
 
 public class SearchActivity extends Activity {
 
-	private ListView searchResultList;
+	private ListView searchSongList;
 	private EditText searchKeyWords;
+	private ImageView searchSubmit;
+	private GridView singerList;
+	private TextView  searchResult;
+
 	private String s_KeyWords = null;
 	public static final String keyWordsName = "StringKeyWords";
 	public static Handler handler;
@@ -45,8 +49,11 @@ public class SearchActivity extends Activity {
 	private XiamiSDK sdk;
 	private SearchSummaryResult searchResultSum;
 	private SearchSummaryAdapter adapter;
+	private SingerAdapter mSingerAdapter;
 	private List<OnlineSong> songs;
 	private List<OnlineSong> songsfull;
+	private List<OnlineArtist> artistList;
+
 	private Pair<QueryInfo, List<OnlineSong>> results;
 
 	private Quality curQuality = OnlineSong.Quality.L;
@@ -60,6 +67,8 @@ public class SearchActivity extends Activity {
 	 */
 	private static final int PAGE_INDEX = 1;
 
+	public static final int REFRESH_SINGERLIST = 1000;
+
 	@Override
 	protected void onCreate(Bundle arg0) {
 		// TODO Auto-generated method stub
@@ -71,16 +80,21 @@ public class SearchActivity extends Activity {
 	}
 
 	private void initView() {
-		setContentView(R.layout.activity_search);
-		searchResultList = (ListView) findViewById(R.id.search_result);
-		searchKeyWords = (EditText) findViewById(R.id.search_keywords);
 
+		setContentView(R.layout.activity_search);
+		searchSongList = (ListView) findViewById(R.id.search_songs);
+		searchKeyWords = (EditText) findViewById(R.id.search_keywords);
+		singerList = (GridView) findViewById(R.id.search_singers);
+		searchSubmit = (ImageView) findViewById(R.id.search_submit);
+		searchResult=(TextView) findViewById(R.id.search_result);
+		
 		sdk = new XiamiSDK(this, SDKUtil.KEY, SDKUtil.SECRET);
 		handler = new Handler(getMainLooper());
 		adapter = new SearchSummaryAdapter(SearchActivity.this);
-		searchResultList.setAdapter(adapter);
-		
-		
+		searchSongList.setAdapter(adapter);
+
+		mSingerAdapter = new SingerAdapter(SearchActivity.this, handler);
+		singerList.setAdapter(mSingerAdapter);
 
 	}
 
@@ -89,12 +103,12 @@ public class SearchActivity extends Activity {
 		s_KeyWords = intent.getStringExtra(keyWordsName);
 		if (!TextUtils.isEmpty(s_KeyWords)) {
 			searchKeyWords.setText(s_KeyWords);
-			//设置光标放在文本末尾
+			// 设置光标放在文本末尾
 			searchKeyWords.setSelection(s_KeyWords.length());
-			 search(s_KeyWords);
+			search(s_KeyWords);
 		}
 
-		searchResultList.setOnItemClickListener(new OnItemClickListener() {
+		searchSongList.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
@@ -105,8 +119,8 @@ public class SearchActivity extends Activity {
 
 			}
 		});
-		//取消item焦点，同时配合android:descendantFocusability="afterDescendants"
-//		searchResultList.setItemsCanFocus(true);
+		// 取消item焦点，同时配合android:descendantFocusability="afterDescendants"
+		// searchSongList.setItemsCanFocus(true);
 
 		handler = new Handler() {
 
@@ -115,10 +129,12 @@ public class SearchActivity extends Activity {
 				// TODO Auto-generated method stub
 				switch (msg.what) {
 				case 1:
-					String keys=(String) msg.obj;
+					String keys = (String) msg.obj;
 					searchKeyWords.setText(keys);
-					//设置光标放在文本末尾
+					// 设置光标放在文本末尾
 					searchKeyWords.setSelection(keys.length());
+					break;
+				case REFRESH_SINGERLIST:
 					break;
 
 				}
@@ -136,8 +152,10 @@ public class SearchActivity extends Activity {
 			String title = songsfull.get(i).getSongName();
 			String artist = songsfull.get(i).getArtistName();
 			int duration = songsfull.get(i).getLength();
+			long songId = songsfull.get(i).getSongId();
 
 			JSONObject music = new JSONObject();
+			music.put("id", songId);
 			music.put("tempPath", path);
 			music.put("title", title);
 			music.put("artist", artist);
@@ -145,26 +163,7 @@ public class SearchActivity extends Activity {
 			array.put(music);
 		}
 		o.put("musicss", array.toString());
-
-		// String listFileAddress =
-		// Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+"MusicList.json";
-		// File jsonFile = new File(listFileAddress);
-		// if (jsonFile.exists()) {
-		// jsonFile.delete();
-		// }
-		// try {
-		// jsonFile.createNewFile();
-		// FileWriter fw = new FileWriter(jsonFile);
-		// fw.write(o.toString(), 0, o.toString().length());
-		// fw.flush();
-		// fw.close();
-		// } catch (IOException e) {
-		// Toast.makeText(SearchActivity.this, "音频列表保存失败", Toast.LENGTH_SHORT)
-		// .show();
-		// e.printStackTrace();
-		//
-		// }
-
+		o.put("musicType", "xiaMi");
 		String listPath = "GetMusicList:" + o.toString();
 		handleMusicMsgs(listPath);
 	}
@@ -176,7 +175,6 @@ public class SearchActivity extends Activity {
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		intent.putExtra("musicpath", msg);
-		intent.putExtra("musicTitle", "网络音乐");		
 		startActivity(intent);
 	}
 
@@ -219,16 +217,25 @@ public class SearchActivity extends Activity {
 				} else {
 					songsfull.clear();
 				}
-				for (int i = 0; i < songs.size(); i++) {
-					songsfull.add(sdk.findSongByIdSync(
-							songs.get(i).getSongId(), curQuality));
+				if (null == artistList) {
+					artistList = new ArrayList<OnlineArtist>();
+				} else {
+					artistList.clear();
 				}
-				searchResultList.post(new Runnable() {
+
+				for (int i = 0; i < songs.size(); i++) {
+					OnlineSong detail = sdk.findSongByIdSync(songs.get(i).getSongId(), curQuality);
+					songsfull.add(detail);
+					addArtist(detail);
+				}
+				searchSongList.post(new Runnable() {
 					@Override
 					public void run() {
 						if (results != null) {
 							// 设置歌曲列表
+							searchResult.setText("搜索结果：相关歌手"+artistList.size()+"位、相关歌曲"+songsfull.size()+"首");
 							adapter.changeSongs(songsfull);
+							mSingerAdapter.changeSingers(artistList);
 						} else if (results.second.size() == 0) {
 							Toast.makeText(SearchActivity.this,
 									R.string.no_search_result,
@@ -245,20 +252,33 @@ public class SearchActivity extends Activity {
 		thread.start();
 	}
 
+	private void addArtist(OnlineSong song) {
+		long artistID = song.getArtistId();
+		int size = artistList.size();
+		for (int i = 0; i < size; i++) {
+			OnlineArtist onlineArtist = artistList.get(i);
+			if(artistID == onlineArtist.getId())return;
+		}
+		//add artist
+		OnlineArtist newArtist=new OnlineArtist();
+		newArtist.setId(song.getArtistId());
+		newArtist.setName(song.getArtistName());
+		newArtist.setLogo(song.getArtistLogo());
+		artistList.add(newArtist);
+	}
+
 	/**
 	 * 系统方法复写
 	 */
 	@Override
 	protected void onDestroy() {
-		// TODO Auto-generated method stub
 		super.onDestroy();
 	}
 
 	@Override
 	protected void onResume() {
-		// TODO Auto-generated method stub
 		super.onResume();
-//		initData();
+		// initData();
 	}
 
 }
