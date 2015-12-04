@@ -2,10 +2,13 @@ package com.changhong.tvserver.search;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.json.JSONArray;
+
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -14,14 +17,21 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Pair;
 import android.view.View;
+import android.view.View.OnFocusChangeListener;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.alibaba.fastjson.JSONObject;
 import com.changhong.tvserver.R;
 import com.xiami.sdk.XiamiSDK;
@@ -66,7 +76,14 @@ public class SearchActivity extends Activity {
 	 * 默认搜索结果页码
 	 */
 	private static final int PAGE_INDEX = 1;
-
+	
+	/*
+	 * 动画效果
+	 */
+	 private LinearLayout songLastSelected, songCurSelected;
+	 private ImageView focusView;
+	public Animation scaleBigAnim, scaleSmallAnim;
+	
 	public static final int REFRESH_SINGERLIST = 1000;
 
 	@Override
@@ -88,6 +105,8 @@ public class SearchActivity extends Activity {
 		searchSubmit = (ImageView) findViewById(R.id.search_submit);
 		searchResult=(TextView) findViewById(R.id.search_result);
 		
+		focusView = (ImageView) findViewById(R.id.image_selected);
+		
 		sdk = new XiamiSDK(this, SDKUtil.KEY, SDKUtil.SECRET);
 		handler = new Handler(getMainLooper());
 		adapter = new SearchSummaryAdapter(SearchActivity.this);
@@ -95,6 +114,8 @@ public class SearchActivity extends Activity {
 
 		mSingerAdapter = new SingerAdapter(SearchActivity.this, handler);
 		singerList.setAdapter(mSingerAdapter);
+		
+		
 
 	}
 
@@ -141,6 +162,13 @@ public class SearchActivity extends Activity {
 
 			}
 		};
+		//设置动画效果
+		scaleBigAnim = AnimationUtils.loadAnimation(SearchActivity.this,
+				R.anim.scale_big);
+		scaleSmallAnim = AnimationUtils.loadAnimation(SearchActivity.this,
+				R.anim.scale_small);
+		searchSongList.setOnItemSelectedListener(itemSelectedListener);
+		searchSongList.setOnFocusChangeListener(itemChangeListener);
 	}
 
 	private void packageData(int arg) {
@@ -265,6 +293,82 @@ public class SearchActivity extends Activity {
 		newArtist.setName(song.getArtistName());
 		newArtist.setLogo(song.getArtistLogo());
 		artistList.add(newArtist);
+	}
+	
+	/*
+	 * 边框动画效果
+	 * 
+	 */
+	
+	
+	OnFocusChangeListener itemChangeListener =new OnFocusChangeListener() {
+		
+		@Override
+		public void onFocusChange(View v, boolean hasFocus) {
+			// TODO Auto-generated method stub
+			if (hasFocus) {
+				if (null != songLastSelected) {
+					selectedScaleBig(songLastSelected);
+				}
+			} else {
+				if (null != songLastSelected) {
+					selectedScaleSmall(songLastSelected);
+				}
+			}
+		}
+	};
+	
+	OnItemSelectedListener itemSelectedListener = new OnItemSelectedListener() {
+
+		@Override
+		public void onItemSelected(AdapterView<?> parent, View view,
+				int position, long id) {
+
+			songCurSelected = (LinearLayout) view
+					.findViewById(R.id.layout_item);
+
+			if (null != songLastSelected) {
+				selectedScaleSmall(songLastSelected);
+			}
+			if (null != songCurSelected) {
+				songLastSelected = songCurSelected;
+				selectedScaleBig(songCurSelected);
+			}
+		}
+
+		@Override
+		public void onNothingSelected(AdapterView<?> parent) {
+
+		}
+	};
+	
+	/**
+	 * 选中项添加边框
+	 */
+	public void selectedScaleBig(LinearLayout selected) {
+		Rect imgRect = new Rect();
+		FrameLayout.LayoutParams focusItemParams = new FrameLayout.LayoutParams(
+				10, 10);
+		selected.getGlobalVisibleRect(imgRect);
+
+		focusItemParams.leftMargin = 20;
+		focusItemParams.topMargin = imgRect.top -160;
+		focusItemParams.width = imgRect.width();
+		focusItemParams.height = imgRect.height();
+
+		focusView.setLayoutParams(focusItemParams);
+		focusView.setImageResource(R.drawable.playlist_selected);
+		focusView.setVisibility(View.VISIBLE);
+		focusView.startAnimation(scaleBigAnim);
+	}
+
+	/**
+	 * 去掉边框
+	 */
+	public void selectedScaleSmall(View disselected) {
+		focusView.setVisibility(View.INVISIBLE);
+		focusView.startAnimation(scaleSmallAnim);
+		focusView.clearAnimation();
 	}
 
 	/**

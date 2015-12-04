@@ -4,6 +4,7 @@
     android:layout_height="80dip"
     android:orientation="horizontal" 
     android:layout_margin="10dip"
+    android:id="@+id/layout_item"
     android:gravity="center">
     
     <!-- 序号 -->
