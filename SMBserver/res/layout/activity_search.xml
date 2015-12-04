@@ -6,36 +6,82 @@
     android:baselineAligned="false"
     android:orientation="vertical" >
 
+    <!-- 搜索关键字 -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp"
-        android:baselineAligned="false"
-        android:orientation="vertical" >
+        android:layout_height="0dip"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="80dp"
+        android:layout_marginRight="80dp"
+        android:layout_marginTop="20dp"
+        android:layout_weight="1"
+        android:orientation="horizontal" >
 
         <EditText
             android:id="@+id/search_keywords"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp" />
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:layout_weight="9"
+            android:background="@color/white"
+             />
+        
+        <ImageView
+            android:id="@+id/search_submit"
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:padding="10dip"
+            android:scaleType="fitCenter"
+            android:src="@drawable/gridview_mall_search_selector" />
     </LinearLayout>
 
+    <!-- 搜索结果 -->  
+    <TextView
+                android:id="@+id/search_result"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="80dp"
+                android:layout_marginRight="80dp"
+                android:gravity="center_vertical"
+                android:textSize="20sp"
+                android:singleLine="true"
+                android:textColor="@color/white"/>
+    
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dip"
+        android:layout_marginBottom="10dp"
         android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp"
-        android:layout_marginTop="30dp"
-        android:baselineAligned="false"
-        android:orientation="vertical" >
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="20dp"
+        android:layout_weight="10"
+        android:orientation="horizontal" >
 
+        <!-- 歌手列表 -->
+        <GridView
+            android:id="@+id/search_singers"
+             android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:layout_weight="1"        
+            android:gravity="center"
+            android:horizontalSpacing="10dp"
+            android:numColumns="1"
+            android:stretchMode="columnWidth"
+            android:verticalSpacing="40dp" 
+            android:scrollbars="none" />"
+        
+        <!-- 搜索列表 -->
         <ListView
-            android:id="@+id/search_result"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content" 
-            
-            />
+            android:id="@+id/search_songs"
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:layout_weight="5"           
+            android:layout_marginLeft="20dp"
+            android:divider="@drawable/playlist_divider"
+            android:footerDividersEnabled="true"
+            android:headerDividersEnabled="true"
+            android:listSelector="#00000000"
+            android:scrollbars="none" />
     </LinearLayout>
 
 </LinearLayout>
