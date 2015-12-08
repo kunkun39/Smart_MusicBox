@@ -7,7 +7,7 @@ import com.xiami.music.api.utils.RequestMethods;
 public class Configure {
 
 	public final static int IMAGE_SIZE1 = 80, IMAGE_SIZE2 = 120,
-			IMAGE_SIZE3 = 400, IMAGE_SIZE4=640, IMAGE_SIZE5=720; 
+			IMAGE_SIZE3 = 330, IMAGE_SIZE4=400, IMAGE_SIZE5=640; 
 
 	public final static int XIAMI_PLAY_MUSICS = 999;
 	public final static int XIAMI_RESPOND_SECCESS = 1000;
