@@ -11,11 +11,11 @@
     <color name="mid_blue">#3658bf</color>
     <color name="dim_foreground_light_inverse_disabled">#80bebebe</color>
     <color name="tab_textColor_selected">#ff10876e</color>
-    <color name="tab_textColor_default">#FFFFFFFF</color>
+    <color name="tab_textColor_default">#FF605d5c</color>
     <color name="imgbg_Color_default">#00000000</color>
     <color name="text_title">#AA1D1915</color>
-    <color name="text_default">#FF04732C</color>
-    <color name="list_bg">#99ffffff</color>
+    <color name="text_default">#FF383431</color>
+    <color name="list_bg">#4Dffffff</color>
     <color name="xiami_second_background">#55ffffff</color>
     <color name="audio_bg">#ff2ba567</color>
      <color name="music_singer">#FF605D5C</color>
