@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/main_bg" >
+
+     <!-- ip setting -->
+   <include layout="@layout/ip_setting" />
+      <!-- 艺人信息 -->   
+       <TextView
+            android:id="@+id/resume_title"
+            android:background="@color/list_bg"           
+            android:layout_width="match_parent"
+            android:layout_height="55dip"
+            android:layout_alignParentTop="true"
+	        android:layout_marginTop="@dimen/ip_banner_height"            		    
+            android:paddingLeft="50dip"
+            android:gravity="center_vertical"
+            android:text="艺人"
+            android:textColor="@color/text_title"
+            android:textSize="@dimen/lable_size" />     
+         <ImageView
+            android:layout_width="15dip"
+            android:layout_height="15dip"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="20dip"
+            android:layout_marginTop="80dip"
+            android:scaleType="fitCenter"
+            android:src="@drawable/left" />
+       
+        <TextView
+            android:id="@+id/artist_resume"
+            android:background="@color/list_bg"                      
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/resume_title"
+            android:layout_marginTop="5dip"           
+            android:padding="15dip"            
+            android:textColor="@color/text_title"
+            android:textSize="@dimen/text_title" />   
+</RelativeLayout>

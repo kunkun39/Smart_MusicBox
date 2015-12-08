@@ -15,9 +15,21 @@
             android:id="@+id/ablum_logo"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="fitXY"/>"
+            android:scaleType="fitXY"/>    
+     
+        <TextView
+            android:id="@+id/ablum_name2"
+            android:background="@drawable/text_bg"
+            android:layout_width="match_parent"
+             android:layout_height="36dip"
+            android:layout_gravity="bottom|left"  
+            android:paddingLeft="5dip" 
+            android:textColor="@color/white"  
+            android:textSize="@dimen/text_title"
+            android:gravity="center_vertical"
+            android:visibility="gone" />
         
-        <ImageView
+          <ImageView
             android:id="@+id/ablum_play"
             android:layout_width="30dip"
             android:layout_height="30dip"
@@ -25,28 +37,17 @@
             android:layout_margin="10dip" 
             android:scaleType="fitCenter"
             android:src="@drawable/play" 
-            android:background="@null"/>
-        
-        <TextView
-            android:id="@+id/ablum_center"
-            android:layout_width="wrap_content"
-             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|left"  
-            android:layout_margin="10dip" 
-            android:textColor="@color/white"  
-            android:textSize="@dimen/lable_size"
-            android:visibility="gone" />
-             
+            android:background="@null"/>          
    </FrameLayout>
     
   <TextView
-            android:id="@+id/ablum_name"
+            android:id="@+id/ablum_name1"
             android:layout_width="match_parent"
              android:layout_height="wrap_content"
              android:paddingLeft="5dip"
-             android:maxLength="12"             
+             android:singleLine="true"       
             android:ellipsize="end" 
-            android:textColor="@color/text_title"  />
+            android:textColor="@color/music_song"  />
   
     <TextView
             android:id="@+id/ablum_content"
@@ -55,9 +56,9 @@
             android:layout_weight="1"
             android:paddingLeft="5dip"
             android:maxLines="2"
-            android:ellipsize="end" 
+            android:ellipsize="end"
             android:gravity="center_vertical"
-            android:textColor="@color/text_default" 
+            android:textColor="@color/music_singer" 
             android:textSize="@dimen/text_content"/>  
 
 </LinearLayout>

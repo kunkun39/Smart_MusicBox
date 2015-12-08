@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    
+     >
+
+    <ImageView
+        android:id="@+id/singer_logo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="fitCenter" />
+
+    <RelativeLayout
+        android:id="@+id/layout1"
+        android:layout_width="match_parent"
+        android:layout_height="50dip"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="250dip"
+        android:background="@drawable/text_bg" >
+
+        <ImageView
+            android:id="@+id/singer_countlikes_flag"
+            android:layout_width="20dip"
+            android:layout_height="20dip"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dip"
+            android:scaleType="fitXY"
+            android:src="@drawable/love" />
+
+        <TextView
+            android:id="@+id/singer_countlikes"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dip"
+            android:layout_toRightOf="@id/singer_countlikes_flag"
+            android:gravity="center_vertical"
+            android:text="1000万" />
+
+        <TextView
+            android:id="@+id/singer_name"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="30dip"
+            android:gravity="center_vertical"
+            android:text="艺人" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/layout1"         
+        android:layout_centerVertical="true"
+        android:background="@drawable/xiami_bg" >
+
+        <TextView
+            android:id="@+id/hotsong_title"
+            android:background="@color/list_bg"                       
+            android:layout_width="match_parent"
+            android:layout_height="55dip"
+            android:layout_alignParentLeft="true"
+            android:paddingLeft="15dip"
+            android:gravity="center_vertical"
+            android:text="热门歌曲   (0首)"
+            android:textColor="@color/text_title"
+            android:textSize="@dimen/lable_size" />
+
+        <ImageView
+            android:id="@+id/song_more"
+            android:layout_width="15dip"
+            android:layout_height="15dip"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dip"
+            android:layout_marginTop="20dip"
+            android:scaleType="fitCenter"
+            android:src="@drawable/select_right" />
+
+        <!-- 热歌列表 -->
+      <ListView
+            android:id="@+id/artist_hotsongs"
+            android:layout_width="fill_parent"
+            android:layout_height="260dip"
+            android:layout_below="@id/hotsong_title" 
+            android:background="@color/list_bg"      
+            android:layout_marginTop="1dip"                  
+            android:divider="@null" >
+        </ListView>
+   
+
+
+        <!-- 专辑 -->
+        <TextView
+            android:id="@+id/album_title"
+            android:background="@color/list_bg"            
+            android:layout_width="match_parent"
+            android:layout_height="55dip"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/artist_hotsongs"
+            android:paddingLeft="15dip"
+            android:layout_marginTop="10dip"                             
+            android:gravity="center_vertical"
+            android:text="专辑"
+            android:textColor="@color/text_title"
+            android:textSize="@dimen/lable_size" />
+
+        <ImageView
+            android:id="@+id/album_more"
+            android:layout_width="15dip"
+            android:layout_height="15dip"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/artist_hotsongs"
+            android:layout_marginRight="20dip"
+            android:layout_marginTop="30dip"
+            android:scaleType="fitCenter"
+            android:src="@drawable/select_right" />
+
+        <GridView
+            android:id="@+id/artist_albums"
+            android:background="@color/list_bg"
+            android:layout_width="match_parent"
+            android:layout_height="400dip"
+            android:layout_below="@id/album_title"
+            android:layout_marginTop="1dip"                                         
+            android:gravity="center"
+            android:horizontalSpacing="10dp"
+            android:numColumns="2"
+            android:paddingLeft="10dip"
+            android:paddingRight="10dip"
+            android:stretchMode="columnWidth"
+            android:verticalSpacing="10dp" >
+        </GridView>
+      
+      <!-- 艺人信息 -->   
+       <TextView
+            android:id="@+id/infor_title"
+            android:background="@color/list_bg"           
+            android:layout_width="match_parent"
+            android:layout_height="55dip"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/artist_albums"
+            android:layout_marginTop="10dip"           
+            android:paddingLeft="15dip"
+            android:gravity="center_vertical"
+            android:text="艺人信息"
+            android:textColor="@color/text_title"
+            android:textSize="@dimen/lable_size" />
+       
+         <ImageView
+            android:id="@+id/infor_more"
+            android:layout_width="15dip"
+            android:layout_height="15dip"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/artist_albums"
+            android:layout_marginRight="20dip"
+            android:layout_marginTop="30dip"
+            android:scaleType="fitCenter"
+            android:src="@drawable/select_right" />
+       
+        <TextView
+            android:id="@+id/infor_detail"
+            android:background="@color/list_bg"                      
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/infor_title"
+            android:layout_marginTop="1dip"           
+            android:maxLines="20"
+            android:padding="15dip"            
+            android:textColor="@color/text_title"
+            android:textSize="@dimen/text_title" />   
+ </RelativeLayout>
+</RelativeLayout>
