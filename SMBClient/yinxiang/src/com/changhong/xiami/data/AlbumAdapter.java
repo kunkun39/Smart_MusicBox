@@ -8,9 +8,7 @@ import com.changhong.yinxiang.R;
 import com.changhong.yinxiang.utils.Configure;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.xiami.sdk.utils.ImageUtil;
-
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Message;
 import android.view.Display;
@@ -21,6 +19,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
+import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -33,6 +32,7 @@ public class AlbumAdapter extends BaseAdapter{
 	private int mScreenHeight;
 	private  ImageLoader imageLoader;
 	private Handler parentHandler=null;
+	int myType=1;
 
 	public AlbumAdapter(Context mContext,Handler parent) {
 		this.mContext = mContext;
@@ -49,7 +49,8 @@ public class AlbumAdapter extends BaseAdapter{
 	 * 当ListView数据发生变化时,调用此方法来更新ListView
 	 * @param list
 	 */
-	public void updateListView(List<XiamiDataModel> list){
+	public void updateListView(List<XiamiDataModel> list,int type){
+		myType=type;
 		mAlbumList.clear();
     	mAlbumList.addAll(list);
         notifyDataSetInvalidated();      
@@ -60,7 +61,7 @@ public class AlbumAdapter extends BaseAdapter{
 		return this.mAlbumList.size();
 	}
 
-	public Object getItem(int position) {
+	public XiamiDataModel getItem(int position) {
 		return mAlbumList.get(position);
 	}
 
@@ -77,10 +78,19 @@ public class AlbumAdapter extends BaseAdapter{
 			AbsListView.LayoutParams param = new AbsListView.LayoutParams( android.view.ViewGroup.LayoutParams.FILL_PARENT,
 					mScreenHeight/3);
 			view.setLayoutParams(param);			
-			viewHolder.albumName = (TextView) view.findViewById(R.id.ablum_name);
+			viewHolder.albumName = (TextView) view.findViewById(R.id.ablum_name1);
 			viewHolder.albumContent = (TextView) view.findViewById(R.id.ablum_content);
 			viewHolder.albumLogo=(ImageView) view.findViewById(R.id.ablum_logo);
-			viewHolder.albumPlay=(ImageView) view.findViewById(R.id.ablum_play);			
+			viewHolder.albumPlay=(ImageView) view.findViewById(R.id.ablum_play);
+			if(2==myType){
+				viewHolder.albumName.setVisibility(View.GONE);
+				viewHolder.albumName=(TextView) view.findViewById(R.id.ablum_name2);
+				viewHolder.albumName.setVisibility(View.VISIBLE);
+				LayoutParams params=(LayoutParams) viewHolder.albumPlay.getLayoutParams();
+				params.bottomMargin=10;
+				viewHolder.albumPlay.setLayoutParams(params);
+				view.getBackground().setAlpha(0);
+			}			
 			view.setTag(viewHolder);
 			
 		} else {
@@ -91,7 +101,7 @@ public class AlbumAdapter extends BaseAdapter{
 		viewHolder.albumName.setText(mAlbumList.get(position).getTitle());
 		viewHolder.albumContent.setText(mAlbumList.get(position).getDescription());	
 		String logo=mAlbumList.get(position).getLogoUrl();
-		String bigLogo=ImageUtil.transferImgUrl(logo, 200);
+		String bigLogo=ImageUtil.transferImgUrl(logo, Configure.IMAGE_SIZE3);
 		imageLoader.displayImage(bigLogo, viewHolder.albumLogo);
 		viewHolder.albumPlay.setOnClickListener(new OnClickListener() {			
 			@Override

@@ -22,6 +22,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.changhong.common.utils.StringUtils;
 import com.changhong.xiami.data.MusicsListAdapter;
 import com.changhong.xiami.data.XMPlayMusics;
 import com.changhong.yinxiang.R;
@@ -70,6 +71,7 @@ public class XiamiMusicListActivity extends BaseActivity {
 			case Configure.XIAMI_COLLECT_DETAIL:
 			case Configure.XIAMI_ALBUM_DETAIL: // 专辑音乐类型1
 			case Configure.XIAMI_SCENE_DETAIL: // 场景音乐
+			case Configure.XIAMI_ARTIST_HOTSONGS: //艺人热歌榜
 
 				element=(JsonElement) msg.obj;
 				getAlbumList(element);
@@ -187,6 +189,13 @@ public class XiamiMusicListActivity extends BaseActivity {
 				return;
 			}
 			mXMMusicData.getCollectDetail(mhandler, albumID);
+		}else if (Configure.XIAMI_ARTIST_HOTSONGS == curMusicType) {
+			albumID=getIntent().getLongExtra("listID", 0);
+			curTitle=getIntent().getStringExtra("listName");
+			if(0==albumID){
+				return;
+			}
+			mXMMusicData.getArtistHotSongs(mhandler, albumID);
 		}else if (Configure.XIAMI_SCENE_DETAIL == curMusicType) {
 			albumID=getIntent().getLongExtra("sceneID", 0);
 			curTitle=getIntent().getStringExtra("sceneName");
@@ -196,6 +205,11 @@ public class XiamiMusicListActivity extends BaseActivity {
 			mXMMusicData.getSceneDetail(mhandler, albumID);
 		}else {
 			mhandler.sendEmptyMessage(curMusicType);
+		}
+		
+		//设置标题
+		if(StringUtils.hasLength(curTitle)){				
+			albumName.setText(curTitle);
 		}
 	}
 

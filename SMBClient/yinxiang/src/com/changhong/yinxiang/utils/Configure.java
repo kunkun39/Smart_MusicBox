@@ -1,14 +1,13 @@
 package com.changhong.yinxiang.utils;
 
-import com.changhong.common.service.ClientSendCommandService;
-import com.changhong.common.system.MyApplication;
+
 import com.changhong.yinxiang.R;
 import com.xiami.music.api.utils.RequestMethods;
 
 public class Configure {
 
 	public final static int IMAGE_SIZE1 = 80, IMAGE_SIZE2 = 120,
-			IMAGE_SIZE3 = 400;
+			IMAGE_SIZE3 = 400, IMAGE_SIZE4=640, IMAGE_SIZE5=720; 
 
 	public final static int XIAMI_PLAY_MUSICS = 999;
 	public final static int XIAMI_RESPOND_SECCESS = 1000;
@@ -29,6 +28,7 @@ public class Configure {
 	public final static int XIAMI_RECOMMEND_PROMOTIONS_ARTISTS = 1015;// 推荐艺人
 	public final static int XIAMI_ARTIST_DETAIL = 1016;// 艺人详细信息
 	public final static int XIAMI_ARTIST_HOTSONGS = 1017;// 热门歌曲
+	public final static int XIAMI_ARTIST_ALBUMS = 1022;// 艺人专辑
 
 	public final static int XIAMI_COLLECT_RECOMMEND = 1018;// 精选集推荐
 	public final static int XIAMI_NEW_ALBUMS = 1019;// 新碟上架-音乐会-专辑
@@ -106,6 +106,8 @@ public class Configure {
 			i = XIAMI_SCENE_LIST;
 		}else if (str.equals(RequestMethods.METHOD_RADIO_DETAIL)) {
 			i = XIAMI_SCENE_DETAIL;
+		}else if (str.equals(RequestMethods.METHOD_ARTIST_ALBUMS)) {
+			i = XIAMI_ARTIST_ALBUMS;
 		}
 		
 		

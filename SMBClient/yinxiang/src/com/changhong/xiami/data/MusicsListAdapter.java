@@ -83,7 +83,12 @@ public class MusicsListAdapter extends BaseAdapter {
 		holder.index.setText(String.valueOf(position + 1));
 		holder.title.setText(song.getSongName());
 		holder.artist.setText(song.getArtistName());
-		MyApplication.imageLoader.displayImage(song.getImageUrl(), holder.musicImage);
+		String imgUrl=song.getImageUrl();
+		if(!StringUtils.hasLength(imgUrl)){
+			imgUrl=song.getArtistLogo();
+		}
+     	MyApplication.imageLoader.displayImage(imgUrl, holder.musicImage);
+	
 		
 		displayQulity(holder.artist, song.getQuality());
 		

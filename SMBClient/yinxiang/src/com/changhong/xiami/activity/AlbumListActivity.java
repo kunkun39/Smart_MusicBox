@@ -110,6 +110,11 @@ public class AlbumListActivity extends BaseActivity {
 					jsonData = (JsonElement) msg.obj;
 					handlXiamiResponse(jsonData);
 					break;
+				case Configure.XIAMI_ARTIST_ALBUMS:
+	                //获取艺人专辑
+					jsonData = (JsonElement) msg.obj;
+					handlXiamiResponse(jsonData);
+					break;
 				case Configure.XIAMI_RESPOND_FAILED:
 					int errorCode = msg.arg1;
 					Toast.makeText(AlbumListActivity.this, errorCode,	Toast.LENGTH_SHORT).show();
@@ -120,6 +125,7 @@ public class AlbumListActivity extends BaseActivity {
 					List<OnlineSong> songs=mXMMusicData.getTheAlbumSongs(jsonData);	
 					XMPlayMusics.getInstance(AlbumListActivity.this).playMusics(songs);
 					break;
+			
 				case Configure.XIAMI_PLAY_MUSICS:
 	                //播放音乐列表
 					int  albumID=msg.arg1;
@@ -135,12 +141,13 @@ public class AlbumListActivity extends BaseActivity {
 	@Override
 	protected void onStart() {
 		super.onStart();
-		curType = getIntent().getIntExtra("albumList",
-				Configure.XIAMI_NEW_ALBUMS);
+		curType = getIntent().getIntExtra("albumList",Configure.XIAMI_NEW_ALBUMS);
 		if (curType == Configure.XIAMI_NEW_ALBUMS) {
 			showNewAlbums();
 		} else if (curType == Configure.XIAMI_PROMOTION_ALBUMS) {
 			showPromotionAlbums();
+		}else  if (curType == Configure.XIAMI_ARTIST_ALBUMS) {
+			showArtistAlbums();
 		}
 	}
 
@@ -155,6 +162,21 @@ public class AlbumListActivity extends BaseActivity {
 		params.put("page", 1);
 		mXMMusicData.getJsonData(mHandler, RequestMethods.METHOD_RANK_NEWALBUM,
 				params);
+	}
+	
+	
+	
+	/*
+	 * 获取艺人专辑
+	 */
+
+	private void showArtistAlbums() {
+		long artist_id = getIntent().getLongExtra("artist_id",0);
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("artist_id", artist_id);
+		params.put("limit", MAX_PAGE_SIZE);
+		params.put("page", 1);
+		mXMMusicData.getJsonData(mHandler, RequestMethods.METHOD_ARTIST_ALBUMS,	params);
 	}
 
 	/*
@@ -225,16 +247,14 @@ public class AlbumListActivity extends BaseActivity {
 	private void handlXiamiResponse(JsonElement jsonData) {
 		List<OnlineAlbum> OnlineAlbums=null;
 		if (jsonData != null) {
-			if (curType == Configure.XIAMI_NEW_ALBUMS) {
-				OnlineAlbums = mXMMusicData
-						.getAlbumList(jsonData);
-				
+			if (curType == Configure.XIAMI_NEW_ALBUMS  || curType==Configure.XIAMI_ARTIST_ALBUMS) {
+				OnlineAlbums = mXMMusicData.getAlbumList(jsonData);				
 			}else if(curType==Configure.XIAMI_PROMOTION_ALBUMS){
 				OnlineAlbums= mXMMusicData.albumsElementToList(jsonData);
 			}
 			SourceDataList = filledData(OnlineAlbums);
 			if (null != SourceDataList) {
-				adapter.updateListView(SourceDataList);
+				adapter.updateListView(SourceDataList,1);
 			} else {
 				Toast.makeText(AlbumListActivity.this, "没有搜索到专辑信息",
 						Toast.LENGTH_SHORT).show();

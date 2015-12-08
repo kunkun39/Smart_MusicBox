@@ -12,6 +12,7 @@ import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.SectionIndexer;
@@ -20,7 +21,6 @@ import android.widget.TextView;
 public class SongAdapter extends BaseAdapter{
 
 	List<OnlineSong> mSongList = new LinkedList<OnlineSong>();
-	private   String singer,logo;
 	private Context mContext;
 	
 	public SongAdapter(Context mContext) {
@@ -31,11 +31,7 @@ public class SongAdapter extends BaseAdapter{
 	 * 当ListView数据发生变化�?调用此方法来更新ListView
 	 * @param list
 	 */
-	public void updateListView(List<OnlineSong> list,String singer,String logo){
-		
-		this.singer=singer;
-		this.logo=logo;
-		
+	public void updateListView(List<OnlineSong> list){	
 		mSongList.clear();
     	mSongList.addAll(list);
         notifyDataSetInvalidated();      
@@ -43,7 +39,7 @@ public class SongAdapter extends BaseAdapter{
 	}
 
 	public int getCount() {
-		return this.mSongList.size();
+		return mSongList.size()>4?4:mSongList.size();
 	}
 
 	public Object getItem(int position) {
@@ -59,17 +55,17 @@ public class SongAdapter extends BaseAdapter{
 		final OnlineSong mContent = mSongList.get(position);
 		if (view == null) {
 			viewHolder = new ViewHolder();
-			view = LayoutInflater.from(mContext).inflate(R.layout.songs_item, null);		
+			view = LayoutInflater.from(mContext).inflate(R.layout.songs_item, null);				
 			viewHolder.songTitle = (TextView) view.findViewById(R.id.song_name);
 			viewHolder.songArtist = (TextView) view.findViewById(R.id.song_artist);
 			viewHolder.singerLogo = (ImageView) view.findViewById(R.id.song_logo);	
-			viewHolder.songArtist.setText(singer);				
 			view.setTag(viewHolder);
 		} else {
 			viewHolder = (ViewHolder) view.getTag();
 		}
 		
 		viewHolder.songTitle.setText(this.mSongList.get(position).getSongName());	
+		viewHolder.songArtist.setText(mSongList.get(position).getArtistName());				
 		String albumLogo=mSongList.get(position).getAlbumLogo();
 		ImageLoader.getInstance().displayImage(albumLogo, viewHolder.singerLogo );
 

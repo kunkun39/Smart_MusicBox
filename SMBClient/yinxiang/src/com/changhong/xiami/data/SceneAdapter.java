@@ -76,19 +76,19 @@ public class SceneAdapter extends BaseAdapter{
 		if (view == null) {
 			viewHolder = new ViewHolder();
 			view = LayoutInflater.from(mContext).inflate(R.layout.xiami_album_list_item, null);	
-			AbsListView.LayoutParams param = new AbsListView.LayoutParams( mScreenWidth/2,		mScreenHeight/3);
+			AbsListView.LayoutParams param = new AbsListView.LayoutParams( mScreenWidth/2,mScreenHeight/3);
 			view.setLayoutParams(param);			
-			viewHolder.sceneName = (TextView) view.findViewById(R.id.ablum_center);
+			viewHolder.sceneName = (TextView) view.findViewById(R.id.ablum_name2);
 			viewHolder.sceneLogo=(ImageView) view.findViewById(R.id.ablum_logo);
 			viewHolder.scenePlay=(ImageView) view.findViewById(R.id.ablum_play);	
 		
 			
 			TextView detail=(TextView) view.findViewById(R.id.ablum_content);
-			TextView name=(TextView) view.findViewById(R.id.ablum_name);
+			TextView name=(TextView) view.findViewById(R.id.ablum_name1);
 			detail.setVisibility(View.GONE);			
 			name.setVisibility(View.GONE);
 			viewHolder.sceneName.setVisibility(View.VISIBLE);
-			
+			viewHolder.sceneName.getBackground().setAlpha(0);
 			view.setTag(viewHolder);
 			
 		} else {

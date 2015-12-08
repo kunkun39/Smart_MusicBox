@@ -327,6 +327,19 @@ public class XMMusicData {
 		requestDataTask.execute(params);
 	}
 
+	
+
+	/*
+	 * 获取指定专辑ID的歌曲列表
+	 */
+	public void getArtistHotSongs(Handler handler, long id) {
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("artist_id", id);
+		params.put("full_des", true);
+		RequestDataTask requestDataTask = new RequestDataTask(this, handler,RequestMethods.METHOD_ARTIST_HOTSONGS);
+		requestDataTask.execute(params);
+	}
+	
 	/**
 	 * 获取指定精选集ID的详细信息
 	 */
