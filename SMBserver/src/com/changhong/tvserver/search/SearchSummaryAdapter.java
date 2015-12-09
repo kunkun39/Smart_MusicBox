@@ -89,7 +89,6 @@ public class SearchSummaryAdapter extends BaseAdapter {
 			viewHolder.logo=(ImageView) convertView.findViewById(R.id.logo);
 			viewHolder.playBtn=(ImageView) convertView.findViewById(R.id.play);
 			viewHolder.albumName=(TextView) convertView.findViewById(R.id.albumname);
-
 			convertView.setTag(viewHolder);
 
 			
@@ -98,7 +97,6 @@ public class SearchSummaryAdapter extends BaseAdapter {
 		}
 		
 		OnlineSong song=mSongList.get(position);
-//		viewHolder.index.setText(position+"");
 		viewHolder.songName.setText(mSongList.get(position).getSongName());
 		viewHolder.singer.setText(mSongList.get(position).getSingers());	
 		viewHolder.albumName.setText(mSongList.get(position).getAlbumName());	

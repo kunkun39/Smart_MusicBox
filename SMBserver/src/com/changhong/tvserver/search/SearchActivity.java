@@ -140,6 +140,17 @@ public class SearchActivity extends Activity {
 
 			}
 		});
+		singerList.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+					long arg3) {
+				OnlineArtist curArtist=artistList.get(arg2);
+				songsfull=matchArtistSongs(curArtist.getId());		
+				adapter.changeSongs(songsfull);
+
+			}
+		});
+		
 		// 取消item焦点，同时配合android:descendantFocusability="afterDescendants"
 		// searchSongList.setItemsCanFocus(true);
 
@@ -245,12 +256,8 @@ public class SearchActivity extends Activity {
 				} else {
 					songsfull.clear();
 				}
-				if (null == artistList) {
-					artistList = new ArrayList<OnlineArtist>();
-				} else {
-					artistList.clear();
-				}
-
+				initArtistList();
+				
 				for (int i = 0; i < songs.size(); i++) {
 					OnlineSong detail = sdk.findSongByIdSync(songs.get(i).getSongId(), curQuality);
 					songsfull.add(detail);
@@ -295,11 +302,35 @@ public class SearchActivity extends Activity {
 		artistList.add(newArtist);
 	}
 	
-	/*
-	 * 边框动画效果
-	 * 
-	 */
 	
+	private void initArtistList(){
+		if (null == artistList) {
+			artistList = new ArrayList<OnlineArtist>();
+		} else {
+			artistList.clear();
+		}		
+		//增加全部艺人
+		OnlineArtist all=new OnlineArtist ();
+		all.setId(1);
+		all.setName("全部");
+		artistList.add(all);
+	}
+	
+	/*
+	 * 匹配艺人歌曲
+	 */
+	private List<OnlineSong> matchArtistSongs(long artistID){
+		
+		List<OnlineSong> songList = new ArrayList<OnlineSong>();
+		int size=songs.size();
+		for (int i = 0; i < size; i++) {
+			OnlineSong song=songs.get(i);
+			if(artistID==song.getArtistId() || 1==artistID){
+				songList.add(song);
+			}
+		}
+        return songList;
+	}
 	
 	OnFocusChangeListener itemChangeListener =new OnFocusChangeListener() {
 		
@@ -324,8 +355,7 @@ public class SearchActivity extends Activity {
 		public void onItemSelected(AdapterView<?> parent, View view,
 				int position, long id) {
 
-			songCurSelected = (LinearLayout) view
-					.findViewById(R.id.layout_item);
+			songCurSelected = (LinearLayout) view.findViewById(R.id.layout_item);
 
 			if (null != songLastSelected) {
 				selectedScaleSmall(songLastSelected);

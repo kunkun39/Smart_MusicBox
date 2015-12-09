@@ -78,19 +78,14 @@ public class SingerAdapter extends BaseAdapter {
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
 
-		if (position < mArtistList.size()) {
 			
-			OnlineArtist artist=mArtistList.get(position);
-			viewHolder.singer.setText(mArtistList.get(position).getName());
-			String logo = mArtistList.get(position).getLogo();
-			ImageLoader.getInstance().displayImage(logo, viewHolder.logo);
-			viewHolder.logo.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View arg0) {
-					mParent.sendEmptyMessage(100);
-				}
-			});
-		}
+		OnlineArtist artist=mArtistList.get(position);
+		String artistName=mArtistList.get(position).getName();
+		viewHolder.singer.setText(artistName);
+		String logo = mArtistList.get(position).getLogo();
+		if(null != logo && logo.length()>1){
+		    ImageLoader.getInstance().displayImage(logo, viewHolder.logo);
+		}	
 		return convertView;
 	}
 
