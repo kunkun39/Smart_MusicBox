@@ -7,14 +7,14 @@
     android:paddingTop="5dp">
 
     <ImageView
-        android:layout_width="80dp"
-        android:layout_height="80dp" 
+        android:layout_width="75dp"
+        android:layout_height="75dp" 
         android:id="@+id/today_recom_image"
         android:scaleType="fitXY"
         />
     
     <TextView 
-        android:layout_width="80dp"
+        android:layout_width="70dp"
         android:layout_height="wrap_content" 
         android:id="@+id/today_recom_songname"
         android:textColor="@color/music_song"
@@ -24,7 +24,7 @@
         />
    
 <TextView 
-    android:layout_width="80dp"
+    android:layout_width="70dp"
         android:layout_height="wrap_content" 
         android:id="@+id/today_recom_singer"
         android:textColor="@color/music_singer"
