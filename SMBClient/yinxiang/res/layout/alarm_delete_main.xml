@@ -7,14 +7,15 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:orientation="horizontal"
-        android:background="@drawable/fragment_bg" >
+        android:background="@drawable/fragment_bg"
+        android:orientation="horizontal" >
 
         <ImageView
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:scaleType="fitCenter"
             android:layout_marginLeft="20dp"
+            android:id="@+id/alarm_delete_back"
+            android:scaleType="fitCenter"
             android:src="@drawable/title_btn_back_selector" />
 
         <TextView
@@ -49,45 +50,46 @@
             android:layout_gravity="right"
             android:layout_marginRight="20dp" />
 
-        <View 
-        android:layout_height="1dp"
-        android:layout_width="match_parent"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="60dp"
-        android:background="@color/white"
-        />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="60dp"
+            android:background="@color/white" />
+
         <ListView
             android:id="@+id/list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="60dp" 
-            android:divider="@null">
+            android:layout_marginTop="60dp"
+            android:divider="@null" >
         </ListView>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             android:layout_gravity="bottom"
-            android:layout_marginBottom="20dp"
             android:orientation="horizontal" >
 
             <Button
                 android:id="@+id/cancel_delete"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="20dp"
                 android:layout_marginLeft="10dp"
+                android:layout_weight="1"
                 android:background="@drawable/alarm_delete_button"
                 android:text="取消" />
 
             <Button
                 android:id="@+id/confirm_delete"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginRight="10dp"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="20dp"
                 android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
                 android:background="@drawable/alarm_delete_button"
                 android:text="确定" />
         </LinearLayout>

@@ -24,6 +24,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -50,6 +51,7 @@ public class SetAlarmActvity extends Activity {
 	private EditText tag;
 	private TextView curMusic;
 	private LinearLayout musics;
+	private ImageView back;
 
 	private Alarm alarm;
 	private WeekButton myWBList[] = null;
@@ -119,6 +121,11 @@ public class SetAlarmActvity extends Activity {
 			case R.id.musics:
 				showMusics();
 				break;
+				
+			case R.id.alarm_setting_back:
+				
+				finish();
+				break;
 			}
 		}
 	};
@@ -158,10 +165,12 @@ public class SetAlarmActvity extends Activity {
 		tag = (EditText) findViewById(R.id.tag);
 		musics = (LinearLayout) findViewById(R.id.musics);
 		curMusic = (TextView) findViewById(R.id.cur_music);
+		back=(ImageView)findViewById(R.id.alarm_setting_back);
 
 		confirm.setOnClickListener(myClickListener);
 		cancel.setOnClickListener(myClickListener);
 		musics.setOnClickListener(myClickListener);
+		back.setOnClickListener(myClickListener);
 	}
 
 	protected void initData() {

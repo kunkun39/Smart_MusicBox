@@ -14,6 +14,7 @@
         <ImageView
             android:layout_width="60dp"
             android:layout_height="60dp"
+            android:id="@+id/alarm_setting_back"
             android:layout_marginLeft="20dp"
             android:scaleType="fitCenter"
             android:src="@drawable/title_btn_back_selector" />
@@ -28,176 +29,182 @@
             android:textSize="16sp" />
     </LinearLayout>
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:background="@color/xiami_second_background" >
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/alarm_timepicker_bg" />
-
-        <TimePicker
-            android:id="@+id/timePicker"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center" >
-
-            <requestFocus />
-        </TimePicker>
-    </FrameLayout>
-
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:background="@color/xiami_second_background"
         android:orientation="vertical" >
 
-        <View
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginLeft="50dp"
-            android:layout_marginRight="50dp"
-            android:layout_marginTop="20dp"
-            android:background="@color/grey" />
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginTop="10dp"
+            >
 
-        
-        
-        <TextView
-            style="@style/alarm_text_name"
-            android:text="重复" />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/alarm_timepicker_bg" />
+
+            <TimePicker
+                android:id="@+id/timePicker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center" >
+
+                <requestFocus />
+            </TimePicker>
+        </FrameLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="50dp"
-            android:layout_marginRight="50dp"
-            android:orientation="horizontal" >
-
-            <com.changhong.common.widgets.WeekButton
-                android:id="@+id/week1"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/alarm1_up" />
-
-            <com.changhong.common.widgets.WeekButton
-                android:id="@+id/week2"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/alarm2_up" />
-
-            <com.changhong.common.widgets.WeekButton
-                android:id="@+id/week3"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/alarm3_up" />
-
-            <com.changhong.common.widgets.WeekButton
-                android:id="@+id/week4"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/alarm4_up" />
-
-            <com.changhong.common.widgets.WeekButton
-                android:id="@+id/week5"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/alarm5_up" />
-
-            <com.changhong.common.widgets.WeekButton
-                android:id="@+id/week6"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/alarm6_up" />
-
-            <com.changhong.common.widgets.WeekButton
-                android:id="@+id/week7"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/alarm7_up" />
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginLeft="50dp"
-            android:layout_marginRight="50dp"
-            android:layout_marginTop="5dp"
-            android:background="@color/grey" />
-
-        <LinearLayout
-            android:id="@+id/musics"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:orientation="vertical" >
 
-            <TextView
-                style="@style/alarm_text_name"
-                android:text="铃声" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="50dp"
+                android:layout_marginRight="50dp"
+                android:layout_marginTop="20dp"
+                android:background="@color/grey" />
 
             <TextView
-                android:id="@+id/cur_music"
                 style="@style/alarm_text_name"
-                android:layout_marginTop="10dp"
-                android:textColor="@color/grey"
-                android:textSize="14sp" />
+                android:text="重复" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="50dp"
+                android:layout_marginRight="50dp"
+                android:orientation="horizontal" >
+
+                <com.changhong.common.widgets.WeekButton
+                    android:id="@+id/week1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/alarm1_up" />
+
+                <com.changhong.common.widgets.WeekButton
+                    android:id="@+id/week2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/alarm2_up" />
+
+                <com.changhong.common.widgets.WeekButton
+                    android:id="@+id/week3"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/alarm3_up" />
+
+                <com.changhong.common.widgets.WeekButton
+                    android:id="@+id/week4"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/alarm4_up" />
+
+                <com.changhong.common.widgets.WeekButton
+                    android:id="@+id/week5"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/alarm5_up" />
+
+                <com.changhong.common.widgets.WeekButton
+                    android:id="@+id/week6"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/alarm6_up" />
+
+                <com.changhong.common.widgets.WeekButton
+                    android:id="@+id/week7"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/alarm7_up" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="50dp"
+                android:layout_marginRight="50dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/grey" />
+
+            <LinearLayout
+                android:id="@+id/musics"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <TextView
+                    style="@style/alarm_text_name"
+                    android:text="铃声" />
+
+                <TextView
+                    android:id="@+id/cur_music"
+                    style="@style/alarm_text_name"
+                    android:layout_marginTop="10dp"
+                    android:textColor="@color/grey"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="50dp"
+                android:layout_marginRight="50dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/grey" />
+
+            <EditText
+                android:id="@+id/tag"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="50dp"
+                android:layout_marginRight="50dp"
+                android:layout_marginTop="20dp"
+                android:hint="标签" />
         </LinearLayout>
 
-        <View
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginLeft="50dp"
-            android:layout_marginRight="50dp"
-            android:layout_marginTop="5dp"
-            android:background="@color/grey" />
+            android:layout_height="60dp"
+            android:orientation="horizontal" >
 
-        <EditText
-            android:id="@+id/tag"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="50dp"
-            android:layout_marginRight="50dp"
-            android:layout_marginTop="20dp"
-            android:hint="标签" />
-    </LinearLayout>
+            <Button
+                android:id="@+id/cancel"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_marginBottom="20dp"
+                android:layout_weight="1"
+                android:background="@drawable/alarm_delete_button"
+                android:text="取消" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal" 
-        android:background="@color/xiami_second_background">
-
-        <Button
-            android:id="@+id/cancel"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/alarm_delete_button"
-            android:layout_marginLeft="10dp"
-            android:text="取消" />
-        
-        <Button
-            android:id="@+id/confirm"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/alarm_delete_button"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:text="确定" />
-
-        
+            <Button
+                android:id="@+id/confirm"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="20dp"
+                android:layout_weight="1"
+                android:background="@drawable/alarm_delete_button"
+                android:text="确定" />
+        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>

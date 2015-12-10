@@ -10,12 +10,12 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.changhong.common.service.ClientSendCommandService;
 import com.changhong.yinxiang.R;
 import com.changhong.yinxiang.activity.AlarmMainActivity;
-import com.changhong.yinxiang.activity.BaseActivity;
 
 public class DeleteAlarmActivity extends Activity {
 
@@ -23,6 +23,7 @@ public class DeleteAlarmActivity extends Activity {
 	private Button confirm, cancel;
 	private ListView list;
 	private AlarmDeleteAdapter adapter;
+	private ImageView back;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +41,7 @@ public class DeleteAlarmActivity extends Activity {
 		confirm = (Button) findViewById(R.id.confirm_delete);
 		cancel = (Button) findViewById(R.id.cancel_delete);
 		list = (ListView) findViewById(R.id.list);
+		back=(ImageView)findViewById(R.id.alarm_delete_back);
 		adapter = new AlarmDeleteAdapter(this);
 		list.setAdapter(adapter);
 		if (AlarmMainActivity.mAlarmList != null) {
@@ -50,6 +52,14 @@ public class DeleteAlarmActivity extends Activity {
 	
 	protected void initData() {
 		// TODO Auto-generated method stub
+		back.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				finish();
+			}
+		});
 
 		confirm.setOnClickListener(new OnClickListener() {
 
