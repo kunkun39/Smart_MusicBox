@@ -23,20 +23,21 @@
             android:layout_width="0dip"
             android:layout_height="match_parent"
             android:layout_weight="9"
-            android:background="@color/white" />
+            android:paddingLeft="20dip"
+            android:textColor="@color/white"          
+            android:background="@drawable/input_bg" />
 
         <ImageView
             android:id="@+id/search_submit"
             android:layout_width="0dip"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:padding="10dip"
+            android:padding="5dip"
             android:scaleType="fitCenter"
             android:src="@drawable/gridview_mall_search_selector" />
     </LinearLayout>
 
     <!-- 搜索结果 -->
-
     <TextView
         android:id="@+id/search_result"
         android:layout_width="match_parent"
@@ -51,15 +52,14 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dip"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="30dp"
+       android:layout_marginBottom="40dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="80dp"
         android:layout_marginTop="20dp"
         android:layout_weight="10"
         android:orientation="horizontal" >
 
         <!-- 歌手列表 -->
-
         <GridView
             android:id="@+id/search_singers"
             android:layout_width="0dip"
@@ -77,11 +77,12 @@
         <FrameLayout
             android:layout_width="0dip"
             android:layout_height="match_parent"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="10dp"
             android:layout_weight="5" >
 
             <ListView
                 android:id="@+id/search_songs"
+                android:background="@drawable/search_bg"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:divider="@drawable/playlist_divider"

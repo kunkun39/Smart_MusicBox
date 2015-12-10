@@ -10,7 +10,7 @@
             android:id="@+id/logo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@drawable/singer" 
+            android:src="@drawable/singer_default" 
             android:scaleType="fitCenter"/>"
     <!-- 歌手名 -->
     
