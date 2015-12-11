@@ -1,6 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/bidir_sliding_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
@@ -24,6 +23,7 @@
         android:layout_width="150dip"
         android:layout_height="fill_parent"
         android:layout_alignParentRight="true"
+        android:layout_marginTop="75dip"        
         android:background="#00ffcc"
         android:visibility="gone" >
         <include layout="@layout/sidemenu" />      

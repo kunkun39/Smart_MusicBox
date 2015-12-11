@@ -2,23 +2,21 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    
-     >
+    android:layout_height="match_parent" >
 
     <ImageView
         android:id="@+id/singer_logo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:scaleType="fitCenter" />
+        android:scaleType="fitXY" />
 
     <RelativeLayout
         android:id="@+id/layout1"
         android:layout_width="match_parent"
         android:layout_height="50dip"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="250dip"
-        android:background="@drawable/text_bg" >
+        android:layout_marginTop="240dip"
+        android:background="@color/list_bg" >
 
         <ImageView
             android:id="@+id/singer_countlikes_flag"
@@ -123,7 +121,7 @@
             android:id="@+id/artist_albums"
             android:background="@color/list_bg"
             android:layout_width="match_parent"
-            android:layout_height="400dip"
+            android:layout_height="450dip"
             android:layout_below="@id/album_title"
             android:layout_marginTop="1dip"                                         
             android:gravity="center"
@@ -132,7 +130,7 @@
             android:paddingLeft="10dip"
             android:paddingRight="10dip"
             android:stretchMode="columnWidth"
-            android:verticalSpacing="10dp" >
+            android:verticalSpacing="5dp" >
         </GridView>
       
       <!-- 艺人信息 -->   
@@ -173,5 +171,6 @@
             android:padding="15dip"            
             android:textColor="@color/text_title"
             android:textSize="@dimen/text_title" />   
+            
  </RelativeLayout>
 </RelativeLayout>
