@@ -5,7 +5,7 @@
     android:background="@drawable/main_bg"
     android:orientation="vertical" >
 
-    <include layout="@layout/ip_setting" />
+
 
     <ListView
         android:id="@+id/alarm_info"
@@ -38,5 +38,5 @@
             android:layout_marginLeft="20dp"
             android:background="@drawable/alarm_delete"/>
     </LinearLayout>
-
+    <include layout="@layout/ip_setting" />
 </FrameLayout>

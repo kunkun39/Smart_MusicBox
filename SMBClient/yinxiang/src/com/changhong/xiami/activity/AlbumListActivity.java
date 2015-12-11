@@ -227,6 +227,8 @@ public class AlbumListActivity extends BaseActivity {
 	 * 位图资源释放
 	 */
 	private void BitmapRecycle() {
+		if(null==SourceDataList)
+			return ;
 		int size = SourceDataList.size();
 		for (int i = 0; i < size; i++) {
 			Bitmap bit = SourceDataList.get(i).getLogoImg();
