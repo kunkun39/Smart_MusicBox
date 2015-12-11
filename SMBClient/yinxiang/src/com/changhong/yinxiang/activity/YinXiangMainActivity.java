@@ -5,10 +5,6 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
@@ -18,26 +14,16 @@ import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.util.JsonReader;
 import android.view.MotionEvent;
-
-import com.baidu.voicerecognition.android.Candidate;
-import com.baidu.voicerecognition.android.VoiceRecognitionClient;
-import com.baidu.voicerecognition.android.VoiceRecognitionConfig;
-import com.changhong.baidu.BaiDuVoiceChannelControlDialog;
 import com.changhong.baidu.BaiDuVoiceClient;
-import com.changhong.baidu.BaiDuVoiceConfiguration;
-import com.changhong.common.domain.AppInfo;
 import com.changhong.common.service.ClientSendCommandService;
 import com.changhong.common.service.NetworkConnectChangedReceiver;
 import com.changhong.common.system.MyApplication;
 import com.changhong.common.utils.DateUtils;
 import com.changhong.common.utils.StringUtils;
-
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.SystemClock;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Fragment;
@@ -50,9 +36,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
-import android.view.GestureDetector.OnGestureListener;
 import android.view.View.OnClickListener;
-import android.view.View.OnLongClickListener;
 import android.view.View.OnTouchListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -65,14 +49,12 @@ import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.changhong.common.utils.NetworkUtils;
 import com.changhong.common.widgets.BoxSelectAdapter;
 import com.changhong.yinxiang.R;
 import com.changhong.yinxiang.fragment.XiamiMusicFragment;
 import com.changhong.yinxiang.fragment.YinXiangCategoryFragment;
 import com.changhong.yinxiang.fragment.YinXiangFMFragment;
-import com.changhong.yinxiang.fragment.YinXiangNetMusicFragment;
 import com.changhong.yinxiang.fragment.YinXiangRemoteControlFragment;
 import com.changhong.yinxiang.fragment.YinXiangSettingFragment;
 import com.changhong.yinxiang.music.MusicEditServer;
@@ -83,9 +65,6 @@ import com.changhong.yinxiang.service.ClientLocalThreadRunningService;
 import com.changhong.yinxiang.service.UpdateLogService;
 import com.changhong.yinxiang.service.UserUpdateService;
 import com.changhong.yinxiang.setting.AppHelpDialog;
-import com.changhong.yinxiang.utils.YuYingWordsUtils;
-import com.changhong.yinxiang.view.SearchDialog;
-
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.ClientProtocolException;
@@ -96,12 +75,12 @@ import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.IntentFilter;
 
-public class YinXiangMainActivity extends FragmentActivity  implements OnClickListener, OnTouchListener{
+public class YinXiangMainActivity extends FragmentActivity implements
+		OnClickListener, OnTouchListener {
 
 	private static final String TAG = "YinXiangMainFragmentActivity";
 	/*
@@ -124,16 +103,15 @@ public class YinXiangMainActivity extends FragmentActivity  implements OnClickLi
 	/****************************** 定义fragment ***************************************/
 	private FragmentManager fragmentManager;
 	private RadioGroup radioGroup;
-	
-	//搜索输入框
-	private RelativeLayout searchInputDialog=null;
-	private ViewHolder searchViewHolder=null;
-	private ImageView  voiceAnimal=null;
-	
-	//百度语音输入
-	BaiDuVoiceClient  mBaiDuVoiceClient=null;
-	
-	
+
+	// 搜索输入框
+	private RelativeLayout searchInputDialog = null;
+	private ViewHolder searchViewHolder = null;
+	private ImageView voiceAnimal = null;
+
+	// 百度语音输入
+	BaiDuVoiceClient mBaiDuVoiceClient = null;
+	private int curfragment = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -172,7 +150,7 @@ public class YinXiangMainActivity extends FragmentActivity  implements OnClickLi
 		 * 启动HTTP服务
 		 */
 		Intent http = new Intent(YinXiangMainActivity.this, HTTPDService.class);
-        startService(http);
+		startService(http);
 		/**
 		 * 启动通讯服务
 		 */
@@ -182,28 +160,28 @@ public class YinXiangMainActivity extends FragmentActivity  implements OnClickLi
 		 * 启动WiFi监听的广播接收器
 		 */
 		regWifiBroadcastRec();
-		mBaiDuVoiceClient=new BaiDuVoiceClient(this);
+		mBaiDuVoiceClient = new BaiDuVoiceClient(this);
 	}
 
 	private void initViewAndEvent() {
-		
+
 		/**
 		 * init all views
 		 */
 		title = (TextView) findViewById(R.id.title);
 		clients = (ListView) findViewById(R.id.clients);
 		list = (Button) findViewById(R.id.btn_list);
-		
+
 		ImageView power = (ImageView) findViewById(R.id.power);
 		ImageView setBtn = (ImageView) findViewById(R.id.btn_set);
 		Button microphone = (Button) findViewById(R.id.yx_microphone);
-		searchInputDialog= (RelativeLayout) findViewById(R.id.search_layout);
-		 searchViewHolder = new ViewHolder();
-	     searchViewHolder.search_keywords=(EditText) searchInputDialog.findViewById(R.id.search_input);
-	     searchViewHolder.btnSubmit=(Button) searchInputDialog.findViewById(R.id.search_submit);
-	     voiceAnimal= (ImageView) findViewById(R.id.voice_animal);
-		
-
+		searchInputDialog = (RelativeLayout) findViewById(R.id.search_layout);
+		searchViewHolder = new ViewHolder();
+		searchViewHolder.search_keywords = (EditText) searchInputDialog
+				.findViewById(R.id.search_input);
+		searchViewHolder.btnSubmit = (Button) searchInputDialog
+				.findViewById(R.id.search_submit);
+		voiceAnimal = (ImageView) findViewById(R.id.voice_animal);
 
 		/***************************** 初始化fragment ****************************************/
 		fragmentManager = getFragmentManager();
@@ -211,25 +189,10 @@ public class YinXiangMainActivity extends FragmentActivity  implements OnClickLi
 		radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 					@Override
 					public void onCheckedChanged(RadioGroup group, int checkedId) {
-
-						int fragmentIndex = matchFragmentIndex(checkedId);
-                        if(3 !=fragmentIndex){                   
-							FragmentTransaction transaction = fragmentManager
-									.beginTransaction();
-							Fragment mFragment = getInstanceByIndex(fragmentIndex);
-							// 增加fragment到backstack。
-							transaction.replace(R.id.yx_tabcontent, mFragment);
-							transaction.addToBackStack(null);
-							// transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-							// 提交修改
-							transaction.commit();
-						}
+						curfragment = matchFragmentIndex(checkedId);
+						setNavigationBarFocus();
 					}
 				});
-		
-		
-
-	
 
 		/**
 		 * Ip部分
@@ -237,7 +200,7 @@ public class YinXiangMainActivity extends FragmentActivity  implements OnClickLi
 		adapter = new BoxSelectAdapter(YinXiangMainActivity.this,
 				ClientSendCommandService.serverIpList);
 		clients.setAdapter(adapter);
-	
+
 		clients.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
@@ -253,8 +216,7 @@ public class YinXiangMainActivity extends FragmentActivity  implements OnClickLi
 				clients.setVisibility(View.GONE);
 			}
 		});
-	
-	
+
 		mhandler = new Handler() {
 
 			@Override
@@ -271,29 +233,28 @@ public class YinXiangMainActivity extends FragmentActivity  implements OnClickLi
 				super.handleMessage(msg1);
 			}
 		};
-		list.setOnClickListener(this);	
+		list.setOnClickListener(this);
 		power.setOnClickListener(this);
 		power.setOnTouchListener(this);
-		setBtn.setOnClickListener(this);
-		setBtn.setOnTouchListener(this);
+	    setBtn.setOnClickListener(this);
+	    setBtn.setOnTouchListener(this);
 		microphone.setOnTouchListener(this);
 		microphone.setOnClickListener(this);
-	    searchViewHolder.btnSubmit.setOnClickListener(this);
-
+		searchViewHolder.btnSubmit.setOnClickListener(this);
 
 		// 长按触发语音换台功能
-	 microphone.setOnLongClickListener(new View.OnLongClickListener() {
+		microphone.setOnLongClickListener(new View.OnLongClickListener() {
 			@Override
 			public boolean onLongClick(View v) {
 				MyApplication.vibrator.vibrate(100);
+				voiceAnimal.setVisibility(View.VISIBLE);
 				mBaiDuVoiceClient.startVoiceRecognition();
 				return true;
 			}
 		});
-	
+		curfragment = 0;
 		// 设置默认进入遥控器控制界面
-		((RadioButton) radioGroup.getChildAt(0)).setChecked(true);	
-		
+		((RadioButton) radioGroup.getChildAt(curfragment)).setChecked(true);
 
 	}
 
@@ -306,36 +267,34 @@ public class YinXiangMainActivity extends FragmentActivity  implements OnClickLi
 			title.setText(ClientSendCommandService.titletxt);
 		}
 	}
-	
+
 	/***************************************************** 系统方法重载部分 ***********************************************/
 
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-	
-		case R.id.yx_microphone://麦克风
-               if(View.VISIBLE==searchInputDialog.getVisibility()){
-            	   searchInputDialog.setVisibility(View.GONE);
-            	   v.setBackgroundResource(R.drawable.microphone);
-               }else{
-            	   searchInputDialog.setVisibility(View.VISIBLE);
-            	   v.setBackgroundResource(R.drawable.keyboard);
-               }
-	
+
+		case R.id.yx_microphone:// 麦克风
+			if (View.VISIBLE == searchInputDialog.getVisibility()) {
+				searchInputDialog.setVisibility(View.GONE);
+				v.setBackgroundResource(R.drawable.microphone);
+			} else {
+				searchInputDialog.setVisibility(View.VISIBLE);
+				v.setBackgroundResource(R.drawable.keyboard);
+				// 关闭动画
+				voiceAnimal.setVisibility(View.GONE);
+
+			}
+
 			break;
-		case R.id.btn_set://设置
+		case R.id.btn_set:// 设置
 			MyApplication.vibrator.vibrate(100);
-			((RadioButton) radioGroup.getChildAt(2)).setChecked(true);	
-			FragmentTransaction transaction = fragmentManager	.beginTransaction();
-			Fragment mFragment = new YinXiangSettingFragment();
-			// 增加fragment到backstack。
-			transaction.replace(R.id.yx_tabcontent, mFragment);
-			transaction.addToBackStack(null);
-			// 提交修改
-			transaction.commit();
+			((RadioButton) radioGroup.getChildAt(2)).setChecked(true);
+			curfragment = 6;
+			setNavigationBarFocus();
 			break;
-			
-		case R.id.btn_list://ip设置
+
+		case R.id.btn_list:// ip设置
 			MyApplication.vibrator.vibrate(100);
 			if (ClientSendCommandService.serverIpList.isEmpty()) {
 				Toast.makeText(YinXiangMainActivity.this,
@@ -345,19 +304,20 @@ public class YinXiangMainActivity extends FragmentActivity  implements OnClickLi
 				clients.setVisibility(View.VISIBLE);
 			}
 			break;
-			
+
 		case R.id.power:
 			MyApplication.vibrator.vibrate(100);
 			isSwitchPower();
 			break;
 		case R.id.search_submit:
 			MyApplication.vibrator.vibrate(100);
-			String keys=searchViewHolder.search_keywords.getText().toString();
-			if(StringUtils.hasLength(keys)){
-				  //发送信息，搜索
+			String keys = searchViewHolder.search_keywords.getText().toString();
+			if (StringUtils.hasLength(keys)) {
+				// 发送信息，搜索
 				searchKey(keys);
-			}else{
-				Toast.makeText(YinXiangMainActivity.this, "您还没有输入搜索关键字哦！", Toast.LENGTH_SHORT).show();
+			} else {
+				Toast.makeText(YinXiangMainActivity.this, "您还没有输入搜索关键字哦！",
+						Toast.LENGTH_SHORT).show();
 			}
 			break;
 		default:
@@ -367,33 +327,21 @@ public class YinXiangMainActivity extends FragmentActivity  implements OnClickLi
 
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
-		
+
 		switch (event.getAction() & MotionEvent.ACTION_MASK) {
 		case MotionEvent.ACTION_DOWN:
 			break;
 		case MotionEvent.ACTION_MOVE:
-		
+
 			break;
 		case MotionEvent.ACTION_UP:
-		/**
+			/**
 			 * 语音识别对话结束
 			 */
 			if (v.getId() == R.id.yx_microphone) {
 				mBaiDuVoiceClient.speakFinish();
-			}
-			break;
-		}
-
-		switch (v.getId()) {
-		
-		case R.id.yx_microphone://可增加语音动画
-			if (event.getAction() == MotionEvent.ACTION_DOWN) {
-				voiceAnimal.setVisibility(View.VISIBLE);
-			} else if (event.getAction() == MotionEvent.ACTION_UP) {
 				voiceAnimal.setVisibility(View.GONE);
 			}
-			break;
-		default:
 			break;
 		}
 		return false;
@@ -431,8 +379,12 @@ public class YinXiangMainActivity extends FragmentActivity  implements OnClickLi
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		switch (keyCode) {
 		case KeyEvent.KEYCODE_BACK:
-			Log.i(TAG, "KEYCODE_BACK");
-			isExitApp();
+			if (View.VISIBLE == searchInputDialog.getVisibility()) {
+				hideSearchInputDialog();
+			} else {
+				Log.i(TAG, "KEYCODE_BACK");
+				isExitApp();
+			}
 			return true;
 		case KeyEvent.KEYCODE_MENU:
 			return true;
@@ -468,26 +420,23 @@ public class YinXiangMainActivity extends FragmentActivity  implements OnClickLi
 		builder.create().show();
 		return true;
 	}
-	
-	
+
 	private boolean isSwitchPower() {
-		Dialog dialog = new AlertDialog.Builder(
-				YinXiangMainActivity.this)
+		Dialog dialog = new AlertDialog.Builder(YinXiangMainActivity.this)
 				.setTitle("是否启动或关闭音响？")
-				.setPositiveButton("是",
-						new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog,int which) {
-								ClientSendCommandService.msg = "key:power";
-								ClientSendCommandService.handler.sendEmptyMessage(1);
-							}
-						})
-				.setNegativeButton("否",	new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog,int which) {
-								dialog.cancel();
-							}
-						}).create();
+				.setPositiveButton("是", new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						ClientSendCommandService.msg = "key:power";
+						ClientSendCommandService.handler.sendEmptyMessage(1);
+					}
+				})
+				.setNegativeButton("否", new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.cancel();
+					}
+				}).create();
 		dialog.show();
 		return true;
 	}
@@ -912,9 +861,9 @@ public class YinXiangMainActivity extends FragmentActivity  implements OnClickLi
 		case 2: // 网络电台
 			fragment = new YinXiangFMFragment();
 			break;
-		case 3: //麦克风	        
+		case 3: // 麦克风
 			break;
-		case 4: //虾米音乐
+		case 4: // 虾米音乐
 			fragment = new XiamiMusicFragment();
 			break;
 		case 5: // 一键推送
@@ -965,27 +914,54 @@ public class YinXiangMainActivity extends FragmentActivity  implements OnClickLi
 			unregisterReceiver(networkConnectChange);
 		}
 	}
-	
-	
-	
 
+	/**
+	 * 设置导航焦点
+	 * 
+	 * @param fragmentIndex
+	 */
+	private void setNavigationBarFocus() {
+		if (3 == curfragment)
+			return;
+		FragmentTransaction transaction = fragmentManager.beginTransaction();
+		Fragment mFragment = getInstanceByIndex(curfragment);
+		// 增加fragment到backstack。
+		transaction.replace(R.id.yx_tabcontent, mFragment);
+		transaction.addToBackStack(null);
+		// transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+		// 提交修改
+		transaction.commit();
 
-private void searchKey(String key) {
-	    	
+		// 隐藏文本输入框
+		hideSearchInputDialog();
+	}
+
+	/**
+	 * 隐藏搜索对话框
+	 */
+	private void hideSearchInputDialog() {
+		if (View.VISIBLE == searchInputDialog.getVisibility()) {
+			searchInputDialog.setVisibility(View.GONE);
+			radioGroup.getChildAt(2).setBackgroundResource(
+					R.drawable.microphone);
+		}
+	}
+
+	private void searchKey(String key) {
+
+		if (3 == curfragment)
+			key += "";
 		StringBuffer sb = new StringBuffer();
 		sb.append("search:");
 		sb.append("|");
 		sb.append(key);
-		
+
 		ClientSendCommandService.msg = sb.toString();
 		ClientSendCommandService.handler.sendEmptyMessage(1);
 	}
-	
-	
-    private class ViewHolder {
-		
-	    public Button btnSubmit;
-	    public EditText search_keywords;
 
+	private class ViewHolder {
+		public Button btnSubmit;
+		public EditText search_keywords;
 	}
 }

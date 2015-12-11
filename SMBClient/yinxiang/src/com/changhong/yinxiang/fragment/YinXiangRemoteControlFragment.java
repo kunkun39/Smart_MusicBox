@@ -1,12 +1,12 @@
 package com.changhong.yinxiang.fragment;
 
-
 import com.changhong.common.service.ClientSendCommandService;
 import com.changhong.common.system.MyApplication;
 import com.changhong.common.utils.StringUtils;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.app.Fragment;
 import android.graphics.Color;
 import android.graphics.PointF;
 import android.graphics.drawable.ColorDrawable;
@@ -41,10 +41,9 @@ import com.changhong.yinxiang.remotecontrol.TVInputDialogFragment;
 import com.changhong.yinxiang.utils.Configure;
 import com.changhong.yinxiang.view.MyToast;
 
-public class YinXiangRemoteControlFragment extends TVInputDialogFragment
+public class YinXiangRemoteControlFragment extends Fragment
 		implements OnClickListener, OnTouchListener, OnGestureListener {
 	private static final String TAG = "yinXiang";
-	// private BidirSlidingLayout bidirSlidingLayout;
 	/**
 	 * control part
 	 */
@@ -53,8 +52,8 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 
 	private GestureDetector detector;
 	RelativeLayout ctrlMain;
-	LinearLayout ctrlAudio,volumeBar;
-	SeekBar  dyAndVolControl;
+	LinearLayout ctrlAudio, volumeBar;
+	SeekBar dyAndVolControl;
 	/**
 	 * server ip part
 	 */
@@ -67,11 +66,9 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 	private PointF startPoint = new PointF();
 	private PointF endPoint = new PointF();
 	GridView yinXiaoControl, lightsControl;
-	//音量控制条
-	Handler audioHandler = null ;
+	// 音量控制条
+	Handler audioHandler = null;
 
-	
-	
 	// 长按键
 	Handler mHandler1 = new Handler();
 	Runnable mRunnable = new Runnable() {
@@ -94,7 +91,8 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.fragment_remote_control,container, false);
+		View view = inflater.inflate(R.layout.fragment_remote_control,
+				container, false);
 		initView(view);
 		return view;
 	}
@@ -125,21 +123,21 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 		// 音效控件
 		ctrlMain = (RelativeLayout) v.findViewById(R.id.control_main);
 		ctrlAudio = (LinearLayout) v.findViewById(R.id.control_audio);
-		volumeBar=(LinearLayout) v.findViewById(R.id.control_volume);
+		volumeBar = (LinearLayout) v.findViewById(R.id.control_volume);
 
 		Button lights_Center = (Button) v.findViewById(R.id.lightscontrol);
 		yinXiaoControl = (GridView) v.findViewById(R.id.audio_yinxiao);
 		lightsControl = (GridView) v.findViewById(R.id.audio_light);
-		dyAndVolControl =(SeekBar) v.findViewById(R.id.volume_value);
+		dyAndVolControl = (SeekBar) v.findViewById(R.id.volume_value);
 
-		
 		yinXiaoControl.setSelector(new ColorDrawable(Color.TRANSPARENT));
 		lightsControl.setSelector(new ColorDrawable(Color.TRANSPARENT));
-		AudioCtrlAdapter adapter = new AudioCtrlAdapter(getActivity(), 6,(int) (width * 0.2f), (int) (height * 0.135f));
+		AudioCtrlAdapter adapter = new AudioCtrlAdapter(getActivity(), 6,
+				(int) (width * 0.2f), (int) (height * 0.135f));
 		yinXiaoControl.setAdapter(adapter);
-		adapter = new AudioCtrlAdapter(getActivity(), 4, (int) (width * 0.27f),(int) (height * 0.16));
+		adapter = new AudioCtrlAdapter(getActivity(), 4, (int) (width * 0.27f),
+				(int) (height * 0.16));
 		lightsControl.setAdapter(adapter);
-			
 
 		btn_up.setOnTouchListener(this);
 		btn_up.setOnClickListener(this);
@@ -151,11 +149,11 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 		btn_right.setOnClickListener(this);
 		btn_center.setOnTouchListener(this);
 		btn_center.setOnClickListener(this);
-		
-		v.setOnTouchListener(this);
-		v.setOnClickListener(this);
-	
-		//功能切换键
+
+		ctrlMain.setOnTouchListener(this);
+		ctrlMain.setOnClickListener(this);
+
+		// 功能切换键
 		funSwitch.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView,
@@ -171,15 +169,12 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 			}
 		});
 
-		
 		home.setOnClickListener(this);
 		home.setOnTouchListener(this);
 		menu.setOnClickListener(this);
 		menu.setOnTouchListener(this);
 		backBtn.setOnClickListener(this);
 		backBtn.setOnTouchListener(this);
-		
-		
 
 		// 灯光控制
 		lights_Center.setOnClickListener(this);
@@ -190,7 +185,7 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 					int position, long id) {
 				MyApplication.vibrator.vibrate(100);
 				int resID = matchLightResID(position);
-				if (resID >0) {
+				if (resID > 0) {
 					lightsControl.setBackgroundResource(resID);
 					String cmdStr = Configure.getAudioSettingCMD(resID);
 					ClientSendCommandService.msg = "key:" + cmdStr;
@@ -217,23 +212,22 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 		centerPoint.set((180.25f - 35.5f) * density, (343.25f - 35.5f)
 				* density);
 
-	
-		
-		audioHandler=new Handler(){
+		audioHandler = new Handler() {
 
 			@Override
 			public void handleMessage(Message msg) {
 				switch (msg.what) {
-				case 1://定时关闭音量控制条
-					 if(View.VISIBLE == volumeBar.getVisibility()){
-						 volumeBar.setVisibility(View.GONE);
-					 }
+				case 1:// 定时关闭音量控制条
+					if (View.VISIBLE == volumeBar.getVisibility()) {
+						volumeBar.setVisibility(View.GONE);
+					}
 					break;
 				default:
 					break;
-				}				super.handleMessage(msg);
+				}
+				super.handleMessage(msg);
 			}
-			
+
 		};
 	}
 
@@ -292,44 +286,24 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
-		
+
 		switch (event.getAction() & MotionEvent.ACTION_MASK) {
 		case MotionEvent.ACTION_DOWN:
 			startPoint.set(event.getX(), event.getY());
 			// 1秒后如果不移动不弹起按键 就执行 长按键操作
-//			mHandler1.postDelayed(mRunnable, 500);
+			// mHandler1.postDelayed(mRunnable, 500);
 			break;
 		case MotionEvent.ACTION_MOVE:
 			endPoint.set(event.getX(), event.getY());
 			float moveX = endPoint.x - startPoint.x;
 			float moveY = endPoint.y - startPoint.y;
-
 			// 移动距离过大判定不是长按键取消长按键操作
 			if (Math.abs(moveX) > 80 || Math.abs(moveY) > 80) {
 				mHandler1.removeCallbacks(mRunnable);
 			}
-
-//			if (Math.abs(moveX) >= Math.abs(moveY)) {
-//				if (moveX >= 400) {
-//					ClientSendCommandService.msg = "key:right";
-//					moveFocus(moveX);
-//				}
-//				if (moveX <= -400) {
-//					ClientSendCommandService.msg = "key:left";
-//					moveFocus(moveX);
-//				}
-//			} else {
-//				if (moveY >= 400) {
-//					ClientSendCommandService.msg = "key:down";
-//					moveFocus(moveY);
-//				}
-//				if (moveY <= -400) {
-//					ClientSendCommandService.msg = "key:up";
-//					moveFocus(moveY);
-//				}
-//			}
 			break;
 		case MotionEvent.ACTION_UP:
+
 			// 移除长按键操作
 			mHandler1.removeCallbacks(mRunnable);
 			endPoint.set(event.getX(), event.getY());
@@ -338,8 +312,6 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 
 			if (Math.abs(moveX) >= Math.abs(moveY)) {
 				if (moveX >= 120) {
-//					moveBall(centerPoint.x, width, centerPoint.y, centerPoint.y);
-//					ClientSendCommandService.msg = "key:right";
 					ClientSendCommandService.msg = "key:volumeup";
 					setVolumeAndDy("key:volumeup");
 					moveFocus(moveX);
@@ -347,8 +319,6 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 					MyApplication.vibrator.vibrate(100);
 				}
 				if (moveX <= -120) {
-//					moveBall(centerPoint.x, -100f, centerPoint.y, centerPoint.y);
-//					ClientSendCommandService.msg = "key:left";
 					ClientSendCommandService.msg = "key:volumedown";
 					setVolumeAndDy("key:volumedown");
 					moveFocus(moveX);
@@ -357,9 +327,6 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 				}
 			} else {
 				if (moveY >= 120) {
-//					moveBall(centerPoint.x, centerPoint.x, centerPoint.y,
-//							height);
-//					ClientSendCommandService.msg = "key:down";
 					ClientSendCommandService.msg = "key:dydown";
 					setVolumeAndDy("key:dydown");
 					moveFocus(moveY);
@@ -367,15 +334,12 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 					MyApplication.vibrator.vibrate(100);
 				}
 				if (moveY <= -120) {
-//					moveBall(centerPoint.x, centerPoint.x, centerPoint.y, 0f);
-//					ClientSendCommandService.msg = "key:up";
 					ClientSendCommandService.msg = "key:dyup";
 					setVolumeAndDy("key:dyup");
 					moveFocus(moveY);
 					v.setId(0);
 					MyApplication.vibrator.vibrate(100);
 				}
-				
 			}
 			break;
 		}
@@ -421,7 +385,7 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 				img_d.setImageResource(R.drawable.tv_control_direction);
 			}
 			break;
-	
+
 		case R.id.btn_menu:
 		case R.id.btn_home:
 		case R.id.btn_b:
@@ -438,7 +402,7 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 						.setBackgroundResource(R.drawable.lightscontroller);
 			}
 			break;
-		
+
 		case R.id.function_switch:
 			// 功能切换按钮
 			if (View.GONE == ctrlMain.getVisibility()) {
@@ -449,17 +413,11 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 				ctrlAudio.setVisibility(View.VISIBLE);
 			}
 			break;
-
 		default:
 			break;
 		}
 		return false;
 	}
-
-	// @Override
-	// public boolean onTouchEvent(MotionEvent event) {
-	// return this.detector.onTouchEvent(event);
-	// }
 
 	@Override
 	public boolean onDown(MotionEvent e) {
@@ -475,16 +433,16 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 
 		if (Math.abs(xMoveDistenace) > Math.abs(yMoveDistenace)) {
 			if (xMoveDistenace > 0 && Math.abs(xMoveDistenace) > 120) {
-//				moveBall(centerPoint.x, width, centerPoint.y, centerPoint.y);
-//				ClientSendCommandService.msg = "key:right";
+				// moveBall(centerPoint.x, width, centerPoint.y, centerPoint.y);
+				// ClientSendCommandService.msg = "key:right";
 				ClientSendCommandService.msg = "key:volumeup";
 				setVolumeAndDy("key:volumeup");
 				moveFocus(Math.abs(xMoveDistenace));
 				MyApplication.vibrator.vibrate(100);
 
 			} else if (xMoveDistenace < 0 && Math.abs(xMoveDistenace) > 120) {
-//				moveBall(centerPoint.x, -100f, centerPoint.y, centerPoint.y);
-//				ClientSendCommandService.msg = "key:left";
+				// moveBall(centerPoint.x, -100f, centerPoint.y, centerPoint.y);
+				// ClientSendCommandService.msg = "key:left";
 				ClientSendCommandService.msg = "key:volumedown";
 				setVolumeAndDy("key:volumedown");
 				moveFocus(Math.abs(xMoveDistenace));
@@ -493,16 +451,17 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 			}
 		} else {
 			if (yMoveDistenace > 0 && Math.abs(yMoveDistenace) > 120) {
-//				moveBall(centerPoint.x, centerPoint.x, centerPoint.y, height);
-//				ClientSendCommandService.msg = "key:down";
+				// moveBall(centerPoint.x, centerPoint.x, centerPoint.y,
+				// height);
+				// ClientSendCommandService.msg = "key:down";
 				ClientSendCommandService.msg = "key:dydown";
 				setVolumeAndDy("key:dydown");
 				moveFocus(Math.abs(yMoveDistenace));
 				MyApplication.vibrator.vibrate(100);
 
 			} else if (yMoveDistenace < 0 && Math.abs(yMoveDistenace) > 120) {
-//				moveBall(centerPoint.x, centerPoint.x, centerPoint.y, 0f);
-//				ClientSendCommandService.msg = "key:up";
+				// moveBall(centerPoint.x, centerPoint.x, centerPoint.y, 0f);
+				// ClientSendCommandService.msg = "key:up";
 				ClientSendCommandService.msg = "key:dyup";
 				setVolumeAndDy("key:dyup");
 				moveFocus(Math.abs(yMoveDistenace));
@@ -525,25 +484,24 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 
 		if (Math.abs(xMoveDistenace) > Math.abs(yMoveDistenace)) {
 			if (xMoveDistenace > 0 && Math.abs(xMoveDistenace) > 400) {
-//					ClientSendCommandService.msg = "key:right";
-					ClientSendCommandService.msg = "key:volumeup";
-					moveFocus(Math.abs(xMoveDistenace));
-
+				// ClientSendCommandService.msg = "key:right";
+				ClientSendCommandService.msg = "key:volumeup";
+				moveFocus(Math.abs(xMoveDistenace));
 
 			} else if (xMoveDistenace < 0 && Math.abs(xMoveDistenace) > 400) {
-//				ClientSendCommandService.msg = "key:left";
+				// ClientSendCommandService.msg = "key:left";
 				ClientSendCommandService.msg = "key:volumedown";
 				moveFocus(Math.abs(xMoveDistenace));
 
 			}
 		} else {
 			if (yMoveDistenace > 0 && Math.abs(yMoveDistenace) > 400) {
-//				ClientSendCommandService.msg = "key:down";
+				// ClientSendCommandService.msg = "key:down";
 				ClientSendCommandService.msg = "key:dydown";
 				moveFocus(Math.abs(yMoveDistenace));
 
 			} else if (yMoveDistenace < 0 && Math.abs(yMoveDistenace) > 400) {
-//				ClientSendCommandService.msg = "key:up";
+				// ClientSendCommandService.msg = "key:up";
 				ClientSendCommandService.msg = "key:dyup";
 				moveFocus(Math.abs(yMoveDistenace));
 
@@ -592,10 +550,6 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 		});
 		smoothBall.startAnimation(animation);
 	}
-	
-	
-	
-	
 
 	@Override
 	public void onResume() {
@@ -635,8 +589,6 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 		super.onDestroy();
 	}
 
-	
-
 	/**
 	 * 匹配音效资源ID
 	 */
@@ -660,39 +612,39 @@ public class YinXiangRemoteControlFragment extends TVInputDialogFragment
 		}
 		return resID;
 	}
-	
-	
+
 	/**
 	 * 音量 && 低音设置
-	 * @param cmd -1=降低  +1=提高
+	 * 
+	 * @param cmd
+	 *            -1=降低 +1=提高
 	 */
-	private void setVolumeAndDy(String cmd){
-		
-		String notice="";
-		//显示音量设置条
-		if(View.GONE==volumeBar.getVisibility()){
+	private void setVolumeAndDy(String cmd) {
+
+		String notice = "";
+		// 显示音量设置条
+		if (View.GONE == volumeBar.getVisibility()) {
 			volumeBar.setVisibility(View.VISIBLE);
 		}
 		audioHandler.sendEmptyMessageDelayed(1, 15000);
 
-		//设置音量条的值
-		int curValue=dyAndVolControl.getProgress();		
-		if(cmd.equals("key:volumedown") ){
-			curValue-=2;
-			notice="音量  减";
-		}else if(cmd.equals("key:dydown") ){
-			curValue-=2;
-			notice="低音  减";
-		}else if(cmd.equals("key:volumeup") ){
-			curValue+=2;
-			notice="音量  加";
-		}else if(cmd.equals("key:dyup") ){
-			curValue+=2;
-			notice="低音  加";
-		}		
+		// 设置音量条的值
+		int curValue = dyAndVolControl.getProgress();
+		if (cmd.equals("key:volumedown")) {
+			curValue -= 2;
+			notice = "音量  减";
+		} else if (cmd.equals("key:dydown")) {
+			curValue -= 2;
+			notice = "低音  减";
+		} else if (cmd.equals("key:volumeup")) {
+			curValue += 2;
+			notice = "音量  加";
+		} else if (cmd.equals("key:dyup")) {
+			curValue += 2;
+			notice = "低音  加";
+		}
 		dyAndVolControl.setProgress(curValue);
 		MyToast.show(getActivity(), notice);
 	}
-	
 
 }

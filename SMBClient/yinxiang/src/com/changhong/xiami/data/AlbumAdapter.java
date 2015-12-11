@@ -28,8 +28,8 @@ public class AlbumAdapter extends BaseAdapter{
 
 	List<XiamiDataModel> mAlbumList = new LinkedList<XiamiDataModel>();
 	private Context mContext;
-	private int mScreenWidth;
-	private int mScreenHeight;
+	private int mViewWidth;
+	private int mViewHeight;
 	private  ImageLoader imageLoader;
 	private Handler parentHandler=null;
 	int myType=1;
@@ -39,8 +39,8 @@ public class AlbumAdapter extends BaseAdapter{
 		this.parentHandler=parent;
 		WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
 		Display d = wm.getDefaultDisplay();
-		mScreenWidth = d.getWidth();
-		mScreenHeight = d.getHeight()-65;
+		mViewWidth = d.getWidth();
+		mViewHeight = (d.getHeight()-65)/3;
 		imageLoader=ImageLoader.getInstance();
 
 	}
@@ -76,7 +76,7 @@ public class AlbumAdapter extends BaseAdapter{
 			viewHolder = new ViewHolder();
 			view = LayoutInflater.from(mContext).inflate(R.layout.xiami_album_list_item, null);	
 			AbsListView.LayoutParams param = new AbsListView.LayoutParams( android.view.ViewGroup.LayoutParams.FILL_PARENT,
-					mScreenHeight/3);
+					mViewHeight);
 			view.setLayoutParams(param);			
 			viewHolder.albumName = (TextView) view.findViewById(R.id.ablum_name1);
 			viewHolder.albumContent = (TextView) view.findViewById(R.id.ablum_content);

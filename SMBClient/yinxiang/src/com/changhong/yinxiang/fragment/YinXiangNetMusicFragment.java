@@ -27,7 +27,6 @@ import com.changhong.xiami.activity.AlbumListActivity;
 import com.changhong.xiami.activity.ArtistListActivity;
 import com.changhong.xiami.activity.CollectActivity;
 import com.changhong.xiami.activity.SceneActivity;
-import com.changhong.xiami.activity.XiamiMainActivity;
 import com.changhong.xiami.activity.XiamiMusicListActivity;
 import com.changhong.yinxiang.R;
 
@@ -78,10 +77,7 @@ public class YinXiangNetMusicFragment extends Fragment{
 //        			Log.e(TAG, "startActivity com.tencent.qqmusic  err ! ");
 //        			Toast.makeText(getActivity(), "启动QQ音乐失败，请确定您是否已安装QQ音乐！", Toast.LENGTH_LONG).show();
 //        		}
-        		 
-        		//测试代码
-        		Intent intent=new Intent(getActivity(),XiamiMainActivity.class);
-        		startActivity(intent);
+        	
         		
         	}
         });

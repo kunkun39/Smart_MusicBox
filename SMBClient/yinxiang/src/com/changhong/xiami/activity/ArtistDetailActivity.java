@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -15,6 +16,8 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.changhong.xiami.data.AlbumAdapter;
@@ -50,6 +53,9 @@ public class ArtistDetailActivity extends BaseActivity implements
 	private ImageView singerLogo, songMore, albumMore, inforMore;
 	private SongAdapter adapter;
 	private AlbumAdapter albumAdapter;
+	private RelativeLayout layout1;
+
+	
 
 	private Handler mHandler;
 	private final int MAX_PAGE_SIZE = 100;
@@ -76,9 +82,7 @@ public class ArtistDetailActivity extends BaseActivity implements
 	@Override
 	protected void initView() {
 		setContentView(R.layout.xiami_singer_container);
-
-		model = (XiamiDataModel) getIntent().getSerializableExtra(
-				"XiamiDataModel");
+		model = (XiamiDataModel) getIntent().getSerializableExtra("XiamiDataModel");
 		curArtistID = model.getId();
 		mXMMusicData = XMMusicData.getInstance(this);
 
@@ -90,6 +94,7 @@ public class ArtistDetailActivity extends BaseActivity implements
 		clients = (ListView) findViewById(R.id.clients);
 		listClients = (Button) findViewById(R.id.btn_list);
 
+		layout1=(RelativeLayout) findViewById(R.id.layout1);
 		singerLogo = (ImageView) findViewById(R.id.singer_logo);
 		mSongList = (ListView) findViewById(R.id.artist_hotsongs);
 		singer_name = (TextView) findViewById(R.id.singer_name);
@@ -103,9 +108,12 @@ public class ArtistDetailActivity extends BaseActivity implements
 		inforMore = (ImageView) findViewById(R.id.infor_more);
 		// 专辑
 		mAlbumList = (GridView) findViewById(R.id.artist_albums);
-		adapter = new SongAdapter(this);
-		mSongList.setAdapter(adapter);
+		albumAdapter = new AlbumAdapter(this, mHandler);
+		mAlbumList.setAdapter(albumAdapter);
 		page = 1;
+		
+		
+		
 	}
 
 	@Override
@@ -158,8 +166,7 @@ public class ArtistDetailActivity extends BaseActivity implements
 				switch (msg.what) {
 				case REFRESH_LOGO:
 					String logo = model.getArtistImgUrl();
-					logo = mXMMusicData.transferImgUrl(logo,
-							Configure.IMAGE_SIZE5);
+					logo = mXMMusicData.transferImgUrl(logo,Configure.IMAGE_SIZE5);
 					ImageLoader.getInstance().displayImage(logo, singerLogo);
 					break;
 
@@ -194,10 +201,11 @@ public class ArtistDetailActivity extends BaseActivity implements
 				}
 			}
 		};
-
+		mHandler.sendEmptyMessage(REFRESH_LOGO);
 		albumAdapter = new AlbumAdapter(this, mHandler);
 		mAlbumList.setAdapter(albumAdapter);
-		mHandler.sendEmptyMessage(REFRESH_LOGO);
+		setViewLayoutParams();
+	
 	}
 
 	@Override
@@ -303,7 +311,21 @@ public class ArtistDetailActivity extends BaseActivity implements
 			albumList.add(albumModel);
 		}
 		return albumList;
-
+	}
+	
+	/**
+	 * 重新布局View的Layout
+	 */
+	private void setViewLayoutParams(){
+		RelativeLayout.LayoutParams param=(LayoutParams) singerLogo.getLayoutParams();
+		param.height=param.width;
+		singerLogo.setLayoutParams(param);
+		param=(LayoutParams) mSongList.getLayoutParams();
+		adapter = new SongAdapter(this,param.width,param.height);
+		mSongList.setAdapter(adapter);
+	    param=(LayoutParams) mAlbumList.getLayoutParams();
+	    param.height=(int) ((mScreemHeight-65)*0.67f);
+	    mAlbumList.setLayoutParams(param);
 	}
 
 	@Override

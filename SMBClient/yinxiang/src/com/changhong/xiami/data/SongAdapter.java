@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.RelativeLayout.LayoutParams;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 
@@ -22,9 +23,13 @@ public class SongAdapter extends BaseAdapter{
 
 	List<OnlineSong> mSongList = new LinkedList<OnlineSong>();
 	private Context mContext;
+	int viewWidth=0,viewHeight=0;
 	
-	public SongAdapter(Context mContext) {
+	public SongAdapter(Context mContext,int width,int height) {
 		this.mContext = mContext;
+		viewWidth=width;
+		viewHeight=height/4;
+		
 	}
 	
 	/**
@@ -55,7 +60,11 @@ public class SongAdapter extends BaseAdapter{
 		final OnlineSong mContent = mSongList.get(position);
 		if (view == null) {
 			viewHolder = new ViewHolder();
-			view = LayoutInflater.from(mContext).inflate(R.layout.songs_item, null);				
+			view = LayoutInflater.from(mContext).inflate(R.layout.songs_item, null);	
+			if(viewHeight>10){
+					AbsListView.LayoutParams param = new AbsListView.LayoutParams( android.view.ViewGroup.LayoutParams.FILL_PARENT,viewHeight);
+					view.setLayoutParams(param);	
+			}
 			viewHolder.songTitle = (TextView) view.findViewById(R.id.song_name);
 			viewHolder.songArtist = (TextView) view.findViewById(R.id.song_artist);
 			viewHolder.singerLogo = (ImageView) view.findViewById(R.id.song_logo);	

@@ -8,13 +8,16 @@ import com.changhong.xiami.data.XMMusicController;
 import com.changhong.xiami.data.XMMusicData;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.view.Display;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -42,12 +45,13 @@ public abstract class BaseActivity extends Activity{
 	//json数据解析
 	protected XMMusicData mXMMusicData;
 	protected XMMusicController mXMController;
-
+	protected int mScreemWidth,mScreemHeight;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
+	
 		initView();
 		initData();
 	}
@@ -58,6 +62,11 @@ public abstract class BaseActivity extends Activity{
 		
 		mXMMusicData=XMMusicData.getInstance(this);
 		mXMController=XMMusicController.getInstance(this);
+		
+		WindowManager wm = (WindowManager)getSystemService(Context.WINDOW_SERVICE);
+		Display d = wm.getDefaultDisplay();
+		mScreemWidth = d.getWidth();
+		mScreemHeight =d.getHeight();
 		/**
 		 * IP连接部分
 		 */
