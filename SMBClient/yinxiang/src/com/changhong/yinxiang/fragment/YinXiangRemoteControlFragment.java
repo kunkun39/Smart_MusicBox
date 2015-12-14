@@ -160,9 +160,11 @@ public class YinXiangRemoteControlFragment extends Fragment
 					boolean isChecked) {
 
 				if (isChecked) {
+					//更多功能设置
 					ctrlMain.setVisibility(View.GONE);
 					ctrlAudio.setVisibility(View.VISIBLE);
 				} else {
+					//常用功能设置
 					ctrlMain.setVisibility(View.VISIBLE);
 					ctrlAudio.setVisibility(View.GONE);
 				}
@@ -433,16 +435,12 @@ public class YinXiangRemoteControlFragment extends Fragment
 
 		if (Math.abs(xMoveDistenace) > Math.abs(yMoveDistenace)) {
 			if (xMoveDistenace > 0 && Math.abs(xMoveDistenace) > 120) {
-				// moveBall(centerPoint.x, width, centerPoint.y, centerPoint.y);
-				// ClientSendCommandService.msg = "key:right";
 				ClientSendCommandService.msg = "key:volumeup";
 				setVolumeAndDy("key:volumeup");
 				moveFocus(Math.abs(xMoveDistenace));
 				MyApplication.vibrator.vibrate(100);
 
 			} else if (xMoveDistenace < 0 && Math.abs(xMoveDistenace) > 120) {
-				// moveBall(centerPoint.x, -100f, centerPoint.y, centerPoint.y);
-				// ClientSendCommandService.msg = "key:left";
 				ClientSendCommandService.msg = "key:volumedown";
 				setVolumeAndDy("key:volumedown");
 				moveFocus(Math.abs(xMoveDistenace));
@@ -451,22 +449,16 @@ public class YinXiangRemoteControlFragment extends Fragment
 			}
 		} else {
 			if (yMoveDistenace > 0 && Math.abs(yMoveDistenace) > 120) {
-				// moveBall(centerPoint.x, centerPoint.x, centerPoint.y,
-				// height);
-				// ClientSendCommandService.msg = "key:down";
 				ClientSendCommandService.msg = "key:dydown";
 				setVolumeAndDy("key:dydown");
 				moveFocus(Math.abs(yMoveDistenace));
 				MyApplication.vibrator.vibrate(100);
 
 			} else if (yMoveDistenace < 0 && Math.abs(yMoveDistenace) > 120) {
-				// moveBall(centerPoint.x, centerPoint.x, centerPoint.y, 0f);
-				// ClientSendCommandService.msg = "key:up";
 				ClientSendCommandService.msg = "key:dyup";
 				setVolumeAndDy("key:dyup");
 				moveFocus(Math.abs(yMoveDistenace));
 				MyApplication.vibrator.vibrate(100);
-
 			}
 		}
 		return true;
@@ -484,24 +476,20 @@ public class YinXiangRemoteControlFragment extends Fragment
 
 		if (Math.abs(xMoveDistenace) > Math.abs(yMoveDistenace)) {
 			if (xMoveDistenace > 0 && Math.abs(xMoveDistenace) > 400) {
-				// ClientSendCommandService.msg = "key:right";
 				ClientSendCommandService.msg = "key:volumeup";
 				moveFocus(Math.abs(xMoveDistenace));
 
 			} else if (xMoveDistenace < 0 && Math.abs(xMoveDistenace) > 400) {
-				// ClientSendCommandService.msg = "key:left";
 				ClientSendCommandService.msg = "key:volumedown";
 				moveFocus(Math.abs(xMoveDistenace));
 
 			}
 		} else {
 			if (yMoveDistenace > 0 && Math.abs(yMoveDistenace) > 400) {
-				// ClientSendCommandService.msg = "key:down";
 				ClientSendCommandService.msg = "key:dydown";
 				moveFocus(Math.abs(yMoveDistenace));
 
 			} else if (yMoveDistenace < 0 && Math.abs(yMoveDistenace) > 400) {
-				// ClientSendCommandService.msg = "key:up";
 				ClientSendCommandService.msg = "key:dyup";
 				moveFocus(Math.abs(yMoveDistenace));
 
@@ -621,6 +609,9 @@ public class YinXiangRemoteControlFragment extends Fragment
 	 */
 	private void setVolumeAndDy(String cmd) {
 
+		//	限定只有在遥控器主界面下才能设置
+		if(View.VISIBLE  ==  ctrlAudio.getVisibility())return;
+		
 		String notice = "";
 		// 显示音量设置条
 		if (View.GONE == volumeBar.getVisibility()) {

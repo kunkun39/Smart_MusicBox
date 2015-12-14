@@ -65,7 +65,6 @@ public class SideBar extends View {
 		int singleHeight = height / b.length;// 获取每一个字母的高度
 
 		for (int i = 0; i < b.length; i++) {
-//			paint.setColor(Color.rgb(33, 65, 98));
 		   paint.setColor(Color.WHITE);
 			paint.setTypeface(Typeface.DEFAULT_BOLD);
 			paint.setAntiAlias(true);
@@ -87,38 +86,46 @@ public class SideBar extends View {
 
 	@Override
 	public boolean dispatchTouchEvent(MotionEvent event) {
-		final int action = event.getAction();
 		final float y = event.getY();// 点击y坐标
 		final int oldChoose = choose;
 		final OnTouchingLetterChangedListener listener = onTouchingLetterChangedListener;
 		final int c = (int) (y / getHeight() * b.length);// 点击y坐标所占总高度的比例*b数组的长度就等于点击b中的个数.
 
-		switch (action) {
+		switch (event.getAction()) {
 		case MotionEvent.ACTION_UP:
-			setBackgroundDrawable(new ColorDrawable(0x00000000));
-			choose = -1;//
-			invalidate();
-			if (mTextDialog != null) {
-				mTextDialog.setVisibility(View.INVISIBLE);
-			}
+//			setBackgroundDrawable(new ColorDrawable(0x00000000));
+//			invalidate();
+//			if (mTextDialog != null) {
+//				mTextDialog.setVisibility(View.INVISIBLE);
+//			}
 			break;
-
-		default:
-			setBackgroundResource(R.drawable.sidebar_background);
+		case MotionEvent.ACTION_DOWN:
 			if (oldChoose != c) {
-				if (c >= 0 && c < b.length) {
+				if (c >= 0 && c < b.length) {	
 					if (listener != null) {
 						listener.onTouchingLetterChanged(b[c]);
 					}
-					if (mTextDialog != null) {
-						mTextDialog.setText(b[c]);
-						mTextDialog.setVisibility(View.VISIBLE);
-					}
-					
 					choose = c;
+//					setBackgroundDrawable(new ColorDrawable(0x00000000));
 					invalidate();
 				}
 			}
+			break;
+		default:
+////			setBackgroundResource(R.drawable.sidebar_background);
+//			if (oldChoose != c) {
+//				if (c >= 0 && c < b.length) {
+//					if (listener != null) {
+//						listener.onTouchingLetterChanged(b[c]);
+//					}
+//					if (mTextDialog != null) {
+//						mTextDialog.setText(b[c]);
+//						mTextDialog.setVisibility(View.VISIBLE);
+//					}					
+//					choose = c;
+////					invalidate();
+//				}
+//			}
 
 			break;
 		}

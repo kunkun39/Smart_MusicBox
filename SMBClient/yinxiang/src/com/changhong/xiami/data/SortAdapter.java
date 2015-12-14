@@ -32,8 +32,12 @@ public class SortAdapter extends BaseAdapter implements SectionIndexer {
 	 * @param list
 	 */
 	public void updateListView(List<XiamiDataModel> list) {
-		SingerListClear();
+		mSingerList.clear();
 		mSingerList.addAll(list);
+		Log.e("YDINFOR::", "start to update   sortAdapter......... ");
+		Log.e("YDINFOR::", "start to update   sortAdapter......... ");
+		Log.e("YDINFOR::", "start to update   sortAdapter......... ");
+		Log.e("YDINFOR::", "start to update   sortAdapter......... ");
 		Log.e("YDINFOR::", "start to update   sortAdapter......... ");
 		notifyDataSetInvalidated();
 
@@ -51,17 +55,6 @@ public class SortAdapter extends BaseAdapter implements SectionIndexer {
 		return position;
 	}
 
-	private void SingerListClear() {
-
-		int count = mSingerList.size();
-		for (int i = 0; i < count; i++) {
-			Bitmap bit = mSingerList.get(i).getLogoImg();
-			if (bit != null && !bit.isRecycled()) {
-				bit.recycle();
-			}
-		}
-		mSingerList.clear();
-	}
 
    @Override
 	public View getView(final int position, View view, ViewGroup arg2) {

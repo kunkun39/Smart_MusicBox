@@ -1,24 +1,18 @@
 package com.changhong.yinxiang.activity;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.*;
-
 import com.changhong.common.service.ClientSendCommandService;
 import com.changhong.common.system.MyApplication;
 import com.changhong.common.utils.NetworkUtils;
 import com.changhong.common.utils.StringUtils;
-import com.changhong.common.widgets.BoxSelectAdapter;
 import com.changhong.yinxiang.R;
 import com.changhong.yinxiang.nanohttpd.HTTPDService;
 import com.changhong.yinxiang.vedio.YinXiangVedioAdapter;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.util.ArrayList;
@@ -45,7 +39,7 @@ public class YinXiangVedioViewActivity extends BaseActivity {
     /**
      * 视频推送按钮
      */
-    private Button vedioSend;
+    private ImageView vedioSend;
 
     /**
      * 视频已经选择INFO
@@ -75,7 +69,7 @@ public class YinXiangVedioViewActivity extends BaseActivity {
         vedioAdapter = new YinXiangVedioAdapter(this);
         vedioListView.setAdapter(vedioAdapter);
 
-        vedioSend = (Button)findViewById(R.id.yinxing_vedio_tuisong);
+        vedioSend = (ImageView)findViewById(R.id.yinxing_vedio_tuisong);
         vedioSelectedInfo = (TextView)findViewById(R.id.yinxing_vedio_tuisong_info);
     }
 

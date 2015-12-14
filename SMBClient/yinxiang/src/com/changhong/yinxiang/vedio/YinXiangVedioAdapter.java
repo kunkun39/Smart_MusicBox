@@ -106,7 +106,6 @@ public class YinXiangVedioAdapter extends BaseAdapter {
 		if (!vedioImagePath.equals("")) {
 			MyApplication.imageLoader.displayImage("file://" + vedioImagePath,
 					wapper.vedioImage, MyApplication.viewOptions);
-			wapper.vedioImage.setScaleType(ImageView.ScaleType.FIT_XY);
 		} else {
 			synchronizImageLoad(wapper.vedioImage, vedioPath);
 		}

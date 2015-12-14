@@ -8,8 +8,10 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
@@ -18,7 +20,9 @@ import android.widget.TextView;
 
 import com.changhong.common.system.MyApplication;
 import com.changhong.common.utils.StringUtils;
+import com.changhong.xiami.activity.XiamiMusicListActivity;
 import com.changhong.yinxiang.R;
+import com.changhong.yinxiang.utils.Configure;
 import com.xiami.sdk.entities.OnlineSong;
 import com.xiami.sdk.entities.OnlineSong.Quality;
 
@@ -26,11 +30,11 @@ public class MusicsListAdapter extends BaseAdapter {
 	private ArrayList<OnlineSong> myList = new ArrayList<OnlineSong>();
 	private LayoutInflater layout;
 	private Context context;
+	private Handler mHandler;
 
 	public MusicsListAdapter(Context con) {
 		this.context = con;
-		this.layout = (LayoutInflater) con
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		this.layout = (LayoutInflater) con.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		if (null == myList) {
 			myList = new ArrayList<OnlineSong>();
 		}
@@ -60,7 +64,7 @@ public class MusicsListAdapter extends BaseAdapter {
 	}
 
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
+	public View getView(final int position, View convertView, ViewGroup parent) {
 		// TODO Auto-generated method stub
 		DataHolder holder = null;
 		if (null == convertView) {
@@ -87,11 +91,17 @@ public class MusicsListAdapter extends BaseAdapter {
 		if(!StringUtils.hasLength(imgUrl)){
 			imgUrl=song.getArtistLogo();
 		}
-     	MyApplication.imageLoader.displayImage(imgUrl, holder.musicImage);
-	
-		
-		displayQulity(holder.artist, song.getQuality());
-		
+     	MyApplication.imageLoader.displayImage(imgUrl, holder.musicImage);		
+     	
+     	//增加play按钮响应
+     	holder.play.setOnClickListener(new OnClickListener() {		
+			@Override
+			public void onClick(View v) {
+				playMusics(position);
+			}
+		});
+     	
+		displayQulity(holder.artist, song.getQuality());		
 		return convertView;
 	}
 	
@@ -110,6 +120,22 @@ public class MusicsListAdapter extends BaseAdapter {
 		draw.setBounds(0, 0, 60,30); //设置边界
 		tv.setCompoundDrawables(draw, null, null, null);
 	}
+	
+	
+	public void  playMusics(int position){
+		
+        int total=myList.size();
+        ArrayList<OnlineSong> playList=new ArrayList<OnlineSong>();
+		for (int i = position; i < total; i++) {
+			playList.add(myList.get(i));
+		}
+		//播放音乐
+		if(playList.size() >0 ){
+				XMPlayMusics.getInstance(context).playMusics(playList);
+		}
+	}
+	
+	
 
 	private final class DataHolder {
 		public TextView index;

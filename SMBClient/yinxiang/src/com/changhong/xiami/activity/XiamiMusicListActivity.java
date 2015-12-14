@@ -7,7 +7,6 @@ package com.changhong.xiami.activity;
  */
 import java.util.ArrayList;
 import java.util.List;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -21,10 +20,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.changhong.common.utils.StringUtils;
 import com.changhong.xiami.data.MusicsListAdapter;
-import com.changhong.xiami.data.XMPlayMusics;
 import com.changhong.yinxiang.R;
 import com.changhong.yinxiang.activity.BaseActivity;
 import com.changhong.yinxiang.utils.Configure;
@@ -41,13 +38,10 @@ public class XiamiMusicListActivity extends BaseActivity {
 	private List<OnlineSong> playList = new ArrayList<OnlineSong>();
 	private long albumID = 0;
 	private final int MUSIC_TYPE_SCENE = 2;
-
-	private final int MUSIC_LIST_UPDATE = 99;
-
 	private int curMusicType = 1;
 	private String curTitle;
 	private Handler mhandler = new Handler() {
-		JsonElement element = null;
+    private 	JsonElement element = null;
 
 		@Override
 		public void handleMessage(Message msg) {
@@ -64,7 +58,7 @@ public class XiamiMusicListActivity extends BaseActivity {
 						Toast.LENGTH_SHORT).show();
 				break;
 
-			case MUSIC_LIST_UPDATE: // 更新音乐列表99
+			case Configure.XIAMI_PLAY_MUSICS: // 更新音乐列表99
 				albumName.setText(curTitle);
 				adapter.setData(songsList);
 				break;
@@ -89,7 +83,7 @@ public class XiamiMusicListActivity extends BaseActivity {
 				element = jsonObj.get("songs");
 				curTitle = getString(R.string.recommend_dailylist);
 				songsList = mXMMusicData.getSongList(element);
-				mhandler.sendEmptyMessage(MUSIC_LIST_UPDATE);
+				mhandler.sendEmptyMessage(Configure.XIAMI_PLAY_MUSICS);
 				break;
 			case Configure.XIAMI_RANK_DETAIL:
 				element = (JsonElement) msg.obj;
@@ -148,17 +142,7 @@ public class XiamiMusicListActivity extends BaseActivity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				// TODO Auto-generated method stub
-
-				if (!playList.isEmpty()) {
-					playList.clear();
-				}
-				for (int i = position; i < songsList.size(); i++) {
-					playList.add(songsList.get(i));
-				}
-
-				XMPlayMusics.getInstance(XiamiMusicListActivity.this).playMusics(playList);
-
+				adapter.playMusics(position);
 			}
 		});
 
@@ -215,13 +199,13 @@ public class XiamiMusicListActivity extends BaseActivity {
 
 	private void getAlbumList(JsonElement element) {
 		songsList=mXMMusicData.getTheAlbumSongs(element);	
-		mhandler.sendEmptyMessage(MUSIC_LIST_UPDATE);
+		mhandler.sendEmptyMessage(Configure.XIAMI_PLAY_MUSICS);
 		}
 
 	private void showRankMusics(JsonElement element) {
 
 		songsList = mXMMusicData.getRankSongList(element);
-		mhandler.sendEmptyMessage(MUSIC_LIST_UPDATE);
+		mhandler.sendEmptyMessage(Configure.XIAMI_PLAY_MUSICS);
 	}
 
 	private void handlXiamiResponse(JsonElement jsonData) {
@@ -239,7 +223,7 @@ public class XiamiMusicListActivity extends BaseActivity {
 			@Override
 			public void run() {
 				if (null != songsList) {
-					mhandler.sendEmptyMessage(MUSIC_LIST_UPDATE);
+					mhandler.sendEmptyMessage(Configure.XIAMI_PLAY_MUSICS);
 				} else {
 					Toast.makeText(XiamiMusicListActivity.this, "没有搜索到专辑信息",
 							Toast.LENGTH_SHORT).show();

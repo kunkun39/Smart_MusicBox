@@ -18,9 +18,9 @@ public class ClientTitleSettingService {
         if (YinXiangMainActivity.title != null) {
             YinXiangMainActivity.title.setText(ClientSendCommandService.titletxt);
         }
-//        if (YinXiangCategoryActivity.title != null) {
-//        	YinXiangCategoryActivity.title.setText(ClientSendCommandService.titletxt);
-//        }
+        if (BaseActivity.title != null) {
+        	BaseActivity.title.setText(ClientSendCommandService.titletxt);
+        }
         if (YinXiangPictureCategoryActivity.title != null) {
         	YinXiangPictureCategoryActivity.title.setText(ClientSendCommandService.titletxt);
         }

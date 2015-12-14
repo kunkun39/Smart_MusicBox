@@ -138,8 +138,7 @@ public class ClientGetCommandService extends Service implements
 								/**
 								 * 如果用户已经选择了IP，就不用选择了，如果为空，就按照系统自动分配
 								 */
-								if (!StringUtils
-										.hasLength(ClientSendCommandService.serverIP)) {
+								if (!StringUtils.hasLength(ClientSendCommandService.serverIP)) {
 									ClientSendCommandService.serverIP = ClientSendCommandService.serverIpList
 											.get(0);
 

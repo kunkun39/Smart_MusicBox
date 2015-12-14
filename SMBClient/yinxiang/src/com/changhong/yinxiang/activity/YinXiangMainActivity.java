@@ -259,7 +259,6 @@ public class YinXiangMainActivity extends FragmentActivity implements
 	}
 
 	/******************************************** 系统方法重载部分 *******************************************************/
-
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -949,15 +948,15 @@ public class YinXiangMainActivity extends FragmentActivity implements
 
 	private void searchKey(String key) {
 
-		if (3 == curfragment)
-			key += "";
+		if (3 == curfragment)key = "音乐"+key;
+		
 		StringBuffer sb = new StringBuffer();
 		sb.append("search:");
 		sb.append("|");
 		sb.append(key);
-
 		ClientSendCommandService.msg = sb.toString();
 		ClientSendCommandService.handler.sendEmptyMessage(1);
+		
 	}
 
 	private class ViewHolder {

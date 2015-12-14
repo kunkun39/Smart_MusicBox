@@ -20,7 +20,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.changhong.xiami.data.CharacterParser;
 import com.changhong.xiami.data.PinyinComparator;
 import com.changhong.xiami.data.SideBar;
@@ -33,10 +32,7 @@ import com.changhong.yinxiang.activity.BaseActivity;
 import com.changhong.yinxiang.utils.Configure;
 import com.google.gson.JsonElement;
 import com.xiami.music.api.utils.RequestMethods;
-import com.xiami.sdk.entities.ArtistRegion;
-import com.xiami.sdk.entities.OnlineAlbum;
 import com.xiami.sdk.entities.OnlineArtist;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -109,8 +105,7 @@ public class ArtistListActivity extends BaseActivity {
 	protected void initData() {
 		super.initData();
 		// 长按进入歌手详情
-		mArtistList
-				.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+		mArtistList	.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 					@Override
 					public void onItemClick(AdapterView<?> parent,
 							View view, int position, long id) {
@@ -119,8 +114,6 @@ public class ArtistListActivity extends BaseActivity {
 						long artistID=model.getId();
 						if(artistID>0){
 								Intent intent=new Intent(ArtistListActivity.this, ArtistDetailActivity.class);
-//								intent.putExtra("artistID", artistID);
-//								intent.putExtra("artistName", model.getTitle());
 								intent.putExtra("XiamiDataModel",(Serializable)model);
 								startActivity(intent);
 						}
@@ -163,8 +156,13 @@ public class ArtistListActivity extends BaseActivity {
 			public void onTouchingLetterChanged(String s) {
 				// 该字母首次出现的位置
 				int position = adapter.getPositionForSection(s.charAt(0));
+				int total=adapter.getCount();
+				Log.e("YDINFOR::", "singer total ="+total);
+
 				if (position != -1) {
 					mArtistList.setSelection(position);
+				}else{
+					mArtistList.setSelection(0);
 				}
 			}
 		});
@@ -175,7 +173,6 @@ public class ArtistListActivity extends BaseActivity {
 			public void onCheckedChanged(RadioGroup group, int checkedId) {
 				// 设备变化
 				curArtistType= matchArtistTypeIndex(checkedId);
-				SourceDataList.clear();
 				if(null == hotArtists){
 						requestHotArtist();	
 				}else{
@@ -221,13 +218,19 @@ public class ArtistListActivity extends BaseActivity {
 	
 	}
 
+
 	@Override
-	protected void onStart() {
-		super.onStart();	
-		requestHotArtist();		
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		if(null == hotArtists){
+			requestHotArtist();	
+	    }else{
+			handleXiamiResponse(hotArtists,true);
+			requestArtistBook();
 	}
 
-
+	}
 
 	/**
 	 * 为ListView填充数据
@@ -267,6 +270,11 @@ public class ArtistListActivity extends BaseActivity {
 					} else {
 						sortModel.setSortLetters("#");
 					}
+					if(sortString.startsWith("A")){
+						Log.e("YDINFOR::  singerName  is ", singer +"and  i="+i);
+					}
+
+					
 			}
 			SourceDataList.add(sortModel);
 		}		
@@ -283,7 +291,7 @@ public class ArtistListActivity extends BaseActivity {
 	
 	private void requestArtistBook( ) {
 		String[] categorys=artistCategory;
-		
+		SourceDataList.clear();
 		if(2 == curArtistType){//艺人大全
 			categorys=new String[]{"chinese_M","chinese_F","chinese_B"};
 		}else if(3 == curArtistType){//欧美
