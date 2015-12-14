@@ -108,6 +108,9 @@
         <activity android:name="com.changhong.xiami.activity.AlbumListActivity"/>
         <activity android:name="com.changhong.xiami.activity.XiamiMainActivity"/>
         <activity android:name="com.changhong.xiami.activity.XiamiMoreRankActivity"/>
+         <activity android:name="com.changhong.xiami.activity.ArtistResumeActivity"/>
+        
+        
         
         <!-- alarm -->
 		<activity android:name="com.changhong.yinxiang.activity.AlarmMainActivity"/>
