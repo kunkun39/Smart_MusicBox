@@ -24,9 +24,19 @@ public class BoxSelectAdapter extends BaseAdapter {
         this.ipList = ipList;
     }
 
+    public void setData(List<String> list){
+    	this.ipList=list;
+    	notifyDataSetChanged();
+    }
+    
+    public void clearData(){
+    	this.ipList=null;
+    	notifyDataSetInvalidated();
+    }
+    
     @Override
     public int getCount() {
-        return ipList.size();
+        return ipList!=null ? ipList.size():0;
     }
 
     @Override
@@ -45,6 +55,7 @@ public class BoxSelectAdapter extends BaseAdapter {
          * VIEW HOLDER的配置
          */
         final ViewHolder vh;
+        String serverIP=null;
         if (convertView == null) {
             vh = new ViewHolder();
             convertView = minflater.inflate(android.R.layout.simple_list_item_1, null);
@@ -55,8 +66,9 @@ public class BoxSelectAdapter extends BaseAdapter {
             vh = (ViewHolder) convertView.getTag();
         }
 
-        String serverIP = ipList.get(position);
-
+        if(ipList!=null){
+        serverIP = ipList.get(position);
+        }
         vh.boxInfo.setText(ClientSendCommandService.getConnectBoxName(serverIP) +  " [" + serverIP + "]");
 
         return convertView;
