@@ -32,6 +32,7 @@ public class XMPlayMusics {
 	}
 	
 	public void playMusics(final List<OnlineSong> list){
+		if(null==list||list.size()==0) return;
 		executor.submit(new Runnable() {
 			
 			@Override

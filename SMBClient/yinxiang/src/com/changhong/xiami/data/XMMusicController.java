@@ -58,6 +58,7 @@ public class XMMusicController {
 	 * 直接播放排行榜音乐
 	 */
 	public void playRankMusic(final String type){
+		if(null==type) return;
 		new Thread(new Runnable() {
 			
 			@Override
@@ -74,6 +75,7 @@ public class XMMusicController {
 	 * 播放指定专辑ID的音乐
 	 */
 	 public void playTheAlbum(final long id){
+		 if(0==id) return;
 		 new Thread(new Runnable() {
 			
 			@Override

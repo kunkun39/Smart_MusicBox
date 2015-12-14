@@ -360,6 +360,8 @@ public class XiamiMusicFragment extends  Fragment {
 	}
 	//播放新碟首发
 	private void playAlbum(int i){
+		if(null==promotionAlbums) return;
+		
 		OnlineAlbum album=promotionAlbums.get(i);
 		final long albumID=album.getAlbumId();
 		new Thread(new Runnable() {
