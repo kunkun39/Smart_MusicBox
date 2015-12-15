@@ -115,8 +115,6 @@ public class SearchActivity extends Activity {
 		mSingerAdapter = new SingerAdapter(SearchActivity.this, handler);
 		singerList.setAdapter(mSingerAdapter);
 		
-		
-
 	}
 
 	private void initData() {
@@ -180,6 +178,9 @@ public class SearchActivity extends Activity {
 				R.anim.scale_small);
 		searchSongList.setOnItemSelectedListener(itemSelectedListener);
 		searchSongList.setOnFocusChangeListener(itemChangeListener);
+		
+		singerList.setOnItemSelectedListener(itemSelectedListener);
+		singerList.setOnFocusChangeListener(itemChangeListener);
 	}
 
 	private void packageData(int arg) {
