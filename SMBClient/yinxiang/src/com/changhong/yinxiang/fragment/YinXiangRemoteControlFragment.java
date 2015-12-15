@@ -237,6 +237,8 @@ public class YinXiangRemoteControlFragment extends Fragment
 
 	@Override
 	public void onClick(View v) {
+		
+		if (View.VISIBLE == volumeBar.getVisibility()) return;
 		switch (v.getId()) {
 		case R.id.up:
 			MyApplication.vibrator.vibrate(100);
@@ -292,8 +294,8 @@ public class YinXiangRemoteControlFragment extends Fragment
 		switch (event.getAction() & MotionEvent.ACTION_MASK) {
 		case MotionEvent.ACTION_DOWN:
 			startPoint.set(event.getX(), event.getY());
-			// 1秒后如果不移动不弹起按键 就执行 长按键操作
-			// mHandler1.postDelayed(mRunnable, 500);
+			// 1秒后如果不移动不弹起按键 就执行 长按键操作			
+			 mHandler1.postDelayed(mRunnable, 500);
 			break;
 		case MotionEvent.ACTION_MOVE:
 			endPoint.set(event.getX(), event.getY());
@@ -317,14 +319,14 @@ public class YinXiangRemoteControlFragment extends Fragment
 					ClientSendCommandService.msg = "key:volumeup";
 					setVolumeAndDy("key:volumeup");
 					moveFocus(moveX);
-					v.setId(0);
+//					v.setId(0);
 					MyApplication.vibrator.vibrate(100);
 				}
 				if (moveX <= -120) {
 					ClientSendCommandService.msg = "key:volumedown";
 					setVolumeAndDy("key:volumedown");
 					moveFocus(moveX);
-					v.setId(0);
+//					v.setId(0);
 					MyApplication.vibrator.vibrate(100);
 				}
 			} else {
@@ -332,14 +334,14 @@ public class YinXiangRemoteControlFragment extends Fragment
 					ClientSendCommandService.msg = "key:dydown";
 					setVolumeAndDy("key:dydown");
 					moveFocus(moveY);
-					v.setId(0);
+//					v.setId(0);
 					MyApplication.vibrator.vibrate(100);
 				}
 				if (moveY <= -120) {
 					ClientSendCommandService.msg = "key:dyup";
 					setVolumeAndDy("key:dyup");
 					moveFocus(moveY);
-					v.setId(0);
+//					v.setId(0);
 					MyApplication.vibrator.vibrate(100);
 				}
 			}
@@ -418,6 +420,7 @@ public class YinXiangRemoteControlFragment extends Fragment
 		default:
 			break;
 		}
+	
 		return false;
 	}
 
@@ -617,7 +620,7 @@ public class YinXiangRemoteControlFragment extends Fragment
 		if (View.GONE == volumeBar.getVisibility()) {
 			volumeBar.setVisibility(View.VISIBLE);
 		}
-		audioHandler.sendEmptyMessageDelayed(1, 15000);
+		audioHandler.sendEmptyMessageDelayed(1, 5000);
 
 		// 设置音量条的值
 		int curValue = dyAndVolControl.getProgress();
