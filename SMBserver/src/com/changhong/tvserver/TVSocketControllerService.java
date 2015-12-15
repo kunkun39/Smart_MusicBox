@@ -104,9 +104,10 @@ public class TVSocketControllerService extends Service implements ServerSocketIn
 	 */
 	public static List<String> vedios = new ArrayList<String>();
 
+	//前面板液晶显示支持类，屏蔽该类，可跨平台使用。
 	LcdManager mLcdManager = null;
 
-	public static String CH_BOX_NAME = "音    箱";
+	public static String CH_BOX_NAME = "影  院";
 
 	// YD add 20150726 接收ClientOnLineMonitorService发送过来的自动控制命令广播。
 	private AutoCtrlCommandReceiver autoCtrlReceiver = null;
@@ -126,8 +127,7 @@ public class TVSocketControllerService extends Service implements ServerSocketIn
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		SharedPreferences preferences = this.getSharedPreferences(
-				"changhong_box_name", Context.MODE_PRIVATE);
+		SharedPreferences preferences = this.getSharedPreferences("changhong_box_name", Context.MODE_PRIVATE);
 		CH_BOX_NAME = preferences.getString("CH_BOX_NAME", "音    箱");
 		if (mLcdManager == null) {
 			mLcdManager = (LcdManager) getSystemService(Context.LCDDISPLAY_SERVICE);

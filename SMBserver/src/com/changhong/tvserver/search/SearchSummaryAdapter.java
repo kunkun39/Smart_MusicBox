@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.webkit.WebView.FindListener;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -42,21 +43,21 @@ public class SearchSummaryAdapter extends BaseAdapter {
 		mSongList.addAll(songs);
 		notifyDataSetInvalidated();
 	}
+//
+//	public void removeSong(OnlineSong song) {
+//		mSongList.remove(song);
+//		notifyDataSetChanged();
+//	}
 
-	public void removeSong(OnlineSong song) {
-		mSongList.remove(song);
-		notifyDataSetChanged();
-	}
-
-	public void addSongFirst(OnlineSong song) {
-		mSongList.addFirst(song);
-		notifyDataSetChanged();
-	}
-
-	public void addSongLast(OnlineSong song) {
-		mSongList.addLast(song);
-		notifyDataSetChanged();
-	}
+//	public void addSongFirst(OnlineSong song) {
+//		mSongList.addFirst(song);
+//		notifyDataSetChanged();
+//	}
+//
+//	public void addSongLast(OnlineSong song) {
+//		mSongList.addLast(song);
+//		notifyDataSetChanged();
+//	}
 
 	public List<OnlineSong> getSongList() {
 		return mSongList;
@@ -74,15 +75,15 @@ public class SearchSummaryAdapter extends BaseAdapter {
 
 	@Override
 	public long getItemId(int position) {
-		return getItem(position).getSongId();
+		return position;
 	}
 
 	@Override
-	public View getView(final int position, View convertView, ViewGroup parent) {
+	public View getView( int position, View convertView, ViewGroup parent) {
 		ViewHolder viewHolder;
 		if (convertView == null) {
 			viewHolder = new ViewHolder();
-			convertView = mInflater.inflate(R.layout.search_list_item, parent,false);
+			convertView = mInflater.inflate(R.layout.search_list_item,parent, false);	
 			viewHolder.songName=(TextView) convertView.findViewById(R.id.song);
 			viewHolder.singer=(TextView) convertView.findViewById(R.id.singer);
 			viewHolder.index=(TextView) convertView.findViewById(R.id.index);
@@ -102,11 +103,12 @@ public class SearchSummaryAdapter extends BaseAdapter {
 		viewHolder.albumName.setText(mSongList.get(position).getAlbumName());	
 		String logo=mSongList.get(position).getLogo();
 		if(null !=logo)ImageLoader.getInstance().displayImage(logo, viewHolder.logo);
-		
+		viewHolder.playBtn.setTag(position);
 		viewHolder.playBtn.setOnClickListener(new OnClickListener() {			
 			@Override
 			public void onClick(View arg0) {
-				packageData(position);
+				int index=(Integer) arg0.getTag();
+				packageData(index);
 			}
 		});		
 		return convertView;

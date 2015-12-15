@@ -34,6 +34,7 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONObject;
 import com.changhong.tvserver.R;
+import com.changhong.tvserver.utils.MyProgressDialog;
 import com.xiami.sdk.XiamiSDK;
 import com.xiami.sdk.entities.OnlineArtist;
 import com.xiami.sdk.entities.OnlineSong;
@@ -85,6 +86,9 @@ public class SearchActivity extends Activity {
 	public Animation scaleBigAnim, scaleSmallAnim;
 	
 	public static final int REFRESH_SINGERLIST = 1000;
+	
+	private MyProgressDialog myProgress=null;
+
 
 	@Override
 	protected void onCreate(Bundle arg0) {
@@ -118,6 +122,7 @@ public class SearchActivity extends Activity {
 	}
 
 	private void initData() {
+		myProgress=new MyProgressDialog(this);
 		Intent intent = getIntent();
 		s_KeyWords = intent.getStringExtra(keyWordsName);
 		if (!TextUtils.isEmpty(s_KeyWords)) {
@@ -247,16 +252,24 @@ public class SearchActivity extends Activity {
 	}
 
 	private void search(final String keyWords) {
+
+		if(null != myProgress){
+			myProgress.show();
+		}
 		Thread thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
+				
 				results = sdk.searchSongSync(keyWords, PAGE_SIZE, PAGE_INDEX);
 				songs = results.second;
+				
+				
 				if (null == songsfull) {
 					songsfull = new ArrayList<OnlineSong>();
 				} else {
 					songsfull.clear();
 				}
+				
 				initArtistList();
 				
 				for (int i = 0; i < songs.size(); i++) {
@@ -267,19 +280,16 @@ public class SearchActivity extends Activity {
 				searchSongList.post(new Runnable() {
 					@Override
 					public void run() {
+						myProgress.cancel();
 						if (results != null) {
 							// 设置歌曲列表
-							searchResult.setText("搜索结果：相关歌手"+artistList.size()+"位、相关歌曲"+songsfull.size()+"首");
+							searchResult.setText("搜索结果：相关歌手"+(artistList.size()-1)+"位、相关歌曲"+songs.size()+"首");
 							adapter.changeSongs(songsfull);
 							mSingerAdapter.changeSingers(artistList);
 						} else if (results.second.size() == 0) {
-							Toast.makeText(SearchActivity.this,
-									R.string.no_search_result,
-									Toast.LENGTH_SHORT).show();
+							Toast.makeText(SearchActivity.this, R.string.no_search_result,	Toast.LENGTH_SHORT).show();
 						} else {
-							Toast.makeText(SearchActivity.this,
-									R.string.error_response, Toast.LENGTH_SHORT)
-									.show();
+							Toast.makeText(SearchActivity.this,	R.string.error_response, Toast.LENGTH_SHORT)	.show();
 						}
 					}
 				});
