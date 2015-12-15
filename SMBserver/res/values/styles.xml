@@ -16,5 +16,25 @@
     <style name="AppTheme" parent="AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
+    
+    
+     <!-- 自定义进度条 -->
+   <style name="myProgressBarStyleLarge" >
+　　<item name="android:indeterminateDrawable">@drawable/progress_large</item>
+　　<item name="android:minWidth">60dip</item>
+　　<item name="android:maxWidth">60dip</item>
+　　<item name="android:minHeight">60dip</item>
+　　<item name="android:maxHeight">60dip</item>
+</style>
+
+   
+   <style name="progressTheme" parent="android:style/Theme.Dialog">
+		<item name="android:windowNoTitle">true</item>
+		<item name="android:windowFullscreen">true</item> 
+		<item name="android:windowFrame">@null</item>
+		<item name="android:background">#00000000</item>
+		<item name="android:windowBackground">@android:color/transparent</item>
+		<item name="android:backgroundDimEnabled">false</item>
+	</style>
 
 </resources>
