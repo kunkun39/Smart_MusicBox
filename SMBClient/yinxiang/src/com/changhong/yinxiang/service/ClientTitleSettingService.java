@@ -41,7 +41,7 @@ public class ClientTitleSettingService {
         }
         if (YinXiangNetMusicActivity.title != null) {
         	YinXiangNetMusicActivity.title.setText(ClientSendCommandService.titletxt);
-        } 
-      
+        }  
     }
+    
 }

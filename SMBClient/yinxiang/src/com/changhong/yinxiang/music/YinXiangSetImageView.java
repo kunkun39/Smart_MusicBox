@@ -38,8 +38,7 @@ public class YinXiangSetImageView {
 					iv.setImageBitmap(bitmap);
 					iv.setScaleType(ImageView.ScaleType.FIT_XY);
 				}
-				DiskCacheFileManager.saveSmallImage(bitmap,
-						yxMusic.getPath());
+				DiskCacheFileManager.saveSmallImage(bitmap,	yxMusic.getPath());
 			}
 		});
 	}

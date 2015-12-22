@@ -119,29 +119,21 @@ public class ClientGetCommandService extends Service implements
 						/**
 						 * 处理Socket
 						 */
-						String serverAddress = dgPacket.getAddress()
-								.getHostAddress();
+						String serverAddress = dgPacket.getAddress().getHostAddress();
 						String content = new String(by, 0, dgPacket.getLength());
-						String[] tokens = StringUtils
-								.delimitedListToStringArray(content, "|");
-						String boxName = NetworkUtils
-								.convertCHBoxName(tokens[0]);
+						String[] tokens = StringUtils.delimitedListToStringArray(content, "|");
+						String boxName = NetworkUtils.convertCHBoxName(tokens[0]);
 						if (StringUtils.hasLength(serverAddress)) {
 							Log.w(TAG, serverAddress);
 
-							if (!ClientSendCommandService.serverIpList
-									.contains(serverAddress)) {
-								ClientSendCommandService.serverIpList
-										.add(serverAddress);
-								ClientSendCommandService.serverIpListMap.put(
-										serverAddress, boxName);
+							if (!ClientSendCommandService.serverIpList.contains(serverAddress)) {
+								ClientSendCommandService.serverIpList.add(serverAddress);
+								ClientSendCommandService.serverIpListMap.put(serverAddress, boxName);
 								/**
 								 * 如果用户已经选择了IP，就不用选择了，如果为空，就按照系统自动分配
 								 */
 								if (!StringUtils.hasLength(ClientSendCommandService.serverIP)) {
-									ClientSendCommandService.serverIP = ClientSendCommandService.serverIpList
-											.get(0);
-
+									ClientSendCommandService.serverIP = ClientSendCommandService.serverIpList.get(0);
 								}
 								ClientSendCommandService.titletxt = boxName;
 								time = System.currentTimeMillis();
@@ -152,11 +144,18 @@ public class ClientGetCommandService extends Service implements
 								Log.e("COMMAND_CLEAN_1", serverAddress + "-"
 										+ ClientSendCommandService.serverIP);
 
-							} else if (ClientSendCommandService.serverIP != null
-									&& serverAddress
-											.equals(ClientSendCommandService.serverIP)) {
+							} else if (ClientSendCommandService.serverIP != null		&& serverAddress.equals(ClientSendCommandService.serverIP)) {
 								Log.e("COMMAND_CLEAN_2", serverAddress + "-"
 										+ ClientSendCommandService.serverIP);
+								
+								/**
+								 * 判断Title是否更新
+								 */
+								if(checkTitleChanged(boxName)){
+									ClientSendCommandService.titletxt = boxName;
+									mHandler.sendEmptyMessage(0);
+								}
+								
 								/**
 								 * 更新当前server的活动时间
 								 */
@@ -261,7 +260,7 @@ public class ClientGetCommandService extends Service implements
 						}
 
 						/*************************************************** 20150726 YD add for autoCtrl YinXiang ********************************************************/
-						// 将服务器的ip地址作为发送内容发给服务器.没30秒发送一次
+						// 将服务器的ip地址作为发送内容发给服务器.每30秒发送一次
 						long curTime = System.currentTimeMillis();
 						if ((curTime - delaySend) > 30000) {
 							
@@ -278,7 +277,7 @@ public class ClientGetCommandService extends Service implements
 					} finally {
 						dgPacket = null;
 						outPacket = null;
-					}
+					}		
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -301,7 +300,7 @@ public class ClientGetCommandService extends Service implements
 		public void run() {
 			while (true) {
 				long during = System.currentTimeMillis() - time;
-				if (during > 4000 && time != 0l) {
+				if (during > 1000 && time != 0l) {
 					Log.e("COMMAND_CLEAN", String.valueOf(during));
 					clearIpList();
 				}
@@ -316,6 +315,15 @@ public class ClientGetCommandService extends Service implements
 		ClientSendCommandService.titletxt = "未连接";
 		mHandler.sendEmptyMessage(0);
 		time = 0l;
+	}
+	
+	
+	private boolean checkTitleChanged(String boxName){
+		boolean result=false;
+		if(null != boxName  && !boxName.equals(ClientSendCommandService.titletxt )){
+			result=true;
+		}		
+		return result;
 	}
 
 	/**

@@ -379,8 +379,10 @@ public class YinXiangMainActivity extends FragmentActivity implements
 		switch (keyCode) {
 		case KeyEvent.KEYCODE_BACK:
 			if (View.VISIBLE == searchInputDialog.getVisibility()) {
-				hideSearchInputDialog();
-			} else {
+				 hideSearchInputDialog();
+			} else if(View.VISIBLE  == clients.getVisibility()){
+				 clients.setVisibility(View.GONE);
+			}else{
 				Log.i(TAG, "KEYCODE_BACK");
 				isExitApp();
 			}

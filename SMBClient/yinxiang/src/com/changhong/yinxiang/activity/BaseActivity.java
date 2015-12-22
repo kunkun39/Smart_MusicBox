@@ -40,7 +40,7 @@ public abstract class BaseActivity extends Activity{
 	protected Button listClients;
 	protected ImageView back;
 	protected ListView clients = null;
-	protected BoxSelectAdapter IpAdapter;
+	public static BoxSelectAdapter IpAdapter;
 	
 	//json数据解析
 	protected XMMusicData mXMMusicData;
@@ -83,10 +83,8 @@ public abstract class BaseActivity extends Activity{
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
-				ClientSendCommandService.serverIP = ClientSendCommandService.serverIpList
-						.get(arg2);
-				ClientSendCommandService.titletxt = ClientSendCommandService
-						.getCurrentConnectBoxName();
+				ClientSendCommandService.serverIP = ClientSendCommandService.serverIpList.get(arg2);
+				ClientSendCommandService.titletxt = ClientSendCommandService	.getCurrentConnectBoxName();
 				title.setText(ClientSendCommandService.getCurrentConnectBoxName());
 				ClientSendCommandService.handler.sendEmptyMessage(2);
 				clients.setVisibility(View.GONE);
