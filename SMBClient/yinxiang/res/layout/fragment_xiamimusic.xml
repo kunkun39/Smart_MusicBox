@@ -50,12 +50,13 @@
                         android:textColor="@color/black"
                         android:textSize="15sp" />
 
-                    <Button
+                    <ImageView
                         android:layout_width="18dip"
                         android:layout_height="18dip"
                         android:layout_marginLeft="5dp"
                         android:layout_marginTop="6dp"
                         android:layout_toRightOf="@id/xmmain_todayrecm_title"
+                        android:clickable="false"
                         android:background="@drawable/select_right" />
                 </RelativeLayout>
 
@@ -140,12 +141,13 @@
                         android:textColor="@color/black"
                         android:textSize="15sp" />
 
-                    <Button
+                    <ImageView
                         android:layout_width="18dip"
                         android:layout_height="18dip"
                         android:layout_marginLeft="5dp"
                         android:layout_marginTop="6dp"
                         android:layout_toRightOf="@id/xmmain_recom_album_title"
+                        android:clickable="false"
                         android:background="@drawable/select_right" />
                 </RelativeLayout>
 
@@ -330,12 +332,13 @@
                             android:textColor="@color/black"
                             android:textSize="15sp" />
 
-                        <Button
+                        <ImageView
                             android:layout_width="18dip"
                             android:layout_height="18dip"
                             android:layout_marginLeft="5dp"
                             android:layout_marginTop="6dp"
                             android:layout_toRightOf="@id/xmmain_rank_title"
+                            android:clickable="false"
                             android:background="@drawable/select_right" />
                     </RelativeLayout>
 

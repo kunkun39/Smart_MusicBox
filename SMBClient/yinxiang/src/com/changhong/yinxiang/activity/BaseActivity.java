@@ -40,6 +40,7 @@ public abstract class BaseActivity extends Activity{
 	protected Button listClients;
 	protected ImageView back;
 	protected ListView clients = null;
+
 	public static BoxSelectAdapter IpAdapter;
 	
 	//json数据解析

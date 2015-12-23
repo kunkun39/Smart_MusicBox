@@ -5,8 +5,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/main_bg">
 
-    <!-- ip setting -->
-   <include layout="@layout/ip_setting"/>  
+   
 
    <GridView
             android:layout_marginTop="68dip"
@@ -20,5 +19,6 @@
             android:horizontalSpacing="10dp"
             android:stretchMode="columnWidth"
             android:gravity="center"/>
-
+ <!-- ip setting -->
+   <include layout="@layout/ip_setting"/>  
 </RelativeLayout>

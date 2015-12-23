@@ -5,18 +5,20 @@
     android:layout_height="match_parent"
     android:background="@drawable/main_bg" >
 
-    <!-- ip setting -->
-   <include layout="@layout/ip_setting" />
-   
-   <!-- 主页面滚动显示-->
+    <!-- 主页面滚动显示 -->
+
     <ScrollView
-	android:layout_width="match_parent"
-	android:layout_height="match_parent"
-	android:layout_marginTop="@dimen/ip_banner_height"            		
-	android:scrollbars="vertical"
-	android:fillViewport="true"
-	android:fadingEdge="vertical">
-	
-	<include layout="@layout/xiami_singer_detail" />
-</ScrollView>
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/ip_banner_height"
+        android:fadingEdge="vertical"
+        android:fillViewport="true"
+        android:scrollbars="vertical" >
+
+        <include layout="@layout/xiami_singer_detail" />
+    </ScrollView>
+    <!-- ip setting -->
+
+    <include layout="@layout/ip_setting" />
+
 </RelativeLayout>

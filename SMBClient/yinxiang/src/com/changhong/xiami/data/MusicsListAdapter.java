@@ -76,7 +76,7 @@ public class MusicsListAdapter extends BaseAdapter {
 					.findViewById(R.id.xiami_music_item_title);
 			holder.artist = (TextView) convertView
 					.findViewById(R.id.xiami_music_item_artist_duration);
-			holder.play = (ImageButton) convertView
+			holder.play = (ImageView) convertView
 					.findViewById(R.id.xiami_music_list_play);
 			holder.musicImage=(ImageView)convertView.findViewById(R.id.xiami_listitem_music_image);
 			convertView.setTag(holder);
@@ -141,7 +141,7 @@ public class MusicsListAdapter extends BaseAdapter {
 		public TextView index;
 		public TextView title;
 		public TextView artist;
-		public ImageButton play;
+		public ImageView play;
 		public ImageView musicImage;
 	}
 

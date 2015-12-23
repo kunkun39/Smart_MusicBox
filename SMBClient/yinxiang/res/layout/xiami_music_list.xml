@@ -7,37 +7,40 @@
     android:orientation="vertical"
     android:paddingBottom="5dp" >
 
-    <include layout="@layout/ip_setting" />
-
     <!-- 歌曲列表 -->
-     <TextView
-            android:id="@+id/ablum_name"
-            android:background="@color/list_bg"
-            android:layout_width="match_parent"
-            android:layout_height="60dip"
-            android:layout_alignParentTop="true"
-           android:layout_marginTop="@dimen/ip_banner_height"      
-            android:paddingLeft="50dip"                 		            
-            android:gravity="center_vertical"
-            android:textColor="@color/black"
-            android:textSize="18sp" />
-     <ImageView
-            android:layout_width="15dip"
-            android:layout_height="15dip"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="20dip"
-            android:layout_marginTop="83dip"
-            android:scaleType="fitCenter"
-            android:src="@drawable/left" />
-     
+
+    <TextView
+        android:id="@+id/ablum_name"
+        android:layout_width="match_parent"
+        android:layout_height="60dip"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="@dimen/ip_banner_height"
+        android:background="@color/list_bg"
+        android:gravity="center_vertical"
+        android:paddingLeft="50dip"
+        android:textColor="@color/black"
+        android:textSize="18sp" />
+
+    <ImageView
+        android:layout_width="15dip"
+        android:layout_height="15dip"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="20dip"
+        android:layout_marginTop="83dip"
+        android:scaleType="fitCenter"
+        android:src="@drawable/left" />
+
     <ListView
         android:id="@+id/musics_list"
-        android:background="@color/list_bg"      
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/ablum_name"
         android:layout_marginTop="5dp"
-        android:paddingLeft="10dp" 
-        android:paddingRight="10dp">
+        android:background="@color/list_bg"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp" >
     </ListView>
+
+    <include layout="@layout/ip_setting" />
+
 </RelativeLayout>

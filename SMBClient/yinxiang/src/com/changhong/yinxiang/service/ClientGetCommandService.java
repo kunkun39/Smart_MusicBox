@@ -15,6 +15,7 @@ import com.changhong.common.service.ClientSocketInterface;
 import com.changhong.common.utils.MobilePerformanceUtils;
 import com.changhong.common.utils.NetworkUtils;
 import com.changhong.common.utils.StringUtils;
+import com.changhong.yinxiang.activity.BaseActivity;
 import com.changhong.yinxiang.setting.NetEstimateUtils;
 
 import android.app.Service;
@@ -129,6 +130,10 @@ public class ClientGetCommandService extends Service implements
 							if (!ClientSendCommandService.serverIpList.contains(serverAddress)) {
 								ClientSendCommandService.serverIpList.add(serverAddress);
 								ClientSendCommandService.serverIpListMap.put(serverAddress, boxName);
+								
+								//通知IpAdapter更新
+								BaseActivity.IpAdapter.notifyDataSetChanged();
+								
 								/**
 								 * 如果用户已经选择了IP，就不用选择了，如果为空，就按照系统自动分配
 								 */
