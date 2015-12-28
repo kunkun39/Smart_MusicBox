@@ -427,8 +427,8 @@ public class SearchActivity extends Activity {
 				10, 10);
 		selected.getGlobalVisibleRect(imgRect);
 
-		focusItemParams.leftMargin = imgRect.left ;
-		focusItemParams.topMargin = imgRect.top - 160;
+		focusItemParams.leftMargin = imgRect.left +40;
+		focusItemParams.topMargin = imgRect.top - 140;
 		focusItemParams.width = imgRect.width();
 		focusItemParams.height = imgRect.height();
 
