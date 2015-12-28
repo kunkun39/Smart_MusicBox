@@ -370,10 +370,8 @@ public class TVSocketControllerService extends Service implements ServerSocketIn
 										.getRunningTasks(1).get(0);
 								String shortClassName = info.topActivity
 										.getClassName(); // 类名
-								if ("com.changhong.tvserver.touying.image.ImageShowPlayingActivity"
-										.equals(shortClassName)) {
-									ImageShowPlayingActivity.handler
-											.sendEmptyMessage(2);
+								if ("com.changhong.tvserver.touying.image.ImageShowPlayingActivity".equals(shortClassName)) {
+									ImageShowPlayingActivity.handler.sendEmptyMessage(2);
 								}
 							}
 						} else if (msg1.equals("rotation:right")) {
