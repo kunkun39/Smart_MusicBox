@@ -18,7 +18,6 @@ import android.text.TextWatcher;
 import android.util.Pair;
 import android.view.View;
 import android.view.View.OnFocusChangeListener;
-import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
@@ -30,7 +29,6 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -193,10 +191,10 @@ public class SearchActivity extends Activity {
 		scaleSmallAnim = AnimationUtils.loadAnimation(SearchActivity.this,
 				R.anim.scale_small);
 		searchSongList.setOnItemSelectedListener(itemSelectedListener);
-		searchSongList.setOnFocusChangeListener(itemChangeListener);
-
-		singerList.setOnItemSelectedListener(itemSelectedListener);
-		singerList.setOnFocusChangeListener(itemChangeListener);
+//		searchSongList.setOnFocusChangeListener(itemChangeListener);
+//
+//		singerList.setOnItemSelectedListener(itemSelectedListener);
+//		singerList.setOnFocusChangeListener(itemChangeListener);
 	}
 
 	private void packageData(int arg) {
@@ -402,25 +400,28 @@ public class SearchActivity extends Activity {
 				int position, long id) {
 
 			if (singerList.isFocused()) {
+				singerList.setSelection(position); 
 				songCurSelected = (LinearLayout) view
 						.findViewById(R.id.artist_layout_item);
+				
 			} else if (searchSongList.isFocusable()) {
 				songCurSelected = (LinearLayout) view
 						.findViewById(R.id.layout_item);
+				searchSongList.setSelection(position);
 			}
 
-			if (null != songLastSelected) {
-				selectedScaleSmall(songLastSelected);
-			}
-			if (null != songCurSelected) {
-				songLastSelected = songCurSelected;
-				selectedScaleBig(songCurSelected);
-			}
+//			if (null != songLastSelected) {
+//				selectedScaleSmall(songLastSelected);
+//			}
+//			if (null != songCurSelected) {
+//				songLastSelected = songCurSelected;
+//				selectedScaleBig(songCurSelected);
+//			}
 		}
 
 		@Override
 		public void onNothingSelected(AdapterView<?> parent) {
-
+			selectedScaleSmall(songLastSelected);
 		}
 	};
 
@@ -433,8 +434,8 @@ public class SearchActivity extends Activity {
 				10, 10);
 		selected.getGlobalVisibleRect(imgRect);
 
-		focusItemParams.leftMargin = imgRect.left +40;
-		focusItemParams.topMargin = imgRect.top - 140;
+		focusItemParams.leftMargin = imgRect.left -30;
+		focusItemParams.topMargin = imgRect.top - 170;
 		focusItemParams.width = imgRect.width();
 		focusItemParams.height = imgRect.height();
 

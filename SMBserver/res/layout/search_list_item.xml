@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="80dip"
     android:orientation="horizontal" 
+    android:descendantFocusability="blocksDescendants"
     android:layout_margin="10dip"
     android:id="@+id/layout_item"
     android:gravity="center">
@@ -26,6 +27,8 @@
             android:layout_weight="1"     
             android:src="@drawable/singer_default" 
             android:scaleType="fitCenter"
+            android:focusable="false"
+            android:clickable="false"
             android:padding="10dip"
             />     
             
