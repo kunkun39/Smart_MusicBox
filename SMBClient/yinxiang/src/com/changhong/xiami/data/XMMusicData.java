@@ -24,6 +24,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.util.Pair;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.changhong.common.service.ClientSendCommandService;
@@ -38,6 +39,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.xiami.music.api.utils.RequestMethods;
+import com.xiami.music.model.Radio;
+import com.xiami.music.model.RadioCategory;
 import com.xiami.sdk.XiamiSDK;
 import com.xiami.sdk.entities.ArtistBook;
 import com.xiami.sdk.entities.ArtistRegion;
@@ -327,8 +330,6 @@ public class XMMusicData {
 		requestDataTask.execute(params);
 	}
 
-	
-
 	/*
 	 * 获取指定专辑ID的歌曲列表
 	 */
@@ -336,10 +337,11 @@ public class XMMusicData {
 		HashMap<String, Object> params = new HashMap<String, Object>();
 		params.put("artist_id", id);
 		params.put("full_des", true);
-		RequestDataTask requestDataTask = new RequestDataTask(this, handler,RequestMethods.METHOD_ARTIST_HOTSONGS);
+		RequestDataTask requestDataTask = new RequestDataTask(this, handler,
+				RequestMethods.METHOD_ARTIST_HOTSONGS);
 		requestDataTask.execute(params);
 	}
-	
+
 	/**
 	 * 获取指定精选集ID的详细信息
 	 */
@@ -351,12 +353,7 @@ public class XMMusicData {
 				RequestMethods.METHOD_COLLECT_DETAIL);
 		requestDataTask.execute(params);
 	}
-	
-	
-	
-	
-	
-	
+
 	/**
 	 * 获取指定场景音乐
 	 */
@@ -696,9 +693,78 @@ public class XMMusicData {
 
 		Log.e("YDINFOR",
 				"++++++++++++++++xiamiRequest()+++++++++++++++++++++++++++++");
-//		 mXiamiSDK.enableLog(true);
+		// mXiamiSDK.enableLog(true);
 		String results = mXiamiSDK.xiamiSDKRequest(methodCode, params);
 		return results;
+	}
+
+	/**
+	 * 解析旧的电台列表信息
+	 * 
+	 * @param element
+	 * @return
+	 */
+
+	public List<RadioCategory> getRadioCategoryOld(JsonElement element) {
+
+		if (null == element)return null;
+		List<RadioCategory> dataList = new ArrayList<RadioCategory>();
+		JsonArray array = getRadioListByIndex(element,0);
+		int size = (null == array) ? 0 : array.size();
+		for (int i = 0; i < size; i++) {	
+			JsonObject itemObj = array.get(i).getAsJsonObject();
+			RadioCategory category = new RadioCategory();
+			category.setTypeId(getJsonObjectValueInt(itemObj, "id"));
+			category.setTypeName(getJsonObjectValue(itemObj, "name"));
+			dataList.add(category);
+		}
+		return dataList;
+	}
+
+	/**
+	 * 获取指定索引的电台列表
+	 * 
+	 * @param element
+	 * @param index
+	 * @return
+	 */
+	private JsonArray getRadioListByIndex(JsonElement element, int index) {
+		if (null == element)
+			return null;
+		if (element.isJsonArray()) {
+			JsonArray array = element.getAsJsonArray();
+			int size = (null == array) ? 0 : array.size();
+			if (index < size) {
+				JsonObject redios = getJsonObject(array.get(index));
+				return getJsonObjectArray(redios, "radios");
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * 解析电台列表信息
+	 * 
+	 * @param element
+	 * @return
+	 */
+	public List<Radio> getRadioList(JsonElement element) {
+
+		if (null == element)
+			return null;
+		List<Radio> dataList = new ArrayList<Radio>();
+		JsonObject radios = getJsonObject(element);
+		JsonArray array = getJsonObjectArray(radios, "radios");
+		int size = (null == array) ? 0 : array.size();
+		for (int i = 0; i < size; i++) {
+			JsonObject itemObj = array.get(i).getAsJsonObject();
+			Radio radio = new Radio();
+			radio.setId(getJsonObjectValueInt(itemObj, "radio_id"));
+			radio.setName(getJsonObjectValue(itemObj, "radio_name"));
+			radio.setLogo(getJsonObjectValue(itemObj, "radio_logo"));
+			dataList.add(radio);
+		}
+		return dataList;
 	}
 
 	/**
@@ -902,14 +968,14 @@ public class XMMusicData {
 				JSONArray array = new JSONArray();
 
 				for (OnlineSong onlineSong : list) {
-					String tempPath =onlineSong.getListenFile();
-					tempPath=(null==tempPath)?"netSong":tempPath;
+					String tempPath = onlineSong.getListenFile();
+					tempPath = (null == tempPath) ? "netSong" : tempPath;
 					String title = onlineSong.getSongName().trim();
 					String artist = onlineSong.getArtistName().trim();
 					int duration = onlineSong.getLength();
-					long songID=onlineSong.getSongId();
+					long songID = onlineSong.getSongId();
 					JSONObject music = new JSONObject();
-                    
+
 					music.put("id", songID);
 					music.put("tempPath", tempPath);
 					music.put("title", title);
@@ -962,10 +1028,6 @@ public class XMMusicData {
 		}
 		return dataList;
 	}
-	
-
-	
-	
 
 	public List<OnlineSong> getSortSongs(List<OnlineSong> songs, int index) {
 		if (null == songs || index >= songs.size())

@@ -33,7 +33,10 @@ public class Configure {
 	public final static int XIAMI_COLLECT_RECOMMEND = 1018;// 精选集推荐
 	public final static int XIAMI_NEW_ALBUMS = 1019;// 新碟上架-音乐会-专辑
 	public final static int XIAMI_SCENE_LIST = 1020;// 场景列表
-	public final static int XIAMI_SCENE_DETAIL = 1021;// 场景详细信息
+	public final static int XIAMI_SCENE_DETAIL = 1021;// 场景详细信息	
+	public final static int XIAMI_RADIO_CATEGORIES = 1022;//电台分类信息
+	public final static int XIAMI_RADIO_LIST = 1023;//电台列表
+
 
 
 	public final static int[] yinxiao_resID = { R.drawable.yinxiaomovie,
@@ -108,10 +111,11 @@ public class Configure {
 			i = XIAMI_SCENE_DETAIL;
 		}else if (str.equals(RequestMethods.METHOD_ARTIST_ALBUMS)) {
 			i = XIAMI_ARTIST_ALBUMS;
+		}else if (str.equals(RequestMethods.METHOD_RADIO_CATEGORIES_OLD)) {
+			i = XIAMI_RADIO_CATEGORIES;
+		}else if (str.equals(RequestMethods.METHOD_RADIO_LIST)) {
+			i = XIAMI_RADIO_LIST;
 		}
-		
-		
-		
 		return i;
 	}
 }
