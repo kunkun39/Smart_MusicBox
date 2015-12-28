@@ -73,7 +73,6 @@ public class SceneActivity extends BaseActivity {
 		back = (ImageView) findViewById(R.id.btn_back);
 		clients = (ListView) findViewById(R.id.clients);
 		listClients = (Button) findViewById(R.id.btn_list);
-
 		mSceneList = (GridView) findViewById(R.id.album_list);
 	
 
