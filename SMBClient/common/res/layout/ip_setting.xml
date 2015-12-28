@@ -45,7 +45,7 @@
         android:id="@+id/clients"
         android:layout_width="match_parent"
         android:layout_height="558dip"
-        android:layout_marginTop="67.6dip"
+        android:layout_marginTop="60dip"
         android:background="@drawable/title_ip_list_bg"
         android:listSelector="@drawable/title_ip_list"
         android:visibility="gone" />
