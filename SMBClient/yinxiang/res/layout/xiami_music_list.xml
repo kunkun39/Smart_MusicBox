@@ -7,8 +7,8 @@
     android:orientation="vertical"
     android:paddingBottom="5dp" >
 
-    <!-- 歌曲列表 -->
 
+    <!-- 歌曲列表 -->
     <TextView
         android:id="@+id/ablum_name"
         android:layout_width="match_parent"
@@ -40,6 +40,7 @@
         android:paddingLeft="10dp"
         android:paddingRight="10dp" >
     </ListView>
+
 
     <include layout="@layout/ip_setting" />
 

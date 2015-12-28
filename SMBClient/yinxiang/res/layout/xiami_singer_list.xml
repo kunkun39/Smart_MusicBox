@@ -5,9 +5,6 @@
     android:layout_height="match_parent"
     android:background="@drawable/main_bg">
 
-   
-
-
     <!-- 主页面 -->        
     <!--       
    <TextView android:id="@+id/singer_title"
@@ -95,6 +92,7 @@
             android:focusable="false" />
     </FrameLayout>
     
+
  <!-- ip setting -->
    <include layout="@layout/ip_setting"/>  
 </RelativeLayout>

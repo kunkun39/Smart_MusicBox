@@ -19,6 +19,7 @@
             android:horizontalSpacing="10dp"
             android:stretchMode="columnWidth"
             android:gravity="center"/>
- <!-- ip setting -->
+ 
+    <!-- ip setting -->
    <include layout="@layout/ip_setting"/>  
 </RelativeLayout>

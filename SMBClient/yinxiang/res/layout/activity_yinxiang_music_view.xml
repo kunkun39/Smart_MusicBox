@@ -5,9 +5,7 @@
                 android:orientation="vertical"
                 android:background="@drawable/main_bg">
 
-    <!--IP选择-->
-    <!-- ip setting -->
-   <include layout="@layout/ip_setting"/>  
+   
 
     <!--中间内容-->
 
@@ -110,4 +108,9 @@
             
      </LinearLayout>
    
+    
+     <!--IP选择-->
+    <!-- ip setting -->
+   <include layout="@layout/ip_setting"/>  
+    
 </RelativeLayout>
