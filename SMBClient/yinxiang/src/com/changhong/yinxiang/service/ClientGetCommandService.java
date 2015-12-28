@@ -52,6 +52,9 @@ public class ClientGetCommandService extends Service implements
 	// YD add for client heartBeat
 	public static String CH_CLIENT_HEARTBEAT = "client | heartBeat";
 	private long delaySend = 0;
+	
+    public static final String NETWORK_IP_LIST_CHANGED= "android.net.iplist.changed";
+
 
 	@Override
 	public void onCreate() {
@@ -77,6 +80,11 @@ public class ClientGetCommandService extends Service implements
 				case 1:
 					// use change server refresh the all channel, please also
 					// check ClientSendCommandService
+					//发送广播，通知ipList变化
+					Intent intent=new Intent();
+					intent.setAction(NETWORK_IP_LIST_CHANGED);
+					sendBroadcast(intent);
+					
 					break;
 				case 3:
 					break;
@@ -132,7 +140,8 @@ public class ClientGetCommandService extends Service implements
 								ClientSendCommandService.serverIpListMap.put(serverAddress, boxName);
 								
 								//通知IpAdapter更新
-								BaseActivity.IpAdapter.notifyDataSetChanged();
+								mHandler.sendEmptyMessage(1);
+
 								
 								/**
 								 * 如果用户已经选择了IP，就不用选择了，如果为空，就按照系统自动分配
@@ -164,7 +173,7 @@ public class ClientGetCommandService extends Service implements
 								/**
 								 * 更新当前server的活动时间
 								 */
-								time = System.currentTimeMillis();
+//								time = System.currentTimeMillis();
 
 								/**
 								 * 设置服务端网络状态
@@ -305,7 +314,7 @@ public class ClientGetCommandService extends Service implements
 		public void run() {
 			while (true) {
 				long during = System.currentTimeMillis() - time;
-				if (during > 1000 && time != 0l) {
+				if (during > 8000 && time != 0l) {
 					Log.e("COMMAND_CLEAN", String.valueOf(during));
 					clearIpList();
 				}
@@ -316,6 +325,7 @@ public class ClientGetCommandService extends Service implements
 
 	private void clearIpList() {
 		ClientSendCommandService.serverIpList.clear();
+		ClientSendCommandService.serverIpListMap.clear();
 		ClientSendCommandService.serverIP = null;
 		ClientSendCommandService.titletxt = "未连接";
 		mHandler.sendEmptyMessage(0);

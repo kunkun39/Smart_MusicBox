@@ -52,6 +52,7 @@ import android.widget.Toast;
 import com.changhong.common.utils.NetworkUtils;
 import com.changhong.common.widgets.BoxSelectAdapter;
 import com.changhong.yinxiang.R;
+import com.changhong.yinxiang.activity.BaseActivity.NetworkIpListChangedReceiver;
 import com.changhong.yinxiang.fragment.XiamiMusicFragment;
 import com.changhong.yinxiang.fragment.YinXiangCategoryFragment;
 import com.changhong.yinxiang.fragment.YinXiangFMFragment;
@@ -88,11 +89,12 @@ public class YinXiangMainActivity extends FragmentActivity implements
 	 */
 	private IntentFilter wifiFilter = null;
 	private NetworkConnectChangedReceiver networkConnectChange = null;
+	private NetworkIpListChangedReceiver ipListChange = null;
 
 	/************************************************** IP连接部分 *******************************************************/
 
 	public static TextView title = null;
-	private BoxSelectAdapter adapter = null;
+	public static BoxSelectAdapter IpAdapter = null;
 	private ListView clients = null;
 	private Button list;
 	/**
@@ -186,7 +188,8 @@ public class YinXiangMainActivity extends FragmentActivity implements
 		/***************************** 初始化fragment ****************************************/
 		fragmentManager = getFragmentManager();
 		radioGroup = (RadioGroup) findViewById(R.id.yx_rgtab);
-		radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+		radioGroup
+				.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 					@Override
 					public void onCheckedChanged(RadioGroup group, int checkedId) {
 						curfragment = matchFragmentIndex(checkedId);
@@ -197,23 +200,25 @@ public class YinXiangMainActivity extends FragmentActivity implements
 		/**
 		 * Ip部分
 		 */
-		adapter = new BoxSelectAdapter(YinXiangMainActivity.this,
+		IpAdapter = new BoxSelectAdapter(YinXiangMainActivity.this,
 				ClientSendCommandService.serverIpList);
-		clients.setAdapter(adapter);
+		clients.setAdapter(IpAdapter);
 
 		clients.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
-				adapter.notifyDataSetChanged();
-				ClientSendCommandService.serverIP = ClientSendCommandService.serverIpList
-						.get(arg2);
-				ClientSendCommandService.titletxt = ClientSendCommandService
-						.getCurrentConnectBoxName();
-				title.setText(ClientSendCommandService.titletxt);
-				ClientSendCommandService.handler.sendEmptyMessage(2);
-				clients.setVisibility(View.GONE);
+				if (arg2 < ClientSendCommandService.serverIpList.size()) {
+					ClientSendCommandService.serverIP = ClientSendCommandService.serverIpList
+							.get(arg2);
+					ClientSendCommandService.titletxt = ClientSendCommandService
+							.getCurrentConnectBoxName();
+					title.setText(ClientSendCommandService.titletxt);
+					ClientSendCommandService.handler.sendEmptyMessage(2);
+					clients.setVisibility(View.GONE);
+				}
+
 			}
 		});
 
@@ -236,8 +241,8 @@ public class YinXiangMainActivity extends FragmentActivity implements
 		list.setOnClickListener(this);
 		power.setOnClickListener(this);
 		power.setOnTouchListener(this);
-	    setBtn.setOnClickListener(this);
-	    setBtn.setOnTouchListener(this);
+		setBtn.setOnClickListener(this);
+		setBtn.setOnTouchListener(this);
 		microphone.setOnTouchListener(this);
 		microphone.setOnClickListener(this);
 		searchViewHolder.btnSubmit.setOnClickListener(this);
@@ -379,10 +384,10 @@ public class YinXiangMainActivity extends FragmentActivity implements
 		switch (keyCode) {
 		case KeyEvent.KEYCODE_BACK:
 			if (View.VISIBLE == searchInputDialog.getVisibility()) {
-				 hideSearchInputDialog();
-			} else if(View.VISIBLE  == clients.getVisibility()){
-				 clients.setVisibility(View.GONE);
-			}else{
+				hideSearchInputDialog();
+			} else if (View.VISIBLE == clients.getVisibility()) {
+				clients.setVisibility(View.GONE);
+			} else {
 				Log.i(TAG, "KEYCODE_BACK");
 				isExitApp();
 			}
@@ -908,11 +913,40 @@ public class YinXiangMainActivity extends FragmentActivity implements
 		wifiFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
 		wifiFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
 		registerReceiver(networkConnectChange, wifiFilter);
+
+		// 注册ipListChange监听
+		if (null == ipListChange) {
+			ipListChange = new NetworkIpListChangedReceiver();
+		}
+		IntentFilter ipListFilter = new IntentFilter();
+		ipListFilter.addAction(ClientGetCommandService.NETWORK_IP_LIST_CHANGED);
+		registerReceiver(ipListChange, ipListFilter);
+
 	}
 
 	private void unregisterWifiBroad() {
 		if (networkConnectChange != null) {
 			unregisterReceiver(networkConnectChange);
+		}
+		if (null != ipListChange) {
+			unregisterReceiver(ipListChange);
+		}
+	}
+
+	/**
+	 * 接收器 获取IPlist变化
+	 * 
+	 * @author di
+	 * 
+	 */
+	public class NetworkIpListChangedReceiver extends BroadcastReceiver {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			String action = intent.getAction();
+			if (ClientGetCommandService.NETWORK_IP_LIST_CHANGED == intent
+					.getAction()) {
+				IpAdapter.setData(ClientSendCommandService.serverIpList);
+			}
 		}
 	}
 
@@ -950,15 +984,16 @@ public class YinXiangMainActivity extends FragmentActivity implements
 
 	private void searchKey(String key) {
 
-		if (3 == curfragment)key = "音乐"+key;
-		
+		if (3 == curfragment)
+			key = "音乐" + key;
+
 		StringBuffer sb = new StringBuffer();
 		sb.append("search:");
 		sb.append("|");
 		sb.append(key);
 		ClientSendCommandService.msg = sb.toString();
 		ClientSendCommandService.handler.sendEmptyMessage(1);
-		
+
 	}
 
 	private class ViewHolder {

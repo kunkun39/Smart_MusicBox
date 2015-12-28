@@ -1,5 +1,10 @@
 package com.changhong.yinxiang.service;
 
+import android.app.ActivityManager;
+import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
+
 import com.changhong.common.service.ClientSendCommandService;
 import com.changhong.yinxiang.activity.*;
 
