@@ -18,6 +18,7 @@ import android.text.TextWatcher;
 import android.util.Pair;
 import android.view.View;
 import android.view.View.OnFocusChangeListener;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
@@ -29,6 +30,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,7 +50,7 @@ public class SearchActivity extends Activity {
 	private EditText searchKeyWords;
 	private ImageView searchSubmit;
 	private GridView singerList;
-	private TextView  searchResult;
+	private TextView searchResult;
 
 	private String s_KeyWords = null;
 	public static final String keyWordsName = "StringKeyWords";
@@ -77,18 +79,17 @@ public class SearchActivity extends Activity {
 	 * 默认搜索结果页码
 	 */
 	private static final int PAGE_INDEX = 1;
-	
+
 	/*
 	 * 动画效果
 	 */
-	 private LinearLayout songLastSelected, songCurSelected;
-	 private ImageView focusView;
+	private LinearLayout songLastSelected, songCurSelected;
+	private ImageView focusView;
 	public Animation scaleBigAnim, scaleSmallAnim;
-	
-	public static final int REFRESH_SINGERLIST = 1000;
-	
-	private MyProgressDialog myProgress=null;
 
+	public static final int REFRESH_SINGERLIST = 1000;
+
+	private MyProgressDialog myProgress = null;
 
 	@Override
 	protected void onCreate(Bundle arg0) {
@@ -107,10 +108,10 @@ public class SearchActivity extends Activity {
 		searchKeyWords = (EditText) findViewById(R.id.search_keywords);
 		singerList = (GridView) findViewById(R.id.search_singers);
 		searchSubmit = (ImageView) findViewById(R.id.search_submit);
-		searchResult=(TextView) findViewById(R.id.search_result);
-		
+		searchResult = (TextView) findViewById(R.id.search_result);
+
 		focusView = (ImageView) findViewById(R.id.image_selected);
-		
+
 		sdk = new XiamiSDK(this, SDKUtil.KEY, SDKUtil.SECRET);
 		handler = new Handler(getMainLooper());
 		adapter = new SearchSummaryAdapter(SearchActivity.this);
@@ -118,11 +119,15 @@ public class SearchActivity extends Activity {
 
 		mSingerAdapter = new SingerAdapter(SearchActivity.this, handler);
 		singerList.setAdapter(mSingerAdapter);
-		
+		// FrameLayout.LayoutParams params=new
+		// FrameLayout.LayoutParams(android.view.ViewGroup.LayoutParams.MATCH_PARENT,
+		// 450);
+		// searchSongList.setLayoutParams(params);
+
 	}
 
 	private void initData() {
-		myProgress=new MyProgressDialog(this);
+		myProgress = new MyProgressDialog(this);
 		Intent intent = getIntent();
 		s_KeyWords = intent.getStringExtra(keyWordsName);
 		if (!TextUtils.isEmpty(s_KeyWords)) {
@@ -147,13 +152,13 @@ public class SearchActivity extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
-				OnlineArtist curArtist=artistList.get(arg2);
-				songsfull=matchArtistSongs(curArtist.getId());		
+				OnlineArtist curArtist = artistList.get(arg2);
+				songsfull = matchArtistSongs(curArtist.getId());
 				adapter.changeSongs(songsfull);
 
 			}
 		});
-		
+
 		// 取消item焦点，同时配合android:descendantFocusability="afterDescendants"
 		// searchSongList.setItemsCanFocus(true);
 
@@ -176,14 +181,14 @@ public class SearchActivity extends Activity {
 
 			}
 		};
-		//设置动画效果
+		// 设置动画效果
 		scaleBigAnim = AnimationUtils.loadAnimation(SearchActivity.this,
 				R.anim.scale_big);
 		scaleSmallAnim = AnimationUtils.loadAnimation(SearchActivity.this,
 				R.anim.scale_small);
 		searchSongList.setOnItemSelectedListener(itemSelectedListener);
 		searchSongList.setOnFocusChangeListener(itemChangeListener);
-		
+
 		singerList.setOnItemSelectedListener(itemSelectedListener);
 		singerList.setOnFocusChangeListener(itemChangeListener);
 	}
@@ -253,27 +258,27 @@ public class SearchActivity extends Activity {
 
 	private void search(final String keyWords) {
 
-		if(null != myProgress){
+		if (null != myProgress) {
 			myProgress.show();
 		}
 		Thread thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				
+
 				results = sdk.searchSongSync(keyWords, PAGE_SIZE, PAGE_INDEX);
 				songs = results.second;
-				
-				
+
 				if (null == songsfull) {
 					songsfull = new ArrayList<OnlineSong>();
 				} else {
 					songsfull.clear();
 				}
-				
+
 				initArtistList();
-				
+
 				for (int i = 0; i < songs.size(); i++) {
-					OnlineSong detail = sdk.findSongByIdSync(songs.get(i).getSongId(), curQuality);
+					OnlineSong detail = sdk.findSongByIdSync(songs.get(i)
+							.getSongId(), curQuality);
 					songsfull.add(detail);
 					addArtist(detail);
 				}
@@ -283,13 +288,19 @@ public class SearchActivity extends Activity {
 						myProgress.cancel();
 						if (results != null) {
 							// 设置歌曲列表
-							searchResult.setText("搜索结果：相关歌手"+(artistList.size()-1)+"位、相关歌曲"+songs.size()+"首");
+							searchResult.setText("搜索结果：相关歌手"
+									+ (artistList.size() - 1) + "位、相关歌曲"
+									+ songs.size() + "首");
 							adapter.changeSongs(songsfull);
 							mSingerAdapter.changeSingers(artistList);
 						} else if (results.second.size() == 0) {
-							Toast.makeText(SearchActivity.this, R.string.no_search_result,	Toast.LENGTH_SHORT).show();
+							Toast.makeText(SearchActivity.this,
+									R.string.no_search_result,
+									Toast.LENGTH_SHORT).show();
 						} else {
-							Toast.makeText(SearchActivity.this,	R.string.error_response, Toast.LENGTH_SHORT)	.show();
+							Toast.makeText(SearchActivity.this,
+									R.string.error_response, Toast.LENGTH_SHORT)
+									.show();
 						}
 					}
 				});
@@ -303,70 +314,94 @@ public class SearchActivity extends Activity {
 		int size = artistList.size();
 		for (int i = 0; i < size; i++) {
 			OnlineArtist onlineArtist = artistList.get(i);
-			if(artistID == onlineArtist.getId())return;
+			if (artistID == onlineArtist.getId())
+				return;
 		}
-		//add artist
-		OnlineArtist newArtist=new OnlineArtist();
+		// add artist
+		OnlineArtist newArtist = new OnlineArtist();
 		newArtist.setId(song.getArtistId());
 		newArtist.setName(song.getArtistName());
 		newArtist.setLogo(song.getArtistLogo());
 		artistList.add(newArtist);
 	}
-	
-	
-	private void initArtistList(){
+
+	private void initArtistList() {
 		if (null == artistList) {
 			artistList = new ArrayList<OnlineArtist>();
 		} else {
 			artistList.clear();
-		}		
-		//增加全部艺人
-		OnlineArtist all=new OnlineArtist ();
+		}
+		// 增加全部艺人
+		OnlineArtist all = new OnlineArtist();
 		all.setId(1);
 		all.setName("全部");
 		artistList.add(all);
 	}
-	
+
 	/*
 	 * 匹配艺人歌曲
 	 */
-	private List<OnlineSong> matchArtistSongs(long artistID){
-		
+	private List<OnlineSong> matchArtistSongs(long artistID) {
+
 		List<OnlineSong> songList = new ArrayList<OnlineSong>();
-		int size=songs.size();
+		int size = songs.size();
 		for (int i = 0; i < size; i++) {
-			OnlineSong song=songs.get(i);
-			if(artistID==song.getArtistId() || 1==artistID){
+			OnlineSong song = songs.get(i);
+			if (artistID == song.getArtistId() || 1 == artistID) {
 				songList.add(song);
 			}
 		}
-        return songList;
+		return songList;
 	}
-	
-	OnFocusChangeListener itemChangeListener =new OnFocusChangeListener() {
-		
+
+	OnFocusChangeListener itemChangeListener = new OnFocusChangeListener() {
+
 		@Override
 		public void onFocusChange(View v, boolean hasFocus) {
 			// TODO Auto-generated method stub
+			if (singerList.isFocused()) {
+				songCurSelected = (LinearLayout) v
+						.findViewById(R.id.artist_layout_item);
+			} else if (searchSongList.isFocusable()) {
+				songCurSelected = (LinearLayout) v
+						.findViewById(R.id.layout_item);
+			}
 			if (hasFocus) {
-				if (null != songLastSelected) {
-					selectedScaleBig(songLastSelected);
+				if (null != songCurSelected) {
+					selectedScaleBig(songCurSelected);
+					songLastSelected = songCurSelected;
 				}
 			} else {
 				if (null != songLastSelected) {
 					selectedScaleSmall(songLastSelected);
 				}
 			}
+
+			// if (hasFocus) {
+			// if (null != songLastSelected) {
+			// selectedScaleBig(songLastSelected);
+			// }
+			// } else {
+			// if (null != songLastSelected) {
+			// selectedScaleSmall(songLastSelected);
+			// }
+			// }
 		}
 	};
-	
+
 	OnItemSelectedListener itemSelectedListener = new OnItemSelectedListener() {
 
 		@Override
 		public void onItemSelected(AdapterView<?> parent, View view,
 				int position, long id) {
 
-			songCurSelected = (LinearLayout) view.findViewById(R.id.layout_item);
+			if (singerList.isFocused()) {
+				songCurSelected = (LinearLayout) view
+						.findViewById(R.id.artist_layout_item);
+			} else if (searchSongList.isFocusable()) {
+				songCurSelected = (LinearLayout) view
+						.findViewById(R.id.layout_item);
+			}
 
 			if (null != songLastSelected) {
 				selectedScaleSmall(songLastSelected);
@@ -382,7 +417,7 @@ public class SearchActivity extends Activity {
 
 		}
 	};
-	
+
 	/**
 	 * 选中项添加边框
 	 */
@@ -392,8 +427,8 @@ public class SearchActivity extends Activity {
 				10, 10);
 		selected.getGlobalVisibleRect(imgRect);
 
-		focusItemParams.leftMargin = 20;
-		focusItemParams.topMargin = imgRect.top -160;
+		focusItemParams.leftMargin = imgRect.left ;
+		focusItemParams.topMargin = imgRect.top - 160;
 		focusItemParams.width = imgRect.width();
 		focusItemParams.height = imgRect.height();
 

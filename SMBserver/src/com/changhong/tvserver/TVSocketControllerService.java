@@ -105,7 +105,7 @@ public class TVSocketControllerService extends Service implements ServerSocketIn
 	public static List<String> vedios = new ArrayList<String>();
 
 	//前面板液晶显示支持类，屏蔽该类，可跨平台使用。
-	LcdManager mLcdManager = null;
+//	LcdManager mLcdManager = null;
 
 	public static String CH_BOX_NAME = "影  院";
 
@@ -129,9 +129,9 @@ public class TVSocketControllerService extends Service implements ServerSocketIn
 		super.onCreate();
 		SharedPreferences preferences = this.getSharedPreferences("changhong_box_name", Context.MODE_PRIVATE);
 		CH_BOX_NAME = preferences.getString("CH_BOX_NAME", "音    箱");
-		if (mLcdManager == null) {
-			mLcdManager = (LcdManager) getSystemService(Context.LCDDISPLAY_SERVICE);
-		}
+//		if (mLcdManager == null) {
+//			mLcdManager = (LcdManager) getSystemService(Context.LCDDISPLAY_SERVICE);
+//		}
 		initFM();
 		handler = new Handler() {
 			@Override
@@ -263,31 +263,31 @@ public class TVSocketControllerService extends Service implements ServerSocketIn
 						}
 						// 选择输入源部�?
 						else if (msg1.equals("source:av1")) {
-							mLcdManager.lcdDsaCmdSend((byte) 0x60);
+//							mLcdManager.lcdDsaCmdSend((byte) 0x60);
 							Intent intent = new Intent();
 							intent.setAction("com.changhong.action.InputSource");
 							intent.putExtra("source_id", 1001);
 							sendBroadcast(intent);
 						} else if (msg1.equals("source:bt")) {
-							mLcdManager.lcdDsaCmdSend((byte) 0x61);
+//							mLcdManager.lcdDsaCmdSend((byte) 0x61);
 							Intent intent = new Intent();
 							intent.setAction("com.changhong.action.InputSource");
 							intent.putExtra("source_id", 1004);
 							sendBroadcast(intent);
 						} else if (msg1.equals("source:hdmi")) {
-							mLcdManager.lcdDsaCmdSend((byte) 0x62);
+//							mLcdManager.lcdDsaCmdSend((byte) 0x62);
 							Intent intent = new Intent();
 							intent.setAction("com.changhong.action.InputSource");
 							intent.putExtra("source_id", 1002);
 							sendBroadcast(intent);
 						} else if (msg1.equals("source:ott")) {
-							mLcdManager.lcdDsaCmdSend((byte) 0x63);
+//							mLcdManager.lcdDsaCmdSend((byte) 0x63);
 							Intent intent = new Intent();
 							intent.setAction("com.changhong.action.InputSource");
 							intent.putExtra("source_id", 1003);
 							sendBroadcast(intent);
 						} else if (msg1.equals("source:av2")) {
-							mLcdManager.lcdDsaCmdSend((byte) 0x64);
+//							mLcdManager.lcdDsaCmdSend((byte) 0x64);
 							Intent intent = new Intent();
 							intent.setAction("com.changhong.action.InputSource");
 							intent.putExtra("source_id", 1005);

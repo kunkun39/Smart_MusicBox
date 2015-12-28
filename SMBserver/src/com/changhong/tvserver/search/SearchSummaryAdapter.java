@@ -83,7 +83,10 @@ public class SearchSummaryAdapter extends BaseAdapter {
 		ViewHolder viewHolder;
 		if (convertView == null) {
 			viewHolder = new ViewHolder();
-			convertView = mInflater.inflate(R.layout.search_list_item,parent, false);	
+			convertView = mInflater.inflate(R.layout.search_list_item,null);	
+			AbsListView.LayoutParams param = new AbsListView.LayoutParams( android.view.ViewGroup.LayoutParams.MATCH_PARENT,
+					80);
+			convertView.setLayoutParams(param);
 			viewHolder.songName=(TextView) convertView.findViewById(R.id.song);
 			viewHolder.singer=(TextView) convertView.findViewById(R.id.singer);
 			viewHolder.index=(TextView) convertView.findViewById(R.id.index);
