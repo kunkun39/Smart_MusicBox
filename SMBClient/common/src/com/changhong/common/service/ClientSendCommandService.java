@@ -201,7 +201,7 @@ public class ClientSendCommandService extends Service implements ClientSocketInt
                                     dgSocket = new DatagramSocket();
                                     byte b[] = msgSwitchChannel.getBytes();
 
-                                    DatagramPacket dgPacket = new DatagramPacket(b, b.length, InetAddress.getByName(serverIP), SWITCH_KEY_PORT);
+                                    DatagramPacket dgPacket = new DatagramPacket(b, b.length, InetAddress.getByName(serverIP), SWITCH_KEY_PORT);                                   
                                     dgSocket.send(dgPacket);
                                 } catch (Exception e) {
                                     e.printStackTrace();

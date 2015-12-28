@@ -8,6 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 import com.changhong.common.service.ClientSendCommandService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,15 +22,27 @@ public class BoxSelectAdapter extends BaseAdapter {
 
     public BoxSelectAdapter(Context context, List<String> ipList) {
         this.minflater = LayoutInflater.from(context);
-        this.ipList = ipList;
+        initIpList(ipList);
+    }
+    
+    private void initIpList(List<String> list){
+    	if(null == ipList){
+    		 ipList=new ArrayList<String>();
+    	}
+    	ipList.clear();
+    	int size=(null !=list)?list.size():0;
+		for (int i = 0; i < size; i++) {
+			ipList.add(list.get(i));
+		}    	
     }
 
     public void setData(List<String> list){
-    	this.ipList=list;
+        initIpList(list);
     	notifyDataSetChanged();
     }
     
     public void clearData(){
+    	ipList.clear();
     	this.ipList=null;
     	notifyDataSetInvalidated();
     }
@@ -73,8 +86,10 @@ public class BoxSelectAdapter extends BaseAdapter {
 
         return convertView;
     }
+   
 
     public final class ViewHolder {
         public TextView boxInfo;
     }
+    
 }
