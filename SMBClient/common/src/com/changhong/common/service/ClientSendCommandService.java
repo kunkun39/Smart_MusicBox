@@ -1,6 +1,5 @@
 package com.changhong.common.service;
 
-import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Handler;
@@ -296,7 +295,7 @@ public class ClientSendCommandService extends Service implements ClientSocketInt
             Looper.loop();
         }
     }
-    @SuppressLint("NewApi")
+
     private void getProgramList(String url) {
         if (url == null) {
             return;
@@ -353,7 +352,7 @@ public class ClientSendCommandService extends Service implements ClientSocketInt
             e.printStackTrace();
         }
     }
-    @SuppressLint("NewApi")
+
     private void getFMList(String url) {
     	if (url == null) {
     		return;
