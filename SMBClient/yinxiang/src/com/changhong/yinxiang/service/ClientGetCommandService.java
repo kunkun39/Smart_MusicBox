@@ -318,11 +318,11 @@ public class ClientGetCommandService extends Service implements
 		public void run() {
 			while (true) {
 				long during = System.currentTimeMillis() - time;
-				if (during > 10000 && time != 0l) {
+				if (during > 8000 && time != 0l) {
 					Log.e("COMMAND_CLEAN", String.valueOf(during));
 					clearIpList();
 				}
-				SystemClock.sleep(2000);
+				SystemClock.sleep(1000);
 			}
 		}
 	}
@@ -332,9 +332,9 @@ public class ClientGetCommandService extends Service implements
 		ClientSendCommandService.serverIP = null;
 		if(ClientSendCommandService.titletxt .equals("未连接")){
 			mHandler.sendEmptyMessage(0);
+			time = 0l;
 		}
 		ClientSendCommandService.titletxt = "未连接";
-		time = 0l;
 	}
 	
 	
