@@ -117,17 +117,8 @@ public class SearchActivity extends Activity {
 
 		mSingerAdapter = new SingerAdapter(SearchActivity.this, handler);
 		singerList.setAdapter(mSingerAdapter);
-		
-		// FrameLayout.LayoutParams params=new
-		// FrameLayout.LayoutParams(android.view.ViewGroup.LayoutParams.MATCH_PARENT,
-		// 450);
-		// searchSongList.setLayoutParams(params);
-		
 
-		//设置焦点为歌曲列表singerList		
-		searchSongList.requestFocus();
-		searchSongList.setFocusable(true);
-		
+	
 	}
 
 	private void initData() {
@@ -191,10 +182,14 @@ public class SearchActivity extends Activity {
 		scaleSmallAnim = AnimationUtils.loadAnimation(SearchActivity.this,
 				R.anim.scale_small);
 		searchSongList.setOnItemSelectedListener(itemSelectedListener);
+		
 //		searchSongList.setOnFocusChangeListener(itemChangeListener);
-//
 //		singerList.setOnItemSelectedListener(itemSelectedListener);
 //		singerList.setOnFocusChangeListener(itemChangeListener);
+		
+		//设置焦点为歌曲列表singerList		
+//		singerList.requestFocus();
+//		singerList.setFocusable(true);		
 	}
 
 	private void packageData(int arg) {
