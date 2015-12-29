@@ -56,6 +56,7 @@ import com.changhong.yinxiang.activity.BaseActivity.NetworkIpListChangedReceiver
 import com.changhong.yinxiang.fragment.XiamiMusicFragment;
 import com.changhong.yinxiang.fragment.YinXiangCategoryFragment;
 import com.changhong.yinxiang.fragment.NewYinXiangFMFragment;
+import com.changhong.yinxiang.fragment.YinXiangFMFragment;
 import com.changhong.yinxiang.fragment.YinXiangRemoteControlFragment;
 import com.changhong.yinxiang.fragment.YinXiangSettingFragment;
 import com.changhong.yinxiang.music.MusicEditServer;
@@ -865,7 +866,7 @@ public class YinXiangMainActivity extends FragmentActivity implements
 			fragment = new YinXiangRemoteControlFragment();
 			break;
 		case 2: // 网络电台
-			fragment = new NewYinXiangFMFragment();
+			fragment = new YinXiangFMFragment();
 			break;
 		case 3: // 麦克风
 			break;

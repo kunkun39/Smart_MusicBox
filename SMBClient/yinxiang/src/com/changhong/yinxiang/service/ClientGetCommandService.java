@@ -52,7 +52,8 @@ public class ClientGetCommandService extends Service implements
 	// YD add for client heartBeat
 	public static String CH_CLIENT_HEARTBEAT = "client | heartBeat";
 	private long delaySend = 0;
-	
+	private int   count = 0;
+
     public static final String NETWORK_IP_LIST_CHANGED= "android.net.iplist.changed";
 
 
@@ -139,8 +140,7 @@ public class ClientGetCommandService extends Service implements
 								ClientSendCommandService.serverIpList.add(serverAddress);
 								ClientSendCommandService.serverIpListMap.put(serverAddress, boxName);
 								
-								//通知IpAdapter更新
-								mHandler.sendEmptyMessage(1);
+								
 
 								
 								/**
@@ -155,6 +155,10 @@ public class ClientGetCommandService extends Service implements
 								 * 更细所有的频道TITLE
 								 */
 								mHandler.sendEmptyMessage(0);
+					
+								//通知IpAdapter更新
+								mHandler.sendEmptyMessage(1);
+								
 								Log.e("COMMAND_CLEAN_1", serverAddress + "-"
 										+ ClientSendCommandService.serverIP);
 
@@ -314,21 +318,22 @@ public class ClientGetCommandService extends Service implements
 		public void run() {
 			while (true) {
 				long during = System.currentTimeMillis() - time;
-				if (during > 8000 && time != 0l) {
+				if (during > 10000 && time != 0l) {
 					Log.e("COMMAND_CLEAN", String.valueOf(during));
 					clearIpList();
 				}
-				SystemClock.sleep(1000);
+				SystemClock.sleep(2000);
 			}
 		}
 	}
 
 	private void clearIpList() {
 		ClientSendCommandService.serverIpList.clear();
-		ClientSendCommandService.serverIpListMap.clear();
 		ClientSendCommandService.serverIP = null;
+		if(ClientSendCommandService.titletxt .equals("未连接")){
+			mHandler.sendEmptyMessage(0);
+		}
 		ClientSendCommandService.titletxt = "未连接";
-		mHandler.sendEmptyMessage(0);
 		time = 0l;
 	}
 	

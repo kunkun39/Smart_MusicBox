@@ -94,13 +94,14 @@ public class YinXiangFMFragment extends Fragment {
 		// }
 		// };
 		// mHandler.sendEmptyMessage(1);
-		regFMInforBroadcastRec();
 
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
+		regFMInforBroadcastRec();
+
 	}
 
 	@Override
